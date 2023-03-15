@@ -1,84 +1,57 @@
-# Pnetcdf-python
-## Setup
-### Requirements
-* Python 3.9+
 
-## Development installation
+# PnetCDF-python
+### Overview
+PnetCDF-python is a [Python](http://python.org)/[numpy](http://numpy.org) interface to the PnetCDF, a high-performance parallel I/O library for accessing NetCDF files. It is implemented on top of PnetCDF [C library](https://github.com/Parallel-NetCDF/PnetCDF) and numpy 
+### Dependencies
+* Python 3.9 or above
+* PnetCDF [C library](https://github.com/Parallel-NetCDF/PnetCDF) built with shared libraries
+* Python libraries [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html), [numpy](http://www.numpy.org/)
+* To work with the in-development version, you need to install [Cython](http://cython.org/)
+
+### Development installation
 * Clone GitHub repository 
 
 * Make sure [numpy](http://www.numpy.org/), [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html) and [Cython](http://cython.org/) are installed and you have [Python](https://www.python.org) 3.9 or newer.
 
-* Make sure [PnetCDF](https://github.com/Parallel-NetCDF/PnetCDF) are installed, 
+* Make sure [PnetCDF](https://github.com/Parallel-NetCDF/PnetCDF) are installed with shared library, 
   and pnetcdf-config is in $PATH. (or specifiy the filepath of `pnetcdf-config` filepath in `setup.cfg`)
 
 * (Optional)create python venv virtual environment and activate it
+
 * Run `env CC=mpicc python3 setup.py build`, then `env CC=mpicc python3 setup.py install`
 
-## Development tasks
-- [] Generic tasks
-    - [x] The implementation Cython file (.pyx) splitted by classes(e.g. _File.pyx, Dimension.pyx)
-    - [x] Add utils Cython files to include all helper functions and import them in class implementation files
-    - [x] Fix "not found" error with direct importing pncpy module
-    - [x] Provide more ways of locating pnetcdf_config in directories
-    - [x] Verify that PnetCDF c functions are genuinely called during running 
-    - [x] Add nc file validation step to test programs using pnetcdf CLI 
-    - [x] Able to implement python constants that mapped to corresponding c constants
-    - [ ] Fix segmentation error when raising runtime error
+### Current build status
+The project is under active development. Below is a summary of the current implementation status
 
-- [x] File API implementation
-    - [x] Implement and test basic class instructor and attributes
-    - [x] Implement and test Cmode and data format option 
-    - [x] Implement inquiry functions related to file and dimension
-    - [x] Implement and test methods to enter/exit define mode 
-    - [x] Implement and test dimension operation methods
-    - [x] Implement and test (global) attribute operation methods
-    - [x] Implment and test variable operation methods
+#### Implemented 
+* NetCDF File operations
+* Dimension operations
+* Attribute operations
+* Variable define mode operations
 
-- [x] Dimension API implementation
-    - [x] Implement and test dimension class constructor
-    - [ ] Comprehensively test all dimension methods
+#### Partially implemented
+* Variable data mode operations
+    * Blocking mode 
 
-- [x] Attribute API implmentation
-    - [x] Global attribute methods under File class
-    - [x] Variable attribute methods under Variable class
-    - [ ] Comprehensively test all dimension methods
+#### Planned
+* Variable data mode operations
+    * Non-blocking mode 
 
-- [ ] Variable API implementation
-    - [x] Implement and test basic class instructor and attributes
-    - [x] Implement and test variable define operations
-    - [x] Blocking mode 
-        - [x] Import MPI datatype in the implementation
-        - [x] Implement and test varaible data numpy-fassion write/read methods (collective & independent)
-        - [x] Implement and test put/get_var1 methods (collective & independent)
-        - [x] Implement and test put/get_var methods (collective & independent)
-        - [x] Implement and test put/get_vara methods (collective & independent)
-        - [x] Implement and test put/get_vars methods (collective & independent)
-        - [ ] Implement and test put/get_varn methods (collective & independent)
-        - [ ] Implement and test put/get_varm methods (collective & independent)
-    - [ ] Non-blocking mode
-## Common errors and solutions
+### Testing
+* To run all the existing tests, execute 
 
-| Error Msg      | Quick fix |
-| ----------- | ----------- |
-| Cannot use python variable/function without gil | Caused by undeclared c function; Added the declaration of C function in PnetCDF.pxi |
-| Seg error on `PyArray_SIZE` | Add import_array() in a new line |
-|NetCDF: Attribute not found| The method being called is not implemented|
-    
-## Design features
-- Cython implmentation file (.pyx) partitioned by class. Each class has a seperate declaration file and implementation file
-- In the case of CDF2-file, data types supported by CDF5 only will cause program to error out (no implicit datatype conversion)
-- User need to explictly call File method to enter/exit define mode and independdent data mode
+```sh
+./test_all.csh [test_file_dir (optional)]
+```
 
+* To run a specific single test, execute 
 
+```sh
+mpiexec -n [number of process] python3 test/test_progrm.py [test_file_dir (optional)]
+```
 
+With test_file_dir argument test programs will save out generated test files in the directory
 
-
-
-## References and learning materials
-- [Python C extension build tutorial][https://realpython.com/build-python-c-extension-module]
-- [Cython basics][https://cython.readthedocs.io/en/latest/src/userguide/language_basics.html]
-- [netCDF4 - Python repo][https://github.com/Unidata/netcdf4-python]
-- [h5py repo][https://github.com/h5py/h5py]
-- [Disutils setupscript][https://docs.python.org/3/distutils/setupscript.html]
-- [Disutils example][https://docs.python.org/3/distutils/examples.html]
-- PyArray (extend numpy to c/c+) [https://numpy.org/doc/stable/user/c-info.how-to-extend.html#getting-at-ndarray-memory-and-accessing-elements-of-the-ndarray]
+### Websites
+* [PnetCDF Overview][https://parallel-netcdf.github.io/]
+* [Source code][https://github.com/Jonathanlyj/PnetCDF-Python]
