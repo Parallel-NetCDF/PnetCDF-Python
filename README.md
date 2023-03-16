@@ -10,7 +10,7 @@ At a granular level, PnetCDF-python is a library that consists of the following 
 | Component | Description |
 | ---- | --- |
 | **File** |`pncpy.File` is a high-level object representing an netCDF file, which provides a Pythonic interface to create, read and write within an netCDF file. A File object serve as the root container for dimensions, variables and attributes. Together they describe the meaning of data and relations among data fields stored in a netCDF file. |
-| **Attribute** | In the library, netCDF attributes can be created, accessed, and manipulated using Python dictionary-like syntax. A Pythonic interface for metadata operations is provided both in the `File` class (for global attributes) and the `Variable` class (for variable attributes). |
+| **Attribute** | In the library, netCDF attributes can be created, accessed, and manipulated using python dictionary-like syntax. A Pythonic interface for metadata operations is provided both in the `File` class (for global attributes) and the `Variable` class (for variable attributes). |
 | **Dimension** | Dimensions define the shape and structure of variables and store coordinate data for multidimensional arrays. The `Dimension` object, which is also a key component of `File` object, provides an interface to create, access and manipulate dimensions. |
 | **Variable** | Variable is a core component of a netCDF file representing an array of data values organized along one or more dimensions, with associated metadata in the form of attributes. The `Variable` object in the library provides define and data operations to read and write the data and metadata of a variable within a netCDF file. Particularly, data operationa have a flexible interface, where reads and writes can be done through either explicit function-call style methods or indexer-style (numpy-like) syntax. |
 
@@ -50,7 +50,6 @@ The project is under active development. Below is a summary of the current imple
 
 
 ### Testing
-With the optional `test_file_dir` argument, test programs will save out generated test files in the directory
 * To run all the existing tests, execute 
 
 ```sh
@@ -62,6 +61,8 @@ With the optional `test_file_dir` argument, test programs will save out generate
 ```sh
 mpiexec -n [number of process] python3 test/tst_program.py [test_file_output_dir]
 ```
+
+The optional `test_file_dir` argument enables test program to save out generated test files in the directory
 
 ### Resources
 * [PnetCDF Overview][https://parallel-netcdf.github.io/]
