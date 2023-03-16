@@ -3,8 +3,8 @@ This directory contains all test programs in python. Detailed description of eac
 
 * **tst_files** \
  This series of test programs focuses on file creation and access through the `File` constructor, particularly with repsect to the following aspects:\
-    * different access modes 
-    * clobber option
+    * Different access modes ("r+", "w", etc)
+    * Clobber option
 
 * **tst_dims** \
  This series of test programs focuses on defining dimensions using the `File` object API, dimension methods and their interactions with netCDF variables. Particularly, these test program tests the following:\
