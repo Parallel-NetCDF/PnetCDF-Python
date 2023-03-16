@@ -2,7 +2,7 @@
 
 # PnetCDF-python
 ### Overview
-PnetCDF-python is a [Python](http://python.org)/[numpy](http://numpy.org) interface to the PnetCDF, a high-performance parallel I/O library for accessing netCDF files. The python library is implemented on top of PnetCDF [C library](https://github.com/Parallel-netCDF/PnetCDF) and MPI 
+PnetCDF-python is a [Python](http://python.org)/[numpy](http://numpy.org) interface to the PnetCDF, a high-performance parallel I/O library for accessing netCDF files. This integration with Python allows for easy manipulation, analysis, and visualization of netCDF data using the rich ecosystem of Python scientific computing libraries, making it a valuable tool for python-based applications that requires high-performance access to netCDF files. 
 ### More about PnetCDF-python
 
 At a granular level, PnetCDF-python is a library that consists of the following components:
@@ -11,8 +11,8 @@ At a granular level, PnetCDF-python is a library that consists of the following 
 | ---- | --- |
 | **File** |`pncpy.File` is a high-level object representing an netCDF file, which provides a Pythonic interface to create, read and write within an netCDF file. A File object serve as the root container for dimensions, variables and attributes. Together they describe the meaning of data and relations among data fields stored in a netCDF file. |
 | **Attribute** | In the library, netCDF attributes can be created, accessed, and manipulated using Python dictionary-like syntax. A Pythonic interface for metadata operations is provided both in the `File` class (for global attributes) and the `Variable` class (for variable attributes). |
-| **Dimension** | The `Dimension` object, which is also a key component of `File` object, provides an interface to create, access and manipulate dimensions within a `File` object. |
-| **Variable** | Variable is a core component of a netCDF file representing an array of data values organized along one or more dimensions, with associated metadata in the form of attributes. The `Variable` object in the library provides define and data operations to read and write the data and metadata of a variable within a netCDF file. With PnetCDF-python, data operations has a flexible interface, where reads and writes can be done through either explicit function-call style methods or indexer-style (numpy-like) syntax. |
+| **Dimension** | Dimensions define the shape and structure of variables and store coordinate data for multidimensional arrays. The `Dimension` object, which is also a key component of `File` object, provides an interface to create, access and manipulate dimensions. |
+| **Variable** | Variable is a core component of a netCDF file representing an array of data values organized along one or more dimensions, with associated metadata in the form of attributes. The `Variable` object in the library provides define and data operations to read and write the data and metadata of a variable within a netCDF file. Particularly, data operationa have a flexible interface, where reads and writes can be done through either explicit function-call style methods or indexer-style (numpy-like) syntax. |
 
 ### Dependencies
 * Python 3.9 or above
@@ -42,14 +42,15 @@ The project is under active development. Below is a summary of the current imple
 * Variable define operations
 
 #### Partially implemented
-* Variable data operations (90% completed)
-    * Blocking mode 
+* Variable blocking mode data operations (90% completed)
+    
 
 #### Planned
-* Variable data operations
-    * Non-blocking mode 
+* Variable non-blocking mode data operations
+
 
 ### Testing
+With the optional `test_file_dir` argument, test programs will save out generated test files in the directory
 * To run all the existing tests, execute 
 
 ```sh
@@ -59,11 +60,11 @@ The project is under active development. Below is a summary of the current imple
 * To run a specific single test, execute 
 
 ```sh
-mpiexec -n [number of process] python3 test/test_progrm.py [test_file_output_dir]
+mpiexec -n [number of process] python3 test/tst_program.py [test_file_output_dir]
 ```
 
-With the optional test_file_dir argument test programs will save out generated test files in the directory
-
-### Websites
+### Resources
 * [PnetCDF Overview][https://parallel-netcdf.github.io/]
 * [Source code][https://github.com/Jonathanlyj/PnetCDF-Python]
+
+### License
