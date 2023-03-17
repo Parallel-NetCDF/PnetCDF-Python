@@ -19,24 +19,24 @@ The optional `test_file_dir` argument enables the testing program to save out ge
 
 ### Test program overview
 * **tst_file** \
- This series of test programs is focused on file creation and access through the `File` constructor, particularly with respect to the following aspects:\
+ This series of test programs is focused on file creation and access through the `File` constructor, particularly with respect to the following aspects:
     * different access modes ("r+", "w", etc)
     * clobber option
 
 * **tst_dims** \
- This series of tests is focused on dimension initialization, dimension methods, and their interactions with netCDF variables using the `File` object API. Particularly, these test program tests the following:\
+ This series of tests is focused on dimension initialization, dimension methods, and their interactions with netCDF variables using the `File` object API. Particularly, these test program tests the following:
     * `Dimension` object basic attributes and methods including name, length
     * interactions with netCDF variable
         * different syntax for referencing associated dimensions at defining variables step
         * unlimited dimension length changes after adding/removing variable data
 
 * **tst_atts** \
- This series of tests is focused on manipulating attributes using the `File` object API (for global attributes) and the `Variable` object API (for variable attributes):\
+ This series of tests is focused on manipulating attributes using the `File` object API (for global attributes) and the `Variable` object API (for variable attributes):
     * define attributes of various data types with explicit methods or python-dictionary style syntax
     * attribute-based methods
 
 * **tst_var**\
- This series of test programs writes data to or reads from variables within a netCDF file with different syntaxes and different access patterns using the `Variable` object interface. For data mode operations, both independent i/o and collective i/o are tested by default.\
+ This series of test programs writes data to or reads from variables within a netCDF file with different syntaxes and different access patterns using the `Variable` object interface. For data mode operations, both independent i/o and collective i/o are tested by default.
     * **tst_var_indexer**: test reading from or writing data to netCDF variable using slicing or indexer (numpy-style) syntax
     * **tst_var_type**: test writing data of heterogeneous data types to the defined variable 
     * **tst_var_put**: this series of tests look into the process of writing data to a netCDF variable using explicit function-call style method concerning different needs of access patterns. Usually, each process is configured to write to a designated area within the netCDF variable.
