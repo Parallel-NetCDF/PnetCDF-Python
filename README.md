@@ -34,9 +34,13 @@ At a granular level, PnetCDF-python is a library that consists of the following 
 
 ### Current build status
 The project is under active development. Below is a summary of the current implementation status
-* **Implemented:** netCDF file operations API, dimension operations API, attribute operations API, variable define mode operations
+<!-- * **Implemented:** netCDF file operations API, dimension operations API, attribute operations API, variable define mode operations
 * **Partially implemented:** variable blocking mode data operations (90% completed)
-* **Planned:** variable non-blocking mode data operations
+* **Planned:** variable non-blocking mode data operations -->
+| Implemented | Partially implemented | Planned |
+| ---- | --- | --- | 
+| File operations API,<br />Dimension operations API,<br />Attribute operations API,<br />Variable define mode operations API| Variable data mode blocking operations (90% completed) | Variable data mode non-blocking operations| 
+
 
 
 ### Testing
