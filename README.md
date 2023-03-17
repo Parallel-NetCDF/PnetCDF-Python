@@ -49,7 +49,7 @@ The project is under active development. Below is a summary of the current imple
 * To run a specific single test, execute 
 
 ```sh
-mpiexec -n [number of process] python3 test/tst_program.py [test_file_output_dir]
+mpiexec -n [num_process] python3 test/tst_program.py [test_file_output_dir]
 ```
 
 The optional `test_file_dir` argument enables the testing program to save out generated test files in the directory
