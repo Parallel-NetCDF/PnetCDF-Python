@@ -9,8 +9,12 @@
    This example program is intended to illustrate the use of the pnetCDF python API.
    It is a program which writes and reads variables to netCDF file using indexer operators 
    (numpy array style). When writing with indexer syntax, the library internally will invoke 
-   put_vara/vars. Similarly when reading with indexer syntax the library internally will  
-   invoke get_vara/vars
+   ncmpi_put_vara/vars. Similarly when reading with indexer syntax the library internally will
+   invoke ncmpi_get_vara/vars
+
+   To run the test, execute the following
+    `mpiexec -n [num_process] python3 tst_var_indexer.py [test_file_output_dir](optional)`
+
 """
 import pncpy
 from numpy.random import seed, randint
@@ -21,7 +25,7 @@ from mpi4py import MPI
 from utils import validate_nc_file
 
 seed(0)
-# Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2)
+# Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2 and None for CDF-1)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 # Name of the test data file
 file_name = "tst_var_indexer.nc"
