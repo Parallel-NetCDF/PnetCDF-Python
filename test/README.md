@@ -18,20 +18,20 @@ mpiexec -n [num_process] python3 test/tst_program.py [test_file_output_dir]
 The optional `test_file_dir` argument enables the testing program to save out generated test files in the directory
 
 ### Test program overview
-* **tst_files** \
- This series of test programs focuses on file creation and access through the `File` constructor, particularly with repsect to the following aspects:\
+* **tst_file** \
+ This series of test programs is focused on file creation and access through the `File` constructor, particularly with repsect to the following aspects:\
     * different access modes ("r+", "w", etc)
     * clobber option
 
 * **tst_dims** \
- This series of tests focus on defining dimensions using the `File` object API, dimension methods and their interactions with netCDF variables. Particularly, these test program tests the following:\
+ This series of tests is focused on defining dimensions using the `File` object API, dimension methods and their interactions with netCDF variables. Particularly, these test program tests the following:\
     * `Dimension` object basic attributes and methods including name, length
     * interactions with netCDF variable
         * different syntax for referencing associated dimensions at defining variables step
         * unlimited dimension length changes after adding/removing variable data
 
 * **tst_atts** \
- This series of test focuses on manipulating attributes using the `File` object API (for globale attributes) and the `Variable` object API (for variable attribute):\
+ This series of test is focused on manipulating attributes using the `File` object API (for globale attributes) and the `Variable` object API (for variable attribute):\
     * define attributes of various data types with explicit methods or python-dictionary style syntax
     * attribute-based methods
 
