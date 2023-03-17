@@ -15,7 +15,7 @@ Make sure PnetCDF-python is installed and you are in the top directory
 mpiexec -n [num_process] python3 test/tst_program.py [test_file_output_dir]
 ```
 
-The optional `test_file_dir` argument enables the testing program to save out generated test files in the directory
+The optional `test_file_output_dir` argument enables the testing program to save out generated test files in the directory
 
 ### Test program overview
 * **tst_file** \
@@ -36,7 +36,7 @@ The optional `test_file_dir` argument enables the testing program to save out ge
     * attribute-based methods
 
 * **tst_var**\
- This series of test programs writes data to or reads from variables within a netCDF file with different syntaxes and different access patterns using the `Variable` object interface. For data mode operations, both independent i/o and collective i/o are tested by default.
+ This series of test programs writes data to or reads from variables within a netCDF file with different syntaxes and different access patterns using the `Variable` object interface. For data mode operations, both independent I/O and collective I/O are tested by default.
     * **tst_var_indexer**: test reading from or writing data to netCDF variable using slicing or indexer (numpy-style) syntax
     * **tst_var_type**: test writing data of heterogeneous data types to the defined variable 
     * **tst_var_put**: this series of tests look into the process of writing data to a netCDF variable using explicit function-call style method concerning different needs of access patterns. Usually, each process is configured to write to a designated area within the netCDF variable.

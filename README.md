@@ -52,7 +52,7 @@ The project is under active development. Below is a summary of the current imple
 mpiexec -n [num_process] python3 test/tst_program.py [test_file_output_dir]
 ```
 
-The optional `test_file_dir` argument enables the testing program to save out generated test files in the directory
+The optional `test_file_output_dir` argument enables the testing program to save out generated test files in the directory
 
 ### Resources
 * [PnetCDF Overview](https://parallel-netcdf.github.io/)
