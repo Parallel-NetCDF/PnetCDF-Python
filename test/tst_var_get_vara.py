@@ -9,7 +9,7 @@ from utils import validate_nc_file
 
 seed(0)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
-file_name = "tst_var_get_var.nc"
+file_name = "tst_var_get_vara.nc"
 
 
 comm = MPI.COMM_WORLD
@@ -47,7 +47,7 @@ class VariablesTestCase(unittest.TestCase):
     def tearDown(self):
         # Remove the temporary files
         comm.Barrier()
-        if (rank == 0) and (self.file_path == file_name):
+        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
     def test_cdf5(self):

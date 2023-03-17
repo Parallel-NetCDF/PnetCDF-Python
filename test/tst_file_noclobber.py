@@ -8,7 +8,7 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
    The program tries to create a netCDF file whose name is the same with an existing file using
-   "w" access mode and noclobber option. This attempt should fail.
+   "w" access mode and noclobber option.
 
 
    To run the test, execute the following
@@ -27,7 +27,7 @@ seed(0)
 # Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2 and None for CDF-1)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 # Name of the test data file
-file_name = " tst_file_noclobber.nc"
+file_name = "tst_file_noclobber.nc"
 xdim = 9
 
 comm = MPI.COMM_WORLD
@@ -58,7 +58,7 @@ class VariablesTestCase(unittest.TestCase):
         # Wait for all processes to finish testing (in multiprocessing mode)
         comm.Barrier()
         # Remove testing file
-        if (rank == 0) and (self.file_path == file_name):
+        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
     def test_cdf5(self):

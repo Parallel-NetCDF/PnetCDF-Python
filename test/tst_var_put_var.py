@@ -55,7 +55,7 @@ class VariablesTestCase(unittest.TestCase):
     def tearDown(self):
         # Remove the temporary files
         comm.Barrier()
-        if (rank == 0) and (self.file_path == file_name):
+        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
             pass
 

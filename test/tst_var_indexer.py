@@ -88,7 +88,7 @@ class VariablesTestCase(unittest.TestCase):
         # Wait for all processes to finish testing (in multiprocessing mode)
         comm.Barrier()
         # Remove testing file
-        if (rank == 0) and (self.file_path == file_name):
+        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
     def test_cdf5(self):
