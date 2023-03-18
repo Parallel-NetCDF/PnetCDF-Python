@@ -43,7 +43,8 @@ The project is under active development. Below is a summary of the current imple
 |Dimension API|ncmpi_def_dim<br />ncmpi_inq_ndims<br />ncmpi_inq_dimlen<br />ncmpi_inq_dim<br />ncmpi_inq_dimname<br />| |
 |Attribute API| ncmpi_put/get_att_text<br />ncmpi_put/get_att<br />ncmpi_inq_att<br />ncmpi_inq_natts<br />ncmpi_inq_attname<br />ncmpi_rename_att<br />ncmpi_del_att| |
 |Variable API| ncmpi_def_var<br />ncmpi_def_var_fill<br />ncmpi_inq_varndims<br />ncmpi_inq_varname<br />ncmpi_put/get_vara<br />ncmpi_put/get_vars<br />ncmpi_put/get_var1<br />ncmpi_put/get_var<br />ncmpi_put/get_varn<br />ncmpi_put/get_vara_all<br />ncmpi_put/get_vars_all<br />ncmpi_put/get_var1_all<br />ncmpi_put/get_var_all<br />ncmpi_put/get_varn_all<br />|ncmpi_put/get_varm 1<br /> ncmpi_put/get_varm_all 1<br />ncmpi_iput/iget_var 1<br />ncmpi_iput/iget_var1 1<br />ncmpi_iput/iget_vara 1<br />ncmpi_iput/iget_vars 1<br />ncmpi_iput/iget_varm 1<br /> ncmpi_iput/iget_varn 2<br /> ncmpi_bput/bget_var 1<br />ncmpi_bput/bget_var1 1<br />ncmpi_bput/bget_vara 1<br />ncmpi_bput/bget_vars 1<br />ncmpi_bput/bget_varm 1<br />ncmpi_bput/bget_varn 2<br />ncmpi_wait/wait_all 1 <br />ncmpi_inq_nreqs 1 <br />ncmpi_inq_buffer_usage/size 1<br />ncmpi_cancel 1 <br />ncmpi_fill_var_rec 2|
-\*priority level 1/2/3 maps to first/second/third priority
+
+<p>\*priority level 1/2/3 maps to first/second/third priority</p>
 
 <!-- |File operations API|,<br />Dimension operations API,<br />Attribute operations API,<br />Variable define mode operations API| Variable data mode blocking operations (90% completed) | Variable data mode non-blocking operations|  -->
 
