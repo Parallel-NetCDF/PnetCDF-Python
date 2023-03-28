@@ -47,7 +47,7 @@ class VariablesTestCase(unittest.TestCase):
     def tearDown(self):
         # Remove the temporary files
         comm.Barrier()
-        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
+        if (rank == 0) and (self.file_path == file_name):
             os.remove(self.file_path)
 
 
@@ -59,11 +59,11 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o put_var1
         index = (rank, rank, rank)
         f.begin_indep()
-        val = v1.get_var(index)
+        val = v1.get_var(index = index)
         assert_equal(val, datarev[rank][rank][rank])
         # test independent i/o put_var1
         f.end_indep()
-        val = v1.get_var_all(index)
+        val = v1.get_var_all(index = index)
         assert_equal(val, datarev[rank][rank][rank])
         f.close()
 
@@ -75,11 +75,11 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o put_var1
         index = (rank, rank, rank)
         f.begin_indep()
-        val = v1.get_var(index)
+        val = v1.get_var(index = index)
         assert_equal(val, datarev[rank][rank][rank])
         # test independent i/o put_var1
         f.end_indep()
-        val = v1.get_var_all(index)
+        val = v1.get_var_all(index = index)
         assert_equal(val, datarev[rank][rank][rank])
         f.close()
 
@@ -90,11 +90,11 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o put_var1
         index = (rank, rank, rank)
         f.begin_indep()
-        val = v1.get_var(index)
+        val = v1.get_var(index = index)
         assert_equal(val, datarev[rank][rank][rank])
         # test independent i/o put_var1
         f.end_indep()
-        val = v1.get_var_all(index)
+        val = v1.get_var_all(index = index)
         assert_equal(val, datarev[rank][rank][rank])
         f.close()
 

@@ -1191,37 +1191,79 @@ cdef class Variable:
         _check_err(ierr)
 
 
-    def put_var(self, data, index=None, start=None, count=None, stride=None, num=None):
-        if isinstance(data, np.ndarray):
-            if start is not None and count is not None and all(arg is None for arg in [index]):
-                if num is not None:
-                    self._put_varn(start, count, num, data, collective = False)
-                else:
-                    if stride is not None:
-                        self._put_vars(start, count, stride, data, collective = False)
-                    else:
-                        self._put_vara(start, count, data, collective = False)
-            elif all(arg is None for arg in [index, start, count, stride]):
-                self._put_var(data, collective = False)
-        elif index is not None and all(arg is None for arg in [start, count, stride]):
+    def _put_varm(self, ndarray data, start, count, stride, imap, collective = True):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t *startp
+        cdef size_t *countp
+        cdef ptrdiff_t *stridep
+        cdef size_t *imapp
+        ndims = len(self.dimensions)
+        startp = <size_t *>malloc(sizeof(size_t) * ndims)
+        countp = <size_t *>malloc(sizeof(size_t) * ndims)
+        stridep = <ptrdiff_t *>malloc(sizeof(ptrdiff_t) * ndims)
+        imapp = <size_t *>malloc(sizeof(size_t) * ndims)
+        for n from 0 <= n < ndims:
+            countp[n] = count[n]
+            startp[n] = start[n]
+            stridep[n] = stride[n]
+            imapp[n] = imap[n]
+        shapeout = ()
+        for lendim in count:
+            shapeout = shapeout + (lendim,)
+        if not PyArray_ISCONTIGUOUS(data):
+            data = data.copy()
+        bufcount = NC_COUNT_IGNORE
+        if data.dtype.str[1:] not in _supportedtypes:
+            raise TypeError, 'illegal data type, must be one of %s, got %s' % \
+            (_supportedtypes, data.dtype.str[1:])
+        buftype = _nptompitype[data.dtype.str[1:]]
+        if collective:
+            with nogil:
+                ierr = ncmpi_put_varm_all(self._file_id, self._varid, <const MPI_Offset *>startp, \
+                                        <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
+                                        <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype)
+        else:
+            with nogil:
+                ierr = ncmpi_put_varm(self._file_id, self._varid, <const MPI_Offset *>startp, \
+                                        <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
+                                        <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype)
+        _check_err(ierr)
+        return data
+
+    
+
+
+    def put_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
+        if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
+            self._put_var(data, collective = False)
+        elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
             self._put_var1(data, index, collective = False)
+        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
+            self._put_vara(start, count, data, collective = False)
+        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
+            self._put_vars(start, count, stride, data, collective = False)
+        elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
+            self._put_varn(start, count, num, data, collective = False)
+        elif all(arg is not None for arg in [data, start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
+            self._put_varm(data, start, count, stride, imap, collective = False)
         else:
             raise ValueError("Invalid input arguments for put_var")
 
-    def put_var_all(self, data, index=None, start=None, count=None, stride=None, num=None):
-        if isinstance(data, np.ndarray):
-            if start is not None and count is not None and all(arg is None for arg in [index]):
-                if num is not None:
-                    self._put_varn(start, count, num, data, collective = True)
-                else:
-                    if stride is not None:
-                        self._put_vars(start, count, stride, data, collective = True)
-                    else:
-                        self._put_vara(start, count, data, collective = True)
-            elif all(arg is None for arg in [index, start, count, stride]):
-                self._put_var(data, collective = True)
-        elif index is not None and all(arg is None for arg in [start, count, stride]):
+    def put_var_all(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
+        if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
+            self._put_var(data, collective = True)
+        elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
             self._put_var1(data, index, collective = True)
+        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
+            self._put_vara(start, count, data, collective = True)
+        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
+            self._put_vars(start, count, stride, data, collective = True)
+        elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
+            self._put_varn(start, count, num, data, collective = True)
+        elif all(arg is not None for arg in [data, start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
+            self._put_varm(data, start, count, stride, imap, collective = True)
         else:
             raise ValueError("Invalid input arguments for put_var_all")
 
@@ -1489,37 +1531,73 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
+    def _get_varm(self, ndarray data, start, count, stride, imap, collective = True):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t *startp
+        cdef size_t *countp
+        cdef ptrdiff_t *stridep
+        cdef size_t *imapp
+        ndims = len(self.dimensions)
+        startp = <size_t *>malloc(sizeof(size_t) * ndims)
+        countp = <size_t *>malloc(sizeof(size_t) * ndims)
+        stridep = <ptrdiff_t *>malloc(sizeof(ptrdiff_t) * ndims)
+        imapp = <size_t *>malloc(sizeof(size_t) * ndims)
+        for n from 0 <= n < ndims:
+            countp[n] = count[n]
+            startp[n] = start[n]
+            stridep[n] = stride[n]
+            imapp[n] = imap[n]
+        shapeout = ()
+        for lendim in count:
+            shapeout = shapeout + (lendim,)
+        if not PyArray_ISCONTIGUOUS(data):
+            data = data.copy()
+        bufcount = NC_COUNT_IGNORE
+        buftype = MPI_DATATYPE_NULL
+        if collective:
+            with nogil:
+                ierr = ncmpi_get_varm_all(self._file_id, self._varid, <const MPI_Offset *>startp, \
+                                        <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
+                                        <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype)
+        else:
+            with nogil:
+                ierr = ncmpi_get_varm(self._file_id, self._varid, <const MPI_Offset *>startp, \
+                                        <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
+                                        <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype)
+        _check_err(ierr)
+        return data
 
-
-    def get_var(self, index=None, start=None, count=None, stride=None, num=None):
-        if start is not None and count is not None and all(arg is None for arg in [index]):
-            if num is not None:
-                return self._get_varn(start, count, num, collective = False)
-            else:
-                if stride is not None:
-                    return self._get_vars(start, count, stride, collective = False)
-                else:
-                    return self._get_vara(start, count, collective = False)
-        elif all(arg is None for arg in [index, start, count, stride]):
+    def get_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
+        if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
             return self._get_var(collective = False)
-        elif index is not None and all(arg is None for arg in [start, count, stride]):
+        elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
             return self._get_var1(index, collective = False)
+        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
+            return self._get_vara(start, count, collective = False)
+        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
+            return self._get_vars(start, count, stride, collective = False)
+        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
+            return self._get_varn(start, count, num, collective = False)
+        elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
+            return self._get_varm(data, start, count, stride, imap, collective = False)
         else:
             raise ValueError("Invalid input arguments for get_var")
 
-    def get_var_all(self, index=None, start=None, count=None, stride=None, num=None):
-        if start is not None and count is not None and all(arg is None for arg in [index]):
-            if num is not None:
-                return self._get_varn(start, count, num, collective = True)
-            else:
-                if stride is not None:
-                    return self._get_vars(start, count, stride, collective = True)
-                else:
-                    return self._get_vara(start, count, collective = True)
-        elif all(arg is None for arg in [index, start, count, stride]):
+    def get_var_all(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
+        if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
             return self._get_var(collective = True)
-        elif index is not None and all(arg is None for arg in [start, count, stride]):
+        elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
             return self._get_var1(index, collective = True)
+        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
+            return self._get_vara(start, count, collective = True)
+        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
+            return self._get_vars(start, count, stride, collective = True)
+        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
+            return self._get_varn(start, count, num, collective = True)
+        elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
+            return self._get_varm(data, start, count, stride, imap, collective = True)
         else:
             raise ValueError("Invalid input arguments for get_var")
 

@@ -180,6 +180,10 @@ cdef extern from "pnetcdf.h":
      MPI_Offset bufcount, MPI_Datatype buftype) nogil
     int ncmpi_put_varn_all(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[], const void *buf,\
      MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_put_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_put_varm_all(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
 
     int ncmpi_get_vara(int ncid, int varid, const MPI_Offset start[],\
      const MPI_Offset count[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
@@ -199,6 +203,10 @@ cdef extern from "pnetcdf.h":
      void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
     int ncmpi_get_varn(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[],\
      void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_get_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[],\
+     const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_get_varm_all(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[],\
+     const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
 cdef extern from "numpy/arrayobject.h":
     ctypedef int npy_intp 
