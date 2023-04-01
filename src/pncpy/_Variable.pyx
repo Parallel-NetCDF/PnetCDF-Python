@@ -1726,18 +1726,54 @@ cdef class Variable:
             return request
 
     def _iput_var1(self, data, index, ignore_req_id):
+    #TODO
         return None
 
     def _iput_vara(self, start, count, ndarray data, ignore_req_id):
-        return None
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t *startp
+        cdef size_t *countp
+        cdef int request
+        ndims = len(self.dimensions)
+        startp = <size_t *>malloc(sizeof(size_t) * ndims)
+        countp = <size_t *>malloc(sizeof(size_t) * ndims)
+        for n from 0 <= n < ndims:
+            countp[n] = count[n]
+            startp[n] = start[n]
+        if not PyArray_ISCONTIGUOUS(data):
+            data = data.copy()
+        #data = data.flatten()
+        bufcount = NC_COUNT_IGNORE
+        #bufcount = data.size
+        if data.dtype.str[1:] not in _supportedtypes:
+            raise TypeError, 'illegal data type, must be one of %s, got %s' % \
+            (_supportedtypes, data.dtype.str[1:])
+        buftype = _nptompitype[data.dtype.str[1:]]
+        if ignore_req_id:
+            with nogil:
+                ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
+                                     PyArray_DATA(data), bufcount, buftype, NULL)
+            _check_err(ierr)
+            return None
+        else:
+            with nogil:
+                ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
+                                     PyArray_DATA(data), bufcount, buftype, &request)
+            _check_err(ierr)
+            return request
 
     def _iput_vars(self, start, count, stride, ndarray data, ignore_req_id):
+        #TODO
         return None
 
     def _iput_varn(self, start, count, num, ndarray data, ignore_req_id):
+        #TODO
         return None
 
     def _iput_varm(self, data, start, count, stride, imap, ignore_req_id):
+        #TODO
         return None
 
     def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, ignore_req_id=False):

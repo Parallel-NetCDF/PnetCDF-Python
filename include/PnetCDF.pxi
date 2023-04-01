@@ -216,6 +216,7 @@ cdef extern from "pnetcdf.h":
     int ncmpi_get_varm_all(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[],\
      const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
     int ncmpi_iput_var(int ncid, int varid, const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_vara(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_wait(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
     int ncmpi_wait_all(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
