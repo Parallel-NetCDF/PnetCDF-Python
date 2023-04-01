@@ -1696,3 +1696,62 @@ cdef class Variable:
             return np.squeeze(data)
         else:
             return data
+
+    def _iput_var(self, ndarray data, ignore_req_id=False):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef int request
+        if not PyArray_ISCONTIGUOUS(data):
+            data = data.copy()
+        #data = data.flatten()
+        bufcount = NC_COUNT_IGNORE
+        #bufcount = data.size
+        if data.dtype.str[1:] not in _supportedtypes:
+            raise TypeError, 'illegal data type, must be one of %s, got %s' % \
+            (_supportedtypes, data.dtype.str[1:])
+        buftype = _nptompitype[data.dtype.str[1:]]
+        #buftype = MPI_DATATYPE_NULL
+        if ignore_req_id:
+            with nogil:
+                ierr = ncmpi_iput_var(self._file_id, self._varid, \
+                                        PyArray_DATA(data), bufcount, buftype, NULL)
+            _check_err(ierr)
+            return None
+        else:
+            with nogil:
+                ierr = ncmpi_iput_var(self._file_id, self._varid, \
+                                        PyArray_DATA(data), bufcount, buftype, &request)
+            _check_err(ierr)
+            return request
+
+    def _iput_var1(self, data, index, ignore_req_id):
+        return None
+
+    def _iput_vara(self, start, count, ndarray data, ignore_req_id):
+        return None
+
+    def _iput_vars(self, start, count, stride, ndarray data, ignore_req_id):
+        return None
+
+    def _iput_varn(self, start, count, num, ndarray data, ignore_req_id):
+        return None
+
+    def _iput_varm(self, data, start, count, stride, imap, ignore_req_id):
+        return None
+
+    def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, ignore_req_id=False):
+        if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
+            return self._iput_var(data, ignore_req_id)
+        elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
+            return self._iput_var1(data, index, ignore_req_id)
+        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
+            return self._iput_vara(start, count, data, ignore_req_id)
+        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
+            return self._iput_vars(start, count, stride, data, ignore_req_id)
+        elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
+            return self._iput_varn(start, count, num, data, ignore_req_id)
+        elif all(arg is not None for arg in [data, start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
+            return self._iput_varm(data, start, count, stride, imap, ignore_req_id)
+        else:
+            raise ValueError("Invalid input arguments for iput_var")

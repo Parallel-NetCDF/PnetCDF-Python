@@ -141,6 +141,7 @@ cdef _check_err(ierr, err_cls=RuntimeError, filename=""):
             raise err_cls(err_str)
 
 
+
 cdef _set_att(file, int varid, name, value,\
               nc_type xtype=-99):
     # Private function to set an attribute name/value pair
@@ -719,3 +720,18 @@ cdef _is_int(a):
         return int(a) == a
     except:
         return False
+
+# external C functions.
+cpdef strerror(err_code):
+    cdef int ierr
+    ierr = err_code
+
+    err_str = (<char *>ncmpi_strerror(ierr)).decode('ascii')
+    return err_str
+
+cpdef strerrno(err_code):
+    cdef int ierr
+    ierr = err_code
+  
+    err_code_str = (<char *>ncmpi_strerrno(ierr)).decode('ascii')
+    return err_code_str

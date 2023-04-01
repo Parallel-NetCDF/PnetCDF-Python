@@ -15,6 +15,7 @@ cdef extern from "pnetcdf.h":
     ctypedef int nc_type
     ctypedef int MPI_Datatype
     const_char_ptr ncmpi_strerror(int err);
+    const_char_ptr ncmpi_strerrno(int err);
 
 
     cdef const int NC_BYTE_C "NC_BYTE"
@@ -107,6 +108,11 @@ cdef extern from "pnetcdf.h":
         NC_EIOMISMATCH
         NC_ENOTSUPPORT
         NC_COUNT_IGNORE
+        NC_REQ_NULL
+        NC_REQ_ALL
+        NC_GET_REQ_ALL
+        NC_PUT_REQ_ALL
+
 
         MPI_DATATYPE_NULL
         MPI_CHAR
@@ -120,6 +126,8 @@ cdef extern from "pnetcdf.h":
         MPI_UNSIGNED_LONG_LONG
         MPI_FLOAT
         MPI_DOUBLE
+
+
 
 
 
@@ -207,6 +215,9 @@ cdef extern from "pnetcdf.h":
      const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
     int ncmpi_get_varm_all(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[],\
      const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_iput_var(int ncid, int varid, const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_wait(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
+    int ncmpi_wait_all(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
 cdef extern from "numpy/arrayobject.h":
     ctypedef int npy_intp 

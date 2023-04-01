@@ -7,9 +7,10 @@ cdef _get_att_names(int file_id, int varid)
 cdef _nptonctype, _notcdf2dtypes, _nctonptype, _nptompitype, _supportedtypes, _supportedtypescdf2, default_fillvals,
 cdef _tostr(s)
 cdef _safecast(a,b)
-cdef _StartCountStride(elem, shape, dimensions=*, file=*, datashape=*,\
-        put=*)
+cdef _StartCountStride(elem, shape, dimensions=*, file=*, datashape=*, put=*)
 cdef _out_array_shape(count)
 cdef chartostring(b,encoding=*)
 cdef stringtochar(a,encoding=*)
+cpdef strerror(err_code)
+cpdef strerrno(err_code)
 
