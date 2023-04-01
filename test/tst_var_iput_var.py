@@ -45,11 +45,11 @@ class VariablesTestCase(unittest.TestCase):
         f.defineDim('x',xdim)
         f.defineDim('y',ydim)
         f.defineDim('z',zdim)
-        # define 10 netCDF variables
-        for i in range(10):
+        # define 20 netCDF variables
+        for i in range(2 * num_reqs):
             v = f.defineVar(f'data{i}', pncpy.NC_INT, ('x','y','z'))
 
-        # post 10 requests to write the whole variable 
+        # post 10 requests to write the whole variable for the first 10 variables
         f.enddef()
         req_ids = []
         for i in range(num_reqs):
@@ -59,13 +59,21 @@ class VariablesTestCase(unittest.TestCase):
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
         f.end_indep()
-        # all processes commit the first 5 requests to the file at once using wait_all (collective i/o)
+        # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num_reqs, req_ids)
         comm.Barrier()
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
+
+        # w/o tracking request id: post 10 requests to write the whole variable for the last 10 variables
+        for i in range(num_reqs, 2 * num_reqs):
+            v = f.variables[f'data{i}']
+            # post the request to write the whole variable without tracking id
+            v.iput_var(data, ignore_req_id = True)
+        # all processes commit all pending requests to the file at once using wait_all (collective i/o)
+        f.wait_all()
         f.close()
         comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
@@ -81,7 +89,7 @@ class VariablesTestCase(unittest.TestCase):
 
         f = pncpy.File(self.file_path, 'r')
         # test iput_var and collective i/o wait_all
-        for i in range(num_reqs):
+        for i in range(2 * num_reqs):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], data)
 
@@ -90,45 +98,18 @@ class VariablesTestCase(unittest.TestCase):
 
         f = pncpy.File(self.file_path, 'r')
         # test iput_var and collective i/o wait_all
-        for i in range(num_reqs):
+        for i in range(2 * num_reqs):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], data)
 
-    def test_cdf(self):
+    def test_cdf1(self):
         """testing variable iput var all for CDF-1 file format"""
 
         f = pncpy.File(self.file_path, 'r')
         # test iput_var and collective i/o wait_all
-        for i in range(num_reqs):
+        for i in range(2 * num_reqs):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], data)
-
-
-    # def test_cdf2(self):
-    #     """testing variable put var all"""
-    #     f = pncpy.File(self.file_path, 'r')
-    #     # test collective i/o put_var1
-    #     f.enddef()
-    #     v1 = f.variables['data1']
-    #     assert_array_equal(v1[:], data)
-    #     # test independent i/o put_var1
-    #     v2 = f.variables['data2']
-    #     assert_array_equal(v2[:], datarev)
-    #     f.close()
-
-    # def test_cdf1(self):
-    #     """testing variable put var all"""
-    #     f = pncpy.File(self.file_path, 'r')
-    #     # test collective i/o put_var1
-    #     f.enddef()
-    #     v1 = f.variables['data1']
-    #     assert_array_equal(v1[:], data)
-    #     # test independent i/o put_var1
-    #     v2 = f.variables['data2']
-    #     assert_array_equal(v2[:], datarev)
-    #     f.close()
-
-
 
 if __name__ == '__main__':
     unittest.main(argv=[sys.argv[0]])
