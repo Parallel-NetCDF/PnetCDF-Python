@@ -1791,3 +1791,93 @@ cdef class Variable:
             return self._iput_varm(data, start, count, stride, imap, ignore_req_id)
         else:
             raise ValueError("Invalid input arguments for iput_var")
+
+    def _iget_var(self, ignore_req_id):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef ndarray data
+        cdef int request
+        shapeout = ()
+        for dimname in self.dimensions:
+            dim = self._file.dimensions[dimname]
+            shapeout += (len(dim),)
+        data = np.empty(shapeout, self.dtype)
+        bufcount = NC_COUNT_IGNORE
+        buftype = MPI_DATATYPE_NULL
+
+        if ignore_req_id:
+            with nogil:
+                ierr = ncmpi_iget_var(self._file_id, self._varid, \
+                                    PyArray_DATA(data), bufcount, buftype, NULL)
+            _check_err(ierr)
+            return data
+        else:
+            with nogil:
+                ierr = ncmpi_iget_var(self._file_id, self._varid, \
+                                    PyArray_DATA(data), bufcount, buftype, &request)
+            _check_err(ierr)
+            return data, request
+
+
+    def _iget_var1(self, index, ignore_req_id):
+        return None
+    def _iget_vara(self, start, count, ignore_req_id):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t *startp
+        cdef size_t *countp
+        cdef ndarray data
+        cdef int request
+        ndims = len(self.dimensions)
+        startp = <size_t *>malloc(sizeof(size_t) * ndims)
+        countp = <size_t *>malloc(sizeof(size_t) * ndims)
+        for n from 0 <= n < ndims:
+            countp[n] = count[n]
+            startp[n] = start[n]
+        shapeout = ()
+        for lendim in count:
+            shapeout = shapeout + (lendim,)
+        data = np.empty(shapeout, self.dtype)
+        bufcount = NC_COUNT_IGNORE
+        buftype = MPI_DATATYPE_NULL
+        if ignore_req_id:
+            with nogil:
+                ierr = ncmpi_iget_vara(self._file_id, self._varid, \
+                                        <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
+                                        PyArray_DATA(data), bufcount, buftype, NULL)
+            _check_err(ierr)
+            return data
+        else:
+            with nogil:
+                ierr = ncmpi_iget_vara(self._file_id, self._varid, \
+                                        <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
+                                        PyArray_DATA(data), bufcount, buftype, &request)
+            _check_err(ierr)
+            return data, request
+
+    def _iget_vars(self, start, count, stride, ignore_req_id):
+        return None
+    def _iget_varn(self, start, count, num, ignore_req_id):
+        return None
+    def _iget_varm(self, data, start, count, stride, imap, ignore_req_id):
+        return None
+
+
+
+    def iget_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None, ignore_req_id=False):
+        if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
+            return self._iget_var(ignore_req_id)
+        elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
+            return self._iget_var1(index, ignore_req_id)
+        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
+            return self._iget_vara(start, count, ignore_req_id)
+        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
+            return self._iget_vars(start, count, stride, ignore_req_id)
+        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
+            return self._iget_varn(start, count, num, ignore_req_id)
+        elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
+            return self._iget_varm(data, start, count, stride, imap, ignore_req_id)
+        else:
+            raise ValueError("Invalid input arguments for get_var")
