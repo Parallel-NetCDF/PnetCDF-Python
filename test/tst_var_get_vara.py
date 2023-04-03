@@ -1,3 +1,15 @@
+# This file is part of pncpy, a Python interface to the PnetCDF library.
+#
+#
+# Copyright (C) 2023, Northwestern University
+# See COPYRIGHT notice in top-level directory
+# License:  
+
+"""
+   This example program is intended to illustrate the use of the pnetCDF python API.
+   The program runs read an array of values from a netCDF variable of an opened netCDF file 
+   using get_var method of `Variable` class. The library will internally invoke ncmpi_get_vara in C. 
+"""
 import pncpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal,\
@@ -16,10 +28,12 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 xdim=9; ydim=10; zdim=size*10
+# initial values for netCDF variable
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
-# generate reference dataframes for testing
+# generate reference numpy arrays for testing
 dataref = []
 for i in range(size):
+    # this should be the returned values of each get_var executed by each process
     dataref.append(data[3:4,:5,i*10:(i+1)*10])
 
 class VariablesTestCase(unittest.TestCase):
@@ -44,14 +58,9 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(self.file_path) == 0
 
-    def tearDown(self):
-        # Remove the temporary files
-        comm.Barrier()
-        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
-            os.remove(self.file_path)
 
     def test_cdf5(self):
-        """testing variable put var1 all"""
+        """testing variable get vara for CDF-5 file format"""
 
         f = pncpy.File(self.file_path, 'r')
         starts = np.array([3, 0, 10 * rank])
@@ -59,17 +68,21 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o get_var
         f.enddef()
         v1 = f.variables['data1u']
+        # all processes read the signed slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts)
+        # compare returned numpy array against reference array
         assert_array_equal(v1_data, dataref[rank])
         # test independent i/o get_var
         f.begin_indep()
         if rank < 2:
+            # mpi process rank 0 and rank 1 respectively read the assigned slice of the variable using independent i/o
             v1_data_indep = v1.get_var(start = starts, count = counts)
+            # compare returned numpy array against reference array
             assert_array_equal(v1_data_indep, dataref[rank])
         f.close()
 
     def test_cdf2(self):
-        """testing variable put var1 all"""
+        """testing variable get vara for CDF-2 file format"""
 
         f = pncpy.File(self.file_path, 'r')
         starts = np.array([3, 0, 10 * rank])
@@ -77,15 +90,47 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o get_var
         f.enddef()
         v1 = f.variables['data1u']
+        # all processes read the signed slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts)
+        # compare returned numpy array against reference array
         assert_array_equal(v1_data, dataref[rank])
         # test independent i/o get_var
         f.begin_indep()
         if rank < 2:
+            # mpi process rank 0 and rank 1 respectively read the assigned slice of the variable using independent i/o
             v1_data_indep = v1.get_var(start = starts, count = counts)
+            # compare returned numpy array against reference array
             assert_array_equal(v1_data_indep, dataref[rank])
         f.close()
 
+    def test_cdf1(self):
+        """testing variable get vara for CDF-1 file format"""
+
+        f = pncpy.File(self.file_path, 'r')
+        starts = np.array([3, 0, 10 * rank])
+        counts = np.array([1, 5, 10])
+        # test collective i/o get_var
+        f.enddef()
+        v1 = f.variables['data1u']
+        # all processes read the signed slices of the variable using collective i/o
+        v1_data = v1.get_var_all(start = starts, count = counts)
+        # compare returned numpy array against reference array
+        assert_array_equal(v1_data, dataref[rank])
+        # test independent i/o get_var
+        f.begin_indep()
+        if rank < 2:
+            # mpi process rank 0 and rank 1 respectively read the assigned slice of the variable using independent i/o
+            v1_data_indep = v1.get_var(start = starts, count = counts)
+            # compare returned numpy array against reference array
+            assert_array_equal(v1_data_indep, dataref[rank])
+        f.close()
+
+
+    def tearDown(self):
+        # remove the temporary files if test file directory is not specified
+        comm.Barrier()
+        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
+            os.remove(self.file_path)
 
 
 if __name__ == '__main__':

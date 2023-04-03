@@ -7,9 +7,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to read an array of values to a variable 
-   from a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The 
-   library will internally invoke ncmpi_igett_vara in C. 
+   The program runs in non-blocking mode and makes a request to read an array of values 
+   from a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The 
+   library will internally invoke ncmpi_iget_vara in C. 
 """
 import pncpy
 from numpy.random import seed, randint

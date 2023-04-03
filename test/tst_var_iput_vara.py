@@ -22,15 +22,18 @@ from pncpy import strerror, strerrno
 from utils import validate_nc_file
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]# Test CDF-1 format as well
+data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_iput_vara.nc"
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 xdim=9; ydim=10; zdim=size*10
+# initial values for netCDF variable
 data = np.zeros((xdim,ydim,zdim)).astype('i4')
+# new array that will be written using iput_var (overwriting some parts of initial values)
 datam = randint(0,10, size=(1,5,10)).astype('i4')
+# reference array for comparison in the testing phase
 datares1, datares2 = data.copy(), data.copy()
 
 for i in range(size):
