@@ -29,9 +29,9 @@ ctypedef MPI.Comm Comm
 ctypedef MPI.Info Info
 
 cdef class File:
-    def __init__(self, filename, mode="w", format=None, clobber=True, Comm comm=None, Info info=None, **kwargs):
+    def __init__(self, filename, mode="w", format=None, Comm comm=None, Info info=None, **kwargs):
         """
-        **`__init__(self, filename, format='64BIT_OFFSET', clobber=True, mode="w", Comm comm=None, Info info=None, **kwargs)`**
+        **`__init__(self, filename, format='64BIT_OFFSET', mode="w", Comm comm=None, Info info=None, **kwargs)`**
 
         `File` constructor.
 
@@ -44,11 +44,6 @@ cdef class File:
         an existing file is opened for reading and writing, if
         file does not exist already, one is created.
 
-
-        **`clobber`**: if `True` (default), opening a file with `mode='w'`
-        will clobber an existing file with the same name.  if `False`, an
-        exception will be raised if a file with the same name already exists.
-        mode=`x` is identical to mode=`w` with clobber=False.
 
         **`format`**: underlying file format (one of `'64BIT_OFFSET'` or
         `'64BIT_DATA'`.
@@ -73,7 +68,8 @@ cdef class File:
             if format not in supported_formats:
                 msg="underlying file format must be one of `'64BIT_OFFSET'` or `'64BIT_DATA'`"
                 raise ValueError(msg)
-
+        
+        clobber = True
         # mode='x' is the same as mode='w' with clobber=False
         if mode == 'x':
             mode = 'w'
