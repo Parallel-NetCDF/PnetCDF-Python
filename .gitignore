@@ -1,0 +1,45 @@
+# Vi(m) temporary buffer files
+*.sw?
+
+# Emacs temporary files
+*~
+
+# Eclipse
+.cproject
+.project
+.settings/
+.pydevproject
+
+# vscode
+.vscode/
+
+# venv
+venv/
+env/
+
+# PyCharm
+.idea/
+
+# Mac OSX finder-related files
+.DS_Store
+
+#binary, library, or temporary files
+*.o
+*.a
+*.so
+*.tmp
+*.exe
+*.out
+*.pyc
+*.nc
+*.json
+*/pncpy/*.c
+core.*
+build/
+
+# egg
+*.eggs/
+*.egg-info/
+
+# dist
+dist/
