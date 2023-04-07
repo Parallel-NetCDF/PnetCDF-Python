@@ -83,7 +83,7 @@ class VariablesTestCase(unittest.TestCase):
          # post 10 requests to read for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):        
             v = f.variables[f'data{i}']
-            v_data= v.iget_var(ignore_req_id = True)
+            v_data, _ = v.iget_var()
             # store the reference of variable values
             v_datas.append(v_data)
 

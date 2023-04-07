@@ -1697,7 +1697,7 @@ cdef class Variable:
         else:
             return data
 
-    def _iput_var(self, ndarray data, ignore_req_id=False):
+    def _iput_var(self, ndarray data):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1712,24 +1712,17 @@ cdef class Variable:
             (_supportedtypes, data.dtype.str[1:])
         buftype = _nptompitype[data.dtype.str[1:]]
         #buftype = MPI_DATATYPE_NULL
-        if ignore_req_id:
-            with nogil:
-                ierr = ncmpi_iput_var(self._file_id, self._varid, \
-                                        PyArray_DATA(data), bufcount, buftype, NULL)
-            _check_err(ierr)
-            return None
-        else:
-            with nogil:
-                ierr = ncmpi_iput_var(self._file_id, self._varid, \
-                                        PyArray_DATA(data), bufcount, buftype, &request)
-            _check_err(ierr)
-            return request
+        with nogil:
+            ierr = ncmpi_iput_var(self._file_id, self._varid, \
+                                    PyArray_DATA(data), bufcount, buftype, &request)
+        _check_err(ierr)
+        return request
 
-    def _iput_var1(self, data, index, ignore_req_id):
+    def _iput_var1(self, data, index):
     #TODO
         return None
 
-    def _iput_vara(self, start, count, ndarray data, ignore_req_id):
+    def _iput_vara(self, start, count, ndarray data):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1751,48 +1744,41 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         buftype = _nptompitype[data.dtype.str[1:]]
-        if ignore_req_id:
-            with nogil:
-                ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                     PyArray_DATA(data), bufcount, buftype, NULL)
-            _check_err(ierr)
-            return None
-        else:
-            with nogil:
-                ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                     PyArray_DATA(data), bufcount, buftype, &request)
-            _check_err(ierr)
-            return request
+        with nogil:
+            ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
+                                    PyArray_DATA(data), bufcount, buftype, &request)
+        _check_err(ierr)
+        return request
 
-    def _iput_vars(self, start, count, stride, ndarray data, ignore_req_id):
+    def _iput_vars(self, start, count, stride, ndarray data):
         #TODO
         return None
 
-    def _iput_varn(self, start, count, num, ndarray data, ignore_req_id):
+    def _iput_varn(self, start, count, num, ndarray data):
         #TODO
         return None
 
-    def _iput_varm(self, data, start, count, stride, imap, ignore_req_id):
+    def _iput_varm(self, data, start, count, stride, imap):
         #TODO
         return None
 
-    def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, ignore_req_id=False):
+    def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
-            return self._iput_var(data, ignore_req_id)
+            return self._iput_var(data)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
-            return self._iput_var1(data, index, ignore_req_id)
+            return self._iput_var1(data, index)
         elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
-            return self._iput_vara(start, count, data, ignore_req_id)
+            return self._iput_vara(start, count, data)
         elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
-            return self._iput_vars(start, count, stride, data, ignore_req_id)
+            return self._iput_vars(start, count, stride, data)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
-            return self._iput_varn(start, count, num, data, ignore_req_id)
+            return self._iput_varn(start, count, num, data)
         elif all(arg is not None for arg in [data, start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._iput_varm(data, start, count, stride, imap, ignore_req_id)
+            return self._iput_varm(data, start, count, stride, imap)
         else:
             raise ValueError("Invalid input arguments for iput_var")
 
-    def _iget_var(self, ignore_req_id):
+    def _iget_var(self):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1805,24 +1791,16 @@ cdef class Variable:
         data = np.empty(shapeout, self.dtype)
         bufcount = NC_COUNT_IGNORE
         buftype = MPI_DATATYPE_NULL
-
-        if ignore_req_id:
-            with nogil:
-                ierr = ncmpi_iget_var(self._file_id, self._varid, \
-                                    PyArray_DATA(data), bufcount, buftype, NULL)
-            _check_err(ierr)
-            return data
-        else:
-            with nogil:
-                ierr = ncmpi_iget_var(self._file_id, self._varid, \
-                                    PyArray_DATA(data), bufcount, buftype, &request)
-            _check_err(ierr)
-            return data, request
+        with nogil:
+            ierr = ncmpi_iget_var(self._file_id, self._varid, \
+                                PyArray_DATA(data), bufcount, buftype, &request)
+        _check_err(ierr)
+        return data, request
 
 
-    def _iget_var1(self, index, ignore_req_id):
+    def _iget_var1(self, index):
         return None
-    def _iget_vara(self, start, count, ignore_req_id):
+    def _iget_vara(self, start, count):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1842,42 +1820,34 @@ cdef class Variable:
         data = np.empty(shapeout, self.dtype)
         bufcount = NC_COUNT_IGNORE
         buftype = MPI_DATATYPE_NULL
-        if ignore_req_id:
-            with nogil:
-                ierr = ncmpi_iget_vara(self._file_id, self._varid, \
-                                        <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        PyArray_DATA(data), bufcount, buftype, NULL)
-            _check_err(ierr)
-            return data
-        else:
-            with nogil:
-                ierr = ncmpi_iget_vara(self._file_id, self._varid, \
-                                        <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        PyArray_DATA(data), bufcount, buftype, &request)
-            _check_err(ierr)
-            return data, request
+        with nogil:
+            ierr = ncmpi_iget_vara(self._file_id, self._varid, \
+                                    <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
+                                    PyArray_DATA(data), bufcount, buftype, &request)
+        _check_err(ierr)
+        return data, request
 
-    def _iget_vars(self, start, count, stride, ignore_req_id):
+    def _iget_vars(self, start, count, stride):
         return None
-    def _iget_varn(self, start, count, num, ignore_req_id):
+    def _iget_varn(self, start, count, num):
         return None
-    def _iget_varm(self, data, start, count, stride, imap, ignore_req_id):
+    def _iget_varm(self, data, start, count, stride, imap):
         return None
 
 
 
-    def iget_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None, ignore_req_id=False):
+    def iget_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
         if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
-            return self._iget_var(ignore_req_id)
+            return self._iget_var()
         elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
-            return self._iget_var1(index, ignore_req_id)
+            return self._iget_var1(index)
         elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
-            return self._iget_vara(start, count, ignore_req_id)
+            return self._iget_vara(start, count)
         elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
-            return self._iget_vars(start, count, stride, ignore_req_id)
+            return self._iget_vars(start, count, stride)
         elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
-            return self._iget_varn(start, count, num, ignore_req_id)
+            return self._iget_varn(start, count, num)
         elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._iget_varm(data, start, count, stride, imap, ignore_req_id)
+            return self._iget_varm(data, start, count, stride, imap)
         else:
             raise ValueError("Invalid input arguments for get_var")

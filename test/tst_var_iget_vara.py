@@ -94,7 +94,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
-            v.iget_var(start = starts, count = counts)
+            v_data, _ = v.iget_var(start = starts, count = counts)
             # store the reference of variable values
             v_datas.append(v_data)
         

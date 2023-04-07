@@ -60,8 +60,9 @@ class VariablesTestCase(unittest.TestCase):
             req_ids.append(req_id)
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num_reqs, req_ids)
-        comm.Barrier()
+        req_errs = f.wait_all(num_reqs, req_ids)# user might don't care about the error statuses of all reqs
+        # ierr = f.wait_all(num_reqs, req_ids, req_err_arrys)
+        # comm.Barrier()
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
@@ -71,11 +72,11 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs, 2 * num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write the whole variable without tracking id
-            v.iput_var(data, ignore_req_id = True)
+            v.iput_var(data)
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all()
+        f.wait_all()# avoid string inputs as much as possible
         f.close()
-        comm.Barrier()
+        # comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):
