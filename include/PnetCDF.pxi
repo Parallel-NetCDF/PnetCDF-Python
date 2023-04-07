@@ -30,6 +30,11 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_UINT_C "NC_UINT"
     cdef const int NC_INT64_C "NC_INT64"
     cdef const int NC_UINT64_C "NC_UINT64"
+
+    cdef const int NC_REQ_ALL_C "NC_REQ_ALL"
+    cdef const int NC_GET_REQ_ALL_C "NC_GET_REQ_ALL"
+    cdef const int NC_PUT_REQ_ALL_C "NC_PUT_REQ_ALL"
+
     cdef enum:
     # TODO: Fix redeclaration warnings
         NC_NAT # NAT = 'Not A Type' (c.f. NaN)
@@ -109,9 +114,6 @@ cdef extern from "pnetcdf.h":
         NC_ENOTSUPPORT
         NC_COUNT_IGNORE
         NC_REQ_NULL
-        NC_REQ_ALL
-        NC_GET_REQ_ALL
-        NC_PUT_REQ_ALL
 
 
         MPI_DATATYPE_NULL

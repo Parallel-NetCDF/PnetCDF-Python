@@ -409,28 +409,10 @@ cdef class File:
         cdef int *requestp
         cdef int *statusp
         _file_id = self._ncid
-
-        if isinstance(num, int):
-            requestp = <int *>malloc(sizeof(int) * num)
-            statusp = <int *>malloc(sizeof(int) * num)
-            for n from 0 <= n < num:
-                requestp[n] = requests[n]
+        if num is None:
+            num = NC_REQ_ALL_C
+        if num in [NC_REQ_ALL_C, NC_PUT_REQ_ALL_C, NC_GET_REQ_ALL_C]:
             num_req = num
-            if not collective:
-                with nogil:
-                    ierr = ncmpi_wait(_file_id, num_req, requestp, statusp)
-            else:
-                with nogil:
-                    ierr = ncmpi_wait_all(_file_id, num_req, requestp, statusp)
-            status = [statusp[i] for i in range(num)]
-            return status
-        else:
-            if num is None or num == "REQ_ALL":
-                num_req = NC_REQ_ALL
-            elif num == "GET_REQ_ALL":
-                num_req = NC_GET_REQ_ALL
-            elif num == "PUT_REQ_ALL":
-                num_req = NC_PUT_REQ_ALL
             if not collective:
                 with nogil:
                     ierr = ncmpi_wait(_file_id, num_req, NULL, NULL)
@@ -439,6 +421,22 @@ cdef class File:
                     ierr = ncmpi_wait_all(_file_id, num_req, NULL, NULL)
             _check_err(ierr)
             return None
+        else:
+            requestp = <int *>malloc(sizeof(int) * num)
+            statusp = <int *>malloc(sizeof(int) * num)
+            num_req = num
+            for n from 0 <= n < num:
+                requestp[n] = requests[n]
+            if not collective:
+                with nogil:
+                    ierr = ncmpi_wait(_file_id, num_req, requestp, statusp)
+            else:
+                with nogil:
+                    ierr = ncmpi_wait_all(_file_id, num_req, requestp, statusp)
+            status = [statusp[i] for i in range(num)]
+            return status
+
+
 
     def wait(self, num=None, requests=None):
         return self._wait(num, requests, collective=False)

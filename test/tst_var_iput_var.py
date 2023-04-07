@@ -61,7 +61,6 @@ class VariablesTestCase(unittest.TestCase):
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num_reqs, req_ids)# user might don't care about the error statuses of all reqs
-        # ierr = f.wait_all(num_reqs, req_ids, req_err_arrys)
         # comm.Barrier()
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
@@ -74,7 +73,7 @@ class VariablesTestCase(unittest.TestCase):
             # post the request to write the whole variable without tracking id
             v.iput_var(data)
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all()# avoid string inputs as much as possible
+        f.wait_all(num = pncpy.NC_PUT_REQ_ALL)# avoid string inputs as much as possible
         f.close()
         # comm.Barrier()
         assert validate_nc_file(self.file_path) == 0

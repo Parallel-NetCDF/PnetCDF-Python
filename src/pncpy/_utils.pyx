@@ -115,6 +115,9 @@ NC_UINT64 = NC_UINT64_C
 NC_FLOAT = NC_FLOAT_C
 NC_DOUBLE = NC_DOUBLE_C
 
+NC_REQ_ALL = NC_REQ_ALL_C
+NC_GET_REQ_ALL = NC_GET_REQ_ALL_C
+NC_PUT_REQ_ALL = NC_PUT_REQ_ALL_C
 
 # internal C functions.
 cdef _strencode(pystr,encoding=""):
