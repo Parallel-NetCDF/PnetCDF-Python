@@ -8,13 +8,26 @@ Welcome to PnetCDF Python's documentation!
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Introduction
+
+   introduction/overview
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Installation
+
+   installation/install
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Development
+
+   development/compatibility
 
 
+.. Indices and tables
+.. ==================
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`
