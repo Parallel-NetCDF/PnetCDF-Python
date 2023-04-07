@@ -19,4 +19,7 @@ end
 foreach test_file (`ls tst_*.py`)
   echo "Running unittest program with mpiexec (4 processes): $test_file"
   mpiexec -n 4 python3 $test_file $OUT_DIR 
+  if ($status != 0) then
+    exit 1
+endif
 end
