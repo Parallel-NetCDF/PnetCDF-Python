@@ -7,7 +7,7 @@ We provide two ways to access/generate the user guide.
 Generate User Guide Online
 ===========================
 
-Access the user guide at https://github.com/yzanhua/pnetcdf-python
+Access the user guide at https://yzanhua.github.io/pncpy-doc/index.html
 
 Generate User Guide in HTML
 ===========================
