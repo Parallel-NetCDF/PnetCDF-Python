@@ -92,9 +92,8 @@ class VariablesTestCase(unittest.TestCase):
             v.iput_var(datam, start = starts, count = counts)
         
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all()
+        f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         f.close()
-        comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):

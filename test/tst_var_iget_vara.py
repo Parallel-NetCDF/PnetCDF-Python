@@ -98,8 +98,8 @@ class VariablesTestCase(unittest.TestCase):
             # store the reference of variable values
             v_datas.append(buff)
         
-        # commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all()
+        # commit all pending get requests to the file at once using wait_all (collective i/o)
+        req_errs = f.wait_all(num = pncpy.NC_GET_REQ_ALL)
         f.close()
         assert validate_nc_file(self.file_path) == 0
     

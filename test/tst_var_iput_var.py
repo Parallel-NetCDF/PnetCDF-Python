@@ -72,10 +72,9 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write the whole variable without tracking id
             v.iput_var(data)
-        # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all(num = pncpy.NC_PUT_REQ_ALL)# avoid string inputs as much as possible
+        # all processes commit all pending put requests to the file at once using wait_all (collective i/o)
+        f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         f.close()
-        # comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):
