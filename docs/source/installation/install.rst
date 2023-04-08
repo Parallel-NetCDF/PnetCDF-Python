@@ -1,5 +1,5 @@
 ============================================
-PnetCDF-python - Install Instructions
+Install from Source
 ============================================
 
 Software Requirements

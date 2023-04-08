@@ -1,5 +1,5 @@
 =============================================
-The PnetCDF-python API Compatibility with C
+Compatibility with C
 =============================================
 
 The Following table contains list of PnetCDF-python's compatibility with PnetCDF-C APIs.

@@ -31,24 +31,34 @@ ctypedef MPI.Info Info
 cdef class File:
     def __init__(self, filename, mode="w", format=None, Comm comm=None, Info info=None, **kwargs):
         """
-        **`__init__(self, filename, format='64BIT_OFFSET', mode="w", Comm comm=None, Info info=None, **kwargs)`**
+        __init__(self, filename, format='64BIT_OFFSET', mode="w", Comm comm=None, Info info=None, **kwargs)
 
-        `File` constructor.
+        The constructor for :class:`pncpy.File`.
 
-        **`filename`**: Name of PnetCDF file to hold dataset.
+        :param filename: Name of the new file.
+        :type filename: str
 
-        **`mode`**: access mode. `r` means read-only; no data can be
-        modified. `w` means write; a new file is created, an existing file with
-        the same name is deleted. `x` means write, but fail if an existing
-        file with the same name already exists. `a` and `r+` mean append;
-        an existing file is opened for reading and writing, if
-        file does not exist already, one is created.
+        :param mode: Access mode.
 
+            - ``r``: Opens a file for reading, error if the file does not exist.
+            - ``w``: Opens a file for writing, creates the file if it does not exist.
+            - ``x``: Creates the file, returns an error if the file exists.
+            -  ``a`` and ``r+``: append, creates the file if it does not exist.
+        
+        :type mode: str
 
-        **`format`**: underlying file format (one of `'64BIT_OFFSET'` or
-        `'64BIT_DATA'`.
-        Only relevant if `mode = 'w'` (if `mode = 'r','a'` or `'r+'` the file format
-        is automatically detected).
+        :param format: underlying file format. Only relevant if ``mode`` is ``w`` or ``x``.
+
+            - ``64BIT_OFFSET``: NetCDF-2 format.
+            - ``64BIT_DATA``: NetCDF-5 format.
+
+        :type format: str
+
+        :param comm: MPI communicator to use for file access. `None` defaults to MPI_COMM_WORLD.
+        :type comm: mpi4py.MPI.Comm or None
+
+        :param info: MPI info object to use for file access. `None` defaults to MPI_INFO_NULL.
+        :type info: mpi4py.MPI.Info or None
         """
         cdef int ncid
         encoding = sys.getfilesystemencoding()
@@ -224,55 +234,63 @@ cdef class File:
         return self.dimensions[dimname]
     
     def defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None):
-
         """
-        **`defineVar(self, varname, datatype, dimensions=(), least_significant_digit=None,
-        significant_digits=None, fill_value=None)`**
+        defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None)
 
-        Creates a new variable with the given `varname`, `datatype`, and
-        `dimensions`. If dimensions are not given, the variable is assumed to be
-        a scalar.
+        Create a new variable with the given parameters.
 
-        The `datatype` can be a numpy datatype object, or a string that describes
-        a numpy dtype object (like the `dtype.str` attribute of a numpy array).
-        Supported specifiers include: `'S1' or 'c' (NC_CHAR), 'i1' or 'b' or 'B'
-        (NC_BYTE), 'u1' (NC_UBYTE), 'i2' or 'h' or 's' (NC_SHORT), 'u2'
-        (NC_USHORT), 'i4' or 'i' or 'l' (NC_INT), 'u4' (NC_UINT), 'i8' (NC_INT64),
-        'u8' (NC_UINT64), 'f4' or 'f' (NC_FLOAT), 'f8' or 'd' (NC_DOUBLE)`.
-        Data from netCDF variables is presented to python as numpy arrays with
-        the corresponding data type.
+        :param varname: Name of the new variable.
+        :type varname: str
 
-        `dimensions` must be a tuple containing `Dimension` instances and/or
-        dimension names (strings) that have been defined
-        previously using `Dataset.defineDim`. The default value
-        is an empty tuple, which means the variable is a scalar.
+        :param nc_dtype: The datatype of the new variable. Supported string specifiers are: 
 
-        The optional keyword `fill_value` can be used to override the default
-        netCDF `_FillValue` (the value that the variable gets filled with before
-        any data is written to it, defaults given in the dict `netCDF4.default_fillvals`).
-        If fill_value is set to `False`, then the variable is not pre-filled.
+            - ``S1`` or ``c`` for NC_CHAR
+            - ``i1`` or ``b`` or ``B`` for NC_BYTE
+            - ``u1`` for NC_UBYTE
+            - ``i2`` or ``h`` or ``s`` for NC_SHORT
+            - ``u2`` for NC_USHORT
+            - ``i4`` or ``i`` or ``l`` for NC_INT
+            - ``u4`` for NC_UINT
+            - ``i8`` for NC_INT64
+            - ``u8`` for NC_UINT64
+            - ``f4`` or ``f`` for NC_FLOAT
+            - ``f8`` or ``d`` for NC_DOUBLE
+        :type nc_dtype: str or numpy.dtype
 
-        The return value is the `Variable` class instance describing the new
-        variable.
+        :param dimensions: The dimensions of the new variable. Empty tuple suggests a scalar.
 
-        A list of names corresponding to netCDF variable attributes can be
-        obtained with the `Variable` method `Variable.ncattrs`. A dictionary
-        containing all the netCDF attribute name/value pairs is provided by
-        the `__dict__` attribute of a `Variable` instance.
+        :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
+        
+        :param fill_value: The fill value of the new variable. Accepted values are:
 
-        `Variable` instances behave much like array objects. Data can be
-        assigned to or retrieved from a variable with indexing and slicing
-        operations on the `Variable` instance. A `Variable` instance has six
-        Dataset standard attributes: `dimensions, dtype, shape, ndim, name`. 
-        Application programs should never modify these attributes. The `dimensions`
-            attribute is a tuple containing the
-        names of the dimensions associated with this variable. The `dtype`
-        attribute is a string describing the variable's data type (`i4, f8,
-        S1,` etc). The `shape` attribute is a tuple describing the current
-        sizes of all the variable's dimensions. The `name` attribute is a
-        string containing the name of the Variable instance. The `ndim` attribute
-        is the number of variable dimensions.
+            - ``None``: use the default fill value for the given datatype
+            - ``False``: fill mode is turned off
+            - any other value: use the given value as fill value
+
+        :return: The created variable.
+        :rtype: :class:`pncpy.Variable`
         """
+
+        # the following should be added to explaination of variable class.
+        # # A list of names corresponding to netCDF variable attributes can be
+        # # obtained with the `Variable` method `Variable.ncattrs`. A dictionary
+        # # containing all the netCDF attribute name/value pairs is provided by
+        # # the `__dict__` attribute of a `Variable` instance.
+
+        # # `Variable` instances behave much like array objects. Data can be
+        # # assigned to or retrieved from a variable with indexing and slicing
+        # # operations on the `Variable` instance. A `Variable` instance has six
+        # # Dataset standard attributes: `dimensions, dtype, shape, ndim, name`. 
+        # # Application programs should never modify these attributes. The `dimensions`
+        # #     attribute is a tuple containing the
+        # # names of the dimensions associated with this variable. The `dtype`
+        # # attribute is a string describing the variable's data type (`i4, f8,
+        # # S1,` etc). The `shape` attribute is a tuple describing the current
+        # # sizes of all the variable's dimensions. The `name` attribute is a
+        # # string containing the name of the Variable instance. The `ndim` attribute
+        # # is the number of variable dimensions.
+        # # """
+
         # if dimensions is a single string or Dimension instance,
         # convert to a tuple.
         # This prevents a common error that occurs when

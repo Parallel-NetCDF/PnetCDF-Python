@@ -20,6 +20,15 @@ Welcome to PnetCDF Python's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :caption: API Documentation
+
+   api/file_api
+   api/attribute_api
+   api/dimension_api
+   api/variable_api
+
+.. toctree::
+   :maxdepth: 2
    :caption: Development
 
    development/compatibility
