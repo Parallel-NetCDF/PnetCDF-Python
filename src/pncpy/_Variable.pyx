@@ -1778,35 +1778,27 @@ cdef class Variable:
         else:
             raise ValueError("Invalid input arguments for iput_var")
 
-    def _iget_var(self):
+    def _iget_var(self, ndarray data):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
-        cdef ndarray data
         cdef int request
-        shapeout = ()
-        for dimname in self.dimensions:
-            dim = self._file.dimensions[dimname]
-            shapeout += (len(dim),)
-        data = np.empty(shapeout, self.dtype)
         bufcount = NC_COUNT_IGNORE
         buftype = MPI_DATATYPE_NULL
         with nogil:
-            ierr = ncmpi_iget_var(self._file_id, self._varid, \
-                                PyArray_DATA(data), bufcount, buftype, &request)
+            ierr = ncmpi_iget_var(self._file_id, self._varid, PyArray_DATA(data), bufcount, buftype, &request)
         _check_err(ierr)
-        return data, request
+        return request
 
 
     def _iget_var1(self, index):
         return None
-    def _iget_vara(self, start, count):
+    def _iget_vara(self, ndarray data, start, count):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
         cdef size_t *startp
         cdef size_t *countp
-        cdef ndarray data
         cdef int request
         ndims = len(self.dimensions)
         startp = <size_t *>malloc(sizeof(size_t) * ndims)
@@ -1814,10 +1806,6 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-        shapeout = ()
-        for lendim in count:
-            shapeout = shapeout + (lendim,)
-        data = np.empty(shapeout, self.dtype)
         bufcount = NC_COUNT_IGNORE
         buftype = MPI_DATATYPE_NULL
         with nogil:
@@ -1825,7 +1813,7 @@ cdef class Variable:
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
                                     PyArray_DATA(data), bufcount, buftype, &request)
         _check_err(ierr)
-        return data, request
+        return request
 
     def _iget_vars(self, start, count, stride):
         return None
@@ -1833,21 +1821,18 @@ cdef class Variable:
         return None
     def _iget_varm(self, data, start, count, stride, imap):
         return None
-
-
-
-    def iget_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
-        if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
-            return self._iget_var()
-        elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
-            return self._iget_var1(index)
-        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
-            return self._iget_vara(start, count)
-        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
-            return self._iget_vars(start, count, stride)
-        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
-            return self._iget_varn(start, count, num)
-        elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._iget_varm(data, start, count, stride, imap)
+    def iget_var(self, buff=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
+        if buff is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
+            return self._iget_var(buff)
+        elif all(arg is not None for arg in [buff, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
+            return self._iget_var1(buff, index)
+        elif all(arg is not None for arg in [buff, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
+            return self._iget_vara(buff, start, count)
+        elif all(arg is not None for arg in [buff, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
+            return self._iget_vars(buff, start, count, stride)
+        elif all(arg is not None for arg in [buff, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
+            return self._iget_varn(buff, start, count, num)
+        elif all(arg is not None for arg in [buff, start, count, stride, imap]) and all(arg is None for arg in [index, num]):
+            return self._iget_varm(buff, start, count, stride, imap)
         else:
-            raise ValueError("Invalid input arguments for get_var")
+            raise ValueError("Invalid input arguments for iget_var")

@@ -65,14 +65,16 @@ class VariablesTestCase(unittest.TestCase):
         f = pncpy.File(self.file_path, 'r')
         # post 10 read requests to read the whole variable for the first 10 netCDF variables and track req ids
         req_ids = []
+        # reinialize the list of returned array references
         v_datas.clear()
         for i in range(num_reqs):        
             v = f.variables[f'data{i}']
-            v_data, req_id = v.iget_var()
+            buff = np.empty(shape = v.shape, dtype = v.datatype)# empty numpy array to hold returned variable values
+            req_id = v.iget_var(buff)
             # track the reqeust ID for each read reqeust 
             req_ids.append(req_id)
             # store the reference of variable values
-            v_datas.append(v_data)
+            v_datas.append(buff)
         # commit those 10 recorded requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num_reqs, req_ids)
         # check request error msg for each unsuccessful requests
@@ -83,12 +85,13 @@ class VariablesTestCase(unittest.TestCase):
          # post 10 requests to read for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):        
             v = f.variables[f'data{i}']
-            v_data, _ = v.iget_var()
+            buff = np.empty(shape = v.shape, dtype = v.datatype)
+            v.iget_var(buff)
             # store the reference of variable values
-            v_datas.append(v_data)
+            v_datas.append(buff)
 
         # commit all pending requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all()
+        req_errs = f.wait_all(num = pncpy.NC_REQ_ALL)
         f.close()
 
 
@@ -122,3 +125,6 @@ class VariablesTestCase(unittest.TestCase):
     
 if __name__ == '__main__':
     unittest.main(argv=[sys.argv[0]])
+
+
+

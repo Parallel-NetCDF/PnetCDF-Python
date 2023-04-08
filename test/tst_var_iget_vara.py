@@ -53,8 +53,6 @@ class VariablesTestCase(unittest.TestCase):
         f.defineDim('y',ydim)
         f.defineDim('z',zdim)
 
-
-
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.defineVar(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
@@ -76,12 +74,13 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1, 5, 10])
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
+            buff = np.empty(shape = counts, dtype = v.datatype)
             # post the request to read one part of the variable
-            v_data, req_id = v.iget_var(start = starts, count = counts)
+            req_id = v.iget_var(buff, start = starts, count = counts)
             # track the reqeust ID for each read reqeust 
             req_ids.append(req_id)
             # store the reference of variable values
-            v_datas.append(v_data)
+            v_datas.append(buff)
         f.end_indep()
         # commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num_reqs, req_ids)
@@ -93,15 +92,15 @@ class VariablesTestCase(unittest.TestCase):
          # post 10 requests to read an arrays of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
+            buff = np.empty(shape = counts, dtype = v.datatype)
             # post the request to write an array of values
-            v_data, _ = v.iget_var(start = starts, count = counts)
+            v.iget_var(buff, start = starts, count = counts)
             # store the reference of variable values
-            v_datas.append(v_data)
+            v_datas.append(buff)
         
         # commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all()
         f.close()
-        comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):
