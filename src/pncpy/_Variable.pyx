@@ -1833,13 +1833,33 @@ cdef class Variable:
         bufcount = NC_COUNT_IGNORE
         buftype = MPI_DATATYPE_NULL
         with nogil:
-            ierr = ncmpi_iget_var(self._file_id, self._varid, PyArray_DATA(data), bufcount, buftype, &request)
+            ierr = ncmpi_iget_var(self._file_id, self._varid, PyArray_DATA(data), \
+            bufcount, buftype, &request)
         _check_err(ierr)
         return request
 
 
-    def _iget_var1(self, index):
-        return None
+    def _iget_var1(self, ndarray buff, index):
+        cdef int ierr, ndims
+        cdef size_t *indexp
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef int request
+        ndim_index = len(index)
+        indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
+        bufcount = NC_COUNT_IGNORE
+        for i, val in enumerate(index):
+            indexp[i] = val
+        buftype = MPI_DATATYPE_NULL
+        with nogil:
+            ierr = ncmpi_iget_var1(self._file_id, self._varid, \
+                                <const MPI_Offset *>indexp, PyArray_DATA(buff), bufcount,\
+                                buftype, &request)
+        _check_err(ierr)
+        free(indexp)
+        return buff
+
+
     def _iget_vara(self, ndarray data, start, count):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
@@ -1862,8 +1882,30 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iget_vars(self, start, count, stride):
-        return None
+    def _iget_vars(self, ndarray buff, start, count, stride):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t *startp
+        cdef size_t *countp
+        cdef ptrdiff_t *stridep
+        cdef int request
+        ndims = len(self.dimensions)
+        startp = <size_t *>malloc(sizeof(size_t) * ndims)
+        countp = <size_t *>malloc(sizeof(size_t) * ndims)
+        stridep = <ptrdiff_t *>malloc(sizeof(ptrdiff_t) * ndims)
+        for n from 0 <= n < ndims:
+            countp[n] = count[n]
+            startp[n] = start[n]
+            stridep[n] = stride[n]
+        bufcount = NC_COUNT_IGNORE
+        buftype = MPI_DATATYPE_NULL
+        with nogil:
+            ierr = ncmpi_iget_vars(self._file_id, self._varid, \
+                                    <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
+                                    <const MPI_Offset *>stridep, PyArray_DATA(buff), bufcount, buftype, &request)
+        _check_err(ierr)
+        return request
     def _iget_varn(self, start, count, num):
         return None
     def _iget_varm(self, data, start, count, stride, imap):

@@ -6,10 +6,10 @@
 # License:  
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to read an array of values 
+   This example program is intended to illustrate the use of the pnetCDF python API.The 
+   program runs in non-blocking mode and makes a request to read an subsampled array of values 
    from a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iget_vara in C. 
+   library will internally invoke ncmpi_iget_vars in C. 
 """
 import pncpy
 from numpy.random import seed, randint
@@ -23,7 +23,7 @@ from utils import validate_nc_file
 
 seed(0)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
-file_name = "tst_var_iget_vara.nc"
+file_name = "tst_var_iget_vars.nc"
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -34,7 +34,7 @@ data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
 # generate reference dataframes for testing
 dataref = []
 for i in range(size):
-    dataref.append(data[3:4,:5,i*10:(i+1)*10])
+    dataref.append(data[3:4:1,0:6:2,i*10:(i+1)*10:2])
 num_reqs = 10
 # initialize a list to store references of variable values 
 v_datas = []
@@ -67,16 +67,17 @@ class VariablesTestCase(unittest.TestCase):
 
 
         f = pncpy.File(self.file_path, 'r')
-        # each process post 10 requests to read an array of values
+        # each process post 10 requests to read an subsampled array of values
         req_ids = []
         v_datas.clear()
-        starts = np.array([3, 0, 10 * rank])
-        counts = np.array([1, 5, 10])
+        starts = np.array([3,0,10*rank])
+        counts = np.array([1,3,5])
+        strides = np.array([1,2,2])
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = counts, dtype = v.datatype)
             # post the request to read one part of the variable
-            req_id = v.iget_var(buff, start = starts, count = counts)
+            req_id = v.iget_var(buff, start = starts, count = counts, stride = strides)
             # track the reqeust ID for each read reqeust 
             req_ids.append(req_id)
             # store the reference of variable values
@@ -89,12 +90,12 @@ class VariablesTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         
-         # post 10 requests to read an arrays of values for the last 10 variables w/o tracking req ids
+         # post 10 requests to read a subsampled array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = counts, dtype = v.datatype)
-            # post the request to read an array of values
-            v.iget_var(buff, start = starts, count = counts)
+            # post the request to read an subsampled array of values
+            v.iget_var(buff, start = starts, count = counts, stride = strides)
             # store the reference of variable values
             v_datas.append(buff)
         
@@ -110,20 +111,20 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
     def test_cdf5(self):
-        """testing variable iget_vara method for CDF-5 file format"""
-        # test iget_vara and collective i/o wait_all
+        """testing variable iget_vars method for CDF-5 file format"""
+        # test iget_vars and collective i/o wait_all
         for i in range(num_reqs * 2):
             assert_array_equal(v_datas[i], dataref[rank])
 
     def test_cdf2(self):
-        """testing variable iget_vara method for CDF-2 file format"""
-        # test iget_vara and collective i/o wait_all
+        """testing variable iget_vars method for CDF-2 file format"""
+        # test iget_vars and collective i/o wait_all
         for i in range(num_reqs * 2):
             assert_array_equal(v_datas[i], dataref[rank])
 
     def test_cdf1(self):
-        """testing variable iget_vara method for CDF-1 file format"""
-        # test iget_vara and collective i/o wait_all
+        """testing variable iget_vars method for CDF-1 file format"""
+        # test iget_vars and collective i/o wait_all
         for i in range(num_reqs * 2):
             assert_array_equal(v_datas[i], dataref[rank])
 
