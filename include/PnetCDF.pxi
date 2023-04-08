@@ -220,9 +220,18 @@ cdef extern from "pnetcdf.h":
     int ncmpi_iput_var(int ncid, int varid, const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_iput_vara(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const void *buf, \
     MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_vars(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[],\
+     const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_var1(int ncid, int varid, const MPI_Offset index[], const void *buf, MPI_Offset bufcount, \
+    MPI_Datatype buftype, int *request) nogil
     int ncmpi_iget_var(int ncid, int varid, void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_iget_vara(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], void *buf, MPI_Offset bufcount,\
      MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iget_var1(int ncid, int varid, const MPI_Offset index[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iget_vars(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+
+
     int ncmpi_wait(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
     int ncmpi_wait_all(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
