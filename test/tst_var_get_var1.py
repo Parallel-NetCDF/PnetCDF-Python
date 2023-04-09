@@ -1,3 +1,15 @@
+# This file is part of pncpy, a Python interface to the PnetCDF library.
+#
+#
+# Copyright (C) 2023, Northwestern University
+# See COPYRIGHT notice in top-level directory
+# License:  
+
+"""
+   This example program is intended to illustrate the use of the pnetCDF python API.
+   The program runs read a single element from a netCDF variable of an opened netCDF file 
+   using get_var method of `Variable` class. The library will internally invoke ncmpi_get_var1 in C. 
+"""
 import pncpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal,\
@@ -11,7 +23,9 @@ seed(0)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_get_var1.nc"
 xdim=9; ydim=10; zdim=11
+# initial values for netCDF variable
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
+# generate reference numpy arrays for testing
 datarev = data[:,::-1,:].copy()
 
 comm = MPI.COMM_WORLD
@@ -40,46 +54,44 @@ class VariablesTestCase(unittest.TestCase):
         f.enddef()
         v1_u[:,::-1,:] = data
         f.close()
-
-        comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
 
-    def tearDown(self):
-        # Remove the temporary files
-        comm.Barrier()
-        if (rank == 0) and (self.file_path == file_name):
-            os.remove(self.file_path)
-
-
     def test_cdf5(self):
-        """testing variable put var1 all"""
-
+        """testing variable get vara for CDF-5 file format"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1u']
         # test collective i/o put_var1
         index = (rank, rank, rank)
         f.begin_indep()
+        # all processes read the designated cell of the variable using independent i/o
         val = v1.get_var(index = index)
+        # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
         # test independent i/o put_var1
         f.end_indep()
+        # all processes read the designated cell of the variable using collective i/o
         val = v1.get_var_all(index = index)
+        # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
         f.close()
 
 
     def test_cdf2(self):
-        """testing variable put var1 all"""
+        """testing variable get vara for CDF-2 file format"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1u']
         # test collective i/o put_var1
         index = (rank, rank, rank)
         f.begin_indep()
+        # all processes read the designated cell of the variable using independent i/o
         val = v1.get_var(index = index)
+        # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
         # test independent i/o put_var1
         f.end_indep()
+        # all processes read the designated cell of the variable using collective i/o
         val = v1.get_var_all(index = index)
+        # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
         f.close()
 
@@ -90,14 +102,23 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o put_var1
         index = (rank, rank, rank)
         f.begin_indep()
+        # all processes read the designated cell of the variable using independent i/o
         val = v1.get_var(index = index)
+        # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
         # test independent i/o put_var1
         f.end_indep()
+        # all processes read the designated cell of the variable using collective i/o
         val = v1.get_var_all(index = index)
+        # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
         f.close()
 
+    def tearDown(self):
+        # remove the temporary files if test file directory is not specified
+        comm.Barrier()
+        if (rank == 0) and (self.file_path == file_name):
+            os.remove(self.file_path)
 
 if __name__ == '__main__':
     unittest.main(argv=[sys.argv[0]])

@@ -68,7 +68,7 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o get_var
         f.enddef()
         v1 = f.variables['data1u']
-        # all processes read the signed slices of the variable using collective i/o
+        # all processes read the designated slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts)
         # compare returned numpy array against reference array
         assert_array_equal(v1_data, dataref[rank])
@@ -90,7 +90,7 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o get_var
         f.enddef()
         v1 = f.variables['data1u']
-        # all processes read the signed slices of the variable using collective i/o
+        # all processes read the designated slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts)
         # compare returned numpy array against reference array
         assert_array_equal(v1_data, dataref[rank])
@@ -112,7 +112,7 @@ class VariablesTestCase(unittest.TestCase):
         # test collective i/o get_var
         f.enddef()
         v1 = f.variables['data1u']
-        # all processes read the signed slices of the variable using collective i/o
+        # all processes read the designated slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts)
         # compare returned numpy array against reference array
         assert_array_equal(v1_data, dataref[rank])

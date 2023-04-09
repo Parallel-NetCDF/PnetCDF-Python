@@ -38,6 +38,7 @@ datares1, datares2 = data.copy(), data.copy()
 
 for i in range(size):
     datares1[3:4:1,0:6:2,i*10:(i+1)*10:2] = datam
+# number of put requests planning to post
 num_reqs = 10
 class VariablesTestCase(unittest.TestCase):
 
@@ -91,39 +92,39 @@ class VariablesTestCase(unittest.TestCase):
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         f.close()
         assert validate_nc_file(self.file_path) == 0
-    
-    def tearDown(self):
-        # remove the temporary files
-        comm.Barrier()
-        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
-            os.remove(self.file_path)
 
     def test_cdf5(self):
         """testing variable iput vars for CDF-5 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_vars and collective i/o wait_all
+        # test iput vars and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datares1)
 
     def test_cdf2(self):
-        """testing variable iput vars all for CDF-2 file format"""
+        """testing variable iput vars for CDF-2 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_vars and collective i/o wait_all
+        # test iput vars and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datares1)
 
     def test_cdf1(self):
-        """testing variable iput vars all for CDF-1 file format"""
+        """testing variable iput vars for CDF-1 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_vars and collective i/o wait_all
+        # test iput vars and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datares1)
+
+    def tearDown(self):
+        # remove the temporary file if test file directory not specified
+        comm.Barrier()
+        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
+            os.remove(self.file_path)
 
 if __name__ == '__main__':
     unittest.main(argv=[sys.argv[0]])

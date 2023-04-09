@@ -46,6 +46,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
+        # unit test will iterate through all three file formats
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         f.defineDim('x',xdim)
@@ -91,7 +92,7 @@ class VariablesTestCase(unittest.TestCase):
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):
-        # remove the temporary files
+        # remove the temporary files if the test file directory not specified
         comm.Barrier()
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
@@ -100,7 +101,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable iput var1 for CDF-5 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_var1 and collective i/o wait_all
+        # test iput var1 and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datarev)
@@ -109,7 +110,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable iput var1 all for CDF-2 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_var1 and collective i/o wait_all
+        # test iput var1 and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datarev)
@@ -118,7 +119,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable iput var1 all for CDF-1 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_var1 and collective i/o wait_all
+        # test iput var1 and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datarev)

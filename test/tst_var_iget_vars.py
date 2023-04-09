@@ -69,6 +69,7 @@ class VariablesTestCase(unittest.TestCase):
         f = pncpy.File(self.file_path, 'r')
         # each process post 10 requests to read an subsampled array of values
         req_ids = []
+        # reinialize the list of returned data references
         v_datas.clear()
         starts = np.array([3,0,10*rank])
         counts = np.array([1,3,5])
@@ -105,7 +106,7 @@ class VariablesTestCase(unittest.TestCase):
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):
-        # remove the temporary files
+        # remove the temporary files if test file directory not specified
         comm.Barrier()
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
