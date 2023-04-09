@@ -13,8 +13,7 @@
 """
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -57,7 +56,7 @@ class VariablesTestCase(unittest.TestCase):
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.defineVar(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
-        # initize variable values
+        # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']

@@ -12,8 +12,7 @@
 """
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -49,7 +48,7 @@ class VariablesTestCase(unittest.TestCase):
 
         v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y','z'))
 
-        # initize variable values using indexer syntax
+        # initialize variable values using indexer syntax
         f.enddef()
         v1[:,::-1,:] = data
         f.close()

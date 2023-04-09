@@ -13,8 +13,7 @@
 """
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -53,7 +52,7 @@ class VariablesTestCase(unittest.TestCase):
         v1_u = f.defineVar('data1u', pncpy.NC_INT, ('xu','y','z'))
         v2_u = f.defineVar('data2u', pncpy.NC_INT, ('xu','y','z'))
 
-        #initize variable values
+        #initialize variable values
         f.enddef()
         v1_u[:,::-1,:] = data
         v2_u[:,::-1,:] = data

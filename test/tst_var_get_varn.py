@@ -1,7 +1,6 @@
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -30,7 +29,7 @@ data = np.array([[3, 3, 3, 1, 1, 0, 0, 2, 1, 1],
 starts = np.zeros((MAX_NUM_REQS, NDIMS), dtype=np.int64)
 counts = np.zeros((MAX_NUM_REQS, NDIMS), dtype=np.int64)
 
-#initize variable values
+#initialize variable values
 if rank == 0:
     num_reqs = 4
     starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
