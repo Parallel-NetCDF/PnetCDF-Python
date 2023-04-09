@@ -61,14 +61,15 @@ class VariablesTestCase(unittest.TestCase):
         
         f = pncpy.File(filename=self.file_path, mode = 'r+', format=data_model, Comm=comm, Info=None)
         v1_u = f.variables['data1u']
+        # equivalent code to the following using indexer syntax: v1_u[rank][rank][rank] = value
         index = (rank, rank, rank)
         value = np.int32(rank * 10 + 1)
-        #each process change a designated element of the variable with collective i/o
+        # each process change a designated element of the variable with collective i/o
         v1_u.put_var_all(value, index)
         
         f.begin_indep()
         v1_u = f.variables['data2u']
-        #each process change a designated element of the variable with independent i/o
+        # each process change a designated element of the variable with independent i/o
         v2_u.put_var(value, index)
         f.end_indep()
 

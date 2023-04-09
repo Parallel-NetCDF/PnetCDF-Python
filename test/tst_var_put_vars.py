@@ -68,6 +68,7 @@ class VariablesTestCase(unittest.TestCase):
         
         f = pncpy.File(filename=self.file_path, mode = 'r+', format=data_model, Comm=comm, Info=None)
         v1_u = f.variables['data1u']
+         # equivalent code to the following using indexer syntax: v1_u[3:4,0:6:2,10*rank:10*(rank+1):2] = datam
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 3, 5])
         strides = np.array([1, 2, 2])

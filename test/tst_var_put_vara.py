@@ -20,11 +20,9 @@ from utils import validate_nc_file
 import argparse
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]# Test CDF-1 format as well
+data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_vara.nc"
-# Write a shell script 
-# -e at the beginnin
-#Add command argument to specify the output folder
+
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -69,13 +67,13 @@ class VariablesTestCase(unittest.TestCase):
         f = pncpy.File(filename=self.file_path, mode = 'r+', format=data_model, Comm=comm, Info=None)
         # define variables and dimensions for testing
         v1_u = f.variables['data1u']
+        # equivalent code to the following using indexer syntax: v1_u[3:4,:5,10*rank:10*(rank+1)] = datam 
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 5, 10])
         # test collective i/o put_var_all
         # all processes write an array of values to variable with put_var_all (collective i/o)
         # each process write to their assigned coordinates within the variable
         v1_u.put_var_all(datam, start = starts, count = counts)
-        # equivalent code to the above using indexer syntax: v1_u[3:4,:5,10*rank:10*(rank+1)] = datam 
 
         # write subarray to variable with put_var (independent i/o)
         v2_u = f.variables['data2u']

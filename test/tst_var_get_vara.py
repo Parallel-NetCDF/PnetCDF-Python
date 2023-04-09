@@ -62,6 +62,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get vara for CDF-5 file format"""
 
         f = pncpy.File(self.file_path, 'r')
+        # equivalent code to the following using indexer syntax: v1_data = v1[3:4,:5,10*rank:10*(rank+1)]
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 5, 10])
         # test collective i/o get_var
@@ -84,6 +85,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get vara for CDF-2 file format"""
 
         f = pncpy.File(self.file_path, 'r')
+        # equivalent code to the following using indexer syntax: v1_data = v1[3:4,:5,10*rank:10*(rank+1)]
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 5, 10])
         # test collective i/o get_var
@@ -106,6 +108,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get vara for CDF-1 file format"""
 
         f = pncpy.File(self.file_path, 'r')
+        # equivalent code to the following using indexer syntax: v1_data = v1[3:4,:5,10*rank:10*(rank+1)]
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 5, 10])
         # test collective i/o get_var

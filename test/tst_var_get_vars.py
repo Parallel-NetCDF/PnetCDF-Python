@@ -61,6 +61,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get_vars method for CDF-5 file format"""
 
         f = pncpy.File(self.file_path, 'r')
+        # equivalent code to the following using indexer syntax: v1_data = v1[3:4,0:6:2,10*rank:10*(rank+1):2]
         starts = np.array([3,0,10*rank])
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])
@@ -83,6 +84,7 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf2(self):
         """testing variable get_vars method for CDF-2 file format"""
         f = pncpy.File(self.file_path, 'r')
+        # equivalent code to the following using indexer syntax: v1_data = v1[3:4,0:6:2,10*rank:10*(rank+1):2]
         starts = np.array([3,0,10*rank])
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])
@@ -105,6 +107,7 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf1(self):
         """testing variable get_vars method for CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
+        # equivalent code to the following using indexer syntax: v1_data = v1[3:4,0:6:2,10*rank:10*(rank+1):2]
         starts = np.array([3,0,10*rank])
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])

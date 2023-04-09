@@ -59,14 +59,15 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get vara for CDF-5 file format"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1u']
-        # test collective i/o put_var1
+        # test collective i/o put var1
+         # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
         index = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o
         val = v1.get_var(index = index)
         # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
-        # test independent i/o put_var1
+        # test independent i/o put var1
         f.end_indep()
         # all processes read the designated cell of the variable using collective i/o
         val = v1.get_var_all(index = index)
@@ -79,14 +80,15 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get vara for CDF-2 file format"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1u']
-        # test collective i/o put_var1
+        # test collective i/o put var1
+        # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
         index = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o
         val = v1.get_var(index = index)
         # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
-        # test independent i/o put_var1
+        # test independent i/o put var1
         f.end_indep()
         # all processes read the designated cell of the variable using collective i/o
         val = v1.get_var_all(index = index)
@@ -98,14 +100,15 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable put var1 all"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1u']
-        # test collective i/o put_var1
+        # test collective i/o put var1
+        # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
         index = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o
         val = v1.get_var(index = index)
         # compare returned value against reference value
         assert_equal(val, datarev[rank][rank][rank])
-        # test independent i/o put_var1
+        # test independent i/o put var1
         f.end_indep()
         # all processes read the designated cell of the variable using collective i/o
         val = v1.get_var_all(index = index)
