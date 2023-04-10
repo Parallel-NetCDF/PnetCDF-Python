@@ -1805,9 +1805,40 @@ cdef class Variable:
         #TODO
         return None
 
-    def _iput_varm(self, data, start, count, stride, imap):
-        #TODO
-        return None
+    def _iput_varm(self, ndarray data, start, count, stride, imap):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t *startp
+        cdef size_t *countp
+        cdef ptrdiff_t *stridep
+        cdef size_t *imapp
+        cdef int request
+        ndims = len(self.dimensions)
+        startp = <size_t *>malloc(sizeof(size_t) * ndims)
+        countp = <size_t *>malloc(sizeof(size_t) * ndims)
+        stridep = <ptrdiff_t *>malloc(sizeof(ptrdiff_t) * ndims)
+        imapp = <size_t *>malloc(sizeof(size_t) * ndims)
+        for n from 0 <= n < ndims:
+            countp[n] = count[n]
+            startp[n] = start[n]
+            stridep[n] = stride[n]
+            imapp[n] = imap[n]
+        shapeout = ()
+        for lendim in count:
+            shapeout = shapeout + (lendim,)
+        if not PyArray_ISCONTIGUOUS(data):
+            data = data.copy()
+        bufcount = NC_COUNT_IGNORE
+        if data.dtype.str[1:] not in _supportedtypes:
+            raise TypeError, 'illegal data type, must be one of %s, got %s' % \
+            (_supportedtypes, data.dtype.str[1:])
+        buftype = _nptompitype[data.dtype.str[1:]]
+        with nogil:
+            ierr = ncmpi_iput_varm(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
+                                    <const MPI_Offset *>stridep, <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype, &request)
+        _check_err(ierr)
+        return request
 
     def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
