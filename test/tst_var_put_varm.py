@@ -7,9 +7,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   It is a program which simultaneously transposes an internal array and writes to a 
-   subsample of a variables within a netCDF file using put_var method of `Variable` class,
-   the library internally will invoke ncmpi_put_varm in C. 
+   The program runs in blocking mode and writes a mapped array section of values into
+   a netCDF variables of an opened netCDF file using iput_var method of `Variable` object.
+   The library will internally invoke ncmpi_put_varm in C.
 """
 import pncpy
 from numpy.random import seed, randint

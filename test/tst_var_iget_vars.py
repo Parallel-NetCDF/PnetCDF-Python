@@ -48,7 +48,6 @@ class VariablesTestCase(unittest.TestCase):
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
         f.defineDim('y',ydim)
         f.defineDim('z',zdim)
 
