@@ -1802,8 +1802,44 @@ cdef class Variable:
         return request
 
     def _iput_varn(self, start, count, num, ndarray data):
-        #TODO
-        return None
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t **startp
+        cdef size_t **countp
+        cdef int num_req
+        cdef int request
+        num_req = num
+        ndims = len(self.dimensions)
+        max_num_req = len(start)
+
+        startp = <size_t**> malloc(max_num_req * sizeof(size_t*));
+        for i in range(max_num_req):
+            startp[i] = <size_t*> malloc(ndims * sizeof(size_t));
+            for j in range(ndims):
+                startp[i][j] = start[i, j]
+
+        countp = <size_t**> malloc(max_num_req * sizeof(size_t*));
+        for i in range(max_num_req):
+            countp[i] = <size_t*> malloc(ndims * sizeof(size_t));
+            for j in range(ndims):
+                countp[i][j] = count[i, j]
+
+        if not PyArray_ISCONTIGUOUS(data):
+            data = data.copy()
+        #data = data.flatten()
+        bufcount = NC_COUNT_IGNORE
+        #bufcount = data.size
+        if data.dtype.str[1:] not in _supportedtypes:
+            raise TypeError, 'illegal data type, must be one of %s, got %s' % \
+            (_supportedtypes, data.dtype.str[1:])
+        buftype = _nptompitype[data.dtype.str[1:]]
+        with nogil:
+            ierr = ncmpi_iput_varn(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
+                                    PyArray_DATA(data), bufcount, buftype, &request)
+
+        _check_err(ierr)
+        return request
 
     def _iput_varm(self, ndarray data, start, count, stride, imap):
         cdef int ierr, ndims
@@ -1937,8 +1973,40 @@ cdef class Variable:
                                     <const MPI_Offset *>stridep, PyArray_DATA(buff), bufcount, buftype, &request)
         _check_err(ierr)
         return request
-    def _iget_varn(self, start, count, num):
-        return None
+
+    def _iget_varn(self, ndarray buff, start, count, num):
+        cdef int ierr, ndims
+        cdef MPI_Offset bufcount
+        cdef MPI_Datatype buftype
+        cdef size_t **startp
+        cdef size_t **countp
+        cdef int num_req
+        cdef int request
+        num_req = num
+        ndims = len(self.dimensions)
+        max_num_req = len(start)
+        startp = <size_t**> malloc(max_num_req * sizeof(size_t*));
+        for i in range(max_num_req):
+            startp[i] = <size_t*> malloc(ndims * sizeof(size_t));
+            for j in range(ndims):
+                startp[i][j] = start[i][j]
+
+        countp = <size_t**> malloc(max_num_req * sizeof(size_t*));
+        for i in range(max_num_req):
+            countp[i] = <size_t*> malloc(ndims * sizeof(size_t));
+            for j in range(ndims):
+                countp[i][j] = count[i][j]
+
+        bufcount = NC_COUNT_IGNORE
+        #buftype = MPI_DATATYPE_NULL
+        buftype = _nptompitype[self.dtype.str[1:]]
+        with nogil:
+            ierr = ncmpi_iget_varn(self._file_id, self._varid, num_req,\
+                                    <const MPI_Offset **>startp, <const MPI_Offset **>countp, \
+                                    PyArray_DATA(buff), bufcount, buftype, &request)
+
+        _check_err(ierr)
+        return request
 
     def _iget_varm(self, ndarray buff, start, count, stride, imap):
         cdef int ierr, ndims
