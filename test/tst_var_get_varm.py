@@ -7,7 +7,7 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   It is a program which simultaneously transposes and subsamples a variables within a netCDF file using 
+   It is a program which simultaneously transposes, subsamples and reads a variable within a netCDF file using 
    get_var method of `Variable` class, the library internally will invoke ncmpi_get_varm in C. 
 """
 import pncpy
@@ -56,15 +56,12 @@ class VariablesTestCase(unittest.TestCase):
         # For the variable dimensioned with limited dims, we are writing 2D data on a 4 X 6 grid 
         v1 = f.defineVar('data1', pncpy.NC_FLOAT, ('x','y'))
 
-
-
         # Enter data mode
         f.enddef()
         # Write to variables using indexer 
         v1[:] = data
         f.close()
         # Validate the created data file using ncvalidator tool
-        comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
 
     def tearDown(self):
