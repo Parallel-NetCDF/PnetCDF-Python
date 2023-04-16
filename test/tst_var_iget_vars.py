@@ -47,7 +47,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        f.defineDim('x',xdim)
+        f.defineDim('xu',-1)
         f.defineDim('y',ydim)
         f.defineDim('z',zdim)
 
@@ -83,7 +83,8 @@ class VariablesTestCase(unittest.TestCase):
             v_datas.append(buff)
         f.end_indep()
         # commit those 10 requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num_reqs, req_ids)
+        req_errs = [None] * num_reqs
+        f.wait_all(num_reqs, req_ids, req_errs)
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":

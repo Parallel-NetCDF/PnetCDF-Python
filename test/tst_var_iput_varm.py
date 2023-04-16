@@ -72,7 +72,8 @@ class VariablesTestCase(unittest.TestCase):
             req_ids.append(req_id)
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num_reqs, req_ids)
+        req_errs = [None] * num_reqs
+        f.wait_all(num_reqs, req_ids, req_errs)
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":

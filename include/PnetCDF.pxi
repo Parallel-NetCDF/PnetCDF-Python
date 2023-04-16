@@ -34,6 +34,7 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_REQ_ALL_C "NC_REQ_ALL"
     cdef const int NC_GET_REQ_ALL_C "NC_GET_REQ_ALL"
     cdef const int NC_PUT_REQ_ALL_C "NC_PUT_REQ_ALL"
+    cdef const int NC_REQ_NULL_C "NC_REQ_NULL"
 
     cdef enum:
     # TODO: Fix redeclaration warnings
@@ -113,7 +114,7 @@ cdef extern from "pnetcdf.h":
         NC_EIOMISMATCH
         NC_ENOTSUPPORT
         NC_COUNT_IGNORE
-        NC_REQ_NULL
+
 
 
         MPI_DATATYPE_NULL

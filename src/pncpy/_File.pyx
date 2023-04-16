@@ -403,7 +403,8 @@ cdef class File:
         with nogil:
             ierr = ncmpi_rename_att(_file_id, NC_GLOBAL, oldnamec, newnamec)
         _check_err(ierr)
-    def _wait(self, num=None, requests=None, collective=False):
+
+    def _wait(self, num=None, requests=None, status=None, collective=False):
         cdef int _file_id, ierr
         cdef int num_req
         cdef int *requestp
@@ -420,7 +421,6 @@ cdef class File:
                 with nogil:
                     ierr = ncmpi_wait_all(_file_id, num_req, NULL, NULL)
             _check_err(ierr)
-            return None
         else:
             requestp = <int *>malloc(sizeof(int) * num)
             statusp = <int *>malloc(sizeof(int) * num)
@@ -433,16 +433,19 @@ cdef class File:
             else:
                 with nogil:
                     ierr = ncmpi_wait_all(_file_id, num_req, requestp, statusp)
-            status = [statusp[i] for i in range(num)]
-            return status
+            for n from 0 <= n < num:
+                requests[n] = requestp[n]
+            _check_err(ierr)
+            if status is not None:
+                for n from 0 <= n < num:
+                    status[n] = statusp[n]
+        return None
 
+    def wait(self, num=None, requests=None, status=None):
+        return self._wait(num, requests, status, collective=False)
 
-
-    def wait(self, num=None, requests=None):
-        return self._wait(num, requests, collective=False)
-    def wait_all(self, num=None, requests=None):
-        return self._wait(num, requests, collective=True)
-
+    def wait_all(self, num=None, requests=None, status=None):
+        return self._wait(num, requests, status, collective=True)
 
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the
@@ -469,7 +472,6 @@ cdef _get_dims(file):
             dimensions[name] = Dimension(file = file, name = name, id=dimids[n])
         free(dimids)
     return dimensions
-
 
 cdef _get_vars(file):
     # Private function to create `Variable` instances for all the
@@ -526,7 +528,6 @@ cdef _get_vars(file):
                     if value._dimid == dimids[nn]:
                         dimensions.append(value)
                         break
-
             # create variable instance
             variables[name] = Variable(file, name, xtype, dimensions, id=varid)
         free(varids) # free pointer holding variable ids.

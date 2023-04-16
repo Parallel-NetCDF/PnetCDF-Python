@@ -59,7 +59,8 @@ class VariablesTestCase(unittest.TestCase):
             req_ids.append(req_id)
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num_reqs, req_ids)# user might don't care about the error statuses of all reqs
+        req_errs = [None] * num_reqs
+        f.wait_all(num_reqs, req_ids, req_errs)# user might don't care about the error statuses of all reqs
         # comm.Barrier()
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
