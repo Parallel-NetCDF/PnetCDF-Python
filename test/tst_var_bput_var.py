@@ -9,7 +9,7 @@
    This example program is intended to illustrate the use of the pnetCDF python API. The program runs 
    in non-blocking mode and makes a request to write all the values of a variable into a netCDF variable
    of an opened netCDF file using bput_var method of `Variable` class. This method is a buffered version 
-   of iput_var and requres the user to attach an internal buffer of size equal to the sum of all requests 
+   of iput_var and requires the user to attach an internal buffer of size equal to the sum of all requests 
    using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_var and 
    ncmpi_attach_buffer in C. 
 """
