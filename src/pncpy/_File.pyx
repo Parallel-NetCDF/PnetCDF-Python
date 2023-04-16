@@ -397,7 +397,7 @@ cdef class File:
         oldnamec = bytestr
         bytestr = _strencode(newname)
         newnamec = bytestr
-        
+
         with nogil:
             ierr = ncmpi_rename_att(_file_id, NC_GLOBAL, oldnamec, newnamec)
         _check_err(ierr)
@@ -473,7 +473,7 @@ cdef class File:
                 for n from 0 <= n < num:
                     status[n] = statusp[n]
             _check_err(ierr)
-        return None
+
 
     def get_nreqs(self):
         cdef int _file_id, ierr
@@ -483,6 +483,36 @@ cdef class File:
             ierr = ncmpi_inq_nreqs(_file_id, &num_req)
         _check_err(ierr)
         return num_req
+
+    def attach_buff(self, bufsize = None):
+        cdef int buffsize, _file_id
+        buffsize = bufsize
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_buffer_attach(_file_id, buffsize)
+        _check_err(ierr)
+
+    def detach_buff(self):
+        cdef int _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_buffer_detach(_file_id)
+        _check_err(ierr)
+
+    def get_buff_usage(self):
+        cdef int _file_id, usage
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_inq_buffer_usage(_file_id, &usage)
+        _check_err(ierr)
+        return usage
+
+    def get_buff_size(self):
+        cdef int _file_id, buffsize
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_inq_buffer_size(_file_id, &buffsize)
+        _check_err(ierr)
+        return buffsize
 
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the
