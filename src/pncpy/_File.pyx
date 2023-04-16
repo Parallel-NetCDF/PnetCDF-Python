@@ -105,17 +105,15 @@ cdef class File:
         self.dimensions = _get_dims(self)
         self.variables = _get_vars(self)
     
-    def close(self):
-        self._close(True)
+    def close(self, check_err = True):
+        self._close(check_err)
     
     def _close(self, check_err):
         cdef int ierr
         with nogil:
             ierr = ncmpi_close(self._ncid)
-
         if check_err:
             _check_err(ierr)
-
         self._isopen = 0 # indicates file already closed, checked by __dealloc__
 
     def filepath(self,encoding=None):
@@ -435,10 +433,11 @@ cdef class File:
                     ierr = ncmpi_wait_all(_file_id, num_req, requestp, statusp)
             for n from 0 <= n < num:
                 requests[n] = requestp[n]
-            _check_err(ierr)
+
             if status is not None:
                 for n from 0 <= n < num:
                     status[n] = statusp[n]
+            _check_err(ierr)
         return None
 
     def wait(self, num=None, requests=None, status=None):
@@ -446,6 +445,44 @@ cdef class File:
 
     def wait_all(self, num=None, requests=None, status=None):
         return self._wait(num, requests, status, collective=True)
+
+    def cancel(self, num=None, requests=None, status=None):
+        cdef int _file_id, ierr
+        cdef int num_req
+        cdef int *requestp
+        cdef int *statusp
+        _file_id = self._ncid
+        if num is None:
+            num = NC_REQ_ALL_C
+        if num in [NC_REQ_ALL_C, NC_PUT_REQ_ALL_C, NC_GET_REQ_ALL_C]:
+            num_req = num
+            with nogil:
+                ierr = ncmpi_cancel(_file_id, num_req, NULL, NULL)
+            _check_err(ierr)
+        else:
+            requestp = <int *>malloc(sizeof(int) * num)
+            statusp = <int *>malloc(sizeof(int) * num)
+            num_req = num
+            for n from 0 <= n < num:
+                requestp[n] = requests[n]
+            with nogil:
+                ierr = ncmpi_cancel(_file_id, num_req, requestp, statusp)
+            for n from 0 <= n < num:
+                requests[n] = requestp[n]
+            if status is not None:
+                for n from 0 <= n < num:
+                    status[n] = statusp[n]
+            _check_err(ierr)
+        return None
+
+    def get_nreqs(self):
+        cdef int _file_id, ierr
+        cdef int num_req
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_inq_nreqs(_file_id, &num_req)
+        _check_err(ierr)
+        return num_req
 
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the

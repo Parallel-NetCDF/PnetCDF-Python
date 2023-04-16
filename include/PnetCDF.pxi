@@ -144,6 +144,8 @@ cdef extern from "pnetcdf.h":
     int ncmpi_begin_indep_data(int ncid) nogil;
     int ncmpi_end_indep_data(int ncid) nogil;
     int ncmpi_inq_path(int ncid, int *pathlen, char *path) nogil
+    int ncmpi_cancel(int ncid, int num, int *requests, int *statuses) nogil
+    int ncmpi_inq_nreqs(int ncid, int *nreqs) nogil
     # Dimension APIs
     int ncmpi_def_dim(int ncid, const char *name, MPI_Offset len, int *idp) nogil
     # Inquiry APIs

@@ -62,8 +62,6 @@ class VariablesTestCase(unittest.TestCase):
         f.defineDim('y',ydim)
         f.defineDim('z',zdim)
 
-
-
         # define 20 netCDF variables: 10 for testing wait_all(), 10 for testing wait()
         for i in range(3 * num_reqs):
             v = f.defineVar(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
@@ -85,6 +83,8 @@ class VariablesTestCase(unittest.TestCase):
             # track the reqeust ID for each write reqeust 
             req_ids_tst1.append(req_id) if i < 10 else req_ids_tst2.append(req_id)
         # TEST 1 - wait_all (collective i/o)
+        # check number of pending requests
+        assert(f.get_nreqs() == num_reqs)
         f.end_indep()
         # all processes commit the first 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
@@ -93,7 +93,9 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(10):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+        # check if all requests are committed
+        assert(f.get_nreqs() == 0)
+
         # TEST 2 - wait (independent i/o)
         req_ids_tst2.clear()
          # post 10 requests to write an array of values for the last 10 variables
@@ -103,6 +105,8 @@ class VariablesTestCase(unittest.TestCase):
             req_id = v.iput_var(datam, start = starts, count = counts)
             # track the reqeust ID for each write reqeust 
             req_ids_tst2.append(req_id)
+        # check number of pending requests
+        assert(f.get_nreqs() == num_reqs)
         f.begin_indep()
         # each process commits the rest 10 requests to the file at once using wait (independent i/o)
         req_errs = [None] * num_reqs
@@ -111,6 +115,8 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(10):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
+        # check if all requests are committed
+        assert(f.get_nreqs() == 0)
         
         f.close()
         assert validate_nc_file(self.file_path) == 0
