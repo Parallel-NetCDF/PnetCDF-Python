@@ -148,7 +148,7 @@ class VariablesTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         
-         # post 10 requests to write an arrays of values for the last 10 variables w/o tracking req ids
+         # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write an array of values

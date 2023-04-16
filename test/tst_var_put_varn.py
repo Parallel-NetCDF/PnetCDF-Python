@@ -51,7 +51,6 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.zeros((MAX_NUM_REQS, NDIMS), dtype=np.int64)
 
         #initialize variable values
-        
         if rank == 0:
             num_reqs = 4
             starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2

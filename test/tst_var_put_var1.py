@@ -20,6 +20,7 @@ from mpi4py import MPI
 from utils import validate_nc_file
 
 seed(0)
+# file format selections: CDF-5(64BIT_DATA'), CDF-2('64BIT_OFFSET') and CDF-1 (None)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_var1.nc"
 xdim=9; ydim=10; zdim=11
@@ -41,7 +42,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        # unit test will iterate through all three file formats
+        # select the next file format for testing
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         f.defineDim('x',xdim)
