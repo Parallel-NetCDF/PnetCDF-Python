@@ -44,6 +44,7 @@ num_reqs = 10
 # initialize the list to store request ids 
 req_ids_tst1 = []
 req_ids_tst2 = []
+bad_req_ids = list(range(num_reqs))
 # initialize the list to store buff references from iget requests
 v_data = []
 
@@ -88,9 +89,9 @@ class VariablesTestCase(unittest.TestCase):
         f.end_indep()
         # all processes commit the first 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
-        f.wait_all(10, req_ids_tst1, req_errs)
+        f.wait_all(num_reqs, req_ids_tst1, req_errs)
         # check request error msg for each unsuccessful requests
-        for i in range(10):
+        for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         # check if all requests are committed
@@ -112,15 +113,27 @@ class VariablesTestCase(unittest.TestCase):
         req_errs = [None] * num_reqs
         f.wait(10, req_ids_tst2, req_errs)
         # check request error msg for each unsuccessful requests
-        for i in range(10):
+        for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         # check if all requests are committed
         assert(f.get_nreqs() == 0)
-        
+
+        # TEST 3 - wait on invalid req ids
+        req_errs = [None] * num_reqs
+        try: 
+            # try commit all requests without terminating the program
+            f.wait(num_reqs, bad_req_ids, req_errs)
+        except RuntimeError:
+            pass
+        else:
+            raise RuntimeError("This should have failed.")
+        finally:
+            # check request error msg for each unsuccessful requests
+            for i in range(num_reqs):
+                assert(strerrno(req_errs[i]) == "NC_EINVAL_REQUEST")
         f.close()
         assert validate_nc_file(self.file_path) == 0
-    
 
     def test_cdf5(self):
         """testing File wait method for CDF-5 file format"""
@@ -136,6 +149,10 @@ class VariablesTestCase(unittest.TestCase):
                 self.assertTrue(req_ids_tst1[i] == pncpy.NC_REQ_NULL)
             else:
                 self.assertTrue(req_ids_tst2[i - 10] == pncpy.NC_REQ_NULL)
+        # test invalid request ids
+        # invalid request id list should remain unchanged
+        assert_array_equal(bad_req_ids, list(range(num_reqs)))
+
         
     def test_cdf2(self):
         """testing File wait method for CDF-2 file format"""
@@ -150,6 +167,9 @@ class VariablesTestCase(unittest.TestCase):
                 self.assertTrue(req_ids_tst1[i] == pncpy.NC_REQ_NULL)
             else:
                 self.assertTrue(req_ids_tst2[i - 10] == pncpy.NC_REQ_NULL)
+        # test invalid request ids
+        # invalid request id list should remain unchanged
+        assert_array_equal(bad_req_ids, list(range(num_reqs)))
 
     def test_cdf1(self):
         """testing File wait method for CDF-1 file format"""
@@ -164,6 +184,9 @@ class VariablesTestCase(unittest.TestCase):
                 self.assertTrue(req_ids_tst1[i] == pncpy.NC_REQ_NULL)
             else:
                 self.assertTrue(req_ids_tst2[i - 10] == pncpy.NC_REQ_NULL)
+        # test invalid request ids
+        # invalid request id list should remain unchanged
+        assert_array_equal(bad_req_ids, list(range(num_reqs)))
 
     def tearDown(self):
         # remove the temporary files if test file output directory not specified
