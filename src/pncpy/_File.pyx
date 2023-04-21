@@ -105,8 +105,8 @@ cdef class File:
         self.dimensions = _get_dims(self)
         self.variables = _get_vars(self)
     
-    def close(self, check_err = True):
-        self._close(check_err)
+    def close(self):
+        self._close(True)
     
     def _close(self, check_err):
         cdef int ierr
