@@ -94,7 +94,6 @@ class VariablesTestCase(unittest.TestCase):
 
     def tearDown(self):
         # Remove the temporary files
-        #pass
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
     

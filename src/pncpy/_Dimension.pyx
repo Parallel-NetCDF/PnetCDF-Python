@@ -40,15 +40,8 @@ cdef class Dimension:
                 lendim = NC_UNLIMITED
             else:
                 lendim = size
-            #TODO: decide whether or not need to exit define mode for user
-            if not file.def_mode_on:
-                file.redef()
-                with nogil:
-                    ierr = ncmpi_def_dim(self._file_id, dimname, lendim, &self._dimid)
-                file.enddef()
-            else:
-                with nogil:
-                    ierr = ncmpi_def_dim(self._file_id, dimname, lendim, &self._dimid)
+            with nogil:
+                ierr = ncmpi_def_dim(self._file_id, dimname, lendim, &self._dimid)
             _check_err(ierr)
 
     def _getname(self):

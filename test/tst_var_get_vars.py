@@ -66,7 +66,7 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])
         # test collective i/o get_var
-        f.enddef()
+
         v1 = f.variables['data1u']
         # all processes read the designated slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts, stride = strides)
@@ -89,7 +89,6 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])
         # test collective i/o get_var
-        f.enddef()
         v1 = f.variables['data1u']
         # all processes read the designated slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts, stride = strides)
@@ -112,7 +111,6 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])
         # test collective i/o get_var
-        f.enddef()
         v1 = f.variables['data1u']
         # all processes read the designated slices of the variable using collective i/o
         v1_data = v1.get_var_all(start = starts, count = counts, stride = strides)

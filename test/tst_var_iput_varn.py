@@ -134,8 +134,6 @@ class VariablesTestCase(unittest.TestCase):
         req_ids = []
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
-            data = np.empty(buf_len, dtype=np.float32)
-            data.fill(rank)
             # post the request to write an array of values
             req_id = v.iput_var(data, start = starts, count = counts, num = num_subarrays)
             # track the reqeust ID for each write reqeust 

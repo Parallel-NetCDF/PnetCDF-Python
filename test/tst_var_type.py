@@ -98,7 +98,6 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf2(self):
         """testing writing data of mismatched datatypes in CDF2 data file"""
         f = pncpy.File(self.file_path, 'r+')
-        f.enddef()
         f.end_indep()
         # Compare returned variable data with reference data
         v1 = f.variables['data1']   
@@ -121,7 +120,6 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf1(self):
         """testing writing data of mismatched datatypes in CDF1 data file"""
         f = pncpy.File(self.file_path, 'r+')
-        f.enddef()
         f.end_indep()
         # Compare returned variable data with reference data
         v1 = f.variables['data1']   

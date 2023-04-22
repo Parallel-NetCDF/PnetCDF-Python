@@ -88,7 +88,6 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable put var all"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put_var1
-        f.enddef()
         v1 = f.variables['data1']
         assert_array_equal(v1[:], data)
         # test independent i/o put_var1
@@ -100,7 +99,6 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable put var all"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put_var1
-        f.enddef()
         v1 = f.variables['data1']
         assert_array_equal(v1[:], data)
         # test independent i/o put_var1

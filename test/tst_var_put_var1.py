@@ -88,7 +88,6 @@ class VariablesTestCase(unittest.TestCase):
 
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put var1
-        f.enddef()
         v1 = f.variables['data1u']
         # compare returned array with the reference array
         assert_array_equal(v1[:], datarev)
@@ -101,7 +100,6 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable put var1 for CDF-2 file format"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put var1
-
         v1 = f.variables['data1u']
         # compare returned array with the reference array
         assert_array_equal(v1[:], datarev)
@@ -115,7 +113,6 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable put var1 for CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put var1
-
         v1 = f.variables['data1u']
         assert_array_equal(v1[:], datarev)
 

@@ -166,8 +166,6 @@ cdef class Variable:
                 dimids = <int *>malloc(sizeof(int) * ndims)
                 for n from 0 <= n < ndims:
                     dimids[n] = dimensions[n]._dimid
-            need_open_def = not (file.def_mode_on)
-            if need_open_def: file.redef() 
             if ndims:
                 with nogil:
                     ierr = ncmpi_def_var(_file_id, varname, xtype, ndims,
@@ -177,29 +175,16 @@ cdef class Variable:
                 with nogil:
                     ierr = ncmpi_def_var(_file_id, varname, xtype, ndims,
                                     NULL, &self._varid)
-            if need_open_def: file.enddef()
             if ierr != NC_NOERR:
                 _check_err(ierr)
             #xtype compatability already veried by C function, no need to check at python level
             if fill_value is not None:
-                if not fill_value and isinstance(fill_value,bool):
-                    # no filling for this variable if fill_value==False.
-                    need_open_def = not (file.def_mode_on)
-                    if need_open_def: file.redef() 
-                    with nogil:
-                        ierr = ncmpi_def_var_fill(_file_id, self._varid, 1, NULL)
-                    if need_open_def: file.enddef()
-                    if ierr != NC_NOERR:
-                        _check_err(ierr)
-                else:
+                if fill_value and isinstance(fill_value,bool):
                     fillval = np.array(fill_value, self.dtype)
                     if not fillval.dtype.isnative: 
                         fillval.byteswap(True)
-                    need_open_def = not (file.def_mode_on)
-                    if need_open_def: file.redef() 
                     _set_att(self._file, self._varid, '_FillValue',\
                                 fillval, xtype=xtype)
-                    if need_open_def: file.enddef()
 
 
         # count how many unlimited dimensions there are.
@@ -368,10 +353,7 @@ cdef class Variable:
             msg='_FillValue attribute must be set when variable is '+\
             'created (using fill_value keyword to defineVar)'
             raise AttributeError(msg)
-        need_open_def = not (self._file.def_mode_on)
-        if need_open_def: self._file.redef()
         _set_att(self._file, self._varid, name, value, xtype=xtype)
-        if need_open_def: self._file.enddef()
 
     def setncatts(self,attdict):
         """
@@ -381,11 +363,9 @@ cdef class Variable:
         This may be faster when setting a lot of attributes for a `NETCDF3`
         formatted file, since nc_redef/nc_enddef is not called in between setting
         each attribute"""
-        need_open_def = not (self._file.def_mode_on)
-        if need_open_def: self._file.redef()
         for name, value in attdict.items():
             _set_att(self._file, self._varid, name, value)
-        if need_open_def: self._file.enddef()
+
 
     def getncattr(self,name,encoding='utf-8'):
         """
@@ -409,11 +389,8 @@ cdef class Variable:
         cdef char *attname
         bytestr = _strencode(name)
         attname = bytestr
-        need_open_def = not (self._file.def_mode_on)
-        if need_open_def: self._file.redef()
         with nogil:
             ierr = ncmpi_del_att(self._file_id, self._varid, attname)
-        if need_open_def: self._file.enddef()
         _check_err(ierr)
 
     def __delattr__(self,name):

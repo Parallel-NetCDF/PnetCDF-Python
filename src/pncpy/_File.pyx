@@ -173,20 +173,20 @@ cdef class File:
     def _redef(self):
         cdef int ierr
         cdef int fileid= self._ncid
-        if not self.def_mode_on:
-            self.def_mode_on = 1
-            with nogil:
-                ierr = ncmpi_redef(fileid)
+        self.def_mode_on = 1
+        with nogil:
+            ierr = ncmpi_redef(fileid)
+        _check_err(ierr)
     def enddef(self):
         self._enddef()
 
     def _enddef(self):
         cdef int ierr
         cdef int fileid = self._ncid
-        if self.def_mode_on:
-            self.def_mode_on = 0
-            with nogil:
-                ierr = ncmpi_enddef(fileid)
+        self.def_mode_on = 0
+        with nogil:
+            ierr = ncmpi_enddef(fileid)
+        _check_err(ierr)
 
     def begin_indep(self):
         cdef int ierr
@@ -304,14 +304,7 @@ cdef class File:
         with the same name as one of the reserved python attributes."""
         cdef nc_type xtype
         xtype=-99
-
-        #TODO: decide whether or not need to exit define mode for user
-        if not self.def_mode_on:
-            self.redef()
-            _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
-            self.enddef()
-        else:
-            _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
+        _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
     def getncattr(self,name,encoding='utf-8'):
         """
         **`getncattr(self,name)`**

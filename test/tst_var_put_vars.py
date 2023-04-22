@@ -93,7 +93,6 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable put vars for CDF-5 file format"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put_var
-        f.enddef()
         v1 = f.variables['data1u']
         # compare returned array with the reference array
         assert_array_equal(v1[:], datares1)
