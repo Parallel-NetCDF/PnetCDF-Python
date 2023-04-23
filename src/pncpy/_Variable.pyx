@@ -478,7 +478,6 @@ cdef class Variable:
         if len(self.dimensions):
             raise IndexError('to assign values to a non-scalar variable, use a slice')
         self[:]=val
-
     def getValue(self):
         """
         **`getValue(self)`**
@@ -489,8 +488,21 @@ cdef class Variable:
             raise IndexError('to retrieve values from a non-scalar variable, use slicing')
         return self[slice(None)]
 
+    def defineFill(self, int no_fill, fill_value = None):
+        cdef ndarray data
+        cdef int ierr, _no_fill
+        _no_fill = no_fill
+        if fill_value is None:
+            with nogil:
+                ierr = ncmpi_def_var_fill(self._file_id, self._varid, _no_fill, NULL)
+        else:
+            data = np.array(fill_value)
+            with nogil:
+                ierr = ncmpi_def_var_fill(self._file_id, self._varid, _no_fill, PyArray_DATA(data))
+        _check_err(ierr)
+
     def get_fill_info(self):
-        cdef int no_fill
+        cdef int ierr, no_fill
         cdef ndarray fill_value
         fill_value = np.empty((1,), self.dtype)
         with nogil:
