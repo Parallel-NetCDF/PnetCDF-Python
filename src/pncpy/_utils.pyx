@@ -84,17 +84,17 @@ _intnptonctype  = {'i1' : NC_BYTE_C,
 
 # default fill_value to numpy datatype mapping.
 default_fillvals = {#'S1': '\0',
-                     'S1':NC_FILL_CHAR,
-                     'i1':NC_FILL_BYTE,
-                     'u1':NC_FILL_UBYTE,
-                     'i2':NC_FILL_SHORT,
-                     'u2':NC_FILL_USHORT,
-                     'i4':NC_FILL_INT,
-                     'u4':NC_FILL_UINT,
-                     'i8':NC_FILL_INT64,
-                     'u8':NC_FILL_UINT64,
-                     'f4':NC_FILL_FLOAT,
-                     'f8':NC_FILL_DOUBLE}
+                     'S1':NC_FILL_CHAR_C,
+                     'i1':NC_FILL_BYTE_C,
+                     'u1':NC_FILL_UBYTE_C,
+                     'i2':NC_FILL_SHORT_C,
+                     'u2':NC_FILL_USHORT_C,
+                     'i4':NC_FILL_INT_C,
+                     'u4':NC_FILL_UINT_C,
+                     'i8':NC_FILL_INT64_C,
+                     'u8':NC_FILL_UINT64_C,
+                     'f4':NC_FILL_FLOAT_C,
+                     'f8':NC_FILL_DOUBLE_C}
 
 _nctonptype = {}
 for _key,_value in _nptonctype.items():
@@ -102,7 +102,7 @@ for _key,_value in _nptonctype.items():
 _supportedtypes = _nptonctype.keys()
 _supportedtypescdf2 = [t for t in _nptonctype if t not in _notcdf2dtypes]
 
-#import NC datatype constants
+# create external NC datatype constants for python users
 NC_CHAR = NC_CHAR_C
 NC_BYTE = NC_BYTE_C
 NC_UBYTE = NC_UBYTE_C
@@ -119,6 +119,20 @@ NC_REQ_ALL = NC_REQ_ALL_C
 NC_GET_REQ_ALL = NC_GET_REQ_ALL_C
 NC_PUT_REQ_ALL = NC_PUT_REQ_ALL_C
 NC_REQ_NULL = NC_REQ_NULL_C
+NC_FILL = NC_FILL_C
+NC_NOFILL = NC_NOFILL_C
+
+NC_FILL_BYTE = NC_FILL_BYTE_C
+NC_FILL_CHAR = NC_FILL_CHAR_C
+NC_FILL_SHORT = NC_FILL_SHORT_C
+NC_FILL_INT = NC_FILL_INT_C
+NC_FILL_FLOAT = NC_FILL_FLOAT_C
+NC_FILL_DOUBLE = NC_FILL_DOUBLE_C
+NC_FILL_UBYTE = NC_FILL_UBYTE_C
+NC_FILL_USHORT = NC_FILL_USHORT_C
+NC_FILL_UINT = NC_FILL_UINT_C
+NC_FILL_INT64 = NC_FILL_INT64_C
+NC_FILL_UINT64 = NC_FILL_UINT64_C
 
 # internal C functions.
 cdef _strencode(pystr,encoding=""):

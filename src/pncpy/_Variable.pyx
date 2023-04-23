@@ -82,7 +82,7 @@ cdef class Variable:
     **`size`**: The number of stored elements.
     """
 
-    def __init__(self, file, name, nc_dtype, dimensions=(), fill_value=False, **kwargs):
+    def __init__(self, file, name, nc_dtype, dimensions=(), fill_value=None, **kwargs):
         """
         **`__init__(self, file, name, datatype, dimensions=(),
             endian='native', least_significant_digit=None,
@@ -294,6 +294,7 @@ cdef class Variable:
             ierr = ncmpi_inq_varname(_file_id, self._varid, namstring)
         _check_err(ierr)
         return namstring.decode('utf-8')
+
     property name:
         """string name of Variable instance"""
         def __get__(self):
@@ -349,10 +350,6 @@ cdef class Variable:
         attributes."""
         cdef nc_type xtype
         xtype=-99
-        if name == '_FillValue':
-            msg='_FillValue attribute must be set when variable is '+\
-            'created (using fill_value keyword to defineVar)'
-            raise AttributeError(msg)
         _set_att(self._file, self._varid, name, value, xtype=xtype)
 
     def setncatts(self,attdict):
@@ -407,11 +404,7 @@ cdef class Variable:
         if name not in _private_atts:
             # if setting _FillValue or missing_value, make sure value
             # has same type and byte order as variable.
-            if name == '_FillValue':
-                msg='_FillValue attribute must be set when variable is '+\
-                'created (using fill_value keyword to defineVar)'
-                raise AttributeError(msg)
-            elif name in ['valid_min','valid_max','valid_range','missing_value']:
+            if name in ['valid_min','valid_max','valid_range','missing_value']:
                 # make sure these attributes written in same data type as variable.
                 # also make sure it is written in native byte order
                 # (the same as the data)
@@ -495,6 +488,15 @@ cdef class Variable:
         if len(self.dimensions):
             raise IndexError('to retrieve values from a non-scalar variable, use slicing')
         return self[slice(None)]
+
+    def get_fillinfo(self):
+        cdef int no_fill
+        cdef ndarray fill_value
+        fill_value = np.empty((1,), self.dtype)
+        with nogil:
+            ierr = ncmpi_inq_var_fill(self._file_id, self._varid, &no_fill, PyArray_DATA(fill_value))
+        _check_err(ierr)
+        return no_fill, fill_value[0]
 
     def set_auto_chartostring(self,chartostring):
         """
@@ -585,6 +587,7 @@ cdef class Variable:
         (automatic conversions are performed).
         """
         self.mask = bool(mask)
+
 
     def set_auto_maskandscale(self,maskandscale):
         self.scale = self.mask = bool(maskandscale)

@@ -325,7 +325,6 @@ cdef class File:
             raise AttributeError(
             "'%s' is one of the reserved attributes %s, cannot delete. Use delncattr instead." % (name, tuple(_private_atts)))
 
-
     def delncattr(self, name):
         """
         **`delncattr(self,name,value)`**
@@ -506,6 +505,16 @@ cdef class File:
             ierr = ncmpi_inq_buffer_size(_file_id, &buffsize)
         _check_err(ierr)
         return buffsize
+
+    def set_fill_mode(self, fillmode):
+        cdef int _file_id, _fillmode, _old_fillmode
+        _file_id = self._ncid
+        _fillmode = fillmode
+        with nogil:
+            ierr = ncmpi_set_fill(_file_id, _fillmode, &_old_fillmode)
+        _check_err(ierr)
+        return _old_fillmode
+
 
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the

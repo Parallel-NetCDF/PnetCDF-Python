@@ -74,19 +74,8 @@ class VariablesTestCase(unittest.TestCase):
             v.intatt = INTATT
             v.floatatt = FLOATATT
             v.seqatt = SEQATT
-            # issue #959: should not be able to set _FillValue after var creation
-            try:
-                v._FillValue(-999.)
-            except AttributeError:
-                pass
-            else:
-                raise ValueError('This test should have failed.')
-            try:
-                v.setncattr('_FillValue',-999.)
-            except AttributeError:
-                pass
-            else:
-                raise ValueError('This test should have failed.')
+            # try set the attribute "_FillValue" to set the fill value of netCDF fill value 
+            v._FillValue = -999.
             f.foo = np.array('bar','S')
             f.foo = np.array('bar','U')
         assert validate_nc_file(self.file_path) == 0
@@ -122,6 +111,7 @@ class VariablesTestCase(unittest.TestCase):
             assert v.getncattr('ndim') == 'three'
             assert v.getncattr('foo') == 1
             assert v.getncattr('bar') == 2
+            assert v._FillValue == -999.
 
     def test_var_attr_dict_(self):
         with pncpy.File(self.file_path, 'r') as f:

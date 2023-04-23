@@ -35,6 +35,21 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_GET_REQ_ALL_C "NC_GET_REQ_ALL"
     cdef const int NC_PUT_REQ_ALL_C "NC_PUT_REQ_ALL"
     cdef const int NC_REQ_NULL_C "NC_REQ_NULL"
+    cdef const int NC_NOFILL_C "NC_NOFILL"
+    cdef const int NC_FILL_C "NC_FILL"
+
+    cdef const int NC_FILL_BYTE_C "NC_FILL_BYTE"
+    cdef const int NC_FILL_CHAR_C "NC_FILL_CHAR"
+    cdef const int NC_FILL_SHORT_C "NC_FILL_SHORT"
+    cdef const int NC_FILL_INT_C "NC_FILL_INT"
+    cdef const int NC_FILL_FLOAT_C "NC_FILL_FLOAT"
+    cdef const int NC_FILL_DOUBLE_C "NC_FILL_DOUBLE"
+    cdef const int NC_FILL_UBYTE_C "NC_FILL_UBYTE"
+    cdef const int NC_FILL_USHORT_C "NC_FILL_USHORT"
+    cdef const int NC_FILL_UINT_C "NC_FILL_UINT"
+    cdef const int NC_FILL_INT64_C "NC_FILL_INT64"
+    cdef const int NC_FILL_UINT64_C "NC_FILL_UINT64"
+
 
     cdef enum:
     # TODO: Fix redeclaration warnings
@@ -63,17 +78,7 @@ cdef extern from "pnetcdf.h":
         # These values are stuffed into newly allocated space as appropriate.
         # The hope is that one might use these to notice that a particular datum
         # has not been set.
-        NC_FILL_BYTE
-        NC_FILL_CHAR
-        NC_FILL_SHORT
-        NC_FILL_INT
-        NC_FILL_FLOAT
-        NC_FILL_DOUBLE
-        NC_FILL_UBYTE
-        NC_FILL_USHORT
-        NC_FILL_UINT
-        NC_FILL_INT64
-        NC_FILL_UINT64
+
         # These maximums are enforced by the interface, to facilitate writing
         # applications and utilities.  However, nothing is statically allocated to
         # these sizes internally.
@@ -144,6 +149,7 @@ cdef extern from "pnetcdf.h":
     int ncmpi_inq_nreqs(int ncid, int *nreqs) nogil
     int ncmpi_buffer_attach(int ncid, MPI_Offset bufsize) nogil
     int ncmpi_buffer_detach(int ncid) nogil
+    int ncmpi_set_fill(int  ncid, int  fillmode, int *old_modep) nogil
     # Dimension APIs
     int ncmpi_def_dim(int ncid, const char *name, MPI_Offset len, int *idp) nogil
     # Inquiry APIs
@@ -169,7 +175,7 @@ cdef extern from "pnetcdf.h":
 
     int ncmpi_rename_att(int ncid, int varid, const char *name, const char *newname) nogil
     int ncmpi_del_att(int ncid, int varid, const char *name) nogil
-    #Variable APIs
+    # Variable APIs
     int ncmpi_def_var(int ncid, const char *name, nc_type xtype, int ndims, const int *dimidsp, int *varidp) nogil
     int ncmpi_def_var_fill(int ncid, int varid, int no_fill, const void *fill_value) nogil
     int ncmpi_inq_varndims(int ncid, int varid, int *ndimsp) nogil
@@ -256,10 +262,9 @@ cdef extern from "pnetcdf.h":
     int ncmpi_bput_varn(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[], \
     const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
 
-
-
     int ncmpi_wait(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
     int ncmpi_wait_all(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
+    int ncmpi_inq_var_fill(int ncid, int varid, int *no_fill, void *fill_value) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
 cdef extern from "numpy/arrayobject.h":
     ctypedef int npy_intp 
