@@ -79,34 +79,38 @@ class VariablesTestCase(unittest.TestCase):
         for i in [1,2]:
             v = f.variables[f'data{i}']
             # check the fill mode settings of each variable
-            no_fill, fill_value = v.get_fillinfo()
+            no_fill, fill_value = v.get_fill_info()
             # check if no_fill flag is set to 0 
             self.assertTrue(no_fill == 0)
             # check if fill_value equals default fill value
             self.assertTrue(fill_value == pncpy.NC_FILL_INT)
         f.close()
 
-    # def test_cdf2(self):
-    #     """testing variable put var all"""
-    #     f = pncpy.File(self.file_path, 'r')
-    #     # test collective i/o put_var1
-    #     v1 = f.variables['data1']
-    #     assert_array_equal(v1[:], data)
-    #     # test independent i/o put_var1
-    #     v2 = f.variables['data2']
-    #     assert_array_equal(v2[:], datarev)
-    #     f.close()
+    def test_cdf2(self):
+        """testing file set fill mode for CDF-2 file format"""
+        f = pncpy.File(self.file_path, 'r')
+        for i in [1,2]:
+            v = f.variables[f'data{i}']
+            # check the fill mode settings of each variable
+            no_fill, fill_value = v.get_fill_info()
+            # check if no_fill flag is set to 0 
+            self.assertTrue(no_fill == 0)
+            # check if fill_value equals default fill value
+            self.assertTrue(fill_value == pncpy.NC_FILL_INT)
+        f.close()
 
-    # def test_cdf1(self):
-    #     """testing variable put var all"""
-    #     f = pncpy.File(self.file_path, 'r')
-    #     # test collective i/o put_var1
-    #     v1 = f.variables['data1']
-    #     assert_array_equal(v1[:], data)
-    #     # test independent i/o put_var1
-    #     v2 = f.variables['data2']
-    #     assert_array_equal(v2[:], datarev)
-    #     f.close()
+    def test_cdf1(self):
+        """testing file set fill mode for CDF-1 file format"""
+        f = pncpy.File(self.file_path, 'r')
+        for i in [1,2]:
+            v = f.variables[f'data{i}']
+            # check the fill mode settings of each variable
+            no_fill, fill_value = v.get_fill_info()
+            # check if no_fill flag is set to 0 
+            self.assertTrue(no_fill == 0)
+            # check if fill_value equals default fill value
+            self.assertTrue(fill_value == pncpy.NC_FILL_INT)
+        f.close()
 
 
 

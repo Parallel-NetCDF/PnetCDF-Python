@@ -489,7 +489,7 @@ cdef class Variable:
             raise IndexError('to retrieve values from a non-scalar variable, use slicing')
         return self[slice(None)]
 
-    def get_fillinfo(self):
+    def get_fill_info(self):
         cdef int no_fill
         cdef ndarray fill_value
         fill_value = np.empty((1,), self.dtype)
