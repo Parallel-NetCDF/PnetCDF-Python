@@ -46,29 +46,39 @@ class VariablesTestCase(unittest.TestCase):
         f.defineDim('x',xdim)
         f.defineDim('xu', -1)
         f.defineDim('y',ydim)
-        # define non-record variables for testing
+        # define non-record variables with no fill for testing 
         v1 = f.defineVar('data1', pncpy.NC_FLOAT, ('x','y'))
         v2 = f.defineVar('data2', pncpy.NC_FLOAT, ('x','y'))
-        v3 = f.defineVar('data3', pncpy.NC_FLOAT, ('xu','y'))
-        v4 = f.defineVar('data4', pncpy.NC_FLOAT, ('xu','y'))
-        # verify current fill node is no_fill
+        v3 = f.defineVar('data3', pncpy.NC_FLOAT, ('x','y'))
+        v4 = f.defineVar('data4', pncpy.NC_FLOAT, ('x','y'))
+        # define non-record variables with fill value for testing 
+        # v4 = f.defineVar('data4', pncpy.NC_FLOAT, ('x','y'), fill_value = True)
+        
+        # check current fill node
         for v in [v1, v2, v3, v4]:
             old_no_fill, old_fill_value = v.get_fill_info()
             assert(old_no_fill == 1)
-        # set fill value for some variables using defineFill
+        # set fill value and fill mode for some variables using defineFill
         v1.defineFill(no_fill = 0, fill_value = fill_value)
-        v3.defineFill(no_fill = 0, fill_value = fill_value)
+        v2.defineFill(no_fill = 0)
+        v4.defineFill(no_fill = 0)
         # set fill value for some variables using _FillValue attribute writes
-        v2.setncattr('_FillValue', fill_value)
-        v4.setncattr('_FillValue', fill_value)
+        v2.setncattr("_FillValue", fill_value)
+        v3._FillValue = fill_value
 
-        # enter data mode and write partially values to the non-record variables
+        # set the variable with fill values back to no fill
+        v4.defineFill(no_fill = 1)
+        # enter data mode and write partially values to variables
         f.enddef()
-        for v in [v1,v2]:
+        for v in [v1,v2,v3,v4]:
             v.put_var_all(np.float32(rank + 1), index = (rank, rank))
+
+        self.v1_nofill, self.v1_fillvalue = v1.get_fill_info()
+        self.v2_nofill, self.v2_fillvalue = v2.get_fill_info()
+        self.v3_nofill, self.v3_fillvalue = v3.get_fill_info()
+        self.v4_nofill, self.v4_fillvalue = v4.get_fill_info()
         f.close()
         assert validate_nc_file(self.file_path) == 0
-    
     def tearDown(self):
         # remove the temporary files
         comm.Barrier()
@@ -78,42 +88,42 @@ class VariablesTestCase(unittest.TestCase):
 
     def test_cdf5(self):
         """testing file set fill mode for CDF-5 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        for i in range(1,4):
-            v = f.variables[f'data{i}']
-            # check the fill mode settings of each variable
-            no_fill, cur_fill_value = v.get_fill_info()
-            # check if no_fill flag is set to 0 
-            self.assertTrue(no_fill == 0)
-            # check if fill_value equals default fill value
-            self.assertTrue(cur_fill_value == fill_value)
-        f.close()
+        # check the fill mode settings of each variable
+        # check no_fill flag 
+        self.assertTrue(self.v1_nofill == 0)
+        self.assertTrue(self.v2_nofill == 0)
+        self.assertTrue(self.v3_nofill == 1)
+        self.assertTrue(self.v4_nofill == 1)
+        # check if fill_value equals the customized fill value
+        self.assertTrue(self.v1_fillvalue == fill_value)
+        self.assertTrue(self.v2_fillvalue == fill_value)
+        self.assertTrue(self.v3_fillvalue == fill_value)
 
     def test_cdf2(self):
         """testing file set fill mode for CDF-2 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        for i in range(1,4):
-            v = f.variables[f'data{i}']
-            # check the fill mode settings of each variable
-            no_fill, cur_fill_value = v.get_fill_info()
-            # check if no_fill flag is set to 0 
-            self.assertTrue(no_fill == 0)
-            # check if fill_value equals default fill value
-            self.assertTrue(cur_fill_value == fill_value)
-        f.close()
+        # check the fill mode settings of each variable
+        # check no_fill flag 
+        self.assertTrue(self.v1_nofill == 0)
+        self.assertTrue(self.v2_nofill == 0)
+        self.assertTrue(self.v3_nofill == 1)
+        self.assertTrue(self.v4_nofill == 1)
+        # check if fill_value equals the customized fill value
+        self.assertTrue(self.v1_fillvalue == fill_value)
+        self.assertTrue(self.v2_fillvalue == fill_value)
+        self.assertTrue(self.v3_fillvalue == fill_value)
 
     def test_cdf1(self):
         """testing file set fill mode for CDF-1 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        for i in range(1,4):
-            v = f.variables[f'data{i}']
-            # check the fill mode settings of each variable
-            no_fill, cur_fill_value = v.get_fill_info()
-            # check if no_fill flag is set to 0 
-            self.assertTrue(no_fill == 0)
-            # check if fill_value equals default fill value
-            self.assertTrue(cur_fill_value == fill_value)
-        f.close()
+        # check the fill mode settings of each variable
+        # check no_fill flag 
+        self.assertTrue(self.v1_nofill == 0)
+        self.assertTrue(self.v2_nofill == 0)
+        self.assertTrue(self.v3_nofill == 1)
+        self.assertTrue(self.v4_nofill == 1)
+        # check if fill_value equals the customized fill value
+        self.assertTrue(self.v1_fillvalue == fill_value)
+        self.assertTrue(self.v2_fillvalue == fill_value)
+        self.assertTrue(self.v3_fillvalue == fill_value)
 
 
 

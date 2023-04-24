@@ -82,7 +82,7 @@ cdef class Variable:
     **`size`**: The number of stored elements.
     """
 
-    def __init__(self, file, name, nc_dtype, dimensions=(), fill_value=None, **kwargs):
+    def __init__(self, file, name, nc_dtype, dimensions=(), **kwargs):
         """
         **`__init__(self, file, name, datatype, dimensions=(),
             endian='native', least_significant_digit=None,
@@ -177,15 +177,6 @@ cdef class Variable:
                                     NULL, &self._varid)
             if ierr != NC_NOERR:
                 _check_err(ierr)
-            #xtype compatability already veried by C function, no need to check at python level
-            if fill_value is not None:
-                if fill_value and isinstance(fill_value,bool):
-                    fillval = np.array(fill_value, self.dtype)
-                    if not fillval.dtype.isnative: 
-                        fillval.byteswap(True)
-                    _set_att(self._file, self._varid, '_FillValue',\
-                                fillval, xtype=xtype)
-
 
         # count how many unlimited dimensions there are.
         self._nunlimdim = 0
@@ -497,6 +488,8 @@ cdef class Variable:
                 ierr = ncmpi_def_var_fill(self._file_id, self._varid, _no_fill, NULL)
         else:
             data = np.array(fill_value)
+            if not data.dtype.isnative:
+                data.byteswap(True)
             with nogil:
                 ierr = ncmpi_def_var_fill(self._file_id, self._varid, _no_fill, PyArray_DATA(data))
         _check_err(ierr)

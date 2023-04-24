@@ -8,7 +8,7 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program sets the default fill mode for a netCDF file open for writing using `File` class
-   method set_filll_mode(). This call will change the fill mode for all non-record variables 
+   method set_fill_mode(). This call will change the fill mode for all non-record variables 
    defined so far and change the default fill mode for new non-record variables defined following
    this call. The library will internally invoke ncmpi_set_fill in C. 
 """
@@ -24,9 +24,6 @@ seed(0)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_file_fill.nc"
 xdim=9; ydim=10 
-# generate numpy array to write to the whole netCDF variable
-data = randint(0,10, size=(xdim,ydim)).astype('i4')
-
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -51,8 +48,8 @@ class VariablesTestCase(unittest.TestCase):
         v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y'))
         # enable fill mode at file-level which applies to all netCDF variables of the file
         old_fillmode = f.set_fill_mode(pncpy.NC_FILL)
-        # # check old_fillmode 
-        # assert(old_fillmode == pncpy.NC_NOFILL)
+        # check old_fillmode
+        assert(old_fillmode == pncpy.NC_NOFILL)
         # define a netCDF variable after setting file filling mode
         v2 = f.defineVar('data2', pncpy.NC_INT, ('x','y'))
 
@@ -60,7 +57,7 @@ class VariablesTestCase(unittest.TestCase):
         # enter data mode and write partially values to the variable
         f.enddef()
         v1 = f.variables['data1']
-        v2 = f.variables['data1']
+        v2 = f.variables['data2']
         v1.put_var_all(np.int32(rank), index = (rank, rank))
         v2.put_var_all(np.int32(rank), index = (rank, rank))
         f.close()
@@ -111,8 +108,6 @@ class VariablesTestCase(unittest.TestCase):
             # check if fill_value equals default fill value
             self.assertTrue(fill_value == pncpy.NC_FILL_INT)
         f.close()
-
-
 
 if __name__ == '__main__':
     unittest.main(argv=[sys.argv[0]])
