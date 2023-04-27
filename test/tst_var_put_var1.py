@@ -45,13 +45,13 @@ class VariablesTestCase(unittest.TestCase):
         # select the next file format for testing
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
 
-        v1_u = f.defineVar('data1u', pncpy.NC_INT, ('xu','y','z'))
-        v2_u = f.defineVar('data2u', pncpy.NC_INT, ('xu','y','z'))
+        v1_u = f.def_var('data1u', pncpy.NC_INT, ('xu','y','z'))
+        v2_u = f.def_var('data2u', pncpy.NC_INT, ('xu','y','z'))
 
         #initialize variable values
         f.enddef()

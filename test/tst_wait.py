@@ -58,14 +58,14 @@ class VariablesTestCase(unittest.TestCase):
         # select the next file format for testing
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        # f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        # f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
 
         # define 20 netCDF variables: 10 for testing wait_all(), 10 for testing wait()
         for i in range(3 * num_reqs):
-            v = f.defineVar(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
+            v = f.def_var(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
         # initialize variable values
         f.enddef()
         for i in range(3 * num_reqs):

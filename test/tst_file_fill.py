@@ -42,18 +42,16 @@ class VariablesTestCase(unittest.TestCase):
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # define variables and dimensions for testing
-        f.defineDim('x',xdim)
-        f.defineDim('y',ydim)
+        f.def_dim('x',xdim)
+        f.def_dim('y',ydim)
         # define a netCDF variable before setting file filling mode 
-        v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y'))
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y'))
         # enable fill mode at file-level which applies to all netCDF variables of the file
         old_fillmode = f.set_fill_mode(pncpy.NC_FILL)
         # check old_fillmode
         assert(old_fillmode == pncpy.NC_NOFILL)
         # define a netCDF variable after setting file filling mode
-        v2 = f.defineVar('data2', pncpy.NC_INT, ('x','y'))
-
-
+        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y'))
         # enter data mode and write partially values to the variable
         f.enddef()
         v1 = f.variables['data1']

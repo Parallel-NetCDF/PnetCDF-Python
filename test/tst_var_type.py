@@ -55,13 +55,13 @@ class VariablesTestCase(unittest.TestCase):
         # Create the test data file 
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # Define dimensions needed, one of the dims is unlimited
-        f.defineDim('x',xdim)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        f.def_dim('x',xdim)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
         # Define 3 variables with same nc datatype NC_INT
-        v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y','z'))
-        v2 = f.defineVar('data2', pncpy.NC_INT, ('x','y','z'))
-        v3 = f.defineVar('data3', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
+        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y','z'))
+        v3 = f.def_var('data3', pncpy.NC_INT, ('x','y','z'))
 
         # Enter data mode
         f.enddef()
@@ -109,7 +109,7 @@ class VariablesTestCase(unittest.TestCase):
         # Comfirm unsigned long long (v3's datatype) is not allowed at define phase
         f.redef()
         try:
-            f.defineVar('data3', pncpy.NC_UINT64, ('x','y','z'))
+            f.def_var('data3', pncpy.NC_UINT64, ('x','y','z'))
         except RuntimeError:
             pass
         else:
@@ -131,7 +131,7 @@ class VariablesTestCase(unittest.TestCase):
         # Comfirm unsigned long long (v3's datatype) is not allowed at define phase
         f.redef()
         try:
-            f.defineVar('data3', pncpy.NC_UINT64, ('x','y','z'))
+            f.def_var('data3', pncpy.NC_UINT64, ('x','y','z'))
         except RuntimeError:
             pass
         else:

@@ -206,9 +206,9 @@ cdef class File:
 
 
 
-    def defineDim(self, dimname, size=-1):
+    def def_dim(self, dimname, size=-1):
         """
-        **`defineDim(self, dimname, size=-1)`**
+        **`def_dim(self, dimname, size=-1)`**
         Creates a new dimension with the given `dimname` and `size`.
         `size` must be a positive integer or `-1`, which stands for
         "unlimited" (default is `-1`). Specifying a size of 0 also
@@ -221,10 +221,10 @@ cdef class File:
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
     
-    def defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None):
+    def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
 
         """
-        **`defineVar(self, varname, datatype, dimensions=(), least_significant_digit=None,
+        **`def_var(self, varname, datatype, dimensions=(), least_significant_digit=None,
         significant_digits=None, fill_value=None)`**
 
         Creates a new variable with the given `varname`, `datatype`, and
@@ -242,7 +242,7 @@ cdef class File:
 
         `dimensions` must be a tuple containing `Dimension` instances and/or
         dimension names (strings) that have been defined
-        previously using `Dataset.defineDim`. The default value
+        previously using `Dataset.def_dim`. The default value
         is an empty tuple, which means the variable is a scalar.
 
         The optional keyword `fill_value` can be used to override the default
@@ -295,9 +295,9 @@ cdef class File:
 
         return netCDF attribute names for this File in a list."""
         return _get_att_names(self._ncid, NC_GLOBAL)
-    def setncattr(self,name,value):
+    def put_att(self,name,value):
         """
-        **`setncattr(self,name,value)`**
+        **`put_att(self,name,value)`**
 
         set a netCDF file attribute using name,value pair.
         Use if you need to set a netCDF attribute with the
@@ -349,11 +349,11 @@ cdef class File:
     # if name in _private_atts, it is stored at the python
     # level and not in the netCDF file.
         if name not in _private_atts:
-            self.setncattr(name, value)
+            self.put_att(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot rebind. Use setncattr instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot rebind. Use put_att instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 

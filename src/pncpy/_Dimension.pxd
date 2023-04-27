@@ -14,7 +14,7 @@ cdef class Dimension:
     determine if the dimension is unlimited.
     Read-only class variables:
     **`name`**: String name, used when creating a `Variable` with
-    `Dataset.defineVar`.
+    `Dataset.def_var`.
     **`size`**: Current `Dimension` size (same as `len(d)`, where `d` is a
     `Dimension` instance).
     """

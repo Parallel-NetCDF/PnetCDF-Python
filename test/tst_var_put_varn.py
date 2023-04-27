@@ -38,11 +38,11 @@ class VariablesTestCase(unittest.TestCase):
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # define dimensions and variables
-        f.defineDim('x',xdim)
-        f.defineDim('y',ydim)
+        f.def_dim('x',xdim)
+        f.def_dim('y',ydim)
 
-        var1 = f.defineVar('var1', pncpy.NC_FLOAT, ('x', 'y'))
-        var2 = f.defineVar('var2', pncpy.NC_FLOAT, ('x', 'y'))
+        var1 = f.def_var('var1', pncpy.NC_FLOAT, ('x', 'y'))
+        var2 = f.def_var('var2', pncpy.NC_FLOAT, ('x', 'y'))
         f.enddef()
         var1[:] = np.full((xdim, ydim), -1, dtype=np.float32)
         var2[:] = np.full((xdim, ydim), -1, dtype=np.float32)

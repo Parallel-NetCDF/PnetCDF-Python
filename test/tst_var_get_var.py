@@ -41,12 +41,12 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
 
-        v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
 
         # initialize variable values using indexer syntax
         f.enddef()

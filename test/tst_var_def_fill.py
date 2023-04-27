@@ -8,7 +8,7 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program sets the fill mode for an individual netCDF variable using `Variable` class
-   method defineFill(). This call will change the fill mode for all non-record variables 
+   method def_fill(). This call will change the fill mode for all non-record variables 
    defined so far and change the default fill mode for new non-record variables defined following
    this call. The library will internally invoke ncmpi_set_fill in C. 
 """
@@ -19,6 +19,7 @@ import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
 from utils import validate_nc_file
+import numpy.ma as ma
 
 seed(0)
 data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
@@ -43,31 +44,31 @@ class VariablesTestCase(unittest.TestCase):
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # define variables and dimensions for testing
-        f.defineDim('x',xdim)
-        f.defineDim('xu', -1)
-        f.defineDim('y',ydim)
+        f.def_dim('x',xdim)
+        f.def_dim('xu', -1)
+        f.def_dim('y',ydim)
         # define non-record variables with no fill for testing 
-        v1 = f.defineVar('data1', pncpy.NC_FLOAT, ('x','y'))
-        v2 = f.defineVar('data2', pncpy.NC_FLOAT, ('x','y'))
-        v3 = f.defineVar('data3', pncpy.NC_FLOAT, ('x','y'))
-        v4 = f.defineVar('data4', pncpy.NC_FLOAT, ('x','y'))
+        v1 = f.def_var('data1', pncpy.NC_FLOAT, ('x','y'))
+        v2 = f.def_var('data2', pncpy.NC_FLOAT, ('x','y'))
+        v3 = f.def_var('data3', pncpy.NC_FLOAT, ('x','y'))
+        v4 = f.def_var('data4', pncpy.NC_FLOAT, ('x','y'))# change this as well
         # define non-record variables with fill value for testing 
-        # v4 = f.defineVar('data4', pncpy.NC_FLOAT, ('x','y'), fill_value = True)
+        # v4 = f.def_var('data4', pncpy.NC_FLOAT, ('x','y'), fill_value = True)
         
         # check current fill node
         for v in [v1, v2, v3, v4]:
-            old_no_fill, old_fill_value = v.get_fill_info()
+            old_no_fill, old_fill_value = v.get_fill_info()# inq_fill?
             assert(old_no_fill == 1)
-        # set fill value and fill mode for some variables using defineFill
-        v1.defineFill(no_fill = 0, fill_value = fill_value)
-        v2.defineFill(no_fill = 0)
-        v4.defineFill(no_fill = 0)
+        # set fill value and fill mode for some variables using def_fill
+        v1.def_fill(no_fill = 0, fill_value = fill_value)#def_fill check all function names
+        v2.def_fill(no_fill = 0)
+        v4.def_fill(no_fill = 0)
         # set fill value for some variables using _FillValue attribute writes
-        v2.setncattr("_FillValue", fill_value)
+        v2.put_att("_FillValue", fill_value)# put? change this as well
         v3._FillValue = fill_value
 
         # set the variable with fill values back to no fill
-        v4.defineFill(no_fill = 1)
+        v4.def_fill(no_fill = 1)
         # enter data mode and write partially values to variables
         f.enddef()
         for v in [v1,v2,v3,v4]:
@@ -77,7 +78,10 @@ class VariablesTestCase(unittest.TestCase):
         self.v2_nofill, self.v2_fillvalue = v2.get_fill_info()
         self.v3_nofill, self.v3_fillvalue = v3.get_fill_info()
         self.v4_nofill, self.v4_fillvalue = v4.get_fill_info()
-        f.close()
+        a = v1[:]
+        # print(v1[:])# not critical
+        # print(v1.get_var_all()) # Take a note on what features are not implemented compared to netcdf4
+        f.close() 
         assert validate_nc_file(self.file_path) == 0
     def tearDown(self):
         # remove the temporary files

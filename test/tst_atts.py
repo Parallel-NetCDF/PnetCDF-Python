@@ -50,7 +50,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = FILE_NAME
         with pncpy.File(self.file_path,'w', format = "64BIT_DATA") as f:
             # try to set a dataset attribute with one of the reserved names.
-            f.setncattr('data_model','netcdf5_format')
+            f.put_att('data_model','netcdf5_format')
             # test attribute renaming
             f.stratt_tmp = STRATT
             f.renameAttribute('stratt_tmp','stratt')
@@ -59,13 +59,13 @@ class VariablesTestCase(unittest.TestCase):
             f.intatt = INTATT
             f.seqatt = SEQATT
             # sequences of strings converted to a single string.
-            f.defineDim(DIM1_NAME, DIM1_LEN)
-            f.defineDim(DIM2_NAME, DIM2_LEN)
-            f.defineDim(DIM3_NAME, DIM3_LEN)
+            f.def_dim(DIM1_NAME, DIM1_LEN)
+            f.def_dim(DIM2_NAME, DIM2_LEN)
+            f.def_dim(DIM3_NAME, DIM3_LEN)
 
-            v = f.defineVar(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
+            v = f.def_var(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
             # try to set a variable attribute with one of the reserved names.
-            v.setncattr('ndim','three')
+            v.put_att('ndim','three')
             v.setncatts({'foo': 1})
             v.setncatts(OrderedDict(bar=2))
             v.stratt_tmp = STRATT

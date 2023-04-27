@@ -50,17 +50,17 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests
         buffsize = num_reqs * datam.nbytes
         f.attach_buff(buffsize)
         assert(f.get_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
-            v = f.defineVar(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
+            v = f.def_var(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
         # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):

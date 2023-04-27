@@ -105,7 +105,7 @@ cdef class Variable:
         unsigned integer), or `'S1'` (single-character string).
 
         **`dimensions`**: a tuple containing the variable's Dimension instances
-        (defined previously with `defineDim`). Default is an empty tuple
+        (defined previously with `def_dim`). Default is an empty tuple
         which means the variable is a scalar (and therefore has no dimensions).
 
         **`least_significant_digit`**: If this or `significant_digits` are specified,
@@ -128,7 +128,7 @@ cdef class Variable:
         the variable is not pre-filled. 
 
         ***Note***: `Variable` instances should be created using the
-        `File.defineVar` method of a `File` instance, not using this class directly.
+        `File.def_var` method of a `File` instance, not using this class directly.
         """
 
         cdef int ierr, ndims, icontiguous, icomplevel, numdims, _file_id, nsd,
@@ -332,9 +332,9 @@ cdef class Variable:
 
         return netCDF attribute names for this `Variable` in a list."""
         return _get_att_names(self._file_id, self._varid)
-    def setncattr(self,name,value):
+    def put_att(self,name,value):
         """
-        **`setncattr(self,name,value)`**
+        **`put_att(self,name,value)`**
 
         set a netCDF variable attribute using name,value pair.  Use if you need to set a
         netCDF attribute with the same name as one of the reserved python
@@ -408,11 +408,11 @@ cdef class Variable:
                     msg="WARNING: %s cannot be safely cast to variable dtype" \
                     % name
                     warnings.warn(msg)
-            self.setncattr(name, value)
+            self.put_att(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-                "'%s' is one of the reserved attributes %s, cannot rebind. Use setncattr instead." % (name, tuple(_private_atts)))
+                "'%s' is one of the reserved attributes %s, cannot rebind. Use put_att instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 
@@ -479,7 +479,7 @@ cdef class Variable:
             raise IndexError('to retrieve values from a non-scalar variable, use slicing')
         return self[slice(None)]
 
-    def defineFill(self, int no_fill, fill_value = None):
+    def def_fill(self, int no_fill, fill_value = None):
         cdef ndarray data
         cdef int ierr, _no_fill
         _no_fill = no_fill

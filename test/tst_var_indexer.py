@@ -53,17 +53,17 @@ class VariablesTestCase(unittest.TestCase):
         # Create the test data file 
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # Define dimensions needed, one of the dims is unlimited
-        f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
         # For the variable dimensioned with limited dims, we are writing 3D data on a 9 x 10 x 11 grid 
-        v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
         # For the record variable, we are writing 3D data on unlimited x 10 x 11 grid
-        v1_u = f.defineVar('data1u', pncpy.NC_INT, ('xu','y','z'))
+        v1_u = f.def_var('data1u', pncpy.NC_INT, ('xu','y','z'))
         # Define another set of variables for indepedent mode testing
-        v2 = f.defineVar('data2', pncpy.NC_INT, ('x','y','z'))
-        v2_u = f.defineVar('data2u', pncpy.NC_INT, ('xu','y','z'))
+        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y','z'))
+        v2_u = f.def_var('data2u', pncpy.NC_INT, ('xu','y','z'))
 
         # Enter data mode
         f.enddef()

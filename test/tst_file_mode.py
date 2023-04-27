@@ -61,7 +61,7 @@ class VariablesTestCase(unittest.TestCase):
         # TEST MODE "w"
         with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
         # Try writing to file by defining a dimension
-            f.defineDim('x',xdim)
+            f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
         comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
@@ -71,7 +71,7 @@ class VariablesTestCase(unittest.TestCase):
         # Try writing to file by defining a dimension
             try:
                 f.redef()
-                f.defineDim('x',xdim)
+                f.def_dim('x',xdim)
             except RuntimeError:
                 pass
             else:
@@ -83,7 +83,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='r+') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('y',ydim)
+            f.def_dim('y',ydim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -95,7 +95,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='a') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('z',zdim)
+            f.def_dim('z',zdim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -117,7 +117,7 @@ class VariablesTestCase(unittest.TestCase):
         # TEST MODE "w"
         with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
         # Try writing to file by defining a dimension
-            f.defineDim('x',xdim)
+            f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
         comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
@@ -127,7 +127,7 @@ class VariablesTestCase(unittest.TestCase):
         # Try writing to file by defining a dimension
             try:
                 f.redef()
-                f.defineDim('x',xdim)
+                f.def_dim('x',xdim)
             except RuntimeError:
                 pass
             else:
@@ -139,7 +139,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='r+') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('y',ydim)
+            f.def_dim('y',ydim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -151,7 +151,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='a') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('z',zdim)
+            f.def_dim('z',zdim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -173,7 +173,7 @@ class VariablesTestCase(unittest.TestCase):
         # TEST MODE "w"
         with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
         # Try writing to file by defining a dimension
-            f.defineDim('x',xdim)
+            f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
         comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
@@ -183,7 +183,7 @@ class VariablesTestCase(unittest.TestCase):
         # Try writing to file by defining a dimension
             try:
                 f.redef()
-                f.defineDim('x',xdim)
+                f.def_dim('x',xdim)
             except RuntimeError:
                 pass
             else:
@@ -195,7 +195,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='r+') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('y',ydim)
+            f.def_dim('y',ydim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -207,7 +207,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='a') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('z',zdim)
+            f.def_dim('z',zdim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())

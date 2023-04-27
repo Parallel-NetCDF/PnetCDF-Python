@@ -118,12 +118,12 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        dx = f.defineDim('x',xdim)
-        dy = f.defineDim('y',ydim)
+        dx = f.def_dim('x',xdim)
+        dy = f.def_dim('y',ydim)
 
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
-            v = f.defineVar(f'data{i}', pncpy.NC_FLOAT, (dx, dy))
+            v = f.def_var(f'data{i}', pncpy.NC_FLOAT, (dx, dy))
         # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):

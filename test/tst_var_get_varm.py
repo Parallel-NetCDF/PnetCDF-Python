@@ -50,11 +50,11 @@ class VariablesTestCase(unittest.TestCase):
         # Create the test data file 
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # Define dimensions needed, one of the dims is unlimited
-        f.defineDim('x',xdim)
-        f.defineDim('y',ydim)
+        f.def_dim('x',xdim)
+        f.def_dim('y',ydim)
 
         # For the variable dimensioned with limited dims, we are writing 2D data on a 4 X 6 grid 
-        v1 = f.defineVar('data1', pncpy.NC_FLOAT, ('x','y'))
+        v1 = f.def_var('data1', pncpy.NC_FLOAT, ('x','y'))
 
         # Enter data mode
         f.enddef()

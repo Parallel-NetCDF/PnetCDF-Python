@@ -7,8 +7,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs write the whole value into a netCDF variable of an opened netCDF file using 
-   put_var method of `Variable` class. The library will internally invoke ncmpi_put_var in C. 
+   The program runs in blocking mode and writes the whole value into a netCDF variable 
+   of an opened netCDF file using put_var method of `Variable` class. The library will
+   internally invoke ncmpi_put_var in C. 
 """
 import pncpy
 from numpy.random import seed, randint
@@ -42,13 +43,13 @@ class VariablesTestCase(unittest.TestCase):
         data_model = data_models.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
         # define variables and dimensions for testing
-        f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
 
-        v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y','z'))
-        v2 = f.defineVar('data2', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
+        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y','z'))
 
         # all MPI processes writes the whole variable with the same value (collective i/o)
         f.enddef()

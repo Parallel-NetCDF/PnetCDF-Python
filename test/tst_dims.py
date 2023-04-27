@@ -39,20 +39,20 @@ class DimensionsTestCase(unittest.TestCase):
         else:
             self.file_path = FILE_NAME
         f = pncpy.File(filename=self.file_path, mode = 'w', format=DATA_MODEL, Comm=comm, Info=None)
-        lat_dim=f.defineDim(LAT_NAME,LAT_LEN)
-        lon_dim=f.defineDim(LON_NAME,LON_LEN)
-        lev_dim=f.defineDim(LEVEL_NAME,LEVEL_LEN)
-        time_dim=f.defineDim(TIME_NAME,TIME_LEN)
+        lat_dim=f.def_dim(LAT_NAME,LAT_LEN)
+        lon_dim=f.def_dim(LON_NAME,LON_LEN)
+        lev_dim=f.def_dim(LEVEL_NAME,LEVEL_LEN)
+        time_dim=f.def_dim(TIME_NAME,TIME_LEN)
 
         # specify dimensions with names
-        fv1 = f.defineVar(VAR_NAME1,VAR_TYPE,(LEVEL_NAME, LAT_NAME, LON_NAME, TIME_NAME))
+        fv1 = f.def_var(VAR_NAME1,VAR_TYPE,(LEVEL_NAME, LAT_NAME, LON_NAME, TIME_NAME))
         # specify dimensions with instances
-        fv2 = f.defineVar(VAR_NAME2,VAR_TYPE,(lev_dim,lat_dim,lon_dim,time_dim))
+        fv2 = f.def_var(VAR_NAME2,VAR_TYPE,(lev_dim,lat_dim,lon_dim,time_dim))
         # specify dimensions using a mix of names and instances
-        fv3 = f.defineVar(VAR_NAME3,VAR_TYPE,(lev_dim, LAT_NAME, lon_dim, TIME_NAME))
+        fv3 = f.def_var(VAR_NAME3,VAR_TYPE,(lev_dim, LAT_NAME, lon_dim, TIME_NAME))
         # single dim instance for name (not in a tuple)
-        fv4 = f.defineVar(VAR_NAME4,VAR_TYPE,time_dim)
-        fv5 = f.defineVar(VAR_NAME5,VAR_TYPE,TIME_NAME)
+        fv4 = f.def_var(VAR_NAME4,VAR_TYPE,time_dim)
+        fv5 = f.def_var(VAR_NAME5,VAR_TYPE,TIME_NAME)
         f.close()
         assert validate_nc_file(self.file_path) == 0
 

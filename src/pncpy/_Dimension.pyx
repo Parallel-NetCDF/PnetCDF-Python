@@ -22,7 +22,7 @@ cdef class Dimension:
         **`name`**: Name of the dimension.
         **`size`**: Size of the dimension. -1 means unlimited. (Default `-1`).
         ***Note***: `Dimension` instances should be created using the
-        `Dataset.defineDim` method of a `File` instance, not using `Dimension.__init__` directly.
+        `Dataset.def_dim` method of a `File` instance, not using `Dimension.__init__` directly.
         """
         cdef int ierr
         cdef char *dimname
