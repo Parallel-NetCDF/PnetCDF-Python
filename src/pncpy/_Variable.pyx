@@ -190,11 +190,11 @@ cdef class Variable:
         self._name = name
         # default for automatically applying scale_factor and
         # add_offset, and converting to/from masked arrays is True.
-        self.scale = True
-        self.mask = True
+        self.scale = False
+        self.mask = False
         # issue 809: default for converting arrays with no missing values to
         # regular numpy arrays
-        self.always_mask = True
+        self.always_mask = False
         # default is to automatically convert to/from character
         # to string arrays when _Encoding variable attribute is set.
         self.chartostring = True

@@ -76,8 +76,6 @@ class VariablesTestCase(unittest.TestCase):
         self.v3_nofill, self.v3_fillvalue = v3.inq_fill()
         self.v4_nofill, self.v4_fillvalue = v4.inq_fill()
         a = v1[:]
-        # print(v1[:])# not critical
-        # print(v1.get_var_all()) # Take a note on what features are not implemented compared to netcdf4
         f.close() 
         assert validate_nc_file(self.file_path) == 0
     def tearDown(self):
