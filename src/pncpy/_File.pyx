@@ -506,7 +506,7 @@ cdef class File:
         _check_err(ierr)
         return buffsize
 
-    def set_fill_mode(self, fillmode):
+    def set_fill(self, fillmode):
         cdef int _file_id, _fillmode, _old_fillmode
         _file_id = self._ncid
         _fillmode = fillmode

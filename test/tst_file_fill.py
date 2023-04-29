@@ -8,7 +8,7 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program sets the default fill mode for a netCDF file open for writing using `File` class
-   method set_fill_mode(). This call will change the fill mode for all non-record variables 
+   method set_fill(). This call will change the fill mode for all non-record variables 
    defined so far and change the default fill mode for new non-record variables defined following
    this call. The library will internally invoke ncmpi_set_fill in C. 
 """
@@ -47,7 +47,7 @@ class VariablesTestCase(unittest.TestCase):
         # define a netCDF variable before setting file filling mode 
         v1 = f.def_var('data1', pncpy.NC_INT, ('x','y'))
         # enable fill mode at file-level which applies to all netCDF variables of the file
-        old_fillmode = f.set_fill_mode(pncpy.NC_FILL)
+        old_fillmode = f.set_fill(pncpy.NC_FILL)
         # check old_fillmode
         assert(old_fillmode == pncpy.NC_NOFILL)
         # define a netCDF variable after setting file filling mode
@@ -74,7 +74,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in [1,2]:
             v = f.variables[f'data{i}']
             # check the fill mode settings of each variable
-            no_fill, fill_value = v.get_fill_info()
+            no_fill, fill_value = v.inq_fill()
             # check if no_fill flag is set to 0 
             self.assertTrue(no_fill == 0)
             # check if fill_value equals default fill value
@@ -87,7 +87,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in [1,2]:
             v = f.variables[f'data{i}']
             # check the fill mode settings of each variable
-            no_fill, fill_value = v.get_fill_info()
+            no_fill, fill_value = v.inq_fill()
             # check if no_fill flag is set to 0 
             self.assertTrue(no_fill == 0)
             # check if fill_value equals default fill value
@@ -100,7 +100,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in [1,2]:
             v = f.variables[f'data{i}']
             # check the fill mode settings of each variable
-            no_fill, fill_value = v.get_fill_info()
+            no_fill, fill_value = v.inq_fill()
             # check if no_fill flag is set to 0 
             self.assertTrue(no_fill == 0)
             # check if fill_value equals default fill value

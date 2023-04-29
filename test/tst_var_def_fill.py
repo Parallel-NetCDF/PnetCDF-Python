@@ -51,20 +51,18 @@ class VariablesTestCase(unittest.TestCase):
         v1 = f.def_var('data1', pncpy.NC_FLOAT, ('x','y'))
         v2 = f.def_var('data2', pncpy.NC_FLOAT, ('x','y'))
         v3 = f.def_var('data3', pncpy.NC_FLOAT, ('x','y'))
-        v4 = f.def_var('data4', pncpy.NC_FLOAT, ('x','y'))# change this as well
-        # define non-record variables with fill value for testing 
-        # v4 = f.def_var('data4', pncpy.NC_FLOAT, ('x','y'), fill_value = True)
+        v4 = f.def_var('data4', pncpy.NC_FLOAT, ('x','y'))
         
         # check current fill node
         for v in [v1, v2, v3, v4]:
-            old_no_fill, old_fill_value = v.get_fill_info()# inq_fill?
+            old_no_fill, old_fill_value = v.inq_fill()
             assert(old_no_fill == 1)
         # set fill value and fill mode for some variables using def_fill
-        v1.def_fill(no_fill = 0, fill_value = fill_value)#def_fill check all function names
+        v1.def_fill(no_fill = 0, fill_value = fill_value)
         v2.def_fill(no_fill = 0)
         v4.def_fill(no_fill = 0)
         # set fill value for some variables using _FillValue attribute writes
-        v2.put_att("_FillValue", fill_value)# put? change this as well
+        v2.put_att("_FillValue", fill_value)
         v3._FillValue = fill_value
 
         # set the variable with fill values back to no fill
@@ -73,11 +71,10 @@ class VariablesTestCase(unittest.TestCase):
         f.enddef()
         for v in [v1,v2,v3,v4]:
             v.put_var_all(np.float32(rank + 1), index = (rank, rank))
-
-        self.v1_nofill, self.v1_fillvalue = v1.get_fill_info()
-        self.v2_nofill, self.v2_fillvalue = v2.get_fill_info()
-        self.v3_nofill, self.v3_fillvalue = v3.get_fill_info()
-        self.v4_nofill, self.v4_fillvalue = v4.get_fill_info()
+        self.v1_nofill, self.v1_fillvalue = v1.inq_fill()
+        self.v2_nofill, self.v2_fillvalue = v2.inq_fill()
+        self.v3_nofill, self.v3_fillvalue = v3.inq_fill()
+        self.v4_nofill, self.v4_fillvalue = v4.inq_fill()
         a = v1[:]
         # print(v1[:])# not critical
         # print(v1.get_var_all()) # Take a note on what features are not implemented compared to netcdf4

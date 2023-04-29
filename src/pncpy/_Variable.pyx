@@ -494,7 +494,7 @@ cdef class Variable:
                 ierr = ncmpi_def_var_fill(self._file_id, self._varid, _no_fill, PyArray_DATA(data))
         _check_err(ierr)
 
-    def get_fill_info(self):
+    def inq_fill(self):
         cdef int ierr, no_fill
         cdef ndarray fill_value
         fill_value = np.empty((1,), self.dtype)
