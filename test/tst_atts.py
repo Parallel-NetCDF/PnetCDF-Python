@@ -50,7 +50,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = FILE_NAME
         with pncpy.File(self.file_path,'w', format = "64BIT_DATA") as f:
             # try to set a dataset attribute with one of the reserved names.
-            f.put_att('data_model','netcdf5_format')
+            f.put_att('file_format','netcdf5_format')
             # test attribute renaming
             f.stratt_tmp = STRATT
             f.renameAttribute('stratt_tmp','stratt')

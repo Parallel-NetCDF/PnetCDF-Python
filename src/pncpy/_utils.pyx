@@ -205,7 +205,7 @@ cdef _set_att(file, int varid, name, value,\
         _check_err(ierr, err_cls=AttributeError)
     # a 'regular' array type ('f4','i4','f8' etc)
     else:
-        if file.data_model != "64BIT_DATA":
+        if file.file_format != "64BIT_DATA":
             #check if dtype meets CDF-5 variable standards
             if value_arr.dtype.str[1:] not in _supportedtypescdf2:
                 raise TypeError, 'illegal data type for attribute %r, must be one of %s, got %s' % (attname, _supportedtypescdf2, value_arr.dtype.str[1:])
@@ -771,17 +771,20 @@ cpdef strerrno(err_code):
     err_code_str = (<char *>ncmpi_strerrno(ierr)).decode('ascii')
     return err_code_str
 
-cpdef set_default_format(int new_format):
+cpdef set_default_format(str new_format):
     cdef int ierr, newformat, oldformat
-    newformat = new_format
+    if new_format not in _format_dict.keys():
+        raise ValueError("format not supported,  must be one of %s" % _format_dict.keys())
+    newformat = _format_dict[new_format]
     with nogil:
         ierr = ncmpi_set_default_format(newformat, &oldformat)
     _check_err(ierr)
-    return oldformat
+    return _reverse_format_dict[oldformat]
 
 cpdef inq_default_format():
     cdef int curformat
     with nogil:
         ierr = ncmpi_inq_default_format(&curformat)
     _check_err(ierr)
-    return curformat
+    return _reverse_format_dict[curformat]
+

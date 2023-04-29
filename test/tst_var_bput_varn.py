@@ -23,7 +23,7 @@ from pncpy import strerror, strerrno
 from utils import validate_nc_file
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_bput_varn.nc"
 
 comm = MPI.COMM_WORLD
@@ -119,8 +119,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # select next file format for testing
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         dx = f.def_dim('x',xdim)
         dy = f.def_dim('y',ydim)
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests

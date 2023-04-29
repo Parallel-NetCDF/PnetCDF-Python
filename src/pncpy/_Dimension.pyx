@@ -28,7 +28,7 @@ cdef class Dimension:
         cdef char *dimname
         cdef MPI_Offset lendim
         self._file_id = file._ncid
-        self._data_model = file.data_model
+        self._file_format = file.file_format
         self._name = name
 
         if 'id' in kwargs:

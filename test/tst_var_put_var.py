@@ -20,7 +20,7 @@ from mpi4py import MPI
 from utils import validate_nc_file
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_var.nc"
 xdim=9; ydim=10; zdim=11 
 # generate numpy array to write to the whole netCDF variable
@@ -40,8 +40,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)

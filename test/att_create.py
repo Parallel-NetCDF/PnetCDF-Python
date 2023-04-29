@@ -4,18 +4,18 @@ import numpy as np
 from utils import validate_nc_file
 
 FILE_NAME = "tst_att_create.nc"
-DATA_MODEL = '64BIT_OFFSET'
+file_format = '64BIT_OFFSET'
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-file1 = pncpy.File(filename=FILE_NAME, mode='w', format=DATA_MODEL, Comm=comm, Info=None)
+file1 = pncpy.File(filename=FILE_NAME, mode='w', format=file_format, Comm=comm, Info=None)
 file1.redef()
-file1.dummy_attr1 = np.int32(10) if DATA_MODEL != "64BIT_DATA" else 10
+file1.dummy_attr1 = np.int32(10) if file_format != "64BIT_DATA" else 10
 setattr(file1, "dummy_attr2", "attibute2")
 print(vars(file1))
 
-file1.height = np.int32(123) if DATA_MODEL != "64BIT_DATA" else 123
+file1.height = np.int32(123) if file_format != "64BIT_DATA" else 123
 print(vars(file1))
 
 file1.time = [1.2, 2.3, 3.4]

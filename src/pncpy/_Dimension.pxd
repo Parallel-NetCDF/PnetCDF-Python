@@ -3,7 +3,7 @@ from ._File cimport File
 cdef class Dimension:
     cdef public int _dimid, _file_id
     cdef public File _file
-    cdef public _name, _data_model
+    cdef public _name, _file_format
 
     """
     A netCDF `Dimension` is used to describe the coordinates of a `Variable`.

@@ -26,7 +26,7 @@ from utils import validate_nc_file
 
 seed(0)
 # Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2 and None for CDF-1)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 # Name of the test data file
 file_name = "tst_var_indexer.nc"
 
@@ -49,9 +49,9 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        data_model = data_models.pop(0)
+        file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)

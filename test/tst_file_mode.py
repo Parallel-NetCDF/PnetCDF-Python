@@ -25,7 +25,7 @@ from utils import validate_nc_file
 
 seed(0)
 # Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2 and None for CDF-1)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 # Name of the test data file
 file_name = "tst_file_mode.nc"
 xdim = 9
@@ -45,7 +45,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        self.data_model = data_models.pop(0)
+        self.file_format = file_formats.pop(0)
 
         
 
@@ -59,7 +59,7 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf5(self):
         """testing file access with different modes in CDF5 data file"""
         # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
+        with pncpy.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
         # Try writing to file by defining a dimension
             f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
@@ -115,7 +115,7 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf2(self):
         """testing file access with different modes in CDF2 data file"""
         # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
+        with pncpy.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
         # Try writing to file by defining a dimension
             f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
@@ -171,7 +171,7 @@ class VariablesTestCase(unittest.TestCase):
     def test_cdf1(self):
         """testing file access with different modes in CDF1 data file"""
         # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
+        with pncpy.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
         # Try writing to file by defining a dimension
             f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool

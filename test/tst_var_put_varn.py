@@ -8,7 +8,7 @@ from utils import validate_nc_file
 import argparse
 
 
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_varn.nc"
 
 
@@ -35,8 +35,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         # define dimensions and variables
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)

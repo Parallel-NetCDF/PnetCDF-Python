@@ -7,10 +7,13 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
-   program sets the fill mode for an individual netCDF variable using `Variable` class
-   method def_fill(). This call will change the fill mode for all non-record variables 
-   defined so far and change the default fill mode for new non-record variables defined following
-   this call. The library will internally invoke ncmpi_set_fill in C. 
+   program sets the fill mode and/or customized fill value for an individual netCDF variable
+   using `Variable` class method def_fill(). The library will internally invoke ncmpi_def_var_fill
+   in C. 
+
+   To run the test, execute the following
+    `mpiexec -n [num_process] python3  tst_var_def_fill.py [test_file_output_dir](optional)`
+
 """
 import pncpy
 from numpy.random import seed, randint
@@ -22,7 +25,7 @@ from utils import validate_nc_file
 import numpy.ma as ma
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_def_fill.nc"
 xdim=9; ydim=10 
 # file value to be set for each variable
@@ -41,8 +44,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # select next file format for testing
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('xu', -1)

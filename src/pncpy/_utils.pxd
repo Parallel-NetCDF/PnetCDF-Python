@@ -14,6 +14,6 @@ cdef chartostring(b,encoding=*)
 cdef stringtochar(a,encoding=*)
 cpdef strerror(err_code)
 cpdef strerrno(err_code)
-cpdef set_default_format(int new_format)
+cpdef set_default_format(str new_format)
 cpdef inq_default_format()
 

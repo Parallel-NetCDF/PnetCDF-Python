@@ -20,7 +20,7 @@ from utils import validate_nc_file
 import numpy.ma as ma
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_def_fill.nc"
 xdim=9; ydim=10 
 # file value to be set for each variable
@@ -52,8 +52,8 @@ class VariablesTestCase(unittest.TestCase):
         starts = np.array([0, 2 * rank])
         counts = np.array([1, 2])
         # select next file format for testing
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         # define variables and dimensions for testing
         dim_xu = f.def_dim('xu', -1)
         dim_x = f.def_dim('x',xdim)

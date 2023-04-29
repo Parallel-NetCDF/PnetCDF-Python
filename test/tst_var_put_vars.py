@@ -20,7 +20,7 @@ from mpi4py import MPI
 from utils import validate_nc_file
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_vars.nc"
 
 
@@ -49,8 +49,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # unit test will iterate through all three file formats
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -66,7 +66,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
         
-        f = pncpy.File(filename=self.file_path, mode = 'r+', format=data_model, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'r+', format=file_format, Comm=comm, Info=None)
         v1_u = f.variables['data1u']
          # equivalent code to the following using indexer syntax: v1_u[3:4,0:6:2,10*rank:10*(rank+1):2] = datam
         starts = np.array([3, 0, 10 * rank])

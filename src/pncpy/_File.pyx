@@ -22,7 +22,7 @@ import numpy as np
 
 #TODO: confirm the final list of private attributes
 _private_atts = \
-['_ncid','_varid','dimensions','variables','data_model','disk_format',
+['_ncid','_varid','dimensions','variables', 'file_format',
  '_nunlimdim','path', 'name', '__orthogoral_indexing__', '_buffer']
 
 ctypedef MPI.Comm Comm
@@ -64,9 +64,9 @@ cdef class File:
         bytestr = _strencode(filename, encoding=encoding)
         path = bytestr
         if format:
-            supported_formats = ["64BIT_OFFSET", "64BIT_DATA", "CLASSIC"]
+            supported_formats = ["64BIT_OFFSET", "64BIT_DATA"]
             if format not in supported_formats:
-                msg="underlying file format must be one of `'64BIT_OFFSET'` or `'64BIT_DATA'` or `'CLASSIC'`"
+                msg="underlying file format must be one of `'64BIT_OFFSET'` or `'64BIT_DATA'`"
                 raise ValueError(msg)
         
         clobber = True
@@ -101,7 +101,7 @@ cdef class File:
         self.def_mode_on = 0
         self.indep_mode = 0
         self._ncid = ncid
-        self.data_model = _get_format(ncid)
+        self.file_format = _get_format(ncid)
         self.dimensions = _get_dims(self)
         self.variables = _get_vars(self)
     

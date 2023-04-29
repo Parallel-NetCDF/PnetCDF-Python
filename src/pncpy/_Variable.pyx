@@ -17,7 +17,7 @@ from ._utils cimport _nptonctype, _notcdf2dtypes, _nctonptype, _nptompitype, _su
                      default_fillvals, _StartCountStride, _out_array_shape
 import_array()
 _private_atts = \
-['_ncid','_varid','dimensions','variables','data_model','disk_format',
+['_ncid','_varid','dimensions','variables','file_format','disk_format',
  '_nunlimdim','path', 'name', '__orthogoral_indexing__', '_buffer']
 
 
@@ -1318,7 +1318,7 @@ cdef class Variable:
         # strides all 1 or scalar variable, use put_vara (faster)
         #bufcount = data.size
         bufcount = NC_COUNT_IGNORE
-        if self._file.data_model != "64BIT_DATA":
+        if self._file.file_format != "64BIT_DATA":
             #check if dtype meets CDF-5 variable standards
             if data.dtype.str[1:] not in _supportedtypescdf2:
                 raise TypeError, 'illegal data type, must be one of %s, got %s' % \
