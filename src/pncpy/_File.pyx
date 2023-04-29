@@ -103,7 +103,7 @@ cdef class File:
         self._ncid = ncid
         self.file_format = _get_format(ncid)
         self.dimensions = _get_dims(self)
-        self.variables = _get_vars(self)
+        self.variables = _get_variables(self)
     
     def close(self):
         self._close(True)
@@ -542,7 +542,7 @@ cdef _get_dims(file):
         free(dimids)
     return dimensions
 
-cdef _get_vars(file):
+cdef _get_variables(file):
     # Private function to create `Variable` instances for all the
     # variables in a `File` 
     cdef int ierr, numvars, n, nn, numdims, varid, classp, iendian, _file_id
