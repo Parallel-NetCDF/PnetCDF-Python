@@ -27,6 +27,7 @@ MPI_Datatype MPI_DOUBLE = MPI.DOUBLE"""
 
 
 import_array()
+
 # np data type <--> netCDF data type mapping.
 _nptonctype  = {'S1' : NC_CHAR_C,
                 'i1' : NC_BYTE_C,
@@ -51,6 +52,7 @@ _nptompitype = {'S1' : MPI_CHAR,
                 'u8' : MPI_UNSIGNED_LONG_LONG,
                 'f4' : MPI_FLOAT,
                 'f8' : MPI_DOUBLE}
+
 
 """_nptompitype = {'S1' : MPI_CHAR,
                 'i1' : MPI_INT8,
@@ -102,6 +104,13 @@ for _key,_value in _nptonctype.items():
 _supportedtypes = _nptonctype.keys()
 _supportedtypescdf2 = [t for t in _nptonctype if t not in _notcdf2dtypes]
 
+# create dictionary mapping string identifiers to netcdf format codes
+_format_dict  = {'CLASSIC' : NC_FORMAT_CLASSIC,
+                 '64BIT_OFFSET' : NC_FORMAT_64BIT,
+                 '64BIT_DATA': NC_FORMAT_64BIT_DATA}
+_reverse_format_dict = dict((v, k) for k, v in _format_dict.iteritems())
+_reverse_format_dict[NC_FORMAT_CDF2] = "64BIT_OFFSET"
+_reverse_format_dict[NC_FORMAT_CDF5] = "64BIT_DATA"
 # create external NC datatype constants for python users
 NC_CHAR = NC_CHAR_C
 NC_BYTE = NC_BYTE_C
@@ -739,6 +748,15 @@ cdef _is_int(a):
     except:
         return False
 
+cdef _get_format(int ncid):
+    # Private function to get the netCDF file format
+    cdef int ierr, formatp
+    with nogil:
+        ierr = ncmpi_inq_format(ncid, &formatp)
+    _check_err(ierr)
+    if formatp not in _reverse_format_dict:
+        raise ValueError('format not supported by python interface')
+    return _reverse_format_dict[formatp]
 # external C functions.
 cpdef strerror(err_code):
     cdef int ierr
@@ -750,6 +768,20 @@ cpdef strerror(err_code):
 cpdef strerrno(err_code):
     cdef int ierr
     ierr = err_code
-  
     err_code_str = (<char *>ncmpi_strerrno(ierr)).decode('ascii')
     return err_code_str
+
+cpdef set_default_format(int new_format):
+    cdef int ierr, newformat, oldformat
+    newformat = new_format
+    with nogil:
+        ierr = ncmpi_set_default_format(newformat, &oldformat)
+    _check_err(ierr)
+    return oldformat
+
+cpdef inq_default_format():
+    cdef int curformat
+    with nogil:
+        ierr = ncmpi_inq_default_format(&curformat)
+    _check_err(ierr)
+    return curformat

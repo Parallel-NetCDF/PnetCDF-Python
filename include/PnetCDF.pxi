@@ -50,6 +50,11 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_FILL_INT64_C "NC_FILL_INT64"
     cdef const int NC_FILL_UINT64_C "NC_FILL_UINT64"
 
+    #cdef const int NC_FORMAT_CLASSIC_C "NC_FORMAT_CLASSIC"
+    #cdef const int NC_FORMAT_64BIT_C "NC_FORMAT_64BIT"
+    #cdef const int NC_FORMAT_64BIT_DATA_C "NC_FORMAT_64BIT_DATA"
+    #cdef const int NC_FORMAT_CDF2_C "NC_FORMAT_CDF2"
+    #cdef const int NC_FORMAT_CDF5_C "NC_FORMAT_CDF5"
 
     cdef enum:
     # TODO: Fix redeclaration warnings
@@ -73,6 +78,14 @@ cdef extern from "pnetcdf.h":
         NC_NOWRITE
         NC_WRITE
         NC_NOERR
+
+        NC_FORMAT_CLASSIC
+        NC_FORMAT_64BIT
+        NC_FORMAT_64BIT_DATA
+        NC_FORMAT_CDF2
+        NC_FORMAT_CDF5
+    
+
 
         #Default fill values, used unless _FillValue attribute is set.
         # These values are stuffed into newly allocated space as appropriate.
@@ -163,6 +176,10 @@ cdef extern from "pnetcdf.h":
     int ncmpi_inq_var_fill(int ncid, int varid, int *no_fill, void *fill_value) nogil
     int ncmpi_inq_buffer_usage(int ncid, MPI_Offset *usage) nogil
     int ncmpi_inq_buffer_size(int ncid, MPI_Offset *buf_size) nogil
+    int ncmpi_set_default_format(int  new_format, int *old_formatp) nogil
+    int ncmpi_inq_default_format(int *formatp) nogil
+    int ncmpi_inq_format(int ncid, int *formatp) nogil
+
     # Attibute APIs
     int ncmpi_put_att_text(int ncid, int varid, const char *name, MPI_Offset len, const char *op) nogil
     int ncmpi_put_att(int ncid, int varid, const char *name, nc_type xtype, MPI_Offset len, const void *op) nogil

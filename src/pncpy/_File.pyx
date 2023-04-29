@@ -16,7 +16,7 @@ from libc.stdlib cimport malloc, free
 
 from ._Dimension cimport Dimension
 from ._Variable cimport Variable
-from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names
+from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _get_format
 from._utils cimport _nctonptype
 import numpy as np
 
@@ -64,9 +64,9 @@ cdef class File:
         bytestr = _strencode(filename, encoding=encoding)
         path = bytestr
         if format:
-            supported_formats = ["64BIT_OFFSET", "64BIT_DATA"]
+            supported_formats = ["64BIT_OFFSET", "64BIT_DATA", "CLASSIC"]
             if format not in supported_formats:
-                msg="underlying file format must be one of `'64BIT_OFFSET'` or `'64BIT_DATA'`"
+                msg="underlying file format must be one of `'64BIT_OFFSET'` or `'64BIT_DATA'` or `'CLASSIC'`"
                 raise ValueError(msg)
         
         clobber = True
@@ -101,7 +101,7 @@ cdef class File:
         self.def_mode_on = 0
         self.indep_mode = 0
         self._ncid = ncid
-        self.data_model = format
+        self.data_model = _get_format(ncid)
         self.dimensions = _get_dims(self)
         self.variables = _get_vars(self)
     
