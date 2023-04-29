@@ -503,6 +503,13 @@ cdef class Variable:
         _check_err(ierr)
         return no_fill, fill_value[0]
 
+    def fill_rec(self, int rec_no):
+        cdef int recno, ierr
+        recno = rec_no
+        with nogil:
+            ierr = ncmpi_fill_var_rec(self._file_id, self._varid, recno)
+        _check_err(ierr)
+
     def set_auto_chartostring(self,chartostring):
         """
         **`set_auto_chartostring(self,chartostring)`**

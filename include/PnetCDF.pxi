@@ -169,15 +169,14 @@ cdef extern from "pnetcdf.h":
     int ncmpi_inq_att(int ncid, int varid, const char *name, nc_type *xtypep, MPI_Offset *lenp) nogil
     int ncmpi_inq_natts(int ncid, int *ngattsp) nogil
     int ncmpi_inq_attname(int ncid, int varid, int attnum, char *name) nogil
-
     int ncmpi_get_att(int ncid, int varid, const char *name, void *ip) nogil
     int ncmpi_get_att_text(int ncid, int varid, const char *name, char *ip) nogil
-
     int ncmpi_rename_att(int ncid, int varid, const char *name, const char *newname) nogil
     int ncmpi_del_att(int ncid, int varid, const char *name) nogil
     # Variable APIs
     int ncmpi_def_var(int ncid, const char *name, nc_type xtype, int ndims, const int *dimidsp, int *varidp) nogil
     int ncmpi_def_var_fill(int ncid, int varid, int no_fill, const void *fill_value) nogil
+    int ncmpi_fill_var_rec (int ncid, int varid, MPI_Offset recno) nogil
     int ncmpi_inq_varndims(int ncid, int varid, int *ndimsp) nogil
     int ncmpi_inq_varname(int ncid, int varid, char *name) nogil
     int ncmpi_inq_vartype(int ncid, int varid, nc_type *xtypep) nogil

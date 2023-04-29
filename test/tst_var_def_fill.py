@@ -86,7 +86,7 @@ class VariablesTestCase(unittest.TestCase):
             pass
 
     def test_cdf5(self):
-        """testing file set fill mode for CDF-5 file format"""
+        """testing var def fill for CDF-5 file format"""
         # check the fill mode settings of each variable
         # check no_fill flag 
         self.assertTrue(self.v1_nofill == 0)
@@ -99,7 +99,7 @@ class VariablesTestCase(unittest.TestCase):
         self.assertTrue(self.v3_fillvalue == fill_value)
 
     def test_cdf2(self):
-        """testing file set fill mode for CDF-2 file format"""
+        """testing var def fill mode for CDF-2 file format"""
         # check the fill mode settings of each variable
         # check no_fill flag 
         self.assertTrue(self.v1_nofill == 0)
@@ -112,7 +112,7 @@ class VariablesTestCase(unittest.TestCase):
         self.assertTrue(self.v3_fillvalue == fill_value)
 
     def test_cdf1(self):
-        """testing file set fill mode for CDF-1 file format"""
+        """testing var def fill mode for CDF-1 file format"""
         # check the fill mode settings of each variable
         # check no_fill flag 
         self.assertTrue(self.v1_nofill == 0)
