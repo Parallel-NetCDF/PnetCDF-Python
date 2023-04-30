@@ -8,7 +8,12 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program sets the fill mode and fill values for an individual netCDF record variable using 
-   `Variable` class method def_fill() and fill_rec(). This call will change the fill mode which enables following  The library will internally invoke ncmpi_set_fill in C. 
+   `Variable` class method def_fill() and fill_rec(). This call will change the fill mode 
+   which enables filling values for the netCDF variable. The library will internally invoke 
+   ncmpi_fill_var_rec in C. 
+
+    To run the test, execute the following
+    `mpiexec -n [num_process] python3  tst_var_rec_fill.py [test_file_output_dir](optional)`
 """
 import pncpy
 from numpy.random import seed, randint
