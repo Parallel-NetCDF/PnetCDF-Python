@@ -796,5 +796,21 @@ cpdef inq_file_format(str file_name):
         ierr = ncmpi_inq_file_format(filename, &curformat)
     _check_err(ierr)
     return _reverse_format_dict[curformat]
+
+cpdef inq_malloc_max_size():
+    cdef int ierr
+    cdef int size
+    with nogil:
+        ierr = ncmpi_inq_malloc_max_size(&size)
+    _check_err(ierr)
+    return size
+
+cpdef inq_malloc_size():
+    cdef int ierr
+    cdef int size
+    with nogil:
+        ierr = ncmpi_inq_malloc_size(&size)
+    _check_err(ierr)
+    return size
     
     

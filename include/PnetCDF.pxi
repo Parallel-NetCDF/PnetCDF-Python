@@ -220,6 +220,8 @@ cdef extern from "pnetcdf.h":
     const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
     int ncmpi_put_varm_all(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
     const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_inq_malloc_size(MPI_Offset *size) nogil
+    int ncmpi_inq_malloc_max_size(MPI_Offset *size) nogil
 
     int ncmpi_get_vara(int ncid, int varid, const MPI_Offset start[],\
      const MPI_Offset count[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
