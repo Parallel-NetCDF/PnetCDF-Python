@@ -98,7 +98,6 @@ cdef class File:
 
         _check_err(ierr, err_cls=OSError, filename=path)
         self._isopen = 1
-        self.def_mode_on = 0
         self.indep_mode = 0
         self._ncid = ncid
         self.file_format = _get_format(ncid)
@@ -173,7 +172,6 @@ cdef class File:
     def _redef(self):
         cdef int ierr
         cdef int fileid= self._ncid
-        self.def_mode_on = 1
         with nogil:
             ierr = ncmpi_redef(fileid)
         _check_err(ierr)
@@ -183,7 +181,6 @@ cdef class File:
     def _enddef(self):
         cdef int ierr
         cdef int fileid = self._ncid
-        self.def_mode_on = 0
         with nogil:
             ierr = ncmpi_enddef(fileid)
         _check_err(ierr)
@@ -287,7 +284,6 @@ cdef class File:
         self.variables[varname] = Variable(self, varname, nc_dtype,
         dimensions=dimensions, fill_value=fill_value)
         return self.variables[varname]
-    
 
     def ncattrs(self):
         """
@@ -295,21 +291,22 @@ cdef class File:
 
         return netCDF attribute names for this File in a list."""
         return _get_att_names(self._ncid, NC_GLOBAL)
-    def put_att(self,name,value):
-        """
-        **`put_att(self,name,value)`**
 
+    def putncatt(self,name,value):
+        """
+        **`putncatt(self,name,value)`**
         set a netCDF file attribute using name,value pair.
         Use if you need to set a netCDF attribute with the
         with the same name as one of the reserved python attributes."""
         cdef nc_type xtype
         xtype=-99
         _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
+
     def getncattr(self,name,encoding='utf-8'):
         """
         **`getncattr(self,name)`**
 
-        retrieve a netCDF dataset or group attribute.
+        retrieve a netCDF dataset or file attribute.
         Use if you need to get a netCDF attribute with the same
         name as one of the reserved python attributes.
 
@@ -336,12 +333,7 @@ cdef class File:
         cdef int ierr
         bytestr = _strencode(name)
         attname = bytestr
-        if not self.def_mode_on:
-            self._redef()
-            with nogil:
-                ierr = ncmpi_del_att(self._ncid, NC_GLOBAL, attname)
-            self._enddef()
-        else:
+        with nogil:
             ierr = ncmpi_del_att(self._ncid, NC_GLOBAL, attname)
         _check_err(ierr)
 
@@ -349,11 +341,11 @@ cdef class File:
     # if name in _private_atts, it is stored at the python
     # level and not in the netCDF file.
         if name not in _private_atts:
-            self.put_att(name, value)
+            self.putncatt(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot rebind. Use put_att instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot rebind. Use putncatt instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 

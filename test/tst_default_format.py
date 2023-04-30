@@ -6,7 +6,7 @@
 # License:  
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.
+   This test program is intended to illustrate the use of the pnetCDF python API.
    The program sets the default file format by using set_default_format function and 
     then create a number of netCDF files with default format for testing. Internally,
    the library will invoke ncmpi_set_default_format and ncmpi_create in C.
