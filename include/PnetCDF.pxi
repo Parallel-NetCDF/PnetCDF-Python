@@ -179,6 +179,7 @@ cdef extern from "pnetcdf.h":
     int ncmpi_set_default_format(int  new_format, int *old_formatp) nogil
     int ncmpi_inq_default_format(int *formatp) nogil
     int ncmpi_inq_format(int ncid, int *formatp) nogil
+    int ncmpi_inq_file_format(const char *filename, int *formatp) nogil
 
     # Attibute APIs
     int ncmpi_put_att_text(int ncid, int varid, const char *name, MPI_Offset len, const char *op) nogil

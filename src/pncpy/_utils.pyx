@@ -191,7 +191,6 @@ cdef _set_att(file, int varid, name, value,\
         # don't allow string array attributes in NETCDF3 files.
         if N > 1:
             msg='array string attributes not supported'
-            
         if not value_arr.shape:
             dats = _strencode(value_arr.item())
         else:
@@ -788,3 +787,14 @@ cpdef inq_default_format():
     _check_err(ierr)
     return _reverse_format_dict[curformat]
 
+cpdef inq_file_format(str file_name):
+    cdef char *filename
+    cdef int ierr, curformat
+    filename_bytestr =  _strencode(file_name)
+    filename = filename_bytestr
+    with nogil:
+        ierr = ncmpi_inq_file_format(filename, &curformat)
+    _check_err(ierr)
+    return _reverse_format_dict[curformat]
+    
+    

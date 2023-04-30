@@ -16,4 +16,5 @@ cpdef strerror(err_code)
 cpdef strerrno(err_code)
 cpdef set_default_format(str new_format)
 cpdef inq_default_format()
+cpdef inq_file_format(str file_name)
 

@@ -16,7 +16,7 @@
 
 """
 import pncpy
-from pncpy import set_default_format, inq_default_format
+from pncpy import set_default_format, inq_default_format, inq_file_format
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -78,6 +78,9 @@ class VariablesTestCase(unittest.TestCase):
         f = pncpy.File(self.file_paths[2], 'r')
         self.assertTrue(f.file_format == "CLASSIC")
         f.close()
+        self.assertTrue(inq_file_format(self.file_paths[0]) == "64BIT_DATA")
+        self.assertTrue(inq_file_format(self.file_paths[1]) == "64BIT_OFFSET")
+        self.assertTrue(inq_file_format(self.file_paths[2]) == "CLASSIC")
 
 
     def tearDown(self):
