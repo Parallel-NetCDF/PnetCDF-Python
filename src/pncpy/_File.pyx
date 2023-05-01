@@ -497,6 +497,22 @@ cdef class File:
             ierr = ncmpi_inq_buffer_size(_file_id, &buffsize)
         _check_err(ierr)
         return buffsize
+    
+    def inq_unlimdim(self):
+        """
+        **`inq_unlimdim(self)`**
+
+        return the unlimited dim instance of the file"""
+        cdef int ierr, unlimdimid
+        with nogil:
+            ierr = ncmpi_inq_unlimdim(self._ncid, &unlimdimid)
+        _check_err(ierr)
+        if unlimdimid == -1:
+            return None
+        for name, dim in self.dimensions.items():
+            if dim._dimid == unlimdimid:
+                return dim
+
 
     def set_fill(self, fillmode):
         cdef int _file_id, _fillmode, _old_fillmode
@@ -506,6 +522,20 @@ cdef class File:
             ierr = ncmpi_set_fill(_file_id, _fillmode, &_old_fillmode)
         _check_err(ierr)
         return _old_fillmode
+
+    def inq_num_rec_vars(self):
+        cdef int ierr, num_rec_vars
+        with nogil:
+            ierr = ncmpi_inq_num_rec_vars(self._ncid, &num_rec_vars)
+        _check_err(ierr)
+        return num_rec_vars
+
+    def inq_num_fix_vars(self):
+        cdef int ierr, num_fix_vars
+        with nogil:
+            ierr = ncmpi_inq_num_fix_vars(self._ncid, &num_fix_vars)
+        _check_err(ierr)
+        return num_fix_vars
 
 
 cdef _get_dims(file):

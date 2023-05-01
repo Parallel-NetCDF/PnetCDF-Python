@@ -1224,7 +1224,6 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    
 
 
     def put_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
