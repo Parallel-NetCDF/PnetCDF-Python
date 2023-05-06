@@ -50,11 +50,15 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_FILL_INT64_C "NC_FILL_INT64"
     cdef const int NC_FILL_UINT64_C "NC_FILL_UINT64"
 
-    #cdef const int NC_FORMAT_CLASSIC_C "NC_FORMAT_CLASSIC"
-    #cdef const int NC_FORMAT_64BIT_C "NC_FORMAT_64BIT"
-    #cdef const int NC_FORMAT_64BIT_DATA_C "NC_FORMAT_64BIT_DATA"
-    #cdef const int NC_FORMAT_CDF2_C "NC_FORMAT_CDF2"
-    #cdef const int NC_FORMAT_CDF5_C "NC_FORMAT_CDF5"
+    cdef const int NC_FORMAT_CLASSIC_C "NC_FORMAT_CLASSIC"
+    cdef const int NC_FORMAT_CDF2_C "NC_FORMAT_CDF2"
+    cdef const int NC_FORMAT_64BIT_OFFSET_C "NC_FORMAT_64BIT_OFFSET"
+    cdef const int NC_FORMAT_64BIT_C "NC_FORMAT_64BIT"
+    cdef const int NC_FORMAT_CDF5_C "NC_FORMAT_CDF5"
+    cdef const int NC_FORMAT_64BIT_DATA_C "NC_FORMAT_64BIT_DATA"
+    cdef const int NC_FORMAT_NETCDF4_C "NC_FORMAT_NETCDF4"
+    cdef const int NC_FORMAT_BP_C "NC_FORMAT_BP"
+
 
     cdef enum:
     # TODO: Fix redeclaration warnings
@@ -78,14 +82,6 @@ cdef extern from "pnetcdf.h":
         NC_NOWRITE
         NC_WRITE
         NC_NOERR
-
-        NC_FORMAT_CLASSIC
-        NC_FORMAT_64BIT
-        NC_FORMAT_64BIT_DATA
-        NC_FORMAT_CDF2
-        NC_FORMAT_CDF5
-    
-
 
         #Default fill values, used unless _FillValue attribute is set.
         # These values are stuffed into newly allocated space as appropriate.

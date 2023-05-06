@@ -46,8 +46,8 @@ class VariablesTestCase(unittest.TestCase):
                 file_path = file_name
             self.file_paths.append(file_path)
         # change default file format to "64BIT_DATA"
-        old_format = set_default_format("64BIT_DATA")
-        assert(old_format == "CLASSIC")
+        old_format = set_default_format(pncpy.NC_FORMAT_64BIT_DATA)
+        assert(old_format == pncpy.NC_FORMAT_CLASSIC)
         # create CDF-5 netCDF files using current default format
         f = pncpy.File(filename=self.file_paths[0], mode = 'w', Comm=comm, Info=None)
         f.close() 
@@ -59,8 +59,8 @@ class VariablesTestCase(unittest.TestCase):
         f.close() 
         assert validate_nc_file(self.file_paths[1]) == 0
         # change default file format back to "CLASSIC"
-        old_format = set_default_format("CLASSIC")
-        assert(old_format == "64BIT_DATA")
+        old_format = set_default_format(pncpy.NC_FORMAT_CLASSIC)
+        assert(old_format == pncpy.NC_FORMAT_64BIT_DATA)
         # create CDF-1 netCDF files using default
         f = pncpy.File(filename=self.file_paths[2], mode = 'w', Comm=comm, Info=None)
         f.close() 
@@ -70,17 +70,17 @@ class VariablesTestCase(unittest.TestCase):
     def test_formats(self):
         """testing set default format for file formats"""
         f = pncpy.File(self.file_paths[0], 'r')
-        self.assertTrue(f.file_format == "64BIT_DATA")
+        self.assertTrue(f.file_format == "64BIT_DATA" or f.file_format == "CDF5")
         f.close()
         f = pncpy.File(self.file_paths[1], 'r')
-        self.assertTrue(f.file_format == '64BIT_OFFSET')
+        self.assertTrue(f.file_format == "64BIT_OFFSET" or f.file_format == "64BIT" or f.file_format == "CDF2")
         f.close()
         f = pncpy.File(self.file_paths[2], 'r')
         self.assertTrue(f.file_format == "CLASSIC")
         f.close()
-        self.assertTrue(inq_file_format(self.file_paths[0]) == "64BIT_DATA")
-        self.assertTrue(inq_file_format(self.file_paths[1]) == "64BIT_OFFSET")
-        self.assertTrue(inq_file_format(self.file_paths[2]) == "CLASSIC")
+        self.assertTrue(inq_file_format(self.file_paths[0]) == pncpy.NC_FORMAT_64BIT_DATA)
+        self.assertTrue(inq_file_format(self.file_paths[1]) == pncpy.NC_FORMAT_64BIT_OFFSET)
+        self.assertTrue(inq_file_format(self.file_paths[2]) == pncpy.NC_FORMAT_CLASSIC)
 
 
     def tearDown(self):

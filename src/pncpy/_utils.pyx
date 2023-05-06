@@ -105,12 +105,16 @@ _supportedtypes = _nptonctype.keys()
 _supportedtypescdf2 = [t for t in _nptonctype if t not in _notcdf2dtypes]
 
 # create dictionary mapping string identifiers to netcdf format codes
-_format_dict  = {'CLASSIC' : NC_FORMAT_CLASSIC,
-                 '64BIT_OFFSET' : NC_FORMAT_64BIT,
-                 '64BIT_DATA': NC_FORMAT_64BIT_DATA}
-_reverse_format_dict = dict((v, k) for k, v in _format_dict.iteritems())
-_reverse_format_dict[NC_FORMAT_CDF2] = "64BIT_OFFSET"
-_reverse_format_dict[NC_FORMAT_CDF5] = "64BIT_DATA"
+_reverse_format_dict = {
+    NC_FORMAT_CLASSIC_C: "CLASSIC",
+    NC_FORMAT_CDF2_C: "CDF2",
+    NC_FORMAT_64BIT_OFFSET_C: "64BIT_OFFSET",
+    NC_FORMAT_64BIT_C: "64BIT",
+    NC_FORMAT_CDF5_C: "CDF5",
+    NC_FORMAT_64BIT_DATA_C: "64BIT_DATA",
+    NC_FORMAT_NETCDF4_C: "NETCDF4",
+    NC_FORMAT_BP_C: "BP"
+}
 # create external NC datatype constants for python users
 NC_CHAR = NC_CHAR_C
 NC_BYTE = NC_BYTE_C
@@ -142,6 +146,15 @@ NC_FILL_USHORT = NC_FILL_USHORT_C
 NC_FILL_UINT = NC_FILL_UINT_C
 NC_FILL_INT64 = NC_FILL_INT64_C
 NC_FILL_UINT64 = NC_FILL_UINT64_C
+
+NC_FORMAT_CLASSIC = NC_FORMAT_CLASSIC_C
+NC_FORMAT_CDF2 = NC_FORMAT_CDF2_C
+NC_FORMAT_64BIT_OFFSET = NC_FORMAT_64BIT_OFFSET_C
+NC_FORMAT_64BIT = NC_FORMAT_64BIT_C
+NC_FORMAT_CDF5 = NC_FORMAT_CDF5_C
+NC_FORMAT_64BIT_DATA = NC_FORMAT_64BIT_DATA_C
+NC_FORMAT_NETCDF4 = NC_FORMAT_NETCDF4_C
+NC_FORMAT_BP = NC_FORMAT_BP_C
 
 # internal C functions.
 cdef _strencode(pystr,encoding=""):
@@ -770,22 +783,20 @@ cpdef strerrno(err_code):
     err_code_str = (<char *>ncmpi_strerrno(ierr)).decode('ascii')
     return err_code_str
 
-cpdef set_default_format(str new_format):
+cpdef set_default_format(int new_format):
     cdef int ierr, newformat, oldformat
-    if new_format not in _format_dict.keys():
-        raise ValueError("format not supported,  must be one of %s" % _format_dict.keys())
-    newformat = _format_dict[new_format]
+    newformat = new_format
     with nogil:
         ierr = ncmpi_set_default_format(newformat, &oldformat)
     _check_err(ierr)
-    return _reverse_format_dict[oldformat]
+    return oldformat
 
 cpdef inq_default_format():
     cdef int curformat
     with nogil:
         ierr = ncmpi_inq_default_format(&curformat)
     _check_err(ierr)
-    return _reverse_format_dict[curformat]
+    return curformat
 
 cpdef inq_file_format(str file_name):
     cdef char *filename
@@ -795,7 +806,7 @@ cpdef inq_file_format(str file_name):
     with nogil:
         ierr = ncmpi_inq_file_format(filename, &curformat)
     _check_err(ierr)
-    return _reverse_format_dict[curformat]
+    return curformat
 
 cpdef inq_malloc_max_size():
     cdef int ierr
