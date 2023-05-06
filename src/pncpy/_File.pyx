@@ -537,6 +537,26 @@ cdef class File:
         _check_err(ierr)
         return num_fix_vars
 
+    def inq_striping(self):
+        cdef int ierr, striping_size, striping_count
+        with nogil:
+            ierr = ncmpi_inq_striping(self._ncid, &striping_size, &striping_count)
+        _check_err(ierr)
+        return striping_size, striping_count
+
+    def inq_recsize(self):
+        cdef int ierr, recsize
+        with nogil:
+            ierr = ncmpi_inq_recsize(self._ncid, &recsize)
+        _check_err(ierr)
+        return recsize
+
+    def inq_version(self):
+        cdef int ierr, nc_mode
+        with nogil:
+            ierr = ncmpi_inq_version(self._ncid, &nc_mode)
+        _check_err(ierr)
+        return nc_mode
 
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the

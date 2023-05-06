@@ -57,8 +57,8 @@ class VariablesTestCase(unittest.TestCase):
         v2_u = f.def_var('data2u', pncpy.NC_INT, (dim_xu, dim_y, dim_z))
         v1 = f.def_var('data1', pncpy.NC_INT, (dim_x, dim_y, dim_z))
         v2 = f.def_var('data2', pncpy.NC_INT, (dim_x, dim_y, dim_z))
-        # TODO: track down the inconsistent results after file is reopened
-        # inquiry and store the number of fix and record variables
+
+        
         f.close()
         assert validate_nc_file(self.file_path) == 0
 
@@ -76,10 +76,13 @@ class VariablesTestCase(unittest.TestCase):
         self.unlimited_dim_name = unlimited_dim.name
         # inquiry and store the file path
         self.file_path_test = f.filepath()
-        # TODO: add the tests the rest of ncmpi_inq famlily
+        # inquiry and store the number of fix and record variables
         self.n_rec_vars = f.inq_num_rec_vars()
         self.n_fix_vars = f.inq_num_fix_vars()
-    
+        # inquiry record variable record block size
+        self.recsize = f.inq_recsize()
+        # inquiry rFile system striping size and striping count
+        self.striping_size, self.striping_count = f.inq_striping()
 
     def test_cdf5(self):
         """testing file inq for CDF-5 file format"""

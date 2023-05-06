@@ -183,6 +183,10 @@ cdef extern from "pnetcdf.h":
     int ncmpi_inq_file_format(const char *filename, int *formatp) nogil
     int ncmpi_inq_num_rec_vars(int ncid, int *num_rec_varsp) nogil
     int ncmpi_inq_num_fix_vars(int ncid, int *num_rec_varsp) nogil
+    int ncmpi_inq_recsize(int ncid, MPI_Offset *recsize) nogil
+    int ncmpi_inq_version(int ncid, int *nc_mode) nogil
+    int ncmpi_inq_striping(int ncid, int *striping_size, int *striping_count) nogil
+
     # Attibute APIs
     int ncmpi_put_att_text(int ncid, int varid, const char *name, MPI_Offset len, const char *op) nogil
     int ncmpi_put_att(int ncid, int varid, const char *name, nc_type xtype, MPI_Offset len, const void *op) nogil
