@@ -34,7 +34,7 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 
-class VariablesTestCase(unittest.TestCase):
+class FileTestCase(unittest.TestCase):
 
     def setUp(self):
         if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
@@ -42,8 +42,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # select next file format for testing
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # write global attributes for testing
         f.attr1 = 'one'
         f.putncatt('attr2','two')
@@ -79,39 +79,29 @@ class VariablesTestCase(unittest.TestCase):
         # inquiry and store the number of fix and record variables
         self.n_rec_vars = f.inq_num_rec_vars()
         self.n_fix_vars = f.inq_num_fix_vars()
+        # inquiry and store file version
+        self.version = f.inq_version()
         # inquiry record variable record block size
         self.recsize = f.inq_recsize()
-        # inquiry rFile system striping size and striping count
+        # inquiry File system striping size and striping count
         self.striping_size, self.striping_count = f.inq_striping()
 
-    def test_cdf5(self):
-        """testing file inq for CDF-5 file format"""
-        self.assertTrue(self.nvars == 4)
-        self.assertTrue(self.ndims == 4)
-        self.assertTrue(self.nattrs == 2)
-        self.assertTrue(self.unlimited_dim_name == 'xu')
-        self.assertTrue(self.file_path_test == self.file_path)
-        self.assertTrue(self.n_rec_vars == 2)
-        self.assertTrue(self.n_fix_vars == 2)
-    def test_cdf2(self):
-        """testing file inq for CDF-2 file format"""
-        self.assertTrue(self.nvars == 4)
-        self.assertTrue(self.ndims == 4)
-        self.assertTrue(self.nattrs == 2)
-        self.assertTrue(self.unlimited_dim_name == 'xu')
-        self.assertTrue(self.file_path_test == self.file_path)
-        self.assertTrue(self.n_rec_vars == 2)
-        self.assertTrue(self.n_fix_vars == 2)
-
-    def test_cdf1(self):
-        """testing file inq for CDF-1 file format"""
-        self.assertTrue(self.nvars == 4)
-        self.assertTrue(self.ndims == 4)
-        self.assertTrue(self.nattrs == 2)
-        self.assertTrue(self.unlimited_dim_name == 'xu')
-        self.assertTrue(self.file_path_test == self.file_path)
-        self.assertTrue(self.n_rec_vars == 2)
-        self.assertTrue(self.n_fix_vars == 2)
+    def runTest(self):
+        """testing file inq for CDF-1/CDF-2/CDF-5 file format"""
+        self.assertEqual(self.nvars, 4)
+        self.assertEqual(self.ndims, 4)
+        self.assertEqual(self.nattrs, 2)
+        self.assertEqual(self.unlimited_dim_name, 'xu')
+        self.assertEqual(self.file_path_test, self.file_path)
+        self.assertEqual(self.n_rec_vars, 2)
+        self.assertEqual(self.n_fix_vars, 2)
+        self.assertEqual(self.n_fix_vars, 2)
+        if self._file_format == "64BIT_DATA":
+            self.assertEqual(self.version, pncpy.NC_64BIT_DATA)
+        elif self._file_format == "64BIT_OFFSET":
+            self.assertEqual(self.version, pncpy.NC_64BIT_OFFSET)
+        elif self._file_format == "CLASSIC":
+            self.assertEqual(self.version, pncpy.NC_CLASSIC_MODEL)
 
     def tearDown(self):
         # remove the temporary files
@@ -120,4 +110,18 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    # unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(FileTestCase())
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
+
+
+
+
+
+
+
+    
+    

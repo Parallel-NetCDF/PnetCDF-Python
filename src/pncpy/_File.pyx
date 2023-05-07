@@ -80,7 +80,7 @@ cdef class File:
             if not clobber:
                 cmode = NC_NOCLOBBER
             if format in ['64BIT_OFFSET', '64BIT_DATA']:
-                file_cmode = NC_64BIT_OFFSET if format  == '64BIT_OFFSET' else NC_64BIT_DATA
+                file_cmode = NC_64BIT_OFFSET_C if format  == '64BIT_OFFSET' else NC_64BIT_DATA_C
                 cmode = cmode | file_cmode
             with nogil:
                 ierr = ncmpi_create(mpicomm, path, cmode, mpiinfo, &ncid)

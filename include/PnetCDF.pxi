@@ -59,6 +59,12 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_FORMAT_NETCDF4_C "NC_FORMAT_NETCDF4"
     cdef const int NC_FORMAT_BP_C "NC_FORMAT_BP"
 
+    cdef const int NC_CLASSIC_MODEL_C "NC_CLASSIC_MODEL"
+    cdef const int NC_64BIT_OFFSET_C "NC_64BIT_OFFSET"
+    cdef const int NC_64BIT_DATA_C "NC_64BIT_DATA"
+    cdef const int NC_NETCDF4_C "NC_NETCDF4"
+    cdef const int NC_BP_C "NC_BP"
+
 
     cdef enum:
     # TODO: Fix redeclaration warnings
@@ -77,8 +83,6 @@ cdef extern from "pnetcdf.h":
         #NC_UINT64 # unsigned 8-byte int
 
         NC_NOCLOBBER # Don't destroy existing file on create
-        NC_64BIT_OFFSET
-        NC_64BIT_DATA
         NC_NOWRITE
         NC_WRITE
         NC_NOERR
@@ -128,6 +132,7 @@ cdef extern from "pnetcdf.h":
         NC_EIOMISMATCH
         NC_ENOTSUPPORT
         NC_COUNT_IGNORE
+
 
 
 

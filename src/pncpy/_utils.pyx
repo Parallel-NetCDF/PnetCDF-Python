@@ -156,6 +156,12 @@ NC_FORMAT_64BIT_DATA = NC_FORMAT_64BIT_DATA_C
 NC_FORMAT_NETCDF4 = NC_FORMAT_NETCDF4_C
 NC_FORMAT_BP = NC_FORMAT_BP_C
 
+NC_CLASSIC_MODEL = NC_CLASSIC_MODEL_C
+NC_64BIT_OFFSET = NC_64BIT_OFFSET_C
+NC_64BIT_DATA = NC_64BIT_DATA_C
+NC_NETCDF4 = NC_NETCDF4_C
+NC_BP = NC_BP_C
+
 # internal C functions.
 cdef _strencode(pystr,encoding=""):
     # encode a string into bytes.  If already bytes, do nothing.
