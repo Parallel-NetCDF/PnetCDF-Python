@@ -557,7 +557,7 @@ cdef class File:
             ierr = ncmpi_inq_version(self._ncid, &nc_mode)
         _check_err(ierr)
         return nc_mode
-    
+
 
     def inq_info(self):
         cdef MPI_Info *mpiinfo

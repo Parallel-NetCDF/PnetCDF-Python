@@ -3,7 +3,7 @@ from ._File cimport File
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
-
+from libc.stdlib cimport malloc, free
 #from mpi4py.libmpi cimport MPI_Offset, MPI_CHAR, MPI_BYTE, MPI_UNSIGNED_CHAR, MPI_INT16_T, MPI_UNSIGNED_SHORT,\
 #                          MPI_INT, MPI_UNSIGNED, MPI_INT64, MPI_UNSIGNED64, MPI_FLOAT, MPI_DOUBLE
 
@@ -830,15 +830,19 @@ cpdef inq_malloc_size():
     _check_err(ierr)
     return size
 
-cpdef inq_files_opened():
+cpdef inq_files_opened(ncids=None):
     cdef int ierr, num
     cdef int *ncidp
-    cdef list ncids = []
-
+    
     with nogil:
-        ierr = ncmpi_inq_files_opened(&num, ncidp)
+        ierr = ncmpi_inq_files_opened(&num, NULL)
     _check_err(ierr)
-    for i in range(num):
-        ncids.append(ncids[i])
-    return num, ncids
+    if ncids is not None:
+        ncidp = <int *>malloc(sizeof(int) * num)
+        with nogil:
+            ierr = ncmpi_inq_files_opened(&num, ncidp)
+        _check_err(ierr)
+        for i in range(num):
+            ncids[i] = ncidp[i]
+    return num
 
