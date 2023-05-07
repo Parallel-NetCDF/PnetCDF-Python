@@ -42,7 +42,7 @@ class DimensionsTestCase(unittest.TestCase):
         else:
             self.file_path = FILE_NAME
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         lat_dim=f.def_dim(LAT_NAME,LAT_LEN)
         lon_dim=f.def_dim(LON_NAME,LON_LEN)
         lev_dim=f.def_dim(LEVEL_NAME,LEVEL_LEN)

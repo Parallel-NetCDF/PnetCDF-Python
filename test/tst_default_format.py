@@ -49,20 +49,20 @@ class FileTestCase(unittest.TestCase):
         old_format = set_default_format(pncpy.NC_FORMAT_64BIT_DATA)
         assert(old_format == pncpy.NC_FORMAT_CLASSIC)
         # create CDF-5 netCDF files using current default format
-        f = pncpy.File(filename=self.file_paths[0], mode = 'w', Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_paths[0], mode = 'w', comm=comm, info=None)
         f.close() 
         assert validate_nc_file(self.file_paths[0]) == 0
         # inquiry current default (for testing)
         self.new_default = inq_default_format()
         # create CDF-2 netCDF files by overwriting default
-        f = pncpy.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", comm=comm, info=None)
         f.close() 
         assert validate_nc_file(self.file_paths[1]) == 0
         # change default file format back to "CLASSIC"
         old_format = set_default_format(pncpy.NC_FORMAT_CLASSIC)
         assert(old_format == pncpy.NC_FORMAT_64BIT_DATA)
         # create CDF-1 netCDF files using default
-        f = pncpy.File(filename=self.file_paths[2], mode = 'w', Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_paths[2], mode = 'w', comm=comm, info=None)
         f.close() 
         assert validate_nc_file(self.file_paths[2]) == 0
 

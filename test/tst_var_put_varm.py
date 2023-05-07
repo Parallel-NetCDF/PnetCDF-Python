@@ -52,7 +52,7 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
 
@@ -66,7 +66,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
         # All processes write subarray to variable with put_var_all (collective i/o)
-        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         v1 = f.variables['data1']
         v1.put_var_all(datam, start = starts, count = counts, stride = strides, imap = imap)
         # Equivalent to the above method call: v1[::2, ::2] = datam.transpose()

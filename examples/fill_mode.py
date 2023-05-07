@@ -109,7 +109,7 @@ def main():
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # create a new file using "w" mode
-    f = pncpy.File(filename=filename, mode = 'w', Comm=comm, Info=None)
+    f = pncpy.File(filename=filename, mode = 'w', comm=comm, info=None)
     # the global array is NY * (NX * nprocs)
     global_ny = NY
     global_nx = NX * nprocs

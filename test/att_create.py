@@ -9,7 +9,7 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-file1 = pncpy.File(filename=FILE_NAME, mode='w', format=self._file_format, Comm=comm, Info=None)
+file1 = pncpy.File(filename=FILE_NAME, mode='w', format=self._file_format, comm=comm, info=None)
 file1.redef()
 file1.dummy_attr1 = np.int32(10) if file_format != "64BIT_DATA" else 10
 setattr(file1, "dummy_attr2", "attibute2")

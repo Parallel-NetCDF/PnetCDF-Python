@@ -44,7 +44,7 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         # select the next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -60,7 +60,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
         
-        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         v1_u = f.variables['data1u']
         # equivalent code to the following using indexer syntax: v1_u[rank][rank][rank] = value
         index = (rank, rank, rank)

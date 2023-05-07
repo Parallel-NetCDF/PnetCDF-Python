@@ -78,11 +78,11 @@ def main():
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # create a new file using "w" mode
-    f = pncpy.File(filename=filename, mode = 'w', Comm=comm, Info=None)
+    f = pncpy.File(filename=filename, mode = 'w', comm=comm, info=None)
     # close the file
     f.close()
     # open the newly created file for read only
-    f = pncpy.File(filename=filename, mode = 'r', Comm=comm, Info=None)
+    f = pncpy.File(filename=filename, mode = 'r', comm=comm, info=None)
     # close the file
     f.close()
     pnetcdf_check_mem_usage(comm)

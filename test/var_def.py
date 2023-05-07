@@ -9,7 +9,7 @@ size = comm.Get_size()
 
 FILE_NAME = "var_def.nc"
 
-file1 = pncpy.File(filename=FILE_NAME, mode='w', Comm=comm, Info=None)
+file1 = pncpy.File(filename=FILE_NAME, mode='w', comm=comm, info=None)
 file1.redef()
 file1.def_dim(dimname = "dummy_dim1", size = 3)
 file1.def_dim(dimname = "dummy_dim2", size = -1)

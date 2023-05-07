@@ -58,7 +58,7 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1, 2])
         # select next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define variables and dimensions for testing
         dim_xu = f.def_dim('xu', -1)
         dim_x = f.def_dim('x',xdim)
