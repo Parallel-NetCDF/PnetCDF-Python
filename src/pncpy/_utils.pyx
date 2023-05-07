@@ -829,5 +829,16 @@ cpdef inq_malloc_size():
         ierr = ncmpi_inq_malloc_size(&size)
     _check_err(ierr)
     return size
-    
-    
+
+cpdef inq_files_opened():
+    cdef int ierr, num
+    cdef int *ncidp
+    cdef list ncids = []
+
+    with nogil:
+        ierr = ncmpi_inq_files_opened(&num, ncidp)
+    _check_err(ierr)
+    for i in range(num):
+        ncids.append(ncids[i])
+    return num, ncids
+

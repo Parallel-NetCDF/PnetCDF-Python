@@ -32,6 +32,12 @@ xdim=9; ydim=10; zdim = 11
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+# create sume dummy MPI Info object for testing
+info1 = MPI.Info.Create()
+info1.Set("nc_header_align_size", "1024")
+info1.Set("nc_var_align_size", "512")
+info1.Set("nc_header_read_chunk_size", "256")
+
 
 
 class FileTestCase(unittest.TestCase):
@@ -43,7 +49,10 @@ class FileTestCase(unittest.TestCase):
             self.file_path = file_name
         # select next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
+
+        # create netCDF file
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, \
+                       comm=comm, info=info1.Dup())
         # write global attributes for testing
         f.attr1 = 'one'
         f.putncatt('attr2','two')
@@ -57,6 +66,8 @@ class FileTestCase(unittest.TestCase):
         v2_u = f.def_var('data2u', pncpy.NC_INT, (dim_xu, dim_y, dim_z))
         v1 = f.def_var('data1', pncpy.NC_INT, (dim_x, dim_y, dim_z))
         v2 = f.def_var('data2', pncpy.NC_INT, (dim_x, dim_y, dim_z))
+        # inquiry MPI INFO object of the file
+        self.file_info = f.inq_info()
         f.close()
         assert validate_nc_file(self.file_path) == 0
         # reopen the netCDF file in read-only mode
@@ -82,6 +93,8 @@ class FileTestCase(unittest.TestCase):
         # inquiry File system striping size and striping count
         self.striping_size, self.striping_count = f.inq_striping()
 
+
+
     def runTest(self):
         """testing file inq for CDF-1/CDF-2/CDF-5/CDF-2/CDF-1 file format"""
         self.assertEqual(self.nvars, 4)
@@ -98,6 +111,7 @@ class FileTestCase(unittest.TestCase):
             self.assertEqual(self.version, pncpy.NC_64BIT_OFFSET)
         elif self._file_format == "CLASSIC":
             self.assertEqual(self.version, pncpy.NC_CLASSIC_MODEL)
+        self.assertEqual(self.file_info.Get("nc_header_align_size"), "1024")
 
     def tearDown(self):
         # remove the temporary files
@@ -107,7 +121,7 @@ class FileTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
-    for i in range(len(file_formats)):
+    for i in range(len([file_formats])):
         suite.addTest(FileTestCase())
     runner = unittest.TextTestRunner()
     result = runner.run(suite)

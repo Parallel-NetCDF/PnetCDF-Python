@@ -557,6 +557,18 @@ cdef class File:
             ierr = ncmpi_inq_version(self._ncid, &nc_mode)
         _check_err(ierr)
         return nc_mode
+    
+
+    def inq_info(self):
+        cdef MPI_Info *mpiinfo
+        cdef int ierr
+        cdef Info info_py
+        info_py = MPI.Info.Create()
+        with nogil:
+            ierr = ncmpi_inq_file_info(self._ncid, &info_py.ob_mpi)
+        _check_err(ierr)
+        return info_py
+
 
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the
