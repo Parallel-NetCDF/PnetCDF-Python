@@ -35,7 +35,7 @@ size = comm.Get_size()
 
 
 
-class VariablesTestCase(unittest.TestCase):
+class FileTestCase(unittest.TestCase):
 
     def setUp(self):
         self.file_paths = []
@@ -67,7 +67,7 @@ class VariablesTestCase(unittest.TestCase):
         assert validate_nc_file(self.file_paths[2]) == 0
 
 
-    def test_formats(self):
+    def runTest(self):
         """testing set default format for file formats"""
         f = pncpy.File(self.file_paths[0], 'r')
         self.assertTrue(f.file_format == "64BIT_DATA" or f.file_format == "CDF5")
@@ -90,6 +90,12 @@ class VariablesTestCase(unittest.TestCase):
         for file_path in self.file_paths:
             if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
                 os.remove(file_path)
-# Unittest execution order: setUp -> test_cdf5 -> tearDown -> setUp -> test_cdf2 -> tearDown
+
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    suite.addTest(FileTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+

@@ -40,8 +40,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -55,53 +55,12 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(self.file_path) == 0
 
-    def test_cdf5(self):
-        """testing variable get vara for CDF-5 file format"""
+    def runTest(self):
+        """testing variable get vara for CDF-5/CDF-2/CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1u']
         # test collective i/o put var1
          # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
-        index = (rank, rank, rank)
-        f.begin_indep()
-        # all processes read the designated cell of the variable using independent i/o
-        val = v1.get_var(index = index)
-        # compare returned value against reference value
-        assert_equal(val, datarev[rank][rank][rank])
-        # test independent i/o put var1
-        f.end_indep()
-        # all processes read the designated cell of the variable using collective i/o
-        val = v1.get_var_all(index = index)
-        # compare returned value against reference value
-        assert_equal(val, datarev[rank][rank][rank])
-        f.close()
-
-
-    def test_cdf2(self):
-        """testing variable get vara for CDF-2 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        v1 = f.variables['data1u']
-        # test collective i/o put var1
-        # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
-        index = (rank, rank, rank)
-        f.begin_indep()
-        # all processes read the designated cell of the variable using independent i/o
-        val = v1.get_var(index = index)
-        # compare returned value against reference value
-        assert_equal(val, datarev[rank][rank][rank])
-        # test independent i/o put var1
-        f.end_indep()
-        # all processes read the designated cell of the variable using collective i/o
-        val = v1.get_var_all(index = index)
-        # compare returned value against reference value
-        assert_equal(val, datarev[rank][rank][rank])
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable put var1 all"""
-        f = pncpy.File(self.file_path, 'r')
-        v1 = f.variables['data1u']
-        # test collective i/o put var1
-        # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
         index = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o
@@ -123,4 +82,11 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+

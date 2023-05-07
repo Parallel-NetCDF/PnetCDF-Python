@@ -44,8 +44,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # select next file format for testing
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('xu', -1)
@@ -88,8 +88,8 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
             pass
 
-    def test_cdf5(self):
-        """testing var def fill for CDF-5 file format"""
+    def runTest(self):
+        """testing var def fill for CDF-5/CDF-2/CDF-1 file format"""
         # check the fill mode settings of each variable
         # check no_fill flag 
         self.assertTrue(self.v1_nofill == 0)
@@ -100,34 +100,12 @@ class VariablesTestCase(unittest.TestCase):
         self.assertTrue(self.v1_fillvalue == fill_value)
         self.assertTrue(self.v2_fillvalue == fill_value)
         self.assertTrue(self.v3_fillvalue == fill_value)
-
-    def test_cdf2(self):
-        """testing var def fill mode for CDF-2 file format"""
-        # check the fill mode settings of each variable
-        # check no_fill flag 
-        self.assertTrue(self.v1_nofill == 0)
-        self.assertTrue(self.v2_nofill == 0)
-        self.assertTrue(self.v3_nofill == 1)
-        self.assertTrue(self.v4_nofill == 1)
-        # check if fill_value equals the customized fill value
-        self.assertTrue(self.v1_fillvalue == fill_value)
-        self.assertTrue(self.v2_fillvalue == fill_value)
-        self.assertTrue(self.v3_fillvalue == fill_value)
-
-    def test_cdf1(self):
-        """testing var def fill mode for CDF-1 file format"""
-        # check the fill mode settings of each variable
-        # check no_fill flag 
-        self.assertTrue(self.v1_nofill == 0)
-        self.assertTrue(self.v2_nofill == 0)
-        self.assertTrue(self.v3_nofill == 1)
-        self.assertTrue(self.v4_nofill == 1)
-        # check if fill_value equals the customized fill value
-        self.assertTrue(self.v1_fillvalue == fill_value)
-        self.assertTrue(self.v2_fillvalue == fill_value)
-        self.assertTrue(self.v3_fillvalue == fill_value)
-
-
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

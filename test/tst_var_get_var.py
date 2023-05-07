@@ -39,8 +39,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -56,47 +56,8 @@ class VariablesTestCase(unittest.TestCase):
         assert validate_nc_file(self.file_path) == 0
 
 
-    def test_cdf5(self):
-        """testing variable get_var method for CDF-5 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        v1 = f.variables['data1']
-        # test independent i/o get_var 
-        f.begin_indep()
-        # mpi process rank 0 and 1 read the whole variable
-        if rank < 2:
-            v1_data = v1.get_var()
-            # compare returned variable values against reference array
-            assert_equal(v1_data, datarev)
-        # test collective i/o get_var_all
-        f.end_indep()
-        # all processes read the whole variable
-        v1_data = v1.get_var_all()
-        # compare returned variable values against reference array
-        assert_equal(v1_data, datarev)
-        f.close()
-
-
-    def test_cdf2(self):
-        """testing variable get_var method for CDF-2 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        v1 = f.variables['data1']
-        # test independent i/o get_var 
-        f.begin_indep()
-        # mpi process rank 0 and 1 read the whole variable
-        if rank < 2:
-            v1_data = v1.get_var()
-            # compare returned variable values against reference array
-            assert_equal(v1_data, datarev)
-        # test collective i/o get_var_all
-        f.end_indep()
-        # all processes read the whole variable
-        v1_data = v1.get_var_all()
-        # compare returned variable values against reference array
-        assert_equal(v1_data, datarev)
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable get_var method for CDF-1 file format"""
+    def runTest(self):
+        """testing variable get_var method for CDF-5/CDF-2/CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1']
         # test independent i/o get_var 
@@ -121,4 +82,11 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+

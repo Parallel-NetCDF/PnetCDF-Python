@@ -48,8 +48,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -102,8 +102,8 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
-        """testing variable iput vara for CDF-5 file format"""
+    def runTest(self):
+        """testing variable iput vara for CDF-5/CDF-2/CDF-1 file format"""
 
         f = pncpy.File(self.file_path, 'r')
         # test iput_vara and collective i/o wait_all
@@ -111,23 +111,12 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], datares1)
 
-    def test_cdf2(self):
-        """testing variable iput vara all for CDF-2 file format"""
-
-        f = pncpy.File(self.file_path, 'r')
-        # test iput_vara and collective i/o wait_all
-        for i in range(num_reqs * 2):
-            v = f.variables[f'data{i}']
-            assert_array_equal(v[:], datares1)
-
-    def test_cdf1(self):
-        """testing variable iput vara all for CDF-1 file format"""
-
-        f = pncpy.File(self.file_path, 'r')
-        # test iput_vara and collective i/o wait_all
-        for i in range(num_reqs * 2):
-            v = f.variables[f'data{i}']
-            assert_array_equal(v[:], datares1)
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

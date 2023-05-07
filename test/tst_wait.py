@@ -48,7 +48,7 @@ bad_req_ids = list(range(num_reqs))
 # initialize the list to store buff references from iget requests
 v_data = []
 
-class VariablesTestCase(unittest.TestCase):
+class FileTestCase(unittest.TestCase):
 
     def setUp(self):
         if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
@@ -56,8 +56,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # select the next file format for testing
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -135,44 +135,9 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(self.file_path) == 0
 
-    def test_cdf5(self):
-        """testing File wait method for CDF-5 file format"""
+    def runTest(self):
+        """testing File wait method for CDF-5/CDF-2/CDF-1 file format"""
 
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o wait_all & independent i/o wait
-        for i in range(2 * num_reqs):
-            v = f.variables[f'data{i}']
-            # compare stored array with reference array
-            assert_array_equal(v[:], datares1)
-            # check request ids - successful ids should be replaced with NC_REQ_NULL
-            if i < 10:
-                self.assertTrue(req_ids_tst1[i] == pncpy.NC_REQ_NULL)
-            else:
-                self.assertTrue(req_ids_tst2[i - 10] == pncpy.NC_REQ_NULL)
-        # test invalid request ids
-        # invalid request id list should remain unchanged
-        assert_array_equal(bad_req_ids, list(range(num_reqs)))
-
-        
-    def test_cdf2(self):
-        """testing File wait method for CDF-2 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o wait_all & independent i/o wait
-        for i in range(2 * num_reqs):
-            v = f.variables[f'data{i}']
-            # compare stored array with reference array
-            assert_array_equal(v[:], datares1)
-            # check request ids - successful ids should be replaced with NC_REQ_NULL
-            if i < 10:
-                self.assertTrue(req_ids_tst1[i] == pncpy.NC_REQ_NULL)
-            else:
-                self.assertTrue(req_ids_tst2[i - 10] == pncpy.NC_REQ_NULL)
-        # test invalid request ids
-        # invalid request id list should remain unchanged
-        assert_array_equal(bad_req_ids, list(range(num_reqs)))
-
-    def test_cdf1(self):
-        """testing File wait method for CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o wait_all & independent i/o wait
         for i in range(2 * num_reqs):
@@ -193,5 +158,12 @@ class VariablesTestCase(unittest.TestCase):
         comm.Barrier()
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
+
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(FileTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

@@ -92,8 +92,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # define dimensions and variables
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
@@ -112,7 +112,7 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
+    def runTest(self):
         """testing variable put varn for CDF-5 file"""
         dataref = np.full((buf_len,), rank, np.float32)
         f = pncpy.File(self.file_path, 'r')
@@ -126,33 +126,11 @@ class VariablesTestCase(unittest.TestCase):
         assert_array_equal(data_indep, dataref)
         f.close()
 
-    def test_cdf2(self):
-        """testing variable put varn for CDF-2 file"""
-        dataref = np.full((buf_len,), rank, np.float32)
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o get_var
-        v1 = f.variables['var1']
-        data_coll = v1.get_var_all(start = starts, count = counts, num = num_reqs)
-        assert_array_equal(data_coll, dataref)
-        # test independent i/o get_var
-        f.begin_indep()
-        data_indep = v1.get_var(start = starts, count = counts, num = num_reqs)
-        assert_array_equal(data_indep, dataref)
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable put varn for CDF-1 file"""
-        dataref = np.full((buf_len,), rank, np.float32)
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o get_var
-        v1 = f.variables['var1']
-        data_coll = v1.get_var_all(start = starts, count = counts, num = num_reqs)
-        assert_array_equal(data_coll, dataref)
-        # test independent i/o get_var
-        f.begin_indep()
-        data_indep = v1.get_var(start = starts, count = counts, num = num_reqs)
-        assert_array_equal(data_indep, dataref)
-        f.close()
-
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

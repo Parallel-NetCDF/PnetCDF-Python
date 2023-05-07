@@ -31,7 +31,7 @@ size = comm.Get_size()
 
 
 
-class VariablesTestCase(unittest.TestCase):
+class FileTestCase(unittest.TestCase):
 
     def setUp(self):
         if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
@@ -39,8 +39,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # select next file format for testing
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
@@ -68,34 +68,8 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
             pass
 
-    def test_cdf5(self):
-        """testing file set fill mode for CDF-5 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        for i in [1,2]:
-            v = f.variables[f'data{i}']
-            # check the fill mode settings of each variable
-            no_fill, fill_value = v.inq_fill()
-            # check if no_fill flag is set to 0 
-            self.assertTrue(no_fill == 0)
-            # check if fill_value equals default fill value
-            self.assertTrue(fill_value == pncpy.NC_FILL_INT)
-        f.close()
-
-    def test_cdf2(self):
-        """testing file set fill mode for CDF-2 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        for i in [1,2]:
-            v = f.variables[f'data{i}']
-            # check the fill mode settings of each variable
-            no_fill, fill_value = v.inq_fill()
-            # check if no_fill flag is set to 0 
-            self.assertTrue(no_fill == 0)
-            # check if fill_value equals default fill value
-            self.assertTrue(fill_value == pncpy.NC_FILL_INT)
-        f.close()
-
-    def test_cdf1(self):
-        """testing file set fill mode for CDF-1 file format"""
+    def runTest(self):
+        """testing file set fill mode for CDF-5/CDF-2/CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
         for i in [1,2]:
             v = f.variables[f'data{i}']
@@ -108,4 +82,10 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(FileTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

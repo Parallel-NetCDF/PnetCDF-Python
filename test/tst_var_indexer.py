@@ -49,9 +49,9 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
+        self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
@@ -91,8 +91,8 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
-        """testing writing and reading variables in CDF5 data file"""
+    def runTest(self):
+        """testing writing and reading variables with CDF5/CDF2/CDF1 file format"""
         f = pncpy.File(self.file_path, 'r')
         f.end_indep()
         v1 = f.variables['data1']
@@ -110,43 +110,13 @@ class VariablesTestCase(unittest.TestCase):
         assert_array_equal(v2_u[:], dataref)
         f.close()
 
-    def test_cdf2(self):
-        """testing writing and reading variables in CDF2 data file"""
 
-        f = pncpy.File(self.file_path, 'r')
-        v = f.variables['data1']
-        # Test the variable previously written in collective mode
-        # Compare returned variable data with reference data
-        assert_array_equal(v[:], dataref)
-        v1_u = f.variables['data1u']
-        assert_array_equal(v1_u[:], dataref)
-        # Run same tests for the variable written in independent mode
-        v2 = f.variables['data2']
-        assert_array_equal(v2[:], dataref)
-
-        v2_u = f.variables['data2u']
-        assert_array_equal(v2_u[:], dataref)
-        f.close()
-
-    def test_cdf1(self):
-        """testing writing and reading variables in CDF2 data file"""
-
-        f = pncpy.File(self.file_path, 'r')
-        v = f.variables['data1']
-        # Test the variable previously written in collective mode
-        # Compare returned variable data with reference data
-        assert_array_equal(v[:], dataref)
-        v1_u = f.variables['data1u']
-        assert_array_equal(v1_u[:], dataref)
-        # Run same tests for the variable written in independent mode
-        v2 = f.variables['data2']
-        assert_array_equal(v2[:], dataref)
-
-        v2_u = f.variables['data2u']
-        assert_array_equal(v2_u[:], dataref)
-        f.close()
-
-
-# Unittest execution order: setUp -> test_cdf5 -> tearDown -> setUp -> test_cdf2 -> tearDown
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+

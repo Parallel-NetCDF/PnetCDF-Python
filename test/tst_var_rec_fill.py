@@ -57,8 +57,8 @@ class VariablesTestCase(unittest.TestCase):
         starts = np.array([0, 2 * rank])
         counts = np.array([1, 2])
         # select next file format for testing
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # define variables and dimensions for testing
         dim_xu = f.def_dim('xu', -1)
         dim_x = f.def_dim('x',xdim)
@@ -92,18 +92,8 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
             pass
 
-    def test_cdf5(self):
-        """testing var rec fill for CDF-5 file format"""
-        # compare record variable values against reference array
-        f = pncpy.File(self.file_path, 'r')
-        v1 = f.variables['data1']
-        v2 = f.variables['data2']
-        assert_array_equal(v1[:], dataref)
-        assert_array_equal(v2[:], dataref)
-        
-
-    def test_cdf2(self):
-        """testing var rec fill for CDF-2 file format"""
+    def runTest(self):
+        """testing var rec fill for CDF-5/CDF-2/CDF-1 file format"""
         # compare record variable values against reference array
         f = pncpy.File(self.file_path, 'r')
         v1 = f.variables['data1']
@@ -111,14 +101,12 @@ class VariablesTestCase(unittest.TestCase):
         assert_array_equal(v1[:], dataref)
         assert_array_equal(v2[:], dataref)
 
-    def test_cdf1(self):
-        """testing var rec fill for CDF-1 file format"""
-        # compare record variable values against reference array
-        f = pncpy.File(self.file_path, 'r')
-        v1 = f.variables['data1']
-        v2 = f.variables['data2']
-        assert_array_equal(v1[:], dataref)
-        assert_array_equal(v2[:], dataref)
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

@@ -46,9 +46,9 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
+        self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
@@ -71,8 +71,8 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and (self.file_path == file_name):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
-        """testing reading variables in CDF5 data file"""
+    def runTest(self):
+        """testing reading variables with CDF5/CDF2/CDF1 file format"""
         f = pncpy.File(self.file_path, 'r')
        
         f.end_indep()
@@ -87,39 +87,11 @@ class VariablesTestCase(unittest.TestCase):
         assert_array_equal(v1_data_ind, dataref)
         f.close()
 
-    def test_cdf2(self):
-        """testing reading variables in CDF2 data file"""
-        f = pncpy.File(self.file_path, 'r')
-       
-        f.end_indep()
-        v1 = f.variables['data1']
-        v1_data = np.zeros((2,3), dtype = np.float32)
-        v1_data = v1.get_var_all(data = v1_data, start = starts, count = counts, stride = strides, imap = imap)
-        assert_array_equal(v1_data, dataref)
-
-         # Test reading from the variable in independent mode
-        f.begin_indep()
-        v1_data_ind = v1.get_var(data = v1_data, start = starts, count = counts, stride = strides, imap = imap)
-        assert_array_equal(v1_data_ind, dataref)
-        f.close()
-
-    def test_cdf1(self):
-        """testing reading variables in CDF1 data file"""
-        f = pncpy.File(self.file_path, 'r')
-       
-        f.end_indep()
-        v1 = f.variables['data1']
-        v1_data = np.zeros((2,3), dtype = np.float32)
-        v1_data = v1.get_var_all(data = v1_data, start = starts, count = counts, stride = strides, imap = imap)
-        assert_array_equal(v1_data, dataref)
-
-         # Test reading from the variable in independent mode
-        f.begin_indep()
-        v1_data_ind = v1.get_var(data = v1_data, start = starts, count = counts, stride = strides, imap = imap)
-        assert_array_equal(v1_data_ind, dataref)
-        f.close()
-
-
-# Unittest execution order: setUp -> test_cdf5 -> tearDown -> setUp -> test_cdf2 -> tearDown -> setUp -> test_cdf1-> tearDown
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

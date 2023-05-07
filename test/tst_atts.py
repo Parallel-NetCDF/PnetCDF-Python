@@ -14,8 +14,7 @@ from utils import validate_nc_file
 from mpi4py import MPI
 import pncpy
 
-# test attribute creation.
-#FILE_NAME = tempfile.NamedTemporaryFile(suffix='.nc', delete=False).name
+# test attribute creation
 FILE_NAME = 'tst_atts.nc'
 VAR_NAME="dummy_var"
 DIM1_NAME="x"
@@ -48,7 +47,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], FILE_NAME)
         else:
             self.file_path = FILE_NAME
-        with pncpy.File(self.file_path,'w', format = "64BIT_DATA") as f:
+        self._file_format = "64BIT_DATA"
+        with pncpy.File(self.file_path,'w', format = self._file_format) as f:
             # try to set a dataset attribute with one of the reserved names.
             f.putncatt('file_format','netcdf5_format')
             # test attribute renaming
@@ -79,6 +79,7 @@ class VariablesTestCase(unittest.TestCase):
             f.foo = np.array('bar','S')
             f.foo = np.array('bar','U')
         assert validate_nc_file(self.file_path) == 0
+        
 
 
     def tearDown(self):
@@ -127,4 +128,12 @@ class VariablesTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    suite.addTest(VariablesTestCase("test_file_attr_dict_"))
+    suite.addTest(VariablesTestCase("test_attr_access"))
+    suite.addTest(VariablesTestCase("test_var_attr_dict_"))
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+

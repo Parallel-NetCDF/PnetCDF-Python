@@ -35,8 +35,8 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         # define dimensions and variables
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
@@ -123,7 +123,7 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
+    def runTest(self):
         """testing variable put vara all"""
 
         f = pncpy.File(self.file_path, 'r')
@@ -134,30 +134,12 @@ class VariablesTestCase(unittest.TestCase):
         v2 = f.variables['var2']
         assert_array_equal(v2[:], dataref)
         f.close()
-
-    def test_cdf2(self):
-        """testing variable put vara all"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['var1']
-        assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
-        v2 = f.variables['var2']
-        assert_array_equal(v2[:], dataref)
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable put vara all"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['var1']
-        assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
-        v2 = f.variables['var2']
-        assert_array_equal(v2[:], dataref)
-        f.close()
-
-
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

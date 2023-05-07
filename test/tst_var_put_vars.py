@@ -49,8 +49,8 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         # unit test will iterate through all three file formats
-        file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=file_format, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, Comm=comm, Info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -66,7 +66,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
         
-        f = pncpy.File(filename=self.file_path, mode = 'r+', format=file_format, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, Comm=comm, Info=None)
         v1_u = f.variables['data1u']
          # equivalent code to the following using indexer syntax: v1_u[3:4,0:6:2,10*rank:10*(rank+1):2] = datam
         starts = np.array([3, 0, 10 * rank])
@@ -89,34 +89,8 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
-        """testing variable put vars for CDF-5 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['data1u']
-        # compare returned array with the reference array
-        assert_array_equal(v1[:], datares1)
-        # test independent i/o put_var
-        v2 = f.variables['data2u']
-        # compare returned array with the reference array
-        assert_array_equal(v2[:], datares2)
-        f.close()
-
-    def test_cdf2(self):
-        """testing variable put vars for CDF-2 file format"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['data1u']
-        # compare returned array with the reference array
-        assert_array_equal(v1[:], datares1)
-        # test independent i/o put_var
-        v2 = f.variables['data2u']
-        # compare returned array with the reference array
-        assert_array_equal(v2[:], datares2)
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable put vars for CDF-1 file format"""
+    def runTest(self):
+        """testing variable put vars for CDF-5/CDF-2/CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o put_var
         v1 = f.variables['data1u']
@@ -129,4 +103,10 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

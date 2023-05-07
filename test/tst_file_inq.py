@@ -57,12 +57,8 @@ class FileTestCase(unittest.TestCase):
         v2_u = f.def_var('data2u', pncpy.NC_INT, (dim_xu, dim_y, dim_z))
         v1 = f.def_var('data1', pncpy.NC_INT, (dim_x, dim_y, dim_z))
         v2 = f.def_var('data2', pncpy.NC_INT, (dim_x, dim_y, dim_z))
-
-        
         f.close()
         assert validate_nc_file(self.file_path) == 0
-
-        
         # reopen the netCDF file in read-only mode
         f = pncpy.File(filename=self.file_path, mode = 'r')
         # inquiry and store the number of vars 
@@ -87,7 +83,7 @@ class FileTestCase(unittest.TestCase):
         self.striping_size, self.striping_count = f.inq_striping()
 
     def runTest(self):
-        """testing file inq for CDF-1/CDF-2/CDF-5 file format"""
+        """testing file inq for CDF-1/CDF-2/CDF-5/CDF-2/CDF-1 file format"""
         self.assertEqual(self.nvars, 4)
         self.assertEqual(self.ndims, 4)
         self.assertEqual(self.nattrs, 2)
@@ -110,12 +106,13 @@ class FileTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
 if __name__ == '__main__':
-    # unittest.main(argv=[sys.argv[0]])
     suite = unittest.TestSuite()
     for i in range(len(file_formats)):
         suite.addTest(FileTestCase())
     runner = unittest.TextTestRunner()
-    runner.run(suite)
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
 
 
 
