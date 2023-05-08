@@ -7,7 +7,7 @@ include "PnetCDF.pxi"
 cimport mpi4py.MPI as MPI
 from mpi4py.libmpi cimport MPI_Comm, MPI_Info, MPI_Comm_dup, MPI_Info_dup, \
                                MPI_Comm_free, MPI_Info_free, MPI_INFO_NULL,\
-                               MPI_COMM_WORLD
+                               MPI_COMM_WORLD, MPI_Offset
 
 
 
@@ -569,7 +569,21 @@ cdef class File:
         _check_err(ierr)
         return info_py
 
+    def inq_header_size(self):
+        cdef int ierr
+        cdef int size
+        with nogil:
+            ierr = ncmpi_inq_header_size(self._ncid, <MPI_Offset *>&size)
+        _check_err(ierr)
+        return size
 
+    def inq_header_extent(self):
+        cdef int ierr
+        cdef int extent
+        with nogil:
+            ierr = ncmpi_inq_header_extent(self._ncid, <MPI_Offset *>&extent)
+        _check_err(ierr)
+        return extent
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the
     # dimensions in a `File`

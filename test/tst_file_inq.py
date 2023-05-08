@@ -90,6 +90,10 @@ class FileTestCase(unittest.TestCase):
         self.version = f.inq_version()
         # inquiry record variable record block size
         self.recsize = f.inq_recsize()
+        # inquiry current file header size (in bytes)
+        self.header_size = f.inq_header_size()
+        # inquiry current file header extent (in bytes)
+        self.header_extent = f.inq_header_extent()
         # inquiry File system striping size and striping count
         self.striping_size, self.striping_count = f.inq_striping()
 
@@ -112,6 +116,7 @@ class FileTestCase(unittest.TestCase):
         elif self._file_format == "CLASSIC":
             self.assertEqual(self.version, pncpy.NC_CLASSIC_MODEL)
         self.assertEqual(self.file_info.Get("nc_header_align_size"), "1024")
+        self.assertTrue(self.header_extent >= self.header_size > 0)
 
     def tearDown(self):
         # remove the temporary files
