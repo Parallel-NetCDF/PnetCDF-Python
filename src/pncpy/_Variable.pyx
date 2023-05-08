@@ -2087,3 +2087,11 @@ cdef class Variable:
             return self._iget_varm(buff, start, count, stride, imap)
         else:
             raise ValueError("Invalid input arguments for iget_var")
+
+    def inq_offset(self):
+        cdef int ierr
+        cdef int offset
+        with nogil:
+            ierr = ncmpi_inq_varoffset(self._file_id, self._varid, <MPI_Offset *> &offset)
+        _check_err(ierr)
+        return offset
