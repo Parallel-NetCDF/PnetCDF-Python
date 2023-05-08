@@ -15,8 +15,8 @@
 
  Example commands for MPI run and outputs from running ncmpidump on the
  netCDF file produced by this example program:
-    % mpiexec -n 4 python3 fill_mode.py /tmp/test1.nc
-    % ncmpidump /tmp/test1.nc
+    % mpiexec -n 4 python3 fill_mode.py tmp/test1.nc
+    % ncmpidump tmp/test1.nc
     netcdf test1 {
     // file format: CDF-1
     dimensions:
@@ -91,7 +91,6 @@ def main():
     NY = 3
     NX = 4
     nprocs = size
-    filename = "testfile.nc"
     verbose = True
     if parse_help():
         MPI.Finalize()
@@ -99,13 +98,14 @@ def main():
     # get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
+    parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
+                         default = "testfile.nc")
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
-    parser.add_argument("--filename", type=str, help="(Optional) output netCDF file name")
+    
     args = parser.parse_args()
     if args.q:
         verbose = False
-    if args.filename:
-        filename = args.filename
+    filename = args.dir
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # create a new file using "w" mode
