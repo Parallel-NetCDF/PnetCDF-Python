@@ -41,5 +41,5 @@ The optional `test_file_output_dir` argument enables the testing program to save
     * **tst_var_type**: test writing data of heterogeneous data types to the defined variable 
     * **tst_var_put**: this series of tests look into the process of writing data to a netCDF variable using explicit function-call style method concerning different needs of access patterns. Usually, each process is configured to write to a designated area within the netCDF variable.
     * **tst_var_get**: this series of tests is focused on reading data from a netCDF variable using explicit function-call style method with respect to different needs of access patterns. Usually, each process is configured to read from a designated area within the netCDF variable.
-
-
+    * **tst_var_iget/iput**: this series of tests is focused on the non-blocking mode of variable operations mentioned above. The program usually posts read(iget) or write(iput) requests to access a netCDF variable using explicit function-call style method and calls the wait function to commit them.
+    * **tst_var_bput**: this series of tests is focused on the buffered non-blocking mode of variable operations mentioned above. The program usually attaches a write buffer to the netCDF file, posts read(iget) or write(iput) requests to access a netCDF variable and then calls the wait function to commit. 

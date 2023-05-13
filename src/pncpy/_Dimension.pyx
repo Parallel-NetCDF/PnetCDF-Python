@@ -22,13 +22,13 @@ cdef class Dimension:
         **`name`**: Name of the dimension.
         **`size`**: Size of the dimension. -1 means unlimited. (Default `-1`).
         ***Note***: `Dimension` instances should be created using the
-        `Dataset.defineDim` method of a `File` instance, not using `Dimension.__init__` directly.
+        `Dataset.def_dim` method of a `File` instance, not using `Dimension.__init__` directly.
         """
         cdef int ierr
         cdef char *dimname
         cdef MPI_Offset lendim
         self._file_id = file._ncid
-        self._data_model = file.data_model
+        self._file_format = file.file_format
         self._name = name
 
         if 'id' in kwargs:
@@ -40,15 +40,8 @@ cdef class Dimension:
                 lendim = NC_UNLIMITED
             else:
                 lendim = size
-            #TODO: decide whether or not need to exit define mode for user
-            if not file.def_mode_on:
-                file.redef()
-                with nogil:
-                    ierr = ncmpi_def_dim(self._file_id, dimname, lendim, &self._dimid)
-                file.enddef()
-            else:
-                with nogil:
-                    ierr = ncmpi_def_dim(self._file_id, dimname, lendim, &self._dimid)
+            with nogil:
+                ierr = ncmpi_def_dim(self._file_id, dimname, lendim, &self._dimid)
             _check_err(ierr)
 
     def _getname(self):

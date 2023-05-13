@@ -7,7 +7,7 @@ include "PnetCDF.pxi"
 cimport mpi4py.MPI as MPI
 from mpi4py.libmpi cimport MPI_Comm, MPI_Info, MPI_Comm_dup, MPI_Info_dup, \
                                MPI_Comm_free, MPI_Info_free, MPI_INFO_NULL,\
-                               MPI_COMM_WORLD
+                               MPI_COMM_WORLD, MPI_Offset
 
 
 
@@ -16,13 +16,13 @@ from libc.stdlib cimport malloc, free
 
 from ._Dimension cimport Dimension
 from ._Variable cimport Variable
-from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names
+from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _get_format
 from._utils cimport _nctonptype
 import numpy as np
 
 #TODO: confirm the final list of private attributes
 _private_atts = \
-['_ncid','_varid','dimensions','variables','data_model','disk_format',
+['_ncid','_varid','dimensions','variables', 'file_format',
  '_nunlimdim','path', 'name', '__orthogoral_indexing__', '_buffer']
 
 ctypedef MPI.Comm Comm
@@ -90,7 +90,7 @@ cdef class File:
             if not clobber:
                 cmode = NC_NOCLOBBER
             if format in ['64BIT_OFFSET', '64BIT_DATA']:
-                file_cmode = NC_64BIT_OFFSET if format  == '64BIT_OFFSET' else NC_64BIT_DATA
+                file_cmode = NC_64BIT_OFFSET_C if format  == '64BIT_OFFSET' else NC_64BIT_DATA_C
                 cmode = cmode | file_cmode
             with nogil:
                 ierr = ncmpi_create(mpicomm, path, cmode, mpiinfo, &ncid)
@@ -108,12 +108,11 @@ cdef class File:
 
         _check_err(ierr, err_cls=OSError, filename=path)
         self._isopen = 1
-        self.def_mode_on = 0
         self.indep_mode = 0
         self._ncid = ncid
-        self.data_model = format
+        self.file_format = _get_format(ncid)
         self.dimensions = _get_dims(self)
-        self.variables = _get_vars(self)
+        self.variables = _get_variables(self)
     
     def close(self):
         self._close(True)
@@ -122,10 +121,8 @@ cdef class File:
         cdef int ierr
         with nogil:
             ierr = ncmpi_close(self._ncid)
-
         if check_err:
             _check_err(ierr)
-
         self._isopen = 0 # indicates file already closed, checked by __dealloc__
 
     def filepath(self,encoding=None):
@@ -185,20 +182,18 @@ cdef class File:
     def _redef(self):
         cdef int ierr
         cdef int fileid= self._ncid
-        if not self.def_mode_on:
-            self.def_mode_on = 1
-            with nogil:
-                ierr = ncmpi_redef(fileid)
+        with nogil:
+            ierr = ncmpi_redef(fileid)
+        _check_err(ierr)
     def enddef(self):
         self._enddef()
 
     def _enddef(self):
         cdef int ierr
         cdef int fileid = self._ncid
-        if self.def_mode_on:
-            self.def_mode_on = 0
-            with nogil:
-                ierr = ncmpi_enddef(fileid)
+        with nogil:
+            ierr = ncmpi_enddef(fileid)
+        _check_err(ierr)
 
     def begin_indep(self):
         cdef int ierr
@@ -218,9 +213,9 @@ cdef class File:
 
 
 
-    def defineDim(self, dimname, size=-1):
+    def def_dim(self, dimname, size=-1):
         """
-        **`defineDim(self, dimname, size=-1)`**
+        **`def_dim(self, dimname, size=-1)`**
         Creates a new dimension with the given `dimname` and `size`.
         `size` must be a positive integer or `-1`, which stands for
         "unlimited" (default is `-1`). Specifying a size of 0 also
@@ -233,7 +228,8 @@ cdef class File:
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
     
-    def defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None):
+
+    def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
         """
         defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None)
 
@@ -307,7 +303,6 @@ cdef class File:
         self.variables[varname] = Variable(self, varname, nc_dtype,
         dimensions=dimensions, fill_value=fill_value)
         return self.variables[varname]
-    
 
     def ncattrs(self):
         """
@@ -315,28 +310,22 @@ cdef class File:
 
         return netCDF attribute names for this File in a list."""
         return _get_att_names(self._ncid, NC_GLOBAL)
-    def setncattr(self,name,value):
-        """
-        **`setncattr(self,name,value)`**
 
+    def putncatt(self,name,value):
+        """
+        **`putncatt(self,name,value)`**
         set a netCDF file attribute using name,value pair.
         Use if you need to set a netCDF attribute with the
         with the same name as one of the reserved python attributes."""
         cdef nc_type xtype
         xtype=-99
+        _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
 
-        #TODO: decide whether or not need to exit define mode for user
-        if not self.def_mode_on:
-            self.redef()
-            _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
-            self.enddef()
-        else:
-            _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
     def getncattr(self,name,encoding='utf-8'):
         """
         **`getncattr(self,name)`**
 
-        retrieve a netCDF dataset or group attribute.
+        retrieve a netCDF dataset or file attribute.
         Use if you need to get a netCDF attribute with the same
         name as one of the reserved python attributes.
 
@@ -352,7 +341,6 @@ cdef class File:
             raise AttributeError(
             "'%s' is one of the reserved attributes %s, cannot delete. Use delncattr instead." % (name, tuple(_private_atts)))
 
-
     def delncattr(self, name):
         """
         **`delncattr(self,name,value)`**
@@ -364,12 +352,7 @@ cdef class File:
         cdef int ierr
         bytestr = _strencode(name)
         attname = bytestr
-        if not self.def_mode_on:
-            self._redef()
-            with nogil:
-                ierr = ncmpi_del_att(self._ncid, NC_GLOBAL, attname)
-            self._enddef()
-        else:
+        with nogil:
             ierr = ncmpi_del_att(self._ncid, NC_GLOBAL, attname)
         _check_err(ierr)
 
@@ -377,11 +360,11 @@ cdef class File:
     # if name in _private_atts, it is stored at the python
     # level and not in the netCDF file.
         if name not in _private_atts:
-            self.setncattr(name, value)
+            self.putncatt(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot rebind. Use setncattr instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot rebind. Use putncatt instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 
@@ -417,11 +400,12 @@ cdef class File:
         oldnamec = bytestr
         bytestr = _strencode(newname)
         newnamec = bytestr
-        
+
         with nogil:
             ierr = ncmpi_rename_att(_file_id, NC_GLOBAL, oldnamec, newnamec)
         _check_err(ierr)
-    def _wait(self, num=None, requests=None, collective=False):
+
+    def _wait(self, num=None, requests=None, status=None, collective=False):
         cdef int _file_id, ierr
         cdef int num_req
         cdef int *requestp
@@ -438,7 +422,6 @@ cdef class File:
                 with nogil:
                     ierr = ncmpi_wait_all(_file_id, num_req, NULL, NULL)
             _check_err(ierr)
-            return None
         else:
             requestp = <int *>malloc(sizeof(int) * num)
             statusp = <int *>malloc(sizeof(int) * num)
@@ -451,17 +434,175 @@ cdef class File:
             else:
                 with nogil:
                     ierr = ncmpi_wait_all(_file_id, num_req, requestp, statusp)
-            status = [statusp[i] for i in range(num)]
-            return status
+            for n from 0 <= n < num:
+                requests[n] = requestp[n]
+
+            if status is not None:
+                for n from 0 <= n < num:
+                    status[n] = statusp[n]
+            _check_err(ierr)
+        return None
+
+    def wait(self, num=None, requests=None, status=None):
+        return self._wait(num, requests, status, collective=False)
+
+    def wait_all(self, num=None, requests=None, status=None):
+        return self._wait(num, requests, status, collective=True)
+
+    def cancel(self, num=None, requests=None, status=None):
+        cdef int _file_id, ierr
+        cdef int num_req
+        cdef int *requestp
+        cdef int *statusp
+        _file_id = self._ncid
+        if num is None:
+            num = NC_REQ_ALL_C
+        if num in [NC_REQ_ALL_C, NC_PUT_REQ_ALL_C, NC_GET_REQ_ALL_C]:
+            num_req = num
+            with nogil:
+                ierr = ncmpi_cancel(_file_id, num_req, NULL, NULL)
+            _check_err(ierr)
+        else:
+            requestp = <int *>malloc(sizeof(int) * num)
+            statusp = <int *>malloc(sizeof(int) * num)
+            num_req = num
+            for n from 0 <= n < num:
+                requestp[n] = requests[n]
+            with nogil:
+                ierr = ncmpi_cancel(_file_id, num_req, requestp, statusp)
+            for n from 0 <= n < num:
+                requests[n] = requestp[n]
+            if status is not None:
+                for n from 0 <= n < num:
+                    status[n] = statusp[n]
+            _check_err(ierr)
 
 
+    def get_nreqs(self):
+        cdef int _file_id, ierr
+        cdef int num_req
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_inq_nreqs(_file_id, &num_req)
+        _check_err(ierr)
+        return num_req
 
-    def wait(self, num=None, requests=None):
-        return self._wait(num, requests, collective=False)
-    def wait_all(self, num=None, requests=None):
-        return self._wait(num, requests, collective=True)
+    def attach_buff(self, bufsize = None):
+        cdef int buffsize, _file_id
+        buffsize = bufsize
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_buffer_attach(_file_id, buffsize)
+        _check_err(ierr)
+
+    def detach_buff(self):
+        cdef int _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_buffer_detach(_file_id)
+        _check_err(ierr)
+
+    def get_buff_usage(self):
+        cdef int _file_id, usage
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_inq_buffer_usage(_file_id, &usage)
+        _check_err(ierr)
+        return usage
+
+    def get_buff_size(self):
+        cdef int _file_id, buffsize
+        _file_id = self._ncid
+        with nogil:
+            ierr = ncmpi_inq_buffer_size(_file_id, &buffsize)
+        _check_err(ierr)
+        return buffsize
+    
+    def inq_unlimdim(self):
+        """
+        **`inq_unlimdim(self)`**
+
+        return the unlimited dim instance of the file"""
+        cdef int ierr, unlimdimid
+        with nogil:
+            ierr = ncmpi_inq_unlimdim(self._ncid, &unlimdimid)
+        _check_err(ierr)
+        if unlimdimid == -1:
+            return None
+        for name, dim in self.dimensions.items():
+            if dim._dimid == unlimdimid:
+                return dim
 
 
+    def set_fill(self, fillmode):
+        cdef int _file_id, _fillmode, _old_fillmode
+        _file_id = self._ncid
+        _fillmode = fillmode
+        with nogil:
+            ierr = ncmpi_set_fill(_file_id, _fillmode, &_old_fillmode)
+        _check_err(ierr)
+        return _old_fillmode
+
+    def inq_num_rec_vars(self):
+        cdef int ierr, num_rec_vars
+        with nogil:
+            ierr = ncmpi_inq_num_rec_vars(self._ncid, &num_rec_vars)
+        _check_err(ierr)
+        return num_rec_vars
+
+    def inq_num_fix_vars(self):
+        cdef int ierr, num_fix_vars
+        with nogil:
+            ierr = ncmpi_inq_num_fix_vars(self._ncid, &num_fix_vars)
+        _check_err(ierr)
+        return num_fix_vars
+
+    def inq_striping(self):
+        cdef int ierr, striping_size, striping_count
+        with nogil:
+            ierr = ncmpi_inq_striping(self._ncid, &striping_size, &striping_count)
+        _check_err(ierr)
+        return striping_size, striping_count
+
+    def inq_recsize(self):
+        cdef int ierr, recsize
+        with nogil:
+            ierr = ncmpi_inq_recsize(self._ncid, &recsize)
+        _check_err(ierr)
+        return recsize
+
+    def inq_version(self):
+        cdef int ierr, nc_mode
+        with nogil:
+            ierr = ncmpi_inq_version(self._ncid, &nc_mode)
+        _check_err(ierr)
+        return nc_mode
+
+
+    def inq_info(self):
+        cdef MPI_Info *mpiinfo
+        cdef int ierr
+        cdef Info info_py
+        info_py = MPI.Info.Create()
+        with nogil:
+            ierr = ncmpi_inq_file_info(self._ncid, &info_py.ob_mpi)
+        _check_err(ierr)
+        return info_py
+
+    def inq_header_size(self):
+        cdef int ierr
+        cdef int size
+        with nogil:
+            ierr = ncmpi_inq_header_size(self._ncid, <MPI_Offset *>&size)
+        _check_err(ierr)
+        return size
+
+    def inq_header_extent(self):
+        cdef int ierr
+        cdef int extent
+        with nogil:
+            ierr = ncmpi_inq_header_extent(self._ncid, <MPI_Offset *>&extent)
+        _check_err(ierr)
+        return extent
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the
     # dimensions in a `File`
@@ -488,8 +629,7 @@ cdef _get_dims(file):
         free(dimids)
     return dimensions
 
-
-cdef _get_vars(file):
+cdef _get_variables(file):
     # Private function to create `Variable` instances for all the
     # variables in a `File` 
     cdef int ierr, numvars, n, nn, numdims, varid, classp, iendian, _file_id
@@ -544,7 +684,6 @@ cdef _get_vars(file):
                     if value._dimid == dimids[nn]:
                         dimensions.append(value)
                         break
-
             # create variable instance
             variables[name] = Variable(file, name, xtype, dimensions, id=varid)
         free(varids) # free pointer holding variable ids.

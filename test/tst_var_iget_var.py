@@ -13,8 +13,7 @@
 """
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -22,7 +21,7 @@ from pncpy import strerror, strerrno
 from utils import validate_nc_file
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_iget_var.nc"
 xdim=9; ydim=10; zdim=11
 # values to be written to netCDF variables
@@ -44,16 +43,16 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        f.defineDim('x',xdim)
-        f.defineDim('xu',-1)
-        f.defineDim('y',ydim)
-        f.defineDim('z',zdim)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f.def_dim('x',xdim)
+        f.def_dim('xu',-1)
+        f.def_dim('y',ydim)
+        f.def_dim('z',zdim)
         for i in range(num_reqs * 2):
-            v = f.defineVar(f'data{i}', pncpy.NC_INT, ('x','y','z'))
+            v = f.def_var(f'data{i}', pncpy.NC_INT, ('x','y','z'))
 
-        #initize variable values for 20 netCDF variables
+        #initialize variable values for 20 netCDF variables
         f.enddef()
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
@@ -65,16 +64,19 @@ class VariablesTestCase(unittest.TestCase):
         f = pncpy.File(self.file_path, 'r')
         # post 10 read requests to read the whole variable for the first 10 netCDF variables and track req ids
         req_ids = []
+        # reinialize the list of returned array references
         v_datas.clear()
         for i in range(num_reqs):        
             v = f.variables[f'data{i}']
-            v_data, req_id = v.iget_var()
+            buff = np.empty(shape = v.shape, dtype = v.datatype)# empty numpy array to hold returned variable values
+            req_id = v.iget_var(buff)
             # track the reqeust ID for each read reqeust 
             req_ids.append(req_id)
             # store the reference of variable values
-            v_datas.append(v_data)
+            v_datas.append(buff)
         # commit those 10 recorded requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num_reqs, req_ids)
+        req_errs = [None] * num_reqs
+        f.wait_all(num_reqs, req_ids, req_errs)
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
@@ -83,12 +85,13 @@ class VariablesTestCase(unittest.TestCase):
          # post 10 requests to read for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):        
             v = f.variables[f'data{i}']
-            v_data, _ = v.iget_var()
+            buff = np.empty(shape = v.shape, dtype = v.datatype)
+            v.iget_var(buff)
             # store the reference of variable values
-            v_datas.append(v_data)
+            v_datas.append(buff)
 
-        # commit all pending requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all()
+        # commit all pending get requests to the file at once using wait_all (collective i/o)
+        req_errs = f.wait_all(num = pncpy.NC_GET_REQ_ALL)
         f.close()
 
 
@@ -99,26 +102,22 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
 
-    def test_cdf5(self):
+    def runTest(self):
         """testing variable iget var and wait_all for CDF-5 """
         
         # test all returned variable values 
         for i in range(num_reqs * 2):
             assert_array_equal(v_datas[i], datarev)
-
-    def test_cdf2(self):
-        """testing variable iget var and wait_all for CDF-2 """
-        f = pncpy.File(self.file_path, 'r')
-        # test all returned variable values 
-        for i in range(num_reqs * 2):
-            assert_array_equal(v_datas[i], datarev)
-
-    def test_cdf1(self):
-        """testing variable iget var and wait_all for CDF-1 """
-        # test all returned variable values 
-        for i in range(num_reqs * 2):
-            assert_array_equal(v_datas[i], datarev)
-
     
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+
+
+
+

@@ -1,7 +1,6 @@
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -9,7 +8,7 @@ from utils import validate_nc_file
 import argparse
 
 
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_varn.nc"
 
 
@@ -36,14 +35,14 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define dimensions and variables
-        f.defineDim('x',xdim)
-        f.defineDim('y',ydim)
+        f.def_dim('x',xdim)
+        f.def_dim('y',ydim)
 
-        var1 = f.defineVar('var1', pncpy.NC_FLOAT, ('x', 'y'))
-        var2 = f.defineVar('var2', pncpy.NC_FLOAT, ('x', 'y'))
+        var1 = f.def_var('var1', pncpy.NC_FLOAT, ('x', 'y'))
+        var2 = f.def_var('var2', pncpy.NC_FLOAT, ('x', 'y'))
         f.enddef()
         var1[:] = np.full((xdim, ydim), -1, dtype=np.float32)
         var2[:] = np.full((xdim, ydim), -1, dtype=np.float32)
@@ -51,8 +50,7 @@ class VariablesTestCase(unittest.TestCase):
         starts = np.zeros((MAX_NUM_REQS, NDIMS), dtype=np.int64)
         counts = np.zeros((MAX_NUM_REQS, NDIMS), dtype=np.int64)
 
-        #initize variable values
-        
+        #initialize variable values
         if rank == 0:
             num_reqs = 4
             starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
@@ -125,7 +123,7 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
+    def runTest(self):
         """testing variable put vara all"""
 
         f = pncpy.File(self.file_path, 'r')
@@ -136,30 +134,12 @@ class VariablesTestCase(unittest.TestCase):
         v2 = f.variables['var2']
         assert_array_equal(v2[:], dataref)
         f.close()
-
-    def test_cdf2(self):
-        """testing variable put vara all"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['var1']
-        assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
-        v2 = f.variables['var2']
-        assert_array_equal(v2[:], dataref)
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable put vara all"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['var1']
-        assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
-        v2 = f.variables['var2']
-        assert_array_equal(v2[:], dataref)
-        f.close()
-
-
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

@@ -3,7 +3,7 @@ from ._File cimport File
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
-
+from libc.stdlib cimport malloc, free
 #from mpi4py.libmpi cimport MPI_Offset, MPI_CHAR, MPI_BYTE, MPI_UNSIGNED_CHAR, MPI_INT16_T, MPI_UNSIGNED_SHORT,\
 #                          MPI_INT, MPI_UNSIGNED, MPI_INT64, MPI_UNSIGNED64, MPI_FLOAT, MPI_DOUBLE
 
@@ -27,6 +27,7 @@ MPI_Datatype MPI_DOUBLE = MPI.DOUBLE"""
 
 
 import_array()
+
 # np data type <--> netCDF data type mapping.
 _nptonctype  = {'S1' : NC_CHAR_C,
                 'i1' : NC_BYTE_C,
@@ -51,6 +52,7 @@ _nptompitype = {'S1' : MPI_CHAR,
                 'u8' : MPI_UNSIGNED_LONG_LONG,
                 'f4' : MPI_FLOAT,
                 'f8' : MPI_DOUBLE}
+
 
 """_nptompitype = {'S1' : MPI_CHAR,
                 'i1' : MPI_INT8,
@@ -84,17 +86,17 @@ _intnptonctype  = {'i1' : NC_BYTE_C,
 
 # default fill_value to numpy datatype mapping.
 default_fillvals = {#'S1': '\0',
-                     'S1':NC_FILL_CHAR,
-                     'i1':NC_FILL_BYTE,
-                     'u1':NC_FILL_UBYTE,
-                     'i2':NC_FILL_SHORT,
-                     'u2':NC_FILL_USHORT,
-                     'i4':NC_FILL_INT,
-                     'u4':NC_FILL_UINT,
-                     'i8':NC_FILL_INT64,
-                     'u8':NC_FILL_UINT64,
-                     'f4':NC_FILL_FLOAT,
-                     'f8':NC_FILL_DOUBLE}
+                     'S1':NC_FILL_CHAR_C,
+                     'i1':NC_FILL_BYTE_C,
+                     'u1':NC_FILL_UBYTE_C,
+                     'i2':NC_FILL_SHORT_C,
+                     'u2':NC_FILL_USHORT_C,
+                     'i4':NC_FILL_INT_C,
+                     'u4':NC_FILL_UINT_C,
+                     'i8':NC_FILL_INT64_C,
+                     'u8':NC_FILL_UINT64_C,
+                     'f4':NC_FILL_FLOAT_C,
+                     'f8':NC_FILL_DOUBLE_C}
 
 _nctonptype = {}
 for _key,_value in _nptonctype.items():
@@ -102,7 +104,18 @@ for _key,_value in _nptonctype.items():
 _supportedtypes = _nptonctype.keys()
 _supportedtypescdf2 = [t for t in _nptonctype if t not in _notcdf2dtypes]
 
-#import NC datatype constants
+# create dictionary mapping string identifiers to netcdf format codes
+_reverse_format_dict = {
+    NC_FORMAT_CLASSIC_C: "CLASSIC",
+    NC_FORMAT_CDF2_C: "CDF2",
+    NC_FORMAT_64BIT_OFFSET_C: "64BIT_OFFSET",
+    NC_FORMAT_64BIT_C: "64BIT",
+    NC_FORMAT_CDF5_C: "CDF5",
+    NC_FORMAT_64BIT_DATA_C: "64BIT_DATA",
+    NC_FORMAT_NETCDF4_C: "NETCDF4",
+    NC_FORMAT_BP_C: "BP"
+}
+# create external NC datatype constants for python users
 NC_CHAR = NC_CHAR_C
 NC_BYTE = NC_BYTE_C
 NC_UBYTE = NC_UBYTE_C
@@ -118,6 +131,36 @@ NC_DOUBLE = NC_DOUBLE_C
 NC_REQ_ALL = NC_REQ_ALL_C
 NC_GET_REQ_ALL = NC_GET_REQ_ALL_C
 NC_PUT_REQ_ALL = NC_PUT_REQ_ALL_C
+NC_REQ_NULL = NC_REQ_NULL_C
+NC_FILL = NC_FILL_C
+NC_NOFILL = NC_NOFILL_C
+
+NC_FILL_BYTE = NC_FILL_BYTE_C
+NC_FILL_CHAR = NC_FILL_CHAR_C
+NC_FILL_SHORT = NC_FILL_SHORT_C
+NC_FILL_INT = NC_FILL_INT_C
+NC_FILL_FLOAT = NC_FILL_FLOAT_C
+NC_FILL_DOUBLE = NC_FILL_DOUBLE_C
+NC_FILL_UBYTE = NC_FILL_UBYTE_C
+NC_FILL_USHORT = NC_FILL_USHORT_C
+NC_FILL_UINT = NC_FILL_UINT_C
+NC_FILL_INT64 = NC_FILL_INT64_C
+NC_FILL_UINT64 = NC_FILL_UINT64_C
+
+NC_FORMAT_CLASSIC = NC_FORMAT_CLASSIC_C
+NC_FORMAT_CDF2 = NC_FORMAT_CDF2_C
+NC_FORMAT_64BIT_OFFSET = NC_FORMAT_64BIT_OFFSET_C
+NC_FORMAT_64BIT = NC_FORMAT_64BIT_C
+NC_FORMAT_CDF5 = NC_FORMAT_CDF5_C
+NC_FORMAT_64BIT_DATA = NC_FORMAT_64BIT_DATA_C
+NC_FORMAT_NETCDF4 = NC_FORMAT_NETCDF4_C
+NC_FORMAT_BP = NC_FORMAT_BP_C
+
+NC_CLASSIC_MODEL = NC_CLASSIC_MODEL_C
+NC_64BIT_OFFSET = NC_64BIT_OFFSET_C
+NC_64BIT_DATA = NC_64BIT_DATA_C
+NC_NETCDF4 = NC_NETCDF4_C
+NC_BP = NC_BP_C
 
 # internal C functions.
 cdef _strencode(pystr,encoding=""):
@@ -167,7 +210,6 @@ cdef _set_att(file, int varid, name, value,\
         # don't allow string array attributes in NETCDF3 files.
         if N > 1:
             msg='array string attributes not supported'
-            
         if not value_arr.shape:
             dats = _strencode(value_arr.item())
         else:
@@ -181,7 +223,7 @@ cdef _set_att(file, int varid, name, value,\
         _check_err(ierr, err_cls=AttributeError)
     # a 'regular' array type ('f4','i4','f8' etc)
     else:
-        if file.data_model != "64BIT_DATA":
+        if file.file_format != "64BIT_DATA":
             #check if dtype meets CDF-5 variable standards
             if value_arr.dtype.str[1:] not in _supportedtypescdf2:
                 raise TypeError, 'illegal data type for attribute %r, must be one of %s, got %s' % (attname, _supportedtypescdf2, value_arr.dtype.str[1:])
@@ -724,6 +766,15 @@ cdef _is_int(a):
     except:
         return False
 
+cdef _get_format(int ncid):
+    # Private function to get the netCDF file format
+    cdef int ierr, formatp
+    with nogil:
+        ierr = ncmpi_inq_format(ncid, &formatp)
+    _check_err(ierr)
+    if formatp not in _reverse_format_dict:
+        raise ValueError('format not supported by python interface')
+    return _reverse_format_dict[formatp]
 # external C functions.
 cpdef strerror(err_code):
     cdef int ierr
@@ -735,6 +786,63 @@ cpdef strerror(err_code):
 cpdef strerrno(err_code):
     cdef int ierr
     ierr = err_code
-  
     err_code_str = (<char *>ncmpi_strerrno(ierr)).decode('ascii')
     return err_code_str
+
+cpdef set_default_format(int new_format):
+    cdef int ierr, newformat, oldformat
+    newformat = new_format
+    with nogil:
+        ierr = ncmpi_set_default_format(newformat, &oldformat)
+    _check_err(ierr)
+    return oldformat
+
+cpdef inq_default_format():
+    cdef int curformat
+    with nogil:
+        ierr = ncmpi_inq_default_format(&curformat)
+    _check_err(ierr)
+    return curformat
+
+cpdef inq_file_format(str file_name):
+    cdef char *filename
+    cdef int ierr, curformat
+    filename_bytestr =  _strencode(file_name)
+    filename = filename_bytestr
+    with nogil:
+        ierr = ncmpi_inq_file_format(filename, &curformat)
+    _check_err(ierr)
+    return curformat
+
+cpdef inq_malloc_max_size():
+    cdef int ierr
+    cdef int size
+    with nogil:
+        ierr = ncmpi_inq_malloc_max_size(&size)
+    _check_err(ierr)
+    return size
+
+cpdef inq_malloc_size():
+    cdef int ierr
+    cdef int size
+    with nogil:
+        ierr = ncmpi_inq_malloc_size(&size)
+    _check_err(ierr)
+    return size
+
+cpdef inq_files_opened(ncids=None):
+    cdef int ierr, num
+    cdef int *ncidp
+    
+    with nogil:
+        ierr = ncmpi_inq_files_opened(&num, NULL)
+    _check_err(ierr)
+    if ncids is not None:
+        ncidp = <int *>malloc(sizeof(int) * num)
+        with nogil:
+            ierr = ncmpi_inq_files_opened(&num, ncidp)
+        _check_err(ierr)
+        for i in range(num):
+            ncids[i] = ncidp[i]
+    return num
+

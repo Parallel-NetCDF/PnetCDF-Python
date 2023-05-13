@@ -25,7 +25,7 @@ from utils import validate_nc_file
 
 seed(0)
 # Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2 and None for CDF-1)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 # Name of the test data file
 file_name = "tst_file_mode.nc"
 xdim = 9
@@ -38,14 +38,14 @@ size = comm.Get_size()
 
 
 
-class VariablesTestCase(unittest.TestCase):
+class FileTestCase(unittest.TestCase):
 
     def setUp(self):
         if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        self.data_model = data_models.pop(0)
+        self.file_format = file_formats.pop(0)
 
         
 
@@ -56,12 +56,12 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
-        """testing file access with different modes in CDF5 data file"""
+    def runTest(self):
+        """testing file access with different modes with CDF5/CDF2/CDF1 file format"""
         # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
+        with pncpy.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
         # Try writing to file by defining a dimension
-            f.defineDim('x',xdim)
+            f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
         comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
@@ -71,7 +71,7 @@ class VariablesTestCase(unittest.TestCase):
         # Try writing to file by defining a dimension
             try:
                 f.redef()
-                f.defineDim('x',xdim)
+                f.def_dim('x',xdim)
             except RuntimeError:
                 pass
             else:
@@ -83,7 +83,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='r+') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('y',ydim)
+            f.def_dim('y',ydim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -95,7 +95,7 @@ class VariablesTestCase(unittest.TestCase):
         with pncpy.File(filename=self.file_path, mode='a') as f:
             f.redef()
             # Try writing to file by defining a dimension
-            f.defineDim('z',zdim)
+            f.def_dim('z',zdim)
             # Check if both 'x' and 'y' dimensions existed in file
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
@@ -112,119 +112,12 @@ class VariablesTestCase(unittest.TestCase):
         else:
             raise RuntimeError("This should have failed")
 
-    def test_cdf2(self):
-        """testing file access with different modes in CDF2 data file"""
-        # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
-        # Try writing to file by defining a dimension
-            f.defineDim('x',xdim)
-        # Validate the created data file using ncvalidator tool
-        comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
-
-        # TEST MODE "r"
-        with pncpy.File(filename=self.file_path, mode='r') as f:
-        # Try writing to file by defining a dimension
-            try:
-                f.redef()
-                f.defineDim('x',xdim)
-            except RuntimeError:
-                pass
-            else:
-                raise RuntimeError("Attempting to write data with 'r' access mode should failed")
-            #Reading should be allowed. Check if 'x' dimension existed in file
-            self.assertTrue('x' in f.dimensions.keys())
-        
-        # TEST MODE "r+"
-        with pncpy.File(filename=self.file_path, mode='r+') as f:
-            f.redef()
-            # Try writing to file by defining a dimension
-            f.defineDim('y',ydim)
-            # Check if both 'x' and 'y' dimensions existed in file
-            self.assertTrue('x' in f.dimensions.keys())
-            self.assertTrue('y' in f.dimensions.keys())
-        comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
-
-
-        # TEST MODE "a"
-        with pncpy.File(filename=self.file_path, mode='a') as f:
-            f.redef()
-            # Try writing to file by defining a dimension
-            f.defineDim('z',zdim)
-            # Check if both 'x' and 'y' dimensions existed in file
-            self.assertTrue('x' in f.dimensions.keys())
-            self.assertTrue('y' in f.dimensions.keys())
-            self.assertTrue('z' in f.dimensions.keys())
-        comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
-
-        # TEST MODE "x"
-        # Try create a new file with the same name using mode "x"
-        try:
-            f = pncpy.File(filename=self.file_path, mode='x')
-        except OSError:
-            pass
-        else:
-            raise RuntimeError("This should have failed")
-
-    def test_cdf1(self):
-        """testing file access with different modes in CDF1 data file"""
-        # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.data_model, Comm=comm) as f:
-        # Try writing to file by defining a dimension
-            f.defineDim('x',xdim)
-        # Validate the created data file using ncvalidator tool
-        comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
-
-        # TEST MODE "r"
-        with pncpy.File(filename=self.file_path, mode='r') as f:
-        # Try writing to file by defining a dimension
-            try:
-                f.redef()
-                f.defineDim('x',xdim)
-            except RuntimeError:
-                pass
-            else:
-                raise RuntimeError("Attempting to write data with 'r' access mode should failed")
-            #Reading should be allowed. Check if 'x' dimension existed in file
-            self.assertTrue('x' in f.dimensions.keys())
-        
-        # TEST MODE "r+"
-        with pncpy.File(filename=self.file_path, mode='r+') as f:
-            f.redef()
-            # Try writing to file by defining a dimension
-            f.defineDim('y',ydim)
-            # Check if both 'x' and 'y' dimensions existed in file
-            self.assertTrue('x' in f.dimensions.keys())
-            self.assertTrue('y' in f.dimensions.keys())
-        comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
-
-
-        # TEST MODE "a"
-        with pncpy.File(filename=self.file_path, mode='a') as f:
-            f.redef()
-            # Try writing to file by defining a dimension
-            f.defineDim('z',zdim)
-            # Check if both 'x' and 'y' dimensions existed in file
-            self.assertTrue('x' in f.dimensions.keys())
-            self.assertTrue('y' in f.dimensions.keys())
-            self.assertTrue('z' in f.dimensions.keys())
-        comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
-
-        # TEST MODE "x"
-        # Try create a new file with the same name using mode "x"
-        try:
-            f = pncpy.File(filename=self.file_path, mode='x')
-        except OSError:
-            pass
-        else:
-            raise RuntimeError("This should have failed")
-
-
-# Unittest execution order: setUp -> test_cdf5 -> tearDown -> setUp -> test_cdf2 -> tearDown
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(FileTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+

@@ -6,10 +6,12 @@
 # License:  
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to write all the values of a variable 
-   into a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iput_var in C. 
+   This example program is intended to illustrate the use of the pnetCDF python API. The program runs 
+   in non-blocking mode and makes a request to write all the values of a variable into a netCDF variable
+   of an opened netCDF file using bput_var method of `Variable` class. This method is a buffered version 
+   of iput_var and requires the user to attach an internal buffer of size equal to the sum of all requests 
+   using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_var and 
+   ncmpi_attach_buffer in C. 
 """
 import pncpy
 from numpy.random import seed, randint
@@ -22,11 +24,9 @@ from utils import validate_nc_file
 
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
-file_name = "tst_var_iput_var.nc"
+file_name = "tst_var_bput_var.nc"
 xdim=9; ydim=10; zdim=11
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
-
-
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
@@ -44,6 +44,10 @@ class VariablesTestCase(unittest.TestCase):
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
+        # estimate the memory buffer size of all requests and attach buffer for buffered put requests
+        buffsize = num_reqs * data.nbytes
+        f.attach_buff(buffsize)
+        assert(f.get_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(2 * num_reqs):
             v = f.def_var(f'data{i}', pncpy.NC_INT, ('x','y','z'))
@@ -51,12 +55,16 @@ class VariablesTestCase(unittest.TestCase):
         # post 10 requests to write the whole variable for the first 10 variables
         f.enddef()
         req_ids = []
+        # check the usage of write buffer in memory
+        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write the whole variable 
-            req_id = v.iput_var(data)
+            req_id = v.bput_var(data)
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
+        # check the usage of write buffer in memory
+        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
@@ -67,13 +75,21 @@ class VariablesTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
 
+        # check the usage of write buffer in memory
+        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+
         # w/o tracking request id: post 10 requests to write the whole variable for the last 10 variables
         for i in range(num_reqs, 2 * num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write the whole variable without tracking id
-            v.iput_var(data)
+            v.bput_var(data)
+        
+        # check the usage of write buffer in memory
+        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
         # all processes commit all pending put requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
+        # relase the internal buffer
+        f.detach_buff()
         f.close()
         assert validate_nc_file(self.file_path) == 0
     
@@ -84,10 +100,10 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
     def runTest(self):
-        """testing variable iput var all for CDF-5/CDF-2/CDF-1 file format"""
+        """testing variable bput var all for CDF-5/CDF-2/CDF-1 file format"""
 
         f = pncpy.File(self.file_path, 'r')
-        # test iput_var and collective i/o wait_all
+        # test bput_var and collective i/o wait_all
         for i in range(2 * num_reqs):
             v = f.variables[f'data{i}']
             assert_array_equal(v[:], data)

@@ -6,10 +6,11 @@
 # License:  
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in blocking mode and writes the whole value into a netCDF variable 
-   of an opened netCDF file using put_var method of `Variable` class. The library will
-   internally invoke ncmpi_put_var in C. 
+   This example program is intended to illustrate the use of the pnetCDF python API. The
+   program sets the default fill mode for a netCDF file open for writing using `File` class
+   method set_fill(). This call will change the fill mode for all non-record variables 
+   defined so far and change the default fill mode for new non-record variables defined following
+   this call. The library will internally invoke ncmpi_set_fill in C. 
 """
 import pncpy
 from numpy.random import seed, randint
@@ -21,11 +22,8 @@ from utils import validate_nc_file
 
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
-file_name = "tst_var_put_var.nc"
-xdim=9; ydim=10; zdim=11 
-# generate numpy array to write to the whole netCDF variable
-data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
-datarev = data[:,::-1,:].copy()
+file_name = "tst_file_fill.nc"
+xdim=9; ydim=10 
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -33,37 +31,34 @@ size = comm.Get_size()
 
 
 
-class VariablesTestCase(unittest.TestCase):
+class FileTestCase(unittest.TestCase):
 
     def setUp(self):
         if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
+        # select next file format for testing
         self._file_format = file_formats.pop(0)
         f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
-        f.def_dim('xu',-1)
         f.def_dim('y',ydim)
-        f.def_dim('z',zdim)
-
-        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
-        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y','z'))
-
-        # all MPI processes writes the whole variable with the same value (collective i/o)
+        # define a netCDF variable before setting file filling mode 
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y'))
+        # enable fill mode at file-level which applies to all netCDF variables of the file
+        old_fillmode = f.set_fill(pncpy.NC_FILL)
+        # check old_fillmode
+        assert(old_fillmode == pncpy.NC_NOFILL)
+        # define a netCDF variable after setting file filling mode
+        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y'))
+        # enter data mode and write partially values to the variable
         f.enddef()
         v1 = f.variables['data1']
-        v1.put_var_all(data)
-
-        # MPI process rank 0 writes the whole variable (independent i/o)
-        f.begin_indep()
         v2 = f.variables['data2']
-        if rank == 0:
-            v2.put_var(datarev)
-        f.end_indep()
+        v1.put_var_all(np.int32(rank), index = (rank, rank))
+        v2.put_var_all(np.int32(rank), index = (rank, rank))
         f.close()
-        comm.Barrier()
         assert validate_nc_file(self.file_path) == 0
     
     def tearDown(self):
@@ -74,22 +69,22 @@ class VariablesTestCase(unittest.TestCase):
             pass
 
     def runTest(self):
-        """testing variable put var all"""
-
+        """testing file set fill mode for CDF-5/CDF-2/CDF-1 file format"""
         f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var1
-        v1 = f.variables['data1']
-        assert_array_equal(v1[:], data)
-        # test independent i/o put_var1
-        v2 = f.variables['data2']
-        assert_array_equal(v2[:], datarev)
+        for i in [1,2]:
+            v = f.variables[f'data{i}']
+            # check the fill mode settings of each variable
+            no_fill, fill_value = v.inq_fill()
+            # check if no_fill flag is set to 0 
+            self.assertTrue(no_fill == 0)
+            # check if fill_value equals default fill value
+            self.assertTrue(fill_value == pncpy.NC_FILL_INT)
         f.close()
-
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     for i in range(len(file_formats)):
-        suite.addTest(VariablesTestCase())
+        suite.addTest(FileTestCase())
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
     if not result.wasSuccessful():

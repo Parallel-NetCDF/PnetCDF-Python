@@ -7,14 +7,13 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   It is a program which simultaneously transposes an internal array and writes to a 
-   subsample of a variables within a netCDF file using put_var method of `Variable` class,
-   the library internally will invoke ncmpi_put_varm in C. 
+   The program runs in blocking mode and writes a mapped array section of values into
+   a netCDF variables of an opened netCDF file using iput_var method of `Variable` object.
+   The library will internally invoke ncmpi_put_varm in C.
 """
 import pncpy
 from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal,\
-assert_array_almost_equal
+from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
@@ -22,7 +21,7 @@ from utils import validate_nc_file
 import argparse
 
 seed(0)
-data_models = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_varm.nc"
 
 
@@ -52,22 +51,22 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], file_name)
         else:
             self.file_path = file_name
-        data_model = data_models.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=data_model, Comm=comm, Info=None)
-        f.defineDim('x',xdim)
-        f.defineDim('y',ydim)
+        self._file_format = file_formats.pop(0)
+        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f.def_dim('x',xdim)
+        f.def_dim('y',ydim)
 
-        v1 = f.defineVar('data1', pncpy.NC_INT, ('x','y'))
-        v2 = f.defineVar('data2', pncpy.NC_INT, ('x','y'))
+        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y'))
+        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y'))
 
-        # Initize variable values
+        # initialize variable values
         f.enddef()
         v1[:] = data
         v2[:] = data
         f.close()
 
         # All processes write subarray to variable with put_var_all (collective i/o)
-        f = pncpy.File(filename=self.file_path, mode = 'r+', format=data_model, Comm=comm, Info=None)
+        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         v1 = f.variables['data1']
         v1.put_var_all(datam, start = starts, count = counts, stride = strides, imap = imap)
         # Equivalent to the above method call: v1[::2, ::2] = datam.transpose()
@@ -89,7 +88,7 @@ class VariablesTestCase(unittest.TestCase):
         if (rank == 0) and (self.file_path == file_name):
             os.remove(self.file_path)
 
-    def test_cdf5(self):
+    def runTest(self):
         """testing variable put varm all"""
 
         f = pncpy.File(self.file_path, 'r')
@@ -100,30 +99,13 @@ class VariablesTestCase(unittest.TestCase):
         v2 = f.variables['data2']
         assert_array_equal(v2[:], dataref)
         f.close()
-
-    def test_cdf2(self):
-        """testing variable put varm all"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['data1']
-        assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
-        v2 = f.variables['data2']
-        assert_array_equal(v2[:], dataref)
-        f.close()
-
-    def test_cdf1(self):
-        """testing variable put varm all"""
-        f = pncpy.File(self.file_path, 'r')
-        # test collective i/o put_var
-        v1 = f.variables['data1']
-        assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
-        v2 = f.variables['data2']
-        assert_array_equal(v2[:], dataref)
-        f.close()
-
 
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    for i in range(len(file_formats)):
+        suite.addTest(VariablesTestCase())
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)

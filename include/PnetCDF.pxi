@@ -34,6 +34,37 @@ cdef extern from "pnetcdf.h":
     cdef const int NC_REQ_ALL_C "NC_REQ_ALL"
     cdef const int NC_GET_REQ_ALL_C "NC_GET_REQ_ALL"
     cdef const int NC_PUT_REQ_ALL_C "NC_PUT_REQ_ALL"
+    cdef const int NC_REQ_NULL_C "NC_REQ_NULL"
+    cdef const int NC_NOFILL_C "NC_NOFILL"
+    cdef const int NC_FILL_C "NC_FILL"
+
+    cdef const int NC_FILL_BYTE_C "NC_FILL_BYTE"
+    cdef const int NC_FILL_CHAR_C "NC_FILL_CHAR"
+    cdef const int NC_FILL_SHORT_C "NC_FILL_SHORT"
+    cdef const int NC_FILL_INT_C "NC_FILL_INT"
+    cdef const int NC_FILL_FLOAT_C "NC_FILL_FLOAT"
+    cdef const int NC_FILL_DOUBLE_C "NC_FILL_DOUBLE"
+    cdef const int NC_FILL_UBYTE_C "NC_FILL_UBYTE"
+    cdef const int NC_FILL_USHORT_C "NC_FILL_USHORT"
+    cdef const int NC_FILL_UINT_C "NC_FILL_UINT"
+    cdef const int NC_FILL_INT64_C "NC_FILL_INT64"
+    cdef const int NC_FILL_UINT64_C "NC_FILL_UINT64"
+
+    cdef const int NC_FORMAT_CLASSIC_C "NC_FORMAT_CLASSIC"
+    cdef const int NC_FORMAT_CDF2_C "NC_FORMAT_CDF2"
+    cdef const int NC_FORMAT_64BIT_OFFSET_C "NC_FORMAT_64BIT_OFFSET"
+    cdef const int NC_FORMAT_64BIT_C "NC_FORMAT_64BIT"
+    cdef const int NC_FORMAT_CDF5_C "NC_FORMAT_CDF5"
+    cdef const int NC_FORMAT_64BIT_DATA_C "NC_FORMAT_64BIT_DATA"
+    cdef const int NC_FORMAT_NETCDF4_C "NC_FORMAT_NETCDF4"
+    cdef const int NC_FORMAT_BP_C "NC_FORMAT_BP"
+
+    cdef const int NC_CLASSIC_MODEL_C "NC_CLASSIC_MODEL"
+    cdef const int NC_64BIT_OFFSET_C "NC_64BIT_OFFSET"
+    cdef const int NC_64BIT_DATA_C "NC_64BIT_DATA"
+    cdef const int NC_NETCDF4_C "NC_NETCDF4"
+    cdef const int NC_BP_C "NC_BP"
+
 
     cdef enum:
     # TODO: Fix redeclaration warnings
@@ -52,8 +83,6 @@ cdef extern from "pnetcdf.h":
         #NC_UINT64 # unsigned 8-byte int
 
         NC_NOCLOBBER # Don't destroy existing file on create
-        NC_64BIT_OFFSET
-        NC_64BIT_DATA
         NC_NOWRITE
         NC_WRITE
         NC_NOERR
@@ -62,17 +91,7 @@ cdef extern from "pnetcdf.h":
         # These values are stuffed into newly allocated space as appropriate.
         # The hope is that one might use these to notice that a particular datum
         # has not been set.
-        NC_FILL_BYTE
-        NC_FILL_CHAR
-        NC_FILL_SHORT
-        NC_FILL_INT
-        NC_FILL_FLOAT
-        NC_FILL_DOUBLE
-        NC_FILL_UBYTE
-        NC_FILL_USHORT
-        NC_FILL_UINT
-        NC_FILL_INT64
-        NC_FILL_UINT64
+
         # These maximums are enforced by the interface, to facilitate writing
         # applications and utilities.  However, nothing is statically allocated to
         # these sizes internally.
@@ -113,7 +132,8 @@ cdef extern from "pnetcdf.h":
         NC_EIOMISMATCH
         NC_ENOTSUPPORT
         NC_COUNT_IGNORE
-        NC_REQ_NULL
+
+
 
 
         MPI_DATATYPE_NULL
@@ -129,10 +149,6 @@ cdef extern from "pnetcdf.h":
         MPI_FLOAT
         MPI_DOUBLE
 
-
-
-
-
     # File APIs
     int ncmpi_create(MPI_Comm comm, const char *path, int cmode, MPI_Info info, int *ncidp) nogil
     int ncmpi_open(MPI_Comm comm, const char *path, int cmode, MPI_Info info, int *ncidp) nogil
@@ -143,32 +159,56 @@ cdef extern from "pnetcdf.h":
     int ncmpi_begin_indep_data(int ncid) nogil;
     int ncmpi_end_indep_data(int ncid) nogil;
     int ncmpi_inq_path(int ncid, int *pathlen, char *path) nogil
+    int ncmpi_cancel(int ncid, int num, int *requests, int *statuses) nogil
+    int ncmpi_inq_nreqs(int ncid, int *nreqs) nogil
+    int ncmpi_buffer_attach(int ncid, MPI_Offset bufsize) nogil
+    int ncmpi_buffer_detach(int ncid) nogil
+    int ncmpi_set_fill(int  ncid, int  fillmode, int *old_modep) nogil
     # Dimension APIs
     int ncmpi_def_dim(int ncid, const char *name, MPI_Offset len, int *idp) nogil
     # Inquiry APIs
     int ncmpi_inq(int ncid, int *ndimsp, int *nvarsp, int *ngattsp, int *unlimdimidp) nogil
     int ncmpi_inq_ndims(int ncid, int *ndimsp) nogil
+    int ncmpi_inq_unlimdim(int ncid, int *unlimdimidp) nogil
     int ncmpi_inq_dimlen(int ncid, int dimid, MPI_Offset *lenp) nogil
     int ncmpi_inq_dimname(int ncid, int dimid, char *name) nogil
     int ncmpi_inq_varnatts(int ncid, int varid, int *nattsp) nogil
     int ncmpi_inq_nvars(int ncid, int *nvarsp) nogil
     int ncmpi_inq_vardimid(int ncid, int varid, int *dimidsp) nogil
     int ncmpi_inq_var_fill(int ncid, int varid, int *no_fill, void *fill_value) nogil
+    int ncmpi_inq_buffer_usage(int ncid, MPI_Offset *usage) nogil
+    int ncmpi_inq_buffer_size(int ncid, MPI_Offset *buf_size) nogil
+    int ncmpi_set_default_format(int  new_format, int *old_formatp) nogil
+    int ncmpi_inq_default_format(int *formatp) nogil
+    int ncmpi_inq_format(int ncid, int *formatp) nogil
+    int ncmpi_inq_file_format(const char *filename, int *formatp) nogil
+    int ncmpi_inq_num_rec_vars(int ncid, int *num_rec_varsp) nogil
+    int ncmpi_inq_num_fix_vars(int ncid, int *num_rec_varsp) nogil
+    int ncmpi_inq_recsize(int ncid, MPI_Offset *recsize) nogil
+    int ncmpi_inq_version(int ncid, int *nc_mode) nogil
+    int ncmpi_inq_striping(int ncid, int *striping_size, int *striping_count) nogil
+    int ncmpi_inq_file_info(int ncid, MPI_Info *info_used) nogil
+    int ncmpi_inq_files_opened(int *num, int *ncids) nogil
+    int ncmpi_inq_header_size(int ncid, MPI_Offset *size) nogil
+    int ncmpi_inq_header_extent(int ncid, MPI_Offset *extent) nogil
+    int ncmpi_inq_malloc_size(MPI_Offset *size) nogil
+    int ncmpi_inq_malloc_max_size(MPI_Offset *size) nogil
+
+
     # Attibute APIs
     int ncmpi_put_att_text(int ncid, int varid, const char *name, MPI_Offset len, const char *op) nogil
     int ncmpi_put_att(int ncid, int varid, const char *name, nc_type xtype, MPI_Offset len, const void *op) nogil
     int ncmpi_inq_att(int ncid, int varid, const char *name, nc_type *xtypep, MPI_Offset *lenp) nogil
     int ncmpi_inq_natts(int ncid, int *ngattsp) nogil
     int ncmpi_inq_attname(int ncid, int varid, int attnum, char *name) nogil
-
     int ncmpi_get_att(int ncid, int varid, const char *name, void *ip) nogil
     int ncmpi_get_att_text(int ncid, int varid, const char *name, char *ip) nogil
-
     int ncmpi_rename_att(int ncid, int varid, const char *name, const char *newname) nogil
     int ncmpi_del_att(int ncid, int varid, const char *name) nogil
-    #Variable APIs
+    # Variable APIs
     int ncmpi_def_var(int ncid, const char *name, nc_type xtype, int ndims, const int *dimidsp, int *varidp) nogil
     int ncmpi_def_var_fill(int ncid, int varid, int no_fill, const void *fill_value) nogil
+    int ncmpi_fill_var_rec (int ncid, int varid, MPI_Offset recno) nogil
     int ncmpi_inq_varndims(int ncid, int varid, int *ndimsp) nogil
     int ncmpi_inq_varname(int ncid, int varid, char *name) nogil
     int ncmpi_inq_vartype(int ncid, int varid, nc_type *xtypep) nogil
@@ -194,6 +234,7 @@ cdef extern from "pnetcdf.h":
     const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
     int ncmpi_put_varm_all(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
     const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
+    int ncmpi_inq_varoffset(int ncid, int varid, MPI_Offset *offset) nogil
 
     int ncmpi_get_vara(int ncid, int varid, const MPI_Offset start[],\
      const MPI_Offset count[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype) nogil
@@ -220,11 +261,42 @@ cdef extern from "pnetcdf.h":
     int ncmpi_iput_var(int ncid, int varid, const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_iput_vara(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const void *buf, \
     MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_vars(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[],\
+     const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_var1(int ncid, int varid, const MPI_Offset index[], const void *buf, MPI_Offset bufcount, \
+    MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iput_varn(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[], const void *buf,\
+     MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+
     int ncmpi_iget_var(int ncid, int varid, void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_iget_vara(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], void *buf, MPI_Offset bufcount,\
      MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iget_var1(int ncid, int varid, const MPI_Offset index[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iget_vars(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iget_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_iget_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil 
+    int ncmpi_iget_varn(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[],\
+    void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+
+    int ncmpi_bput_var(int ncid, int varid, const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_bput_var1(int ncid, int varid, const MPI_Offset index[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_bput_vara(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const void *buf, MPI_Offset bufcount, \
+    MPI_Datatype buftype, int *request) nogil
+    int ncmpi_bput_vars(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], const void *buf,\
+     MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_bput_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
+    const MPI_Offset imap[], const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+    int ncmpi_bput_varn(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[], \
+    const void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
+
     int ncmpi_wait(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
     int ncmpi_wait_all(int ncid, int count, int array_of_requests[], int array_of_statuses[]) nogil
+    int ncmpi_inq_var_fill(int ncid, int varid, int *no_fill, void *fill_value) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
 cdef extern from "numpy/arrayobject.h":
     ctypedef int npy_intp 

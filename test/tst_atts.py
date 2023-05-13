@@ -14,8 +14,7 @@ from utils import validate_nc_file
 from mpi4py import MPI
 import pncpy
 
-# test attribute creation.
-#FILE_NAME = tempfile.NamedTemporaryFile(suffix='.nc', delete=False).name
+# test attribute creation
 FILE_NAME = 'tst_atts.nc'
 VAR_NAME="dummy_var"
 DIM1_NAME="x"
@@ -48,9 +47,10 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = os.path.join(sys.argv[1], FILE_NAME)
         else:
             self.file_path = FILE_NAME
-        with pncpy.File(self.file_path,'w', format = "64BIT_DATA") as f:
+        self._file_format = "64BIT_DATA"
+        with pncpy.File(self.file_path,'w', format = self._file_format) as f:
             # try to set a dataset attribute with one of the reserved names.
-            f.setncattr('data_model','netcdf5_format')
+            f.putncatt('file_format','netcdf5_format')
             # test attribute renaming
             f.stratt_tmp = STRATT
             f.renameAttribute('stratt_tmp','stratt')
@@ -59,13 +59,13 @@ class VariablesTestCase(unittest.TestCase):
             f.intatt = INTATT
             f.seqatt = SEQATT
             # sequences of strings converted to a single string.
-            f.defineDim(DIM1_NAME, DIM1_LEN)
-            f.defineDim(DIM2_NAME, DIM2_LEN)
-            f.defineDim(DIM3_NAME, DIM3_LEN)
+            f.def_dim(DIM1_NAME, DIM1_LEN)
+            f.def_dim(DIM2_NAME, DIM2_LEN)
+            f.def_dim(DIM3_NAME, DIM3_LEN)
 
-            v = f.defineVar(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
+            v = f.def_var(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
             # try to set a variable attribute with one of the reserved names.
-            v.setncattr('ndim','three')
+            v.putncatt('ndim','three')
             v.setncatts({'foo': 1})
             v.setncatts(OrderedDict(bar=2))
             v.stratt_tmp = STRATT
@@ -74,27 +74,16 @@ class VariablesTestCase(unittest.TestCase):
             v.intatt = INTATT
             v.floatatt = FLOATATT
             v.seqatt = SEQATT
-            # issue #959: should not be able to set _FillValue after var creation
-            try:
-                v._FillValue(-999.)
-            except AttributeError:
-                pass
-            else:
-                raise ValueError('This test should have failed.')
-            try:
-                v.setncattr('_FillValue',-999.)
-            except AttributeError:
-                pass
-            else:
-                raise ValueError('This test should have failed.')
+            # try set the attribute "_FillValue" to set the fill value of netCDF fill value 
+            v._FillValue = -999.
             f.foo = np.array('bar','S')
             f.foo = np.array('bar','U')
         assert validate_nc_file(self.file_path) == 0
+        
 
 
     def tearDown(self):
         # Remove the temporary files
-        #pass
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
     
@@ -123,6 +112,7 @@ class VariablesTestCase(unittest.TestCase):
             assert v.getncattr('ndim') == 'three'
             assert v.getncattr('foo') == 1
             assert v.getncattr('bar') == 2
+            assert v._FillValue == -999.
 
     def test_var_attr_dict_(self):
         with pncpy.File(self.file_path, 'r') as f:
@@ -138,4 +128,12 @@ class VariablesTestCase(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(argv=[sys.argv[0]])
+    suite = unittest.TestSuite()
+    suite.addTest(VariablesTestCase("test_file_attr_dict_"))
+    suite.addTest(VariablesTestCase("test_attr_access"))
+    suite.addTest(VariablesTestCase("test_var_attr_dict_"))
+    runner = unittest.TextTestRunner()
+    result = runner.run(suite)
+    if not result.wasSuccessful():
+        sys.exit(1)
+
