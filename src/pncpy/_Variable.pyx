@@ -84,9 +84,7 @@ cdef class Variable:
 
     def __init__(self, file, name, nc_dtype, dimensions=(), **kwargs):
         """
-        **`__init__(self, file, name, datatype, dimensions=(),
-            endian='native', least_significant_digit=None,
-            significant_digits=None, fill_value=None, **kwargs)`**
+        **`__init__(self, file, name, datatype, dimensions=(), endian='native', least_significant_digit=None, significant_digits=None, fill_value=None, **kwargs)`**
 
         `Variable` constructor.
 
