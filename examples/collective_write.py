@@ -198,7 +198,7 @@ def main():
     if args.q:
         verbose = False
     if args.k:
-        kind_dict = {1:None, 2:"64BIT_OFFSET", 5:"64BIT_DATA"}
+        kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
         file_format = kind_dict[args.k]
     if args.l:
         if int(args.l) > 0:
