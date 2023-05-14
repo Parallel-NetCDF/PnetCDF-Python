@@ -49,9 +49,8 @@ def parse_help():
                 "       [filename] (Optional) output netCDF file name\n"
             ).format(sys.argv[0])
             print(help_text)
-        return True
-    else:
-        False
+
+    return help_flag
 
 def pnetcdf_check_mem_usage(comm):
     malloc_size, sum_size = 0, 0
