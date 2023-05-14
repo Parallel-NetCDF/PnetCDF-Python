@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PnetCDF Python 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            PnetCDF Python
+          </a>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-introduction/overview">Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-installation/install">Install from Source</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-api/file_api">File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-api/attribute_api">Attribute</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-api/dimension_api">Dimension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-api/variable_api">Variable</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-development/compatibility">Compatibility with C</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">PnetCDF Python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PnetCDF Python 0.0.1 documentation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-pnetcdf-python-s-documentation">
+<h1>Welcome to PnetCDF Python’s documentation!<a class="headerlink" href="#welcome-to-pnetcdf-python-s-documentation" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<span id="document-introduction/overview"></span><section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>PnetCDF-python is a Python interface to PnetCDF,
+a high-performance parallel I/O library for accessing netCDF files.
+This integration with Python allows for easy manipulation, analysis,
+and visualization of netCDF data using the rich ecosystem of Python’s
+scientific computing libraries, making it a valuable tool for python-based
+applications that require high-performance access to netCDF files.</p>
+</section>
+</div>
+<div class="toctree-wrapper compound">
+<span id="document-installation/install"></span><section id="install-from-source">
+<h2>Install from Source<a class="headerlink" href="#install-from-source" title="Permalink to this heading"></a></h2>
+<section id="software-requirements">
+<h3>Software Requirements<a class="headerlink" href="#software-requirements" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>PnetCDF C library</p></li>
+<li><p>Python 3.9 or later</p></li>
+<li><p>Python libraries: numpy, mpi4py</p></li>
+<li><p>Python libraries: Cython, setuptools (optional, for building from source)</p></li>
+</ul>
+</section>
+<section id="building-pnetcdf-c-library">
+<h3>Building PnetCDF C library<a class="headerlink" href="#building-pnetcdf-c-library" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># download PnetCDF C library v1.12.3 (or later)</span>
+$ wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
+
+$ tar -xf pnetcdf-1.12.3.tar.gz
+$ <span class="nb">cd</span> pnetcdf-1.12.3
+
+<span class="c1"># configure</span>
+$ ./configure --prefix<span class="o">=</span>/path/to/install-dir --enable-shared <span class="nv">CC</span><span class="o">=</span>mpicc
+
+<span class="c1"># build and install</span>
+$ make
+$ make install
+</pre></div>
+</div>
+</section>
+<section id="building-pnetcdf-python-from-source">
+<h3>Building PnetCDF-python from source<a class="headerlink" href="#building-pnetcdf-python-from-source" title="Permalink to this heading"></a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># activate an virtual environment (optional)</span>
+<span class="c1"># use Python 3.9 or later</span>
+$ python3 -m venv env
+$ <span class="nb">source</span> env/bin/activate
+$ pip install --upgrade pip
+
+<span class="c1"># install Python libraries</span>
+$ pip install numpy Cython setuptools
+$ env <span class="nv">CC</span><span class="o">=</span>mpicc pip install --no-cache-dir mpi4py
+
+<span class="c1"># download PnetCDF-python source code</span>
+$ git clone git@github.com:yzanhua/pnetcdf-python.git
+$ <span class="nb">cd</span> pnetcdf-python
+
+<span class="c1"># install PnetCDF-python</span>
+env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py build
+env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py install
+</pre></div>
+</div>
+</section>
+</section>
+</div>
+<div class="toctree-wrapper compound">
+<span id="document-api/file_api"></span><section id="file">
+<h2>File<a class="headerlink" href="#file" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pncpy.File</span></code> is a high-level object representing an netCDF file,
+which provides a Pythonic interface to create,
+read and write within an netCDF file. A File object serves as
+the root container for dimensions, variables, and attributes.
+Together they describe the meaning of data and relations among
+data fields stored in a netCDF file.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pncpy.File">
+<em class="property"><span class="pre">class</span><span class="w">  </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#pncpy.File" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format='64BIT_OFFSET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode=&quot;w&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Comm</span> <span class="pre">comm=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Info</span> <span class="pre">info=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>The constructor for <a class="reference internal" href="#pncpy.File" title="pncpy.File"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.File</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of the new file.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – <p>Access mode.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code>: Opens a file for reading, error if the file does not exist.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">w</span></code>: Opens a file for writing, creates the file if it does not exist.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: Creates the file, returns an error if the file exists.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">r+</span></code>: append, creates the file if it does not exist.</p></li>
+</ul>
+</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – <p>underlying file format. Only relevant if <code class="docutils literal notranslate"><span class="pre">mode</span></code> is <code class="docutils literal notranslate"><span class="pre">w</span></code> or <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_OFFSET</span></code>: NetCDF-2 format.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_DATA</span></code>: NetCDF-5 format.</p></li>
+</ul>
+</p></li>
+<li><p><strong>comm</strong> (<em>mpi4py.MPI.Comm</em><em> or </em><em>None</em>) – MPI communicator to use for file access. <cite>None</cite> defaults to MPI_COMM_WORLD.</p></li>
+<li><p><strong>info</strong> (<em>mpi4py.MPI.Info</em><em> or </em><em>None</em>) – MPI info object to use for file access. <cite>None</cite> defaults to MPI_INFO_NULL.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.def_dim">
+<span class="sig-name descname"><span class="pre">def_dim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_dim" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`def_dim(self, dimname, size=-1)`</strong>
+Creates a new dimension with the given <cite>dimname</cite> and <cite>size</cite>.
+<cite>size</cite> must be a positive integer or <cite>-1</cite>, which stands for
+“unlimited” (default is <cite>-1</cite>). Specifying a size of 0 also
+results in an unlimited dimension. The return value is the <cite>Dimension</cite>
+class instance describing the new dimension.  To determine the current
+maximum size of the dimension, use the <cite>len</cite> function on the <cite>Dimension</cite>
+instance. To determine if a dimension is ‘unlimited’, use the
+<cite>Dimension.isunlimited</cite> method of the <cite>Dimension</cite> instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.def_var">
+<span class="sig-name descname"><span class="pre">def_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_var" title="Permalink to this definition"></a></dt>
+<dd><p>defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None)</p>
+<p>Create a new variable with the given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
+<li><p><strong>nc_dtype</strong> (<em>str</em><em> or </em><em>numpy.dtype</em>) – <p>The datatype of the new variable. Supported string specifiers are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">S1</span></code> or <code class="docutils literal notranslate"><span class="pre">c</span></code> for NC_CHAR</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i1</span></code> or <code class="docutils literal notranslate"><span class="pre">b</span></code> or <code class="docutils literal notranslate"><span class="pre">B</span></code> for NC_BYTE</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u1</span></code> for NC_UBYTE</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i2</span></code> or <code class="docutils literal notranslate"><span class="pre">h</span></code> or <code class="docutils literal notranslate"><span class="pre">s</span></code> for NC_SHORT</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u2</span></code> for NC_USHORT</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i4</span></code> or <code class="docutils literal notranslate"><span class="pre">i</span></code> or <code class="docutils literal notranslate"><span class="pre">l</span></code> for NC_INT</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u4</span></code> for NC_UINT</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">i8</span></code> for NC_INT64</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">u8</span></code> for NC_UINT64</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f4</span></code> or <code class="docutils literal notranslate"><span class="pre">f</span></code> for NC_FLOAT</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">f8</span></code> or <code class="docutils literal notranslate"><span class="pre">d</span></code> for NC_DOUBLE</p></li>
+</ul>
+</p></li>
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="index.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Empty tuple suggests a scalar.</p></li>
+<li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
+<li><p>any other value: use the given value as fill value</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created variable.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="index.html#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.delncattr">
+<span class="sig-name descname"><span class="pre">delncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.delncattr" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`delncattr(self,name,value)`</strong></p>
+<p>delete a netCDF file attribute.  Use if you need to delete a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.filepath">
+<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`filepath(self,encoding=None)`</strong></p>
+<p>Get the file system path (or the opendap URL) which was used to
+open/create the Dataset. Requires netcdf &gt;= 4.1.2.  The path
+is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default, this can be
+changed using the <cite>encoding</cite> kwarg.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.getncattr">
+<span class="sig-name descname"><span class="pre">getncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.getncattr" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`getncattr(self,name)`</strong></p>
+<p>retrieve a netCDF dataset or file attribute.
+Use if you need to get a netCDF attribute with the same
+name as one of the reserved python attributes.</p>
+<p>option kwarg <cite>encoding</cite> can be used to specify the
+character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_unlimdim">
+<span class="sig-name descname"><span class="pre">inq_unlimdim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_unlimdim" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`inq_unlimdim(self)`</strong></p>
+<p>return the unlimited dim instance of the file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.ncattrs">
+<span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.ncattrs" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`ncattrs(self)`</strong></p>
+<p>return netCDF attribute names for this File in a list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.putncatt">
+<span class="sig-name descname"><span class="pre">putncatt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.putncatt" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`putncatt(self,name,value)`</strong>
+set a netCDF file attribute using name,value pair.
+Use if you need to set a netCDF attribute with the
+with the same name as one of the reserved python attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.renameAttribute">
+<span class="sig-name descname"><span class="pre">renameAttribute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.renameAttribute" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`renameAttribute(self, oldname, newname)`</strong></p>
+<p>rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.sync">
+<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.sync" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`sync(self)`</strong></p>
+<p>Writes all buffered data in the <cite>File</cite> to the disk file.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<span id="document-api/attribute_api"></span><section id="attribute">
+<h2>Attribute<a class="headerlink" href="#attribute" title="Permalink to this heading"></a></h2>
+<p>In the library, netCDF attributes can be created, accessed, and manipulated
+using python dictionary-like syntax. A Pythonic interface for metadata operations
+is provided both in the <code class="docutils literal notranslate"><span class="pre">File</span></code> class (for global attributes) and the
+<code class="docutils literal notranslate"><span class="pre">Variable</span></code> class (for variable attributes).</p>
+</section>
+<span id="document-api/dimension_api"></span><section id="dimension">
+<h2>Dimension<a class="headerlink" href="#dimension" title="Permalink to this heading"></a></h2>
+<p>Dimension defines the shape and structure of variables and stores
+coordinate data for multidimensional arrays. The <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> object,
+which is also a key component of <code class="docutils literal notranslate"><span class="pre">File</span></code> class, provides an interface
+to create, access and manipulate dimensions.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pncpy.Dimension">
+<em class="property"><span class="pre">class</span><span class="w">  </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">Dimension</span></span><a class="headerlink" href="#pncpy.Dimension" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Dimension.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Dimension.getfile">
+<span class="sig-name descname"><span class="pre">getfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.getfile" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`file(self)`</strong></p>
+<p>return the file that this <cite>Dimension</cite> is a member of.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Dimension.isunlimited">
+<span class="sig-name descname"><span class="pre">isunlimited</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.isunlimited" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`isunlimited(self)`</strong></p>
+<p>returns <cite>True</cite> if the <cite>Dimension</cite> instance is unlimited, <cite>False</cite> otherwise.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Dimension.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pncpy.Dimension.name" title="Permalink to this definition"></a></dt>
+<dd><p>string name of Dimension instance</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Dimension.size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pncpy.Dimension.size" title="Permalink to this definition"></a></dt>
+<dd><p>current size of Dimension (calls <cite>len</cite> on Dimension instance)</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<span id="document-api/variable_api"></span><section id="variable">
+<h2>Variable<a class="headerlink" href="#variable" title="Permalink to this heading"></a></h2>
+<p>Variable is a core component of a netCDF file representing an array
+of data values organized along one or more dimensions, with associated
+metadata in the form of attributes. The <code class="docutils literal notranslate"><span class="pre">Variable</span></code> object in the library
+provides operations to read and write the data and metadata of a variable
+within a netCDF file. Particularly, data mode operations have a flexible
+interface, where reads and writes can be done through either explicit
+function-call style methods or indexer-style (numpy-like) syntax.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pncpy.Variable">
+<em class="property"><span class="pre">class</span><span class="w">  </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">Variable</span></span><a class="headerlink" href="#pncpy.Variable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A PnetCDF <cite>Variable</cite> is used to read and write netCDF data.  They are
+analogous to numpy array objects. See <cite>Variable.__init__</cite> for more
+details.</p>
+<p>A list of attribute names corresponding to netCDF attributes defined for
+the variable can be obtained with the <cite>Variable.ncattrs</cite> method. These
+attributes can be created by assigning to an attribute of the
+<cite>Variable</cite> instance. A dictionary containing all the netCDF attribute
+name/value pairs is provided by the <cite>__dict__</cite> attribute of a
+<cite>Variable</cite> instance.</p>
+<p>The following class variables are read-only:</p>
+<p><strong>`dimensions`</strong>: A tuple containing the names of the
+dimensions associated with this variable.</p>
+<p><strong>`dtype`</strong>: A numpy dtype object describing the
+variable’s data type.</p>
+<p><strong>`ndim`</strong>: The number of variable dimensions.</p>
+<p><strong>`shape`</strong>: A tuple with the current shape (length of all dimensions).</p>
+<p><strong>`scale`</strong>: If True, <cite>scale_factor</cite> and <cite>add_offset</cite> are
+applied, and signed integer data is automatically converted to
+unsigned integer data if the <cite>_Unsigned</cite> attribute is set.
+Default is <cite>True</cite>, can be reset using <cite>Variable.set_auto_scale</cite> and
+<cite>Variable.set_auto_maskandscale</cite> methods.</p>
+<p><strong>`mask`</strong>: If True, data is automatically converted to/from masked
+arrays when missing values or fill values are present. Default is <cite>True</cite>, can be
+reset using <cite>Variable.set_auto_mask</cite> and <cite>Variable.set_auto_maskandscale</cite>
+methods. Only relevant for Variables with primitive or enum types (ignored
+for compound and vlen Variables).</p>
+<p><strong>`chartostring`</strong>: If True, data is automatically converted to/from character
+arrays to string arrays when the <cite>_Encoding</cite> variable attribute is set.
+Default is <cite>True</cite>, can be reset using
+<cite>Variable.set_auto_chartostring</cite> method.</p>
+<p><strong>`least_significant_digit`</strong>: Describes the power of ten of the
+smallest decimal place in the data the contains a reliable value.  Data is
+truncated to this decimal place when it is assigned to the <cite>Variable</cite>
+instance. If <cite>None</cite>, the data is not truncated.</p>
+<p><strong>`__orthogonal_indexing__`</strong>: Always <cite>True</cite>.  Indicates to client code
+that the object supports ‘orthogonal indexing’, which means that slices
+that are 1d arrays or lists slice along each dimension independently.  This
+behavior is similar to Fortran or Matlab, but different than np.</p>
+<p><strong>`datatype`</strong>: numpy data type (for primitive data types) or VLType/CompoundType
+instance (for compound or vlen data types).</p>
+<p><strong>`name`</strong>: String name.</p>
+<p><strong>`size`</strong>: The number of stored elements.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.__init__" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`__init__(self, file, name, datatype, dimensions=(), endian=’native’, least_significant_digit=None, significant_digits=None, fill_value=None, **kwargs)`</strong></p>
+<p><cite>Variable</cite> constructor.</p>
+<p><strong>`group`</strong>: <cite>Group</cite> or <cite>Dataset</cite> instance to associate with variable.</p>
+<p><strong>`name`</strong>: Name of the variable.</p>
+<p><strong>`datatype`</strong>: <cite>Variable</cite> data type. Can be specified by providing a
+numpy dtype object, or a string that describes a numpy dtype object.
+Supported values, corresponding to <cite>str</cite> attribute of numpy dtype
+objects, include <cite>‘f4’</cite> (32-bit floating point), <cite>‘f8’</cite> (64-bit floating
+point), <cite>‘i4’</cite> (32-bit signed integer), <cite>‘i2’</cite> (16-bit signed integer),
+<cite>‘i8’</cite> (64-bit signed integer), <cite>‘i4’</cite> (8-bit signed integer), <cite>‘i1’</cite>
+(8-bit signed integer), <cite>‘u1’</cite> (8-bit unsigned integer), <cite>‘u2’</cite> (16-bit
+unsigned integer), <cite>‘u4’</cite> (32-bit unsigned integer), <cite>‘u8’</cite> (64-bit
+unsigned integer), or <cite>‘S1’</cite> (single-character string).</p>
+<p><strong>`dimensions`</strong>: a tuple containing the variable’s Dimension instances
+(defined previously with <cite>def_dim</cite>). Default is an empty tuple
+which means the variable is a scalar (and therefore has no dimensions).</p>
+<p><strong>`least_significant_digit`</strong>: If this or <cite>significant_digits</cite> are specified,
+variable data will be truncated (quantized).
+In conjunction with <cite>compression=’zlib’</cite> this produces
+‘lossy’, but significantly more efficient compression. For example, if
+<cite>least_significant_digit=1</cite>, data will be quantized using
+around(scale*data)/scale, where scale = 2**bits, and bits is determined
+so that a precision of 0.1 is retained (in this case bits=4). Default is
+<cite>None</cite>, or no quantization.</p>
+<p><strong>`significant_digits`</strong>: New in version 1.6.0.
+As described for <cite>least_significant_digit</cite>
+except the number of significant digits retained is prescribed independent
+of the floating point exponent. Default <cite>None</cite> - no quantization done.</p>
+<p><strong>`fill_value`</strong>:  If specified, the default netCDF <cite>_FillValue</cite> (the
+value that the variable gets filled with before any data is written to it)
+is replaced with this value.  If fill_value is set to <cite>False</cite>, then
+the variable is not pre-filled.</p>
+<p><strong>*Note*</strong>: <cite>Variable</cite> instances should be created using the
+<cite>File.def_var</cite> method of a <cite>File</cite> instance, not using this class directly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.assignValue">
+<span class="sig-name descname"><span class="pre">assignValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.assignValue" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`assignValue(self, val)`</strong></p>
+<p>assign a value to a scalar variable.  Provided for compatibility with
+Scientific.IO.NetCDF, can also be done by assigning to an Ellipsis slice ([…]).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Variable.datatype">
+<span class="sig-name descname"><span class="pre">datatype</span></span><a class="headerlink" href="#pncpy.Variable.datatype" title="Permalink to this definition"></a></dt>
+<dd><p>numpy data type</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.delncattr">
+<span class="sig-name descname"><span class="pre">delncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.delncattr" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`delncattr(self,name,value)`</strong></p>
+<p>delete a netCDF variable attribute.  Use if you need to delete a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Variable.dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#pncpy.Variable.dimensions" title="Permalink to this definition"></a></dt>
+<dd><p>get variables’s dimension names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.getValue">
+<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.getValue" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`getValue(self)`</strong></p>
+<p>get the value of a scalar variable.  Provided for compatibility with
+Scientific.IO.NetCDF, can also be done by slicing with an Ellipsis ([…]).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.get_dims">
+<span class="sig-name descname"><span class="pre">get_dims</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_dims" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`get_dims(self)`</strong></p>
+<p>return a tuple of <cite>Dimension</cite> instances associated with this
+<cite>Variable</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.getncattr">
+<span class="sig-name descname"><span class="pre">getncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.getncattr" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`getncattr(self,name)`</strong></p>
+<p>retrieve a netCDF variable attribute.  Use if you need to set a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+<p>option kwarg <cite>encoding</cite> can be used to specify the
+character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Variable.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pncpy.Variable.name" title="Permalink to this definition"></a></dt>
+<dd><p>string name of Variable instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.ncattrs">
+<span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.ncattrs" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`ncattrs(self)`</strong></p>
+<p>return netCDF attribute names for this <cite>Variable</cite> in a list.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.putncatt">
+<span class="sig-name descname"><span class="pre">putncatt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.putncatt" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`putncatt(self,name,value)`</strong></p>
+<p>set a netCDF variable attribute using name,value pair.  Use if you need to set a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.renameAttribute">
+<span class="sig-name descname"><span class="pre">renameAttribute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.renameAttribute" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`renameAttribute(self, oldname, newname)`</strong></p>
+<p>rename a <cite>Variable</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.set_auto_chartostring">
+<span class="sig-name descname"><span class="pre">set_auto_chartostring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.set_auto_chartostring" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`set_auto_chartostring(self,chartostring)`</strong></p>
+<p>turn on or off automatic conversion of character variable data to and
+from numpy fixed length string arrays when the <cite>_Encoding</cite> variable attribute
+is set.</p>
+<p>If <cite>chartostring</cite> is set to <cite>True</cite>, when data is read from a character variable
+(dtype = <cite>S1</cite>) that has an <cite>_Encoding</cite> attribute, it is converted to a numpy
+fixed length unicode string array (dtype = <cite>UN</cite>, where <cite>N</cite> is the length
+of the the rightmost dimension of the variable).  The value of <cite>_Encoding</cite>
+is the unicode encoding that is used to decode the bytes into strings.</p>
+<p>When numpy string data is written to a variable it is converted back to
+indiviual bytes, with the number of bytes in each string equalling the
+rightmost dimension of the variable.</p>
+<p>The default value of <cite>chartostring</cite> is <cite>True</cite>
+(automatic conversions are performed).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.set_auto_mask">
+<span class="sig-name descname"><span class="pre">set_auto_mask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.set_auto_mask" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`set_auto_mask(self,mask)`</strong></p>
+<p>turn on or off automatic conversion of variable data to and
+from masked arrays .</p>
+<p>If <cite>mask</cite> is set to <cite>True</cite>, when data is read from a variable
+it is converted to a masked array if any of the values are exactly
+equal to the either the netCDF _FillValue or the value specified by the
+missing_value variable attribute. The fill_value of the masked array
+is set to the missing_value attribute (if it exists), otherwise
+the netCDF _FillValue attribute (which has a default value
+for each data type). If the variable has no missing_value attribute, the
+_FillValue is used instead. If the variable has valid_min/valid_max and
+missing_value attributes, data outside the specified range will be masked.
+When data is written to a variable, the masked
+array is converted back to a regular numpy array by replacing all the
+masked values by the missing_value attribute of the variable (if it
+exists).  If the variable has no missing_value attribute, the _FillValue
+is used instead.</p>
+<p>The default value of <cite>mask</cite> is <cite>True</cite>
+(automatic conversions are performed).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.set_auto_scale">
+<span class="sig-name descname"><span class="pre">set_auto_scale</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.set_auto_scale" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`set_auto_scale(self,scale)`</strong></p>
+<p>turn on or off automatic packing/unpacking of variable
+data using <cite>scale_factor</cite> and <cite>add_offset</cite> attributes.
+Also turns on and off automatic conversion of signed integer data
+to unsigned integer data if the variable has an <cite>_Unsigned</cite>
+attribute.</p>
+<p>If <cite>scale</cite> is set to <cite>True</cite>, and the variable has a
+<cite>scale_factor</cite> or an <cite>add_offset</cite> attribute, then data read
+from that variable is unpacked using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="o">*</span><span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_offset</span>
+</pre></div>
+</div>
+<p>When data is written to a variable it is packed using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_offset</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+</pre></div>
+</div>
+<p>If either scale_factor is present, but add_offset is missing, add_offset
+is assumed zero.  If add_offset is present, but scale_factor is missing,
+scale_factor is assumed to be one.
+For more information on how <cite>scale_factor</cite> and <cite>add_offset</cite> can be
+used to provide simple compression, see the
+[PSL metadata conventions](<a class="reference external" href="http://www.esrl.noaa.gov/psl/data/gridded/conventions/cdc_netcdf_standard.shtml">http://www.esrl.noaa.gov/psl/data/gridded/conventions/cdc_netcdf_standard.shtml</a>).</p>
+<p>In addition, if <cite>scale</cite> is set to <cite>True</cite>, and if the variable has an
+attribute <cite>_Unsigned</cite> set, and the variable has a signed integer data type,
+a view to the data is returned with the corresponding unsigned integer datatype.
+This convention is used by the netcdf-java library to save unsigned integer
+data in <cite>NETCDF3</cite> or <cite>NETCDF4_CLASSIC</cite> files (since the <cite>NETCDF3</cite>
+data model does not have unsigned integer data types).</p>
+<p>The default value of <cite>scale</cite> is <cite>True</cite>
+(automatic conversions are performed).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.setncatts">
+<span class="sig-name descname"><span class="pre">setncatts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.setncatts" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`setncatts(self,attdict)`</strong></p>
+<p>set a bunch of netCDF variable attributes at once using a python dictionary.
+This may be faster when setting a lot of attributes for a <cite>NETCDF3</cite>
+formatted file, since nc_redef/nc_enddef is not called in between setting
+each attribute</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Variable.shape">
+<span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#pncpy.Variable.shape" title="Permalink to this definition"></a></dt>
+<dd><p>find current sizes of all variable dimensions</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.Variable.size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pncpy.Variable.size" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of stored elements.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</div>
+<div class="toctree-wrapper compound">
+<span id="document-development/compatibility"></span><section id="compatibility-with-c">
+<h2>Compatibility with C<a class="headerlink" href="#compatibility-with-c" title="Permalink to this heading"></a></h2>
+<p>The Following table contains list of PnetCDF-python’s compatibility with PnetCDF-C APIs.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><div class="line-block">
+<div class="line">Component</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">Implemented</div>
+</div>
+</th>
+<th class="head"><div class="line-block">
+<div class="line">To be implemented (priority <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>)</div>
+</div>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">File API</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ncmpi_strerror</div>
+<div class="line">ncmpi_strerrno</div>
+<div class="line">ncmpi_create</div>
+<div class="line">ncmpi_open/close</div>
+<div class="line">ncmpi_enddef/redef</div>
+<div class="line">ncmpi_sync</div>
+<div class="line">ncmpi_begin/end_indep_data</div>
+<div class="line">ncmpi_inq_path</div>
+<div class="line">ncmpi_inq</div>
+<div class="line">ncmpi_wait</div>
+<div class="line">ncmpi_wait_all</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ncmpi_inq_libvers (3)</div>
+<div class="line">ncmpi_set_fill (3)</div>
+<div class="line">ncmpi_set_default_format (3)</div>
+<div class="line">ncmpi_inq_put/get_size (3)</div>
+<div class="line">ncmpi_delete (2)</div>
+<div class="line">ncmpi_sync_numrecs (2)</div>
+<div class="line">ncmpi_inq_file_info (3)</div>
+<div class="line">ncmpi_inq_files_opened (3)</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">Dimension API</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ncmpi_def_dim</div>
+<div class="line">ncmpi_inq_ndims</div>
+<div class="line">ncmpi_inq_dimlen</div>
+<div class="line">ncmpi_inq_dim</div>
+<div class="line">ncmpi_inq_dimname</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><div class="line-block">
+<div class="line">Attribute API</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ncmpi_put/get_att_text</div>
+<div class="line">ncmpi_put/get_att</div>
+<div class="line">ncmpi_inq_att</div>
+<div class="line">ncmpi_inq_natts</div>
+<div class="line">ncmpi_inq_attname</div>
+<div class="line">ncmpi_rename_att</div>
+<div class="line">ncmpi_del_att</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><div class="line-block">
+<div class="line">Variable  API</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ncmpi_def_var</div>
+<div class="line">ncmpi_def_var_fill</div>
+<div class="line">ncmpi_inq_varndims</div>
+<div class="line">ncmpi_inq_varname</div>
+<div class="line">ncmpi_put/get_vara</div>
+<div class="line">ncmpi_put/get_vars</div>
+<div class="line">ncmpi_put/get_var1</div>
+<div class="line">ncmpi_put/get_var</div>
+<div class="line">ncmpi_put/get_varn</div>
+<div class="line">ncmpi_put/get_varm</div>
+<div class="line">ncmpi_put/get_vara_all</div>
+<div class="line">ncmpi_put/get_vars_all</div>
+<div class="line">ncmpi_put/get_var1_all</div>
+<div class="line">ncmpi_put/get_var_all</div>
+<div class="line">ncmpi_put/get_varn_all</div>
+<div class="line">ncmpi_put/get_varm_all</div>
+<div class="line">ncmpi_iput/iget_var</div>
+<div class="line">ncmpi_iput/iget_vara</div>
+</div>
+</td>
+<td><div class="line-block">
+<div class="line">ncmpi_iput/iget_var1 (1)</div>
+<div class="line">ncmpi_iput/iget_vars (1)</div>
+<div class="line">ncmpi_iput/iget_varm (1)</div>
+<div class="line">ncmpi_iput/iget_varn (2)</div>
+<div class="line">ncmpi_bput/bget_var (1)</div>
+<div class="line">ncmpi_bput/bget_var1 (1)</div>
+<div class="line">ncmpi_bput/bget_vara (1)</div>
+<div class="line">ncmpi_bput/bget_vars (1)</div>
+<div class="line">ncmpi_bput/bget_varm (1)</div>
+<div class="line">ncmpi_bput/bget_varn (2)</div>
+<div class="line">ncmpi_wait/wait_all (1)</div>
+<div class="line">ncmpi_inq_nreqs (1)</div>
+<div class="line">ncmpi_inq_buffer_usage/size (1)</div>
+<div class="line">ncmpi_cancel (1)</div>
+<div class="line">ncmpi_fill_var_rec (2)</div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>priority level 1/2/3 maps to first/second/third priority</p>
+</aside>
+</aside>
+</section>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, CUCIS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
