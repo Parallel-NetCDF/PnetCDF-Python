@@ -50,6 +50,10 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-development/compatibility">Compatibility with C</a></li>
 </ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/tutorial">Tutorial</a></li>
+</ul>
 
         </div>
       </div>
@@ -837,6 +841,47 @@ each attribute</p>
 <p>priority level 1/2/3 maps to first/second/third priority</p>
 </aside>
 </aside>
+</section>
+</div>
+<div class="toctree-wrapper compound">
+<span id="document-tutorial/tutorial"></span><section id="tutorial">
+<h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Under construction.</p>
+</div>
+<section id="running-python-scripts-with-mpi">
+<h3>Running Python scripts with MPI<a class="headerlink" href="#running-python-scripts-with-mpi" title="Permalink to this heading"></a></h3>
+<p>Python programs with PnetCDF-python can be run with the command <strong class="program">mpiexec</strong>. In
+practice, running Python programs looks like:</p>
+<blockquote>
+<div><p>$ mpiexec -n 4 python script.py</p>
+</div></blockquote>
+<p>to run the program with 4 processors.</p>
+</section>
+<section id="creating-opening-closing-a-netcdf-file">
+<h3>Creating/Opening/Closing a netCDF file<a class="headerlink" href="#creating-opening-closing-a-netcdf-file" title="Permalink to this heading"></a></h3>
+<dl>
+<dt>To create a netCDF file from python, you simply call the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. This is also</dt><dd><p>the method used to open an existing netCDF file. If the file is open for write access
+(mode=’w’, ‘r+’ or ‘a’), you may write any type of data including new dimensions, variables
+and attributes. Currently, netCDF files can be created in classic formats, specifically the
+formats of CDF-1, 2, and 5. When creating a new file, the format may be specified using the
+format keyword in the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. The default format is NETCDF4. To see how a given
+file is formatted, you can examine the <code class="docutils literal notranslate"><span class="pre">file_format</span></code> attribute. Closing the netCDF file is
+accomplished via the <code class="docutils literal notranslate"><span class="pre">File.close</span></code> method of the <code class="docutils literal notranslate"><span class="pre">File</span></code> instance.</p>
+<p>Here’s an example:</p>
+<blockquote>
+<div><p>import pncpy
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+# create a new file using “w” mode
+f = pncpy.File(filename=”testfile.nc”, mode = ‘w’, comm=comm, info=None)
+# close the file
+f.close()</p>
+</div></blockquote>
+</dd>
+</dl>
+</section>
 </section>
 </div>
 </section>
