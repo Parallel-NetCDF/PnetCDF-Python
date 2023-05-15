@@ -33,6 +33,12 @@ PnetCDF-Python Documentation
 
    development/compatibility
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorial
+
+   tutorial/tutorial
+
 
 .. Indices and tables
 .. ==================
