@@ -44,7 +44,7 @@ Building PnetCDF-python from source
     $ env CC=mpicc pip install --no-cache-dir mpi4py
 
     # download PnetCDF-python source code
-    $ git clone git@github.com:yzanhua/pnetcdf-python.git
+    $ git clone git@github.com:Jonathanlyj/pnetcdf-python.git
     $ cd pnetcdf-python
 
     # install PnetCDF-python

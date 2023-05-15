@@ -51,6 +51,7 @@ cdef class File:
 
             - ``64BIT_OFFSET``: NetCDF-2 format.
             - ``64BIT_DATA``: NetCDF-5 format.
+            - `None` defaults to default file format (NetCDF-1 format)
 
         :type format: str
 
