@@ -38,11 +38,11 @@ PnetCDF-Python Documentation
    api/dimension_api
    api/variable_api
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Development
+.. #.. toctree::
+.. #   :maxdepth: 2
+.. #   :caption: Development
 
-   development/compatibility
+.. #   development/compatibility
 
 
 .. Indices and tables

@@ -41,7 +41,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/basic">Basic</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/basic">Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/collective_indep">Collective vs Independent I/O</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/read_write">Variable Reading and Writing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/non_blocking">Non-blocking Reads and Writes</a></li>
@@ -53,10 +53,6 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-api/attribute_api">Attribute</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-api/dimension_api">Dimension</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-api/variable_api">Variable</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-development/compatibility">Compatibility with C</a></li>
 </ul>
 
         </div>
@@ -149,8 +145,8 @@ env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py ins
 </section>
 </div>
 <div class="toctree-wrapper compound">
-<span id="document-tutorial/basic"></span><section id="basic">
-<h2>Basic<a class="headerlink" href="#basic" title="Permalink to this heading"></a></h2>
+<span id="document-tutorial/basic"></span><section id="basics">
+<h2>Basics<a class="headerlink" href="#basics" title="Permalink to this heading"></a></h2>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
@@ -227,6 +223,10 @@ and commit them altogether…</p>
 </section>
 <span id="document-tutorial/datatypes"></span><section id="datatypes-in-pnetcdf-python">
 <h2>Datatypes in PnetCDF-python<a class="headerlink" href="#datatypes-in-pnetcdf-python" title="Permalink to this heading"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Under construction.</p>
+</div>
 <p>This page should talk about what are the support datatypes in numpy with
 respect to different file formats and mechanisms of data type conversion
 between numpy and netCDF datatypes…</p>
@@ -237,11 +237,9 @@ between numpy and netCDF datatypes…</p>
 <h2>File<a class="headerlink" href="#file" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">pncpy.File</span></code> is a high-level object representing an netCDF file,
 which provides a Pythonic interface to create, read and write within
-an netCDF file. A File object serves as the root container for dimensions,</p>
-<blockquote>
-<div><p>ariables, and attributes. Together they describe the meaning of data and</p>
-</div></blockquote>
-<p>relations among data fields stored in a netCDF file.</p>
+an netCDF file. A File object serves as the root container for dimensions,
+variables, and attributes. Together they describe the meaning of data and
+relations among data fields stored in a netCDF file.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pncpy.File">
 <em class="property"><span class="pre">class</span><span class="w">  </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#pncpy.File" title="Permalink to this definition"></a></dt>
@@ -735,200 +733,6 @@ each attribute</p>
 
 </dd></dl>
 
-</section>
-</div>
-<div class="toctree-wrapper compound">
-<span id="document-development/compatibility"></span><section id="compatibility-with-c">
-<h2>Compatibility with C<a class="headerlink" href="#compatibility-with-c" title="Permalink to this heading"></a></h2>
-<p>The Following table contains list of PnetCDF-python’s compatibility with PnetCDF-C APIs.</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><div class="line-block">
-<div class="line">Component</div>
-</div>
-</th>
-<th class="head"><div class="line-block">
-<div class="line">Implemented</div>
-</div>
-</th>
-<th class="head"><div class="line-block">
-<div class="line">To be implemented (priority <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>)</div>
-</div>
-</th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><div class="line-block">
-<div class="line">File API</div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">ncmpi_strerror</div>
-<div class="line">ncmpi_strerrno</div>
-<div class="line">ncmpi_create</div>
-<div class="line">ncmpi_open/close</div>
-<div class="line">ncmpi_enddef/redef</div>
-<div class="line">ncmpi_sync</div>
-<div class="line">ncmpi_begin/end_indep_data</div>
-<div class="line">ncmpi_inq_path</div>
-<div class="line">ncmpi_inq</div>
-<div class="line">ncmpi_wait</div>
-<div class="line">ncmpi_wait_all</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">ncmpi_inq_libvers (3)</div>
-<div class="line">ncmpi_set_fill (3)</div>
-<div class="line">ncmpi_set_default_format (3)</div>
-<div class="line">ncmpi_inq_put/get_size (3)</div>
-<div class="line">ncmpi_delete (2)</div>
-<div class="line">ncmpi_sync_numrecs (2)</div>
-<div class="line">ncmpi_inq_file_info (3)</div>
-<div class="line">ncmpi_inq_files_opened (3)</div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><div class="line-block">
-<div class="line">Dimension API</div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">ncmpi_def_dim</div>
-<div class="line">ncmpi_inq_ndims</div>
-<div class="line">ncmpi_inq_dimlen</div>
-<div class="line">ncmpi_inq_dim</div>
-<div class="line">ncmpi_inq_dimname</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><div class="line-block">
-<div class="line">Attribute API</div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">ncmpi_put/get_att_text</div>
-<div class="line">ncmpi_put/get_att</div>
-<div class="line">ncmpi_inq_att</div>
-<div class="line">ncmpi_inq_natts</div>
-<div class="line">ncmpi_inq_attname</div>
-<div class="line">ncmpi_rename_att</div>
-<div class="line">ncmpi_del_att</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><div class="line-block">
-<div class="line">Variable  API</div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">ncmpi_def_var</div>
-<div class="line">ncmpi_def_var_fill</div>
-<div class="line">ncmpi_inq_varndims</div>
-<div class="line">ncmpi_inq_varname</div>
-<div class="line">ncmpi_put/get_vara</div>
-<div class="line">ncmpi_put/get_vars</div>
-<div class="line">ncmpi_put/get_var1</div>
-<div class="line">ncmpi_put/get_var</div>
-<div class="line">ncmpi_put/get_varn</div>
-<div class="line">ncmpi_put/get_varm</div>
-<div class="line">ncmpi_put/get_vara_all</div>
-<div class="line">ncmpi_put/get_vars_all</div>
-<div class="line">ncmpi_put/get_var1_all</div>
-<div class="line">ncmpi_put/get_var_all</div>
-<div class="line">ncmpi_put/get_varn_all</div>
-<div class="line">ncmpi_put/get_varm_all</div>
-<div class="line">ncmpi_iput/iget_var</div>
-<div class="line">ncmpi_iput/iget_vara</div>
-</div>
-</td>
-<td><div class="line-block">
-<div class="line">ncmpi_iput/iget_var1 (1)</div>
-<div class="line">ncmpi_iput/iget_vars (1)</div>
-<div class="line">ncmpi_iput/iget_varm (1)</div>
-<div class="line">ncmpi_iput/iget_varn (2)</div>
-<div class="line">ncmpi_bput/bget_var (1)</div>
-<div class="line">ncmpi_bput/bget_var1 (1)</div>
-<div class="line">ncmpi_bput/bget_vara (1)</div>
-<div class="line">ncmpi_bput/bget_vars (1)</div>
-<div class="line">ncmpi_bput/bget_varm (1)</div>
-<div class="line">ncmpi_bput/bget_varn (2)</div>
-<div class="line">ncmpi_wait/wait_all (1)</div>
-<div class="line">ncmpi_inq_nreqs (1)</div>
-<div class="line">ncmpi_inq_buffer_usage/size (1)</div>
-<div class="line">ncmpi_cancel (1)</div>
-<div class="line">ncmpi_fill_var_rec (2)</div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-<div class="line"><br /></div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<aside class="footnote-list brackets">
-<aside class="footnote brackets" id="id2" role="note">
-<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
-<p>priority level 1/2/3 maps to first/second/third priority</p>
-</aside>
-</aside>
 </section>
 </div>
 </section>
