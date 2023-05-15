@@ -20,6 +20,17 @@ PnetCDF-Python Documentation
 
 .. toctree::
    :maxdepth: 2
+   :caption: Tutorial
+
+   tutorial/basic.rst
+   tutorial/collective_indep.rst
+   tutorial/read_write.rst
+   tutorial/non_blocking.rst
+   tutorial/datatypes.rst
+
+
+.. toctree::
+   :maxdepth: 2
    :caption: API Documentation
 
    api/file_api
@@ -32,12 +43,6 @@ PnetCDF-Python Documentation
    :caption: Development
 
    development/compatibility
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Tutorial
-
-   tutorial/tutorial
 
 
 .. Indices and tables
