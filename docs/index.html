@@ -74,8 +74,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-pnetcdf-python-s-documentation">
-<h1>Welcome to PnetCDF Python’s documentation!<a class="headerlink" href="#welcome-to-pnetcdf-python-s-documentation" title="Permalink to this heading"></a></h1>
+  <section id="pnetcdf-python-documentation">
+<h1>PnetCDF-Python Documentation<a class="headerlink" href="#pnetcdf-python-documentation" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <span id="document-introduction/overview"></span><section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
@@ -129,7 +129,7 @@ $ pip install numpy Cython setuptools
 $ env <span class="nv">CC</span><span class="o">=</span>mpicc pip install --no-cache-dir mpi4py
 
 <span class="c1"># download PnetCDF-python source code</span>
-$ git clone git@github.com:yzanhua/pnetcdf-python.git
+$ git clone git@github.com:Jonathanlyj/pnetcdf-python.git
 $ <span class="nb">cd</span> pnetcdf-python
 
 <span class="c1"># install PnetCDF-python</span>
@@ -144,11 +144,12 @@ env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py ins
 <span id="document-api/file_api"></span><section id="file">
 <h2>File<a class="headerlink" href="#file" title="Permalink to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">pncpy.File</span></code> is a high-level object representing an netCDF file,
-which provides a Pythonic interface to create,
-read and write within an netCDF file. A File object serves as
-the root container for dimensions, variables, and attributes.
-Together they describe the meaning of data and relations among
-data fields stored in a netCDF file.</p>
+which provides a Pythonic interface to create, read and write within
+an netCDF file. A File object serves as the root container for dimensions,</p>
+<blockquote>
+<div><p>ariables, and attributes. Together they describe the meaning of data and</p>
+</div></blockquote>
+<p>relations among data fields stored in a netCDF file.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pncpy.File">
 <em class="property"><span class="pre">class</span><span class="w">  </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#pncpy.File" title="Permalink to this definition"></a></dt>
@@ -173,6 +174,7 @@ data fields stored in a netCDF file.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">64BIT_OFFSET</span></code>: NetCDF-2 format.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">64BIT_DATA</span></code>: NetCDF-5 format.</p></li>
+<li><p><cite>None</cite> defaults to default file format (NetCDF-1 format)</p></li>
 </ul>
 </p></li>
 <li><p><strong>comm</strong> (<em>mpi4py.MPI.Comm</em><em> or </em><em>None</em>) – MPI communicator to use for file access. <cite>None</cite> defaults to MPI_COMM_WORLD.</p></li>
