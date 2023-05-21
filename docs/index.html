@@ -41,11 +41,7 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/basic">Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/collective_indep">Collective vs Independent I/O</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/read_write">Variable Reading and Writing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/non_blocking">Non-blocking Reads and Writes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/datatypes">Datatypes in PnetCDF-python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-tutorial/index">Tutorial</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -145,14 +141,17 @@ env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py ins
 </section>
 </div>
 <div class="toctree-wrapper compound">
+<span id="document-tutorial/index"></span><section id="tutorial">
+<h2>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
 <span id="document-tutorial/basic"></span><section id="basics">
-<h2>Basics<a class="headerlink" href="#basics" title="Permalink to this heading"></a></h2>
+<h3>Basics<a class="headerlink" href="#basics" title="Permalink to this heading"></a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
 </div>
 <section id="running-python-scripts-with-mpi">
-<h3>Running Python scripts with MPI<a class="headerlink" href="#running-python-scripts-with-mpi" title="Permalink to this heading"></a></h3>
+<h4>Running Python scripts with MPI<a class="headerlink" href="#running-python-scripts-with-mpi" title="Permalink to this heading"></a></h4>
 <p>Python programs with PnetCDF-python can be run with the command <strong class="program">mpiexec</strong>. In
 practice, running Python programs looks like:</p>
 <blockquote>
@@ -161,7 +160,7 @@ practice, running Python programs looks like:</p>
 <p>to run the program with 4 processors.</p>
 </section>
 <section id="creating-opening-closing-a-netcdf-file">
-<h3>Creating/Opening/Closing a netCDF file<a class="headerlink" href="#creating-opening-closing-a-netcdf-file" title="Permalink to this heading"></a></h3>
+<h4>Creating/Opening/Closing a netCDF file<a class="headerlink" href="#creating-opening-closing-a-netcdf-file" title="Permalink to this heading"></a></h4>
 <p>To create a netCDF file from python, you simply call the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. This is also
 the method used to open an existing netCDF file. If the file is open for write access
 (mode=’w’, ‘r+’ or ‘a’), you may write any type of data including new dimensions, variables
@@ -184,20 +183,20 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 </dl>
 </section>
 <section id="dimensions-in-a-netcdf-file">
-<h3>Dimensions in a netCDF file<a class="headerlink" href="#dimensions-in-a-netcdf-file" title="Permalink to this heading"></a></h3>
+<h4>Dimensions in a netCDF file<a class="headerlink" href="#dimensions-in-a-netcdf-file" title="Permalink to this heading"></a></h4>
 </section>
 <section id="variables-in-a-netcdf-file">
-<h3>Variables in a netCDF file<a class="headerlink" href="#variables-in-a-netcdf-file" title="Permalink to this heading"></a></h3>
+<h4>Variables in a netCDF file<a class="headerlink" href="#variables-in-a-netcdf-file" title="Permalink to this heading"></a></h4>
 </section>
 <section id="attributes-in-a-netcdf-file">
-<h3>Attributes in a netCDF file<a class="headerlink" href="#attributes-in-a-netcdf-file" title="Permalink to this heading"></a></h3>
+<h4>Attributes in a netCDF file<a class="headerlink" href="#attributes-in-a-netcdf-file" title="Permalink to this heading"></a></h4>
 </section>
 <section id="writing-values-to-and-reading-values-from-a-netcdf-variable">
-<h3>Writing values to and reading values from a netCDF variable<a class="headerlink" href="#writing-values-to-and-reading-values-from-a-netcdf-variable" title="Permalink to this heading"></a></h3>
+<h4>Writing values to and reading values from a netCDF variable<a class="headerlink" href="#writing-values-to-and-reading-values-from-a-netcdf-variable" title="Permalink to this heading"></a></h4>
 </section>
 </section>
 <span id="document-tutorial/collective_indep"></span><section id="collective-vs-independent-i-o">
-<h2>Collective vs Independent I/O<a class="headerlink" href="#collective-vs-independent-i-o" title="Permalink to this heading"></a></h2>
+<h3>Collective vs Independent I/O<a class="headerlink" href="#collective-vs-independent-i-o" title="Permalink to this heading"></a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
@@ -205,7 +204,7 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 <p>This page should talk about how to switch between colletive/indepdent modes …</p>
 </section>
 <span id="document-tutorial/read_write"></span><section id="variable-reading-and-writing">
-<h2>Variable Reading and Writing<a class="headerlink" href="#variable-reading-and-writing" title="Permalink to this heading"></a></h2>
+<h3>Variable Reading and Writing<a class="headerlink" href="#variable-reading-and-writing" title="Permalink to this heading"></a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
@@ -213,7 +212,7 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 <p>This page should talk about different choices of syntax for writing and reading data</p>
 </section>
 <span id="document-tutorial/non_blocking"></span><section id="non-blocking-reads-and-writes">
-<h2>Non-blocking Reads and Writes<a class="headerlink" href="#non-blocking-reads-and-writes" title="Permalink to this heading"></a></h2>
+<h3>Non-blocking Reads and Writes<a class="headerlink" href="#non-blocking-reads-and-writes" title="Permalink to this heading"></a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
@@ -222,7 +221,7 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 and commit them altogether…</p>
 </section>
 <span id="document-tutorial/datatypes"></span><section id="datatypes-in-pnetcdf-python">
-<h2>Datatypes in PnetCDF-python<a class="headerlink" href="#datatypes-in-pnetcdf-python" title="Permalink to this heading"></a></h2>
+<h3>Datatypes in PnetCDF-python<a class="headerlink" href="#datatypes-in-pnetcdf-python" title="Permalink to this heading"></a></h3>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
@@ -230,6 +229,8 @@ and commit them altogether…</p>
 <p>This page should talk about what are the support datatypes in numpy with
 respect to different file formats and mechanisms of data type conversion
 between numpy and netCDF datatypes…</p>
+</section>
+</div>
 </section>
 </div>
 <div class="toctree-wrapper compound">
@@ -376,9 +377,9 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.putncattr">
-<span class="sig-name descname"><span class="pre">putncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.putncattr" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`putncattr(self,name,value)`</strong>
+<dt class="sig sig-object py" id="pncpy.File.putncatt">
+<span class="sig-name descname"><span class="pre">putncatt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.putncatt" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`putncatt(self,name,value)`</strong>
 set a netCDF file attribute using name,value pair.
 Use if you need to set a netCDF attribute with the
 with the same name as one of the reserved python attributes.</p>
@@ -616,9 +617,9 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.putncattr">
-<span class="sig-name descname"><span class="pre">putncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.putncattr" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`putncattr(self,name,value)`</strong></p>
+<dt class="sig sig-object py" id="pncpy.Variable.putncatt">
+<span class="sig-name descname"><span class="pre">putncatt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.putncatt" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`putncatt(self,name,value)`</strong></p>
 <p>set a netCDF variable attribute using name,value pair.  Use if you need to set a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>

@@ -19,14 +19,10 @@ PnetCDF-Python Documentation
    installation/install
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Tutorial
 
-   tutorial/basic.rst
-   tutorial/collective_indep.rst
-   tutorial/read_write.rst
-   tutorial/non_blocking.rst
-   tutorial/datatypes.rst
+   tutorial/index.rst
 
 
 .. toctree::
