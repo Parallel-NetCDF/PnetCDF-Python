@@ -1197,8 +1197,9 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-            stridep[n] = stride[n]
+            stridep[n] = stride[n] if stride else 1
             imapp[n] = imap[n]
+
         shapeout = ()
         for lendim in count:
             shapeout = shapeout + (lendim,)
@@ -1251,7 +1252,7 @@ cdef class Variable:
             self._put_vars(start, count, stride, data, collective = True)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
             self._put_varn(start, count, num, data, collective = True)
-        elif all(arg is not None for arg in [data, start, count, stride, imap]) and all(arg is None for arg in [index, num]):
+        elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [index, num]):
             self._put_varm(data, start, count, stride, imap, collective = True)
         else:
             raise ValueError("Invalid input arguments for put_var_all")
@@ -1871,7 +1872,7 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-            stridep[n] = stride[n]
+            stridep[n] = stride[n] if stride else 1
             imapp[n] = imap[n]
         shapeout = ()
         for lendim in count:
