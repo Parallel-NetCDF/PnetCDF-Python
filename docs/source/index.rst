@@ -6,6 +6,8 @@
 PnetCDF-Python Documentation
 ============================
 
+Contents:
+
 .. toctree::
    :maxdepth: 2
    :caption: Introduction
@@ -19,10 +21,9 @@ PnetCDF-Python Documentation
    installation/install
 
 .. toctree::
-   :maxdepth: 3
    :caption: Tutorial
 
-   tutorial/index.rst
+   tutorial/index
 
 
 .. toctree::
