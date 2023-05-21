@@ -312,9 +312,9 @@ cdef class File:
         return netCDF attribute names for this File in a list."""
         return _get_att_names(self._ncid, NC_GLOBAL)
 
-    def putncatt(self,name,value):
+    def putncattr(self,name,value):
         """
-        **`putncatt(self,name,value)`**
+        **`putncattr(self,name,value)`**
         set a netCDF file attribute using name,value pair.
         Use if you need to set a netCDF attribute with the
         with the same name as one of the reserved python attributes."""
@@ -361,11 +361,11 @@ cdef class File:
     # if name in _private_atts, it is stored at the python
     # level and not in the netCDF file.
         if name not in _private_atts:
-            self.putncatt(name, value)
+            self.putncattr(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot rebind. Use putncatt instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot rebind. Use putncattr instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 
@@ -502,7 +502,7 @@ cdef class File:
             ierr = ncmpi_buffer_detach(_file_id)
         _check_err(ierr)
 
-    def get_buff_usage(self):
+    def inq_buff_usage(self):
         cdef int _file_id, usage
         _file_id = self._ncid
         with nogil:
@@ -510,7 +510,7 @@ cdef class File:
         _check_err(ierr)
         return usage
 
-    def get_buff_size(self):
+    def inq_buff_size(self):
         cdef int _file_id, buffsize
         _file_id = self._ncid
         with nogil:

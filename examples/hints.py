@@ -121,7 +121,7 @@ def main():
     NZ = 5
     nprocs = size
     
-    verbose = True
+    global verbose
     if parse_help():
         MPI.Finalize()
         return 1

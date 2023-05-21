@@ -55,7 +55,7 @@ class FileTestCase(unittest.TestCase):
                        comm=comm, info=info1.Dup())
         # write global attributes for testing
         f.attr1 = 'one'
-        f.putncatt('attr2','two')
+        f.putncattr('attr2','two')
         # define variables and dimensions for testing
         dim_xu = f.def_dim('xu',-1)
         dim_x = f.def_dim('x',xdim)

@@ -60,7 +60,7 @@ class VariablesTestCase(unittest.TestCase):
         buffsize = num_reqs * datam.nbytes
         f.attach_buff(buffsize)
         # check the size of attached buffer
-        assert(f.get_buff_size() == buffsize)
+        assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.def_var(f'data{i}', pncpy.NC_INT, ('x','y'))
@@ -74,7 +74,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # check if there's space left in the buffer
-            assert(f.get_buff_size() - f.get_buff_usage() > 0)
+            assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
             # post the request to write a mapped array section of values
             req_id = v.bput_var(datam, start = starts, count = counts, stride = strides, imap = imap)
             # track the reqeust ID for each write reqeust 

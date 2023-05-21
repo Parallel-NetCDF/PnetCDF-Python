@@ -58,7 +58,7 @@ class VariablesTestCase(unittest.TestCase):
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests
         buffsize = num_reqs * datam.nbytes
         f.attach_buff(buffsize)
-        assert(f.get_buff_size() == buffsize)
+        assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.def_var(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
@@ -71,7 +71,7 @@ class VariablesTestCase(unittest.TestCase):
         # each process post 10 requests to write an array of values
         req_ids = []
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 5, 10])
         for i in range(num_reqs):
@@ -81,13 +81,13 @@ class VariablesTestCase(unittest.TestCase):
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * 10
         f.wait_all(num_reqs, req_ids, req_errs)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
@@ -99,7 +99,7 @@ class VariablesTestCase(unittest.TestCase):
             # post the request to write an array of values
             v.bput_var(datam, start = starts, count = counts)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
        
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)

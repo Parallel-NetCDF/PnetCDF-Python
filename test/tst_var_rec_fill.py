@@ -67,7 +67,7 @@ class VariablesTestCase(unittest.TestCase):
         v2 = f.def_var('data2', pncpy.NC_FLOAT, (dim_xu, dim_x))
         # set fill value using _FillValue attribute writes or def_fill
         v1.def_fill(no_fill = 0, fill_value = fill_value)
-        v2.putncatt("_FillValue", fill_value)
+        v2.putncattr("_FillValue", fill_value)
 
         # enter data mode and write partial values to variables
         f.enddef()

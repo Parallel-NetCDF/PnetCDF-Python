@@ -69,8 +69,8 @@ class VariablesTestCase(unittest.TestCase):
         buffsize = num_reqs * 4
         f.attach_buff(buffsize)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
-        assert(f.get_buff_size() == buffsize)
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+        assert(f.inq_buff_size() == buffsize)
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write a single element
@@ -78,7 +78,7 @@ class VariablesTestCase(unittest.TestCase):
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
@@ -88,14 +88,14 @@ class VariablesTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write a single element
             v.bput_var(value, index = index)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.get_buff_size() - f.get_buff_usage()} bytes left")
+        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         f.detach_buff()

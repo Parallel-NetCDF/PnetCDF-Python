@@ -330,9 +330,9 @@ cdef class Variable:
 
         return netCDF attribute names for this `Variable` in a list."""
         return _get_att_names(self._file_id, self._varid)
-    def putncatt(self,name,value):
+    def putncattr(self,name,value):
         """
-        **`putncatt(self,name,value)`**
+        **`putncattr(self,name,value)`**
 
         set a netCDF variable attribute using name,value pair.  Use if you need to set a
         netCDF attribute with the same name as one of the reserved python
@@ -406,11 +406,11 @@ cdef class Variable:
                     msg="WARNING: %s cannot be safely cast to variable dtype" \
                     % name
                     warnings.warn(msg)
-            self.putncatt(name, value)
+            self.putncattr(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-                "'%s' is one of the reserved attributes %s, cannot rebind. Use putncatt instead." % (name, tuple(_private_atts)))
+                "'%s' is one of the reserved attributes %s, cannot rebind. Use putncattr instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 

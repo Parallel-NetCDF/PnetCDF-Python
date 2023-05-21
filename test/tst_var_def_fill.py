@@ -65,7 +65,7 @@ class VariablesTestCase(unittest.TestCase):
         v2.def_fill(no_fill = 0)
         v4.def_fill(no_fill = 0)
         # set fill value for some variables using _FillValue attribute writes
-        v2.putncatt("_FillValue", fill_value)
+        v2.putncattr("_FillValue", fill_value)
         v3._FillValue = fill_value
 
         # set the variable with fill values back to no fill

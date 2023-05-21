@@ -127,7 +127,7 @@ class VariablesTestCase(unittest.TestCase):
         buffsize = num_reqs * data.nbytes
         f.attach_buff(buffsize)
         # check the size of attached buffer
-        assert(f.get_buff_size() == buffsize)
+        assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.def_var(f'data{i}', pncpy.NC_FLOAT, (dx, dy))
@@ -142,7 +142,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # check if there is any space left in buffer
-            assert(f.get_buff_size() - f.get_buff_usage() > 0)
+            assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
             # post the request to write an array of values
             req_id = v.bput_var(data, start = starts, count = counts, num = num_subarrays)
             # track the reqeust ID for each write reqeust 

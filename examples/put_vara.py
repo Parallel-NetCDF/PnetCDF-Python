@@ -125,7 +125,7 @@ def pnetcdf_io(comm, filename, file_format):
         str_att = None
     # Make sure the time string is consistent among all processes
     str_att = comm.bcast(str_att, root=0)
-    f.putncatt('history',str_att)
+    f.putncattr('history',str_att)
     # Define dimensions
     dim_y = f.def_dim("Y", global_ny)
     dim_x = f.def_dim("X",global_nx)
@@ -133,9 +133,9 @@ def pnetcdf_io(comm, filename, file_format):
     var = f.def_var("var", pncpy.NC_INT, (dim_y, dim_x))
     # Add attributes to the variable
     str_att = "example attribute of type text."
-    var.putncatt("str_att_name", str_att)
-    var.putncatt("float_att_name", float_att)
-    var.putncatt("short_att_name", short_att)
+    var.putncattr("str_att_name", str_att)
+    var.putncattr("float_att_name", float_att)
+    var.putncattr("short_att_name", short_att)
 
      # Exit the define mode
     f.enddef()

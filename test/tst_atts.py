@@ -50,7 +50,7 @@ class VariablesTestCase(unittest.TestCase):
         self._file_format = "64BIT_DATA"
         with pncpy.File(self.file_path,'w', format = self._file_format) as f:
             # try to set a dataset attribute with one of the reserved names.
-            f.putncatt('file_format','netcdf5_format')
+            f.putncattr('file_format','netcdf5_format')
             # test attribute renaming
             f.stratt_tmp = STRATT
             f.renameAttribute('stratt_tmp','stratt')
@@ -65,7 +65,7 @@ class VariablesTestCase(unittest.TestCase):
 
             v = f.def_var(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
             # try to set a variable attribute with one of the reserved names.
-            v.putncatt('ndim','three')
+            v.putncattr('ndim','three')
             v.setncatts({'foo': 1})
             v.setncatts(OrderedDict(bar=2))
             v.stratt_tmp = STRATT
