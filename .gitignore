@@ -36,7 +36,7 @@ env/
 */pncpy/*.c
 core.*
 build/
-
+!docs/build/
 # egg
 *.eggs/
 *.egg-info/
