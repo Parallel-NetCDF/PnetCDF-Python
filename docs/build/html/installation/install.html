@@ -107,17 +107,17 @@
 <section id="building-pnetcdf-c-library">
 <h2>Building PnetCDF C library<a class="headerlink" href="#building-pnetcdf-c-library" title="Permalink to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># download PnetCDF C library v1.12.3 (or later)</span>
-$<span class="w"> </span>wget<span class="w"> </span>https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
+$ wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
 
-$<span class="w"> </span>tar<span class="w"> </span>-xf<span class="w"> </span>pnetcdf-1.12.3.tar.gz
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>pnetcdf-1.12.3
+$ tar -xf pnetcdf-1.12.3.tar.gz
+$ <span class="nb">cd</span> pnetcdf-1.12.3
 
 <span class="c1"># configure</span>
-$<span class="w"> </span>./configure<span class="w"> </span>--prefix<span class="o">=</span>/path/to/install-dir<span class="w"> </span>--enable-shared<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc
+$ ./configure --prefix<span class="o">=</span>/path/to/install-dir --enable-shared <span class="nv">CC</span><span class="o">=</span>mpicc
 
 <span class="c1"># build and install</span>
-$<span class="w"> </span>make
-$<span class="w"> </span>make<span class="w"> </span>install
+$ make
+$ make install
 </pre></div>
 </div>
 </section>
@@ -125,21 +125,21 @@ $<span class="w"> </span>make<span class="w"> </span>install
 <h2>Building PnetCDF-python from source<a class="headerlink" href="#building-pnetcdf-python-from-source" title="Permalink to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># activate an virtual environment (optional)</span>
 <span class="c1"># use Python 3.9 or later</span>
-$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>env
-$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>env/bin/activate
-$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+$ python3 -m venv env
+$ <span class="nb">source</span> env/bin/activate
+$ pip install --upgrade pip
 
 <span class="c1"># install Python libraries</span>
-$<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>Cython<span class="w"> </span>setuptools
-$<span class="w"> </span>env<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--no-cache-dir<span class="w"> </span>mpi4py
+$ pip install numpy Cython setuptools
+$ env <span class="nv">CC</span><span class="o">=</span>mpicc pip install --no-cache-dir mpi4py
 
 <span class="c1"># download PnetCDF-python source code</span>
-$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:Jonathanlyj/pnetcdf-python.git
-$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>pnetcdf-python
+$ git clone git@github.com:Jonathanlyj/pnetcdf-python.git
+$ <span class="nb">cd</span> pnetcdf-python
 
 <span class="c1"># install PnetCDF-python</span>
-env<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>build
-env<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>install
+env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py build
+env <span class="nv">CC</span><span class="o">=</span>mpicc python3 setup.py install
 </pre></div>
 </div>
 </section>

@@ -8,4 +8,4 @@ which is also a key component of ``File`` class, provides an interface
 to create, access and manipulate dimensions.
 
 .. autoclass:: pncpy::Dimension
-   :members:
+   :exclude-members: __init__, _getname, _wait, __repr__, __str__, __len__
