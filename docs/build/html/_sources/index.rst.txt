@@ -6,8 +6,6 @@
 PnetCDF-Python Documentation
 ============================
 
-Contents:
-
 .. toctree::
    :maxdepth: 2
    :caption: Introduction
@@ -21,9 +19,15 @@ Contents:
    installation/install
 
 .. toctree::
+   :maxdepth: 2
    :caption: Tutorial
 
-   tutorial/index
+   tutorial/basic
+   tutorial/collective_indep
+   tutorial/read_write
+   tutorial/non_blocking
+   tutorial/datatypes
+
 
 
 .. toctree::

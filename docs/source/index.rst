@@ -19,6 +19,7 @@ PnetCDF-Python Documentation
    installation/install
 
 .. toctree::
+   :maxdepth: 2
    :caption: Tutorial
 
    tutorial/basic
