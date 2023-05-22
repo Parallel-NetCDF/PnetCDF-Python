@@ -53,7 +53,7 @@ class VariablesTestCase(unittest.TestCase):
             f.put_att('file_format','netcdf5_format')
             # test attribute renaming
             f.stratt_tmp = STRATT
-            f.renameAttribute('stratt_tmp','stratt')
+            f.rename_att('stratt_tmp','stratt')
             f.emptystratt = EMPTYSTRATT
             f.floatatt = FLOATATT
             f.intatt = INTATT
@@ -66,10 +66,8 @@ class VariablesTestCase(unittest.TestCase):
             v = f.def_var(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
             # try to set a variable attribute with one of the reserved names.
             v.put_att('ndim','three')
-            v.setncatts({'foo': 1})
-            v.setncatts(OrderedDict(bar=2))
             v.stratt_tmp = STRATT
-            v.renameAttribute('stratt_tmp','stratt')
+            v.rename_att('stratt_tmp','stratt')
             v.emptystratt = EMPTYSTRATT
             v.intatt = INTATT
             v.floatatt = FLOATATT
@@ -110,8 +108,6 @@ class VariablesTestCase(unittest.TestCase):
             assert v.stratt == STRATT
             assert v.seqatt.tolist() == SEQATT.tolist()
             assert v.get_att('ndim') == 'three'
-            assert v.get_att('foo') == 1
-            assert v.get_att('bar') == 2
             assert v._FillValue == -999.
 
     def test_var_attr_dict_(self):

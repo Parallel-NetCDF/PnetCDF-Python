@@ -21,7 +21,7 @@ print(vars(file1))
 file1.time = [1.2, 2.3, 3.4]
 print(vars(file1))
 
-file1.renameAttribute(oldname = "dummy_attr2", newname = "dummy_attr3")
+file1.rename_att(oldname = "dummy_attr2", newname = "dummy_attr3")
 print(vars(file1))
 
 delattr(file1, 'dummy_attr1')

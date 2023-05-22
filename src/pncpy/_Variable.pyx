@@ -341,17 +341,6 @@ cdef class Variable:
         xtype=-99
         _set_att(self._file, self._varid, name, value, xtype=xtype)
 
-    def setncatts(self,attdict):
-        """
-        **`setncatts(self,attdict)`**
-
-        set a bunch of netCDF variable attributes at once using a python dictionary.
-        This may be faster when setting a lot of attributes for a `NETCDF3`
-        formatted file, since nc_redef/nc_enddef is not called in between setting
-        each attribute"""
-        for name, value in attdict.items():
-            _set_att(self._file, self._varid, name, value)
-
 
     def get_att(self,name,encoding='utf-8'):
         """
@@ -433,9 +422,9 @@ cdef class Variable:
         else:
             return self.get_att(name)
 
-    def renameAttribute(self, oldname, newname):
+    def rename_att(self, oldname, newname):
         """
-        **`renameAttribute(self, oldname, newname)`**
+        **`rename_att(self, oldname, newname)`**
 
         rename a `Variable` attribute named `oldname` to `newname`."""
         cdef char *oldnamec

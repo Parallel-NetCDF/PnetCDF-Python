@@ -116,6 +116,9 @@ cdef class File:
         self.variables = _get_variables(self)
     
     def close(self):
+        """
+        close(self)
+        """
         self._close(True)
     
     def _close(self, check_err):
@@ -128,7 +131,7 @@ cdef class File:
 
     def filepath(self,encoding=None):
         """
-        **`filepath(self,encoding=None)`**
+        filepath(self,encoding=None)
 
         Get the file system path (or the opendap URL) which was used to
         open/create the Dataset. Requires netcdf >= 4.1.2.  The path
@@ -169,7 +172,7 @@ cdef class File:
 
     def sync(self):
         """
-        **`sync(self)`**
+        sync(self)
 
         Writes all buffered data in the `File` to the disk file."""
         cdef int ierr
@@ -178,6 +181,9 @@ cdef class File:
         _check_err(ierr)
 
     def redef(self):
+        """
+        redef(self)
+        """
         self._redef()
 
     def _redef(self):
@@ -187,6 +193,9 @@ cdef class File:
             ierr = ncmpi_redef(fileid)
         _check_err(ierr)
     def enddef(self):
+        """
+        enddef(self)
+        """
         self._enddef()
 
     def _enddef(self):
@@ -197,6 +206,9 @@ cdef class File:
         _check_err(ierr)
 
     def begin_indep(self):
+        """
+        begin_indep(self)
+        """
         cdef int ierr
         cdef int fileid = self._ncid
         with nogil:
@@ -205,6 +217,9 @@ cdef class File:
         self.indep_mode = 1
 
     def end_indep(self):
+        """
+        end_indep(self)
+        """
         cdef int ierr
         cdef int fileid = self._ncid
         with nogil:
@@ -216,7 +231,8 @@ cdef class File:
 
     def def_dim(self, dimname, size=-1):
         """
-        **`def_dim(self, dimname, size=-1)`**
+        def_dim(self, dimname, size=-1)
+
         Creates a new dimension with the given `dimname` and `size`.
         `size` must be a positive integer or `-1`, which stands for
         "unlimited" (default is `-1`). Specifying a size of 0 also
@@ -307,14 +323,15 @@ cdef class File:
 
     def ncattrs(self):
         """
-        **`ncattrs(self)`**
+        ncattrs(self)
 
         return netCDF attribute names for this File in a list."""
         return _get_att_names(self._ncid, NC_GLOBAL)
 
     def put_att(self,name,value):
         """
-        **`put_att(self,name,value)`**
+        put_att(self,name,value)
+
         set a netCDF file attribute using name,value pair.
         Use if you need to set a netCDF attribute with the
         with the same name as one of the reserved python attributes."""
@@ -324,7 +341,7 @@ cdef class File:
 
     def get_att(self,name,encoding='utf-8'):
         """
-        **`get_att(self,name)`**
+        get_att(self,name)
 
         retrieve a netCDF dataset or file attribute.
         Use if you need to get a netCDF attribute with the same
@@ -344,7 +361,7 @@ cdef class File:
 
     def del_att(self, name):
         """
-        **`del_att(self,name,value)`**
+        del_att(self,name,value)
 
         delete a netCDF file attribute.  Use if you need to delete a
         netCDF attribute with the same name as one of the reserved python
@@ -387,9 +404,9 @@ cdef class File:
         else:
             return self.get_att(name)
             
-    def renameAttribute(self, oldname, newname):
+    def rename_att(self, oldname, newname):
         """
-        **`renameAttribute(self, oldname, newname)`**
+        rename_att(self, oldname, newname)
 
         rename a `File` attribute named `oldname` to `newname`."""
         cdef char *oldnamec
@@ -445,12 +462,24 @@ cdef class File:
         return None
 
     def wait(self, num=None, requests=None, status=None):
+        """
+        wait(self, num=None, requests=None, status=None)
+
+        """
         return self._wait(num, requests, status, collective=False)
 
     def wait_all(self, num=None, requests=None, status=None):
+        """
+        wait_all(self, num=None, requests=None, status=None)
+        
+        """
         return self._wait(num, requests, status, collective=True)
 
     def cancel(self, num=None, requests=None, status=None):
+        """
+        cancel(self, num=None, requests=None, status=None)
+        
+        """
         cdef int _file_id, ierr
         cdef int num_req
         cdef int *requestp
@@ -480,6 +509,10 @@ cdef class File:
 
 
     def get_nreqs(self):
+        """
+        get_nreqs(self)
+        
+        """
         cdef int _file_id, ierr
         cdef int num_req
         _file_id = self._ncid
@@ -489,6 +522,10 @@ cdef class File:
         return num_req
 
     def attach_buff(self, bufsize = None):
+        """
+        attach_buff(self, bufsize = None)
+        
+        """
         cdef int buffsize, _file_id
         buffsize = bufsize
         _file_id = self._ncid
@@ -497,12 +534,20 @@ cdef class File:
         _check_err(ierr)
 
     def detach_buff(self):
+        """
+        detach_buff(self)
+        
+        """
         cdef int _file_id = self._ncid
         with nogil:
             ierr = ncmpi_buffer_detach(_file_id)
         _check_err(ierr)
 
     def inq_buff_usage(self):
+        """
+        inq_buff_usage(self)
+        
+        """
         cdef int _file_id, usage
         _file_id = self._ncid
         with nogil:
@@ -511,6 +556,10 @@ cdef class File:
         return usage
 
     def inq_buff_size(self):
+        """
+        inq_buff_size(self)
+        
+        """
         cdef int _file_id, buffsize
         _file_id = self._ncid
         with nogil:
@@ -520,7 +569,7 @@ cdef class File:
     
     def inq_unlimdim(self):
         """
-        **`inq_unlimdim(self)`**
+        inq_unlimdim(self)
 
         return the unlimited dim instance of the file"""
         cdef int ierr, unlimdimid
@@ -535,6 +584,10 @@ cdef class File:
 
 
     def set_fill(self, fillmode):
+        """
+        set_fill(self, fillmode)
+
+        """
         cdef int _file_id, _fillmode, _old_fillmode
         _file_id = self._ncid
         _fillmode = fillmode
@@ -544,6 +597,10 @@ cdef class File:
         return _old_fillmode
 
     def inq_num_rec_vars(self):
+        """
+        inq_num_rec_vars(self)
+
+        """
         cdef int ierr, num_rec_vars
         with nogil:
             ierr = ncmpi_inq_num_rec_vars(self._ncid, &num_rec_vars)
@@ -551,6 +608,10 @@ cdef class File:
         return num_rec_vars
 
     def inq_num_fix_vars(self):
+        """
+        inq_num_fix_vars(self)
+
+        """
         cdef int ierr, num_fix_vars
         with nogil:
             ierr = ncmpi_inq_num_fix_vars(self._ncid, &num_fix_vars)
@@ -558,6 +619,10 @@ cdef class File:
         return num_fix_vars
 
     def inq_striping(self):
+        """
+        inq_striping(self)
+
+        """
         cdef int ierr, striping_size, striping_count
         with nogil:
             ierr = ncmpi_inq_striping(self._ncid, &striping_size, &striping_count)
@@ -565,6 +630,10 @@ cdef class File:
         return striping_size, striping_count
 
     def inq_recsize(self):
+        """
+        inq_recsize(self)
+
+        """
         cdef int ierr, recsize
         with nogil:
             ierr = ncmpi_inq_recsize(self._ncid, &recsize)
@@ -572,6 +641,10 @@ cdef class File:
         return recsize
 
     def inq_version(self):
+        """
+        inq_version(self)
+
+        """
         cdef int ierr, nc_mode
         with nogil:
             ierr = ncmpi_inq_version(self._ncid, &nc_mode)
@@ -580,6 +653,10 @@ cdef class File:
 
 
     def inq_info(self):
+        """
+        inq_info(self)
+
+        """
         cdef MPI_Info *mpiinfo
         cdef int ierr
         cdef Info info_py
@@ -590,6 +667,10 @@ cdef class File:
         return info_py
 
     def inq_header_size(self):
+        """
+        inq_header_size(self)
+
+        """
         cdef int ierr
         cdef int size
         with nogil:
@@ -598,6 +679,10 @@ cdef class File:
         return size
 
     def inq_header_extent(self):
+        """
+        inq_header_extent(self)
+
+        """
         cdef int ierr
         cdef int extent
         with nogil:
