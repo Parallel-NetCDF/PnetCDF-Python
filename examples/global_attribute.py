@@ -120,11 +120,11 @@ def main():
 
     # Make sure the time string is consistent among all processes
     str_att = comm.bcast(str_att, root=0)
-    f.putncattr('history',str_att)
+    f.put_att('history',str_att)
     if rank == 0 and verbose:
         print(f'writing global attribute "history" of text {str_att}')
     # add another global attribute named "digits": an array of short type
-    f.putncattr('digits', digit)
+    f.put_att('digits', digit)
     if rank == 0 and verbose:
         print("writing global attribute \"digits\" of 10 short integers")
     # Close the file
@@ -140,13 +140,13 @@ def main():
     if att_name != "history":
         print(f"Error: Expected attribute name 'history', but got {att_name}")
     # Read attribute value
-    str_att = f.getncattr(att_name)
+    str_att = f.get_att(att_name)
     # Find the name of the second global attribute
     att_name = f.ncattrs()[1]
     if att_name != "digits":
         print(f"Error: Expected attribute name 'digits', but got {att_name}")
     # Read attribute value
-    short_att = f.getncattr(att_name)
+    short_att = f.get_att(att_name)
     f.close()
     pnetcdf_check_mem_usage(comm)
     MPI.Finalize()

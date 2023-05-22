@@ -103,7 +103,7 @@ def pnetcdf_io(comm, filename, file_format):
     # Open an existing file for reading
     f = pncpy.File(filename=filename, mode = 'r', comm=comm, info=None)
     # Get global attribute named "history"
-    str_att = f.getncattr("history")
+    str_att = f.get_att("history")
     if rank == 0 and verbose:
         print("global attribute \"history\" of text:", str_att)
     # Get dimension lengths for dimensions Y and X
@@ -112,11 +112,11 @@ def pnetcdf_io(comm, filename, file_format):
     # get the variable of a 2D variable of integer type
     v = f.variables['var']
     # Get the variable's attribute named "str_att_name"
-    str_att = v.getncattr("str_att_name")
+    str_att = v.get_att("str_att_name")
     if rank == 0 and verbose:
         print("variable attribute \"str_att_name\" of type text =", str_att)
     # Get the length of the variable's attribute named "float_att_name"
-    float_att =  v.getncattr("float_att_name")
+    float_att =  v.get_att("float_att_name")
     # Prepare reading subarray
     local_ny = global_ny
     local_nx = global_nx // nprocs

@@ -218,7 +218,7 @@ cdef class Variable:
         ncdump.append('%s %s(%s)' %\
             (kind, self._name, ', '.join(dimnames)))
         for name in self.ncattrs():
-            ncdump.append('    %s: %s' % (name, self.getncattr(name)))
+            ncdump.append('    %s: %s' % (name, self.get_att(name)))
         if show_more_dtype:
             ncdump.append('%s data type: %s' % (kind, self.dtype))
         unlimdims = []
@@ -330,9 +330,9 @@ cdef class Variable:
 
         return netCDF attribute names for this `Variable` in a list."""
         return _get_att_names(self._file_id, self._varid)
-    def putncattr(self,name,value):
+    def put_att(self,name,value):
         """
-        **`putncattr(self,name,value)`**
+        **`put_att(self,name,value)`**
 
         set a netCDF variable attribute using name,value pair.  Use if you need to set a
         netCDF attribute with the same name as one of the reserved python
@@ -353,9 +353,9 @@ cdef class Variable:
             _set_att(self._file, self._varid, name, value)
 
 
-    def getncattr(self,name,encoding='utf-8'):
+    def get_att(self,name,encoding='utf-8'):
         """
-        **`getncattr(self,name)`**
+        **`get_att(self,name)`**
 
         retrieve a netCDF variable attribute.  Use if you need to set a
         netCDF attribute with the same name as one of the reserved python
@@ -365,9 +365,9 @@ cdef class Variable:
         character encoding of a string attribute (default is `utf-8`)."""
         return _get_att(self._file, self._file_id, name, encoding=encoding)
 
-    def delncattr(self, name):
+    def del_att(self, name):
         """
-        **`delncattr(self,name,value)`**
+        **`del_att(self,name,value)`**
 
         delete a netCDF variable attribute.  Use if you need to delete a
         netCDF attribute with the same name as one of the reserved python
@@ -382,10 +382,10 @@ cdef class Variable:
     def __delattr__(self,name):
         # if it's a netCDF attribute, remove it
         if name not in _private_atts:
-            self.delncattr(name)
+            self.del_att(name)
         else:
             raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot delete. Use delncattr instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot delete. Use del_att instead." % (name, tuple(_private_atts)))
     
     def __setattr__(self,name,value):
         # if name in _private_atts, it is stored at the python
@@ -406,11 +406,11 @@ cdef class Variable:
                     msg="WARNING: %s cannot be safely cast to variable dtype" \
                     % name
                     warnings.warn(msg)
-            self.putncattr(name, value)
+            self.put_att(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-                "'%s' is one of the reserved attributes %s, cannot rebind. Use putncattr instead." % (name, tuple(_private_atts)))
+                "'%s' is one of the reserved attributes %s, cannot rebind. Use put_att instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 
@@ -431,7 +431,7 @@ cdef class Variable:
         elif name in _private_atts:
             return self.__dict__[name]
         else:
-            return self.getncattr(name)
+            return self.get_att(name)
 
     def renameAttribute(self, oldname, newname):
         """
@@ -457,25 +457,6 @@ cdef class Variable:
         `Variable`.
                 """
         return tuple(self._file.dimensions[dim] for dim in self.dimensions)
-
-    def assignValue(self,val):
-        """
-        **`assignValue(self, val)`**
-
-        assign a value to a scalar variable.  Provided for compatibility with
-        Scientific.IO.NetCDF, can also be done by assigning to an Ellipsis slice ([...])."""
-        if len(self.dimensions):
-            raise IndexError('to assign values to a non-scalar variable, use a slice')
-        self[:]=val
-    def getValue(self):
-        """
-        **`getValue(self)`**
-
-        get the value of a scalar variable.  Provided for compatibility with
-        Scientific.IO.NetCDF, can also be done by slicing with an Ellipsis ([...])."""
-        if len(self.dimensions):
-            raise IndexError('to retrieve values from a non-scalar variable, use slicing')
-        return self[slice(None)]
 
     def def_fill(self, int no_fill, fill_value = None):
         cdef ndarray data
@@ -1003,7 +984,7 @@ cdef class Variable:
         msg="""WARNING: %s not used since it
                 cannot be safely cast to variable data type""" % attname
         if hasattr(self, attname):
-            att = np.array(self.getncattr(attname))
+            att = np.array(self.get_att(attname))
         else:
             return False
         try:
@@ -1197,7 +1178,10 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-            stridep[n] = stride[n] if stride else 1
+            if stride is not None:
+                stridep[n] = stride[n]
+            else: 
+                stridep[n] = 1
             imapp[n] = imap[n]
 
         shapeout = ()
@@ -1537,7 +1521,10 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-            stridep[n] = stride[n]
+            if stride is not None:
+                stridep[n] = stride[n]
+            else: 
+                stridep[n] = 1
             imapp[n] = imap[n]
         shapeout = ()
         for lendim in count:
@@ -1872,7 +1859,10 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-            stridep[n] = stride[n] if stride else 1
+            if stride is not None:
+                stridep[n] = stride[n]
+            else:
+                stridep[n] = 1
             imapp[n] = imap[n]
         shapeout = ()
         for lendim in count:
@@ -1906,7 +1896,7 @@ cdef class Variable:
             return self._iput_vars(start, count, stride, data, buffered=True)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
             return self._iput_varn(start, count, num, data, buffered=True)
-        elif all(arg is not None for arg in [data, start, count, stride, imap]) and all(arg is None for arg in [index, num]):
+        elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [index, num]):
             return self._iput_varm(data, start, count, stride, imap, buffered=True)
         else:
             raise ValueError("Invalid input arguments for bput_var")
@@ -1922,7 +1912,7 @@ cdef class Variable:
             return self._iput_vars(start, count, stride, data)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
             return self._iput_varn(start, count, num, data)
-        elif all(arg is not None for arg in [data, start, count, stride, imap]) and all(arg is None for arg in [index, num]):
+        elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [index, num]):
             return self._iput_varm(data, start, count, stride, imap)
         else:
             raise ValueError("Invalid input arguments for iput_var")
@@ -2060,7 +2050,10 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-            stridep[n] = stride[n]
+            if stride is not None:
+                stridep[n] = stride[n]
+            else: 
+                stridep[n] = 1
             imapp[n] = imap[n]
         bufcount = NC_COUNT_IGNORE
         buftype = MPI_DATATYPE_NULL
@@ -2082,7 +2075,7 @@ cdef class Variable:
             return self._iget_vars(buff, start, count, stride)
         elif all(arg is not None for arg in [buff, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
             return self._iget_varn(buff, start, count, num)
-        elif all(arg is not None for arg in [buff, start, count, stride, imap]) and all(arg is None for arg in [index, num]):
+        elif all(arg is not None for arg in [buff, start, count, imap]) and all(arg is None for arg in [index, num]):
             return self._iget_varm(buff, start, count, stride, imap)
         else:
             raise ValueError("Invalid input arguments for iget_var")

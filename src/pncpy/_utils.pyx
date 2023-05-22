@@ -829,7 +829,7 @@ cpdef inq_malloc_size():
         ierr = ncmpi_inq_malloc_size(&size)
     _check_err(ierr)
     return size
-
+"""
 cpdef inq_files_opened(ncids=None):
     cdef int ierr, num
     cdef int *ncidp
@@ -845,4 +845,4 @@ cpdef inq_files_opened(ncids=None):
         for i in range(num):
             ncids[i] = ncidp[i]
     return num
-
+"""

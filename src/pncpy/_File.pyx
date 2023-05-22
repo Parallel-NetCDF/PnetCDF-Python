@@ -312,9 +312,9 @@ cdef class File:
         return netCDF attribute names for this File in a list."""
         return _get_att_names(self._ncid, NC_GLOBAL)
 
-    def putncattr(self,name,value):
+    def put_att(self,name,value):
         """
-        **`putncattr(self,name,value)`**
+        **`put_att(self,name,value)`**
         set a netCDF file attribute using name,value pair.
         Use if you need to set a netCDF attribute with the
         with the same name as one of the reserved python attributes."""
@@ -322,9 +322,9 @@ cdef class File:
         xtype=-99
         _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
 
-    def getncattr(self,name,encoding='utf-8'):
+    def get_att(self,name,encoding='utf-8'):
         """
-        **`getncattr(self,name)`**
+        **`get_att(self,name)`**
 
         retrieve a netCDF dataset or file attribute.
         Use if you need to get a netCDF attribute with the same
@@ -337,14 +337,14 @@ cdef class File:
     def __delattr__(self,name):
         # if it's a netCDF attribute, remove it
         if name not in _private_atts:
-            self.delncattr(name)
+            self.del_att(name)
         else:
             raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot delete. Use delncattr instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot delete. Use del_att instead." % (name, tuple(_private_atts)))
 
-    def delncattr(self, name):
+    def del_att(self, name):
         """
-        **`delncattr(self,name,value)`**
+        **`del_att(self,name,value)`**
 
         delete a netCDF file attribute.  Use if you need to delete a
         netCDF attribute with the same name as one of the reserved python
@@ -361,11 +361,11 @@ cdef class File:
     # if name in _private_atts, it is stored at the python
     # level and not in the netCDF file.
         if name not in _private_atts:
-            self.putncattr(name, value)
+            self.put_att(name, value)
         elif not name.endswith('__'):
             if hasattr(self,name):
                 raise AttributeError(
-            "'%s' is one of the reserved attributes %s, cannot rebind. Use putncattr instead." % (name, tuple(_private_atts)))
+            "'%s' is one of the reserved attributes %s, cannot rebind. Use put_att instead." % (name, tuple(_private_atts)))
             else:
                 self.__dict__[name]=value
 
@@ -385,7 +385,7 @@ cdef class File:
         elif name in _private_atts:
             return self.__dict__[name]
         else:
-            return self.getncattr(name)
+            return self.get_att(name)
             
     def renameAttribute(self, oldname, newname):
         """
