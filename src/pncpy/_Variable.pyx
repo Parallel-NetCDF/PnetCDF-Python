@@ -5,7 +5,7 @@ import numpy as np
 import warnings
 include "PnetCDF.pxi"
 
-import mpi4py.MPI as MPI
+cimport mpi4py.MPI as MPI
 from mpi4py.libmpi cimport MPI_Comm, MPI_Info, MPI_Comm_dup, MPI_Info_dup, \
                                MPI_Comm_free, MPI_Info_free, MPI_INFO_NULL,\
                                MPI_COMM_WORLD, MPI_Offset, MPI_DATATYPE_NULL
@@ -20,6 +20,7 @@ _private_atts = \
 ['_ncid','_varid','dimensions','variables','file_format','disk_format',
  '_nunlimdim','path', 'name', '__orthogoral_indexing__', '_buffer']
 
+ctypedef MPI.Datatype Datatype
 
 
 cdef class Variable:
@@ -987,7 +988,7 @@ cdef class Variable:
             warnings.warn(msg)
         return is_safe
 
-    def _put_var1(self, value, tuple index, collective = True):
+    def _put_var1(self, value, tuple index, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset bufcount
@@ -999,13 +1000,19 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         for i, val in enumerate(index):
             indexp[i] = val
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_var1_all(self._file_id, self._varid, \
@@ -1017,19 +1024,25 @@ cdef class Variable:
         _check_err(ierr)
         free(indexp)
 
-    def _put_var(self, ndarray data, collective = True):
+    def _put_var(self, ndarray data, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         #buftype = MPI_DATATYPE_NULL
         if collective:
             with nogil:
@@ -1041,7 +1054,7 @@ cdef class Variable:
                                      PyArray_DATA(data), bufcount, buftype)
         _check_err(ierr)
 
-    def _put_vara(self, start, count, ndarray data, collective = True):
+    def _put_vara(self, start, count, ndarray data, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1056,12 +1069,18 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_vara_all(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
@@ -1072,7 +1091,7 @@ cdef class Variable:
                                      PyArray_DATA(data), bufcount, buftype)
         _check_err(ierr)
 
-    def _put_varn(self, start, count, num, ndarray data, collective = True):
+    def _put_varn(self, start, count, num, ndarray data, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1098,12 +1117,18 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_varn_all(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
@@ -1114,7 +1139,7 @@ cdef class Variable:
                                      PyArray_DATA(data), bufcount, buftype)
         _check_err(ierr)
 
-    def _put_vars(self, start, count, stride, ndarray data, collective = True):
+    def _put_vars(self, start, count, stride, ndarray data, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1132,12 +1157,18 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_vars_all(self._file_id, self._varid, \
@@ -1151,7 +1182,7 @@ cdef class Variable:
         _check_err(ierr)
 
 
-    def _put_varm(self, ndarray data, start, count, stride, imap, collective = True):
+    def _put_varm(self, ndarray data, start, count, stride, imap, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1178,11 +1209,17 @@ cdef class Variable:
             shapeout = shapeout + (lendim,)
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_varm_all(self._file_id, self._varid, <const MPI_Offset *>startp, \
@@ -1198,35 +1235,35 @@ cdef class Variable:
 
 
 
-    def put_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def put_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
-            self._put_var(data, collective = False)
+            self._put_var(data, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
-            self._put_var1(data, index, collective = False)
+            self._put_var1(data, index, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
-            self._put_vara(start, count, data, collective = False)
+            self._put_vara(start, count, data, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
-            self._put_vars(start, count, stride, data, collective = False)
+            self._put_vars(start, count, stride, data, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
-            self._put_varn(start, count, num, data, collective = False)
+            self._put_varn(start, count, num, data, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, stride, imap]) and all(arg is None for arg in [index, num]):
-            self._put_varm(data, start, count, stride, imap, collective = False)
+            self._put_varm(data, start, count, stride, imap, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for put_var")
 
-    def put_var_all(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def put_var_all(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
-            self._put_var(data, collective = True)
+            self._put_var(data, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
-            self._put_var1(data, index, collective = True)
+            self._put_var1(data, index, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
-            self._put_vara(start, count, data, collective = True)
+            self._put_vara(start, count, data, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
-            self._put_vars(start, count, stride, data, collective = True)
+            self._put_vars(start, count, stride, data, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
-            self._put_varn(start, count, num, data, collective = True)
+            self._put_varn(start, count, num, data, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [index, num]):
-            self._put_varm(data, start, count, stride, imap, collective = True)
+            self._put_varm(data, start, count, stride, imap, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for put_var_all")
 
@@ -1327,7 +1364,7 @@ cdef class Variable:
         free(countp)
         free(stridep)
 
-    def _get_var1(self, index, collective = True):
+    def _get_var1(self, index, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset bufcount
@@ -1336,10 +1373,16 @@ cdef class Variable:
         data = np.empty((), self.dtype)
         ndim_index = len(index)
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         for i, val in enumerate(index):
             indexp[i] = val
-        buftype = MPI_DATATYPE_NULL
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_var1_all(self._file_id, self._varid, \
@@ -1352,7 +1395,7 @@ cdef class Variable:
         free(indexp)
         return data
 
-    def _get_var(self, collective = True):
+    def _get_var(self, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1362,8 +1405,14 @@ cdef class Variable:
             dim = self._file.dimensions[dimname]
             shapeout += (len(dim),)
         data = np.empty(shapeout, self.dtype)
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
 
         if collective:
             with nogil:
@@ -1377,7 +1426,7 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    def _get_vara(self, start, count, collective = True):
+    def _get_vara(self, start, count, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1394,8 +1443,14 @@ cdef class Variable:
         for lendim in count:
             shapeout = shapeout + (lendim,)
         data = np.empty(shapeout, self.dtype)
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_vara_all(self._file_id, self._varid, \
@@ -1410,7 +1465,7 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    def _get_varn(self, start, count, num, collective = True):
+    def _get_varn(self, start, count, num, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1440,9 +1495,15 @@ cdef class Variable:
                 r_req_len*= count[i][j]
             buf_len += r_req_len
         data = np.empty(buf_len, self.dtype)
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #buftype = MPI_DATATYPE_NULL
-        buftype = _nptompitype[self.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[self.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_varn_all(self._file_id, self._varid, num_req,\
@@ -1458,7 +1519,7 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    def _get_vars(self, start, count, stride, collective = True):
+    def _get_vars(self, start, count, stride, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1478,8 +1539,14 @@ cdef class Variable:
         for lendim in count:
             shapeout = shapeout + (lendim,)
         data = np.empty(shapeout, self.dtype)
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_vars_all(self._file_id, self._varid, \
@@ -1494,7 +1561,7 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    def _get_varm(self, ndarray data, start, count, stride, imap, collective = True):
+    def _get_varm(self, ndarray data, start, count, stride, imap, buff_count, Datatype mpi_datatype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1520,8 +1587,14 @@ cdef class Variable:
             shapeout = shapeout + (lendim,)
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_varm_all(self._file_id, self._varid, <const MPI_Offset *>startp, \
@@ -1535,35 +1608,35 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    def get_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def get_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
-            return self._get_var(collective = False)
+            return self._get_var(collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
-            return self._get_var1(index, collective = False)
+            return self._get_var1(index, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
-            return self._get_vara(start, count, collective = False)
+            return self._get_vara(start, count, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
-            return self._get_vars(start, count, stride, collective = False)
+            return self._get_vars(start, count, stride, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
-            return self._get_varn(start, count, num, collective = False)
+            return self._get_varn(start, count, num, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._get_varm(data, start, count, stride, imap, collective = False)
+            return self._get_varm(data, start, count, stride, imap, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for get_var")
 
-    def get_var_all(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def get_var_all(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
-            return self._get_var(collective = True)
+            return self._get_var(collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
-            return self._get_var1(index, collective = True)
+            return self._get_var1(index, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
-            return self._get_vara(start, count, collective = True)
+            return self._get_vara(start, count, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
-            return self._get_vars(start, count, stride, collective = True)
+            return self._get_vars(start, count, stride, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
-            return self._get_varn(start, count, num, collective = True)
+            return self._get_varn(start, count, num, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._get_varm(data, start, count, stride, imap, collective = True)
+            return self._get_varm(data, start, count, stride, imap, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for get_var")
 
@@ -1663,7 +1736,7 @@ cdef class Variable:
         else:
             return data
 
-    def _iput_var(self, ndarray data, buffered = False):
+    def _iput_var(self, ndarray data, buff_count, Datatype mpi_datatype, buffered = False):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1671,12 +1744,18 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         #buftype = MPI_DATATYPE_NULL
         if not buffered:
             with nogil:
@@ -1689,7 +1768,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_var1(self, value, index, buffered=False):
+    def _iput_var1(self, value, index, buff_count, Datatype mpi_datatype, buffered=False):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset bufcount
@@ -1702,13 +1781,19 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         for i, val in enumerate(index):
             indexp[i] = val
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_var1(self._file_id, self._varid, <const MPI_Offset *>indexp,\
@@ -1720,7 +1805,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_vara(self, start, count, ndarray data, buffered=False):
+    def _iput_vara(self, start, count, ndarray data, buff_count, Datatype mpi_datatype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1736,12 +1821,18 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
@@ -1753,7 +1844,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_vars(self, start, count, stride, ndarray data, buffered=False):
+    def _iput_vars(self, start, count, stride, ndarray data, buff_count, Datatype mpi_datatype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1771,11 +1862,17 @@ cdef class Variable:
             stridep[n] = stride[n]
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_vars(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
@@ -1787,7 +1884,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_varn(self, start, count, num, ndarray data, buffered=False):
+    def _iput_varn(self, start, count, num, ndarray data, buff_count, Datatype mpi_datatype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1813,12 +1910,18 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_varn(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
@@ -1831,7 +1934,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_varm(self, ndarray data, start, count, stride, imap, buffered=False):
+    def _iput_varm(self, ndarray data, start, count, stride, imap, buff_count, Datatype mpi_datatype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1858,11 +1961,17 @@ cdef class Variable:
             shapeout = shapeout + (lendim,)
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[data.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_varm(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
@@ -1874,45 +1983,51 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def bput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def bput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
-            return self._iput_var(data, buffered=True)
+            return self._iput_var(data, buffered=True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
-            return self._iput_var1(data, index, buffered=True)
+            return self._iput_var1(data, index, buffered=True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
-            return self._iput_vara(start, count, data, buffered=True)
+            return self._iput_vara(start, count, data, buffered=True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
-            return self._iput_vars(start, count, stride, data, buffered=True)
+            return self._iput_vars(start, count, stride, data, buffered=True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
-            return self._iput_varn(start, count, num, data, buffered=True)
+            return self._iput_varn(start, count, num, data, buffered=True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [index, num]):
-            return self._iput_varm(data, start, count, stride, imap, buffered=True)
+            return self._iput_varm(data, start, count, stride, imap, buffered=True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for bput_var")
 
-    def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def iput_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
-            return self._iput_var(data)
+            return self._iput_var(data, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
-            return self._iput_var1(data, index)
+            return self._iput_var1(data, index, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
-            return self._iput_vara(start, count, data)
+            return self._iput_vara(start, count, data, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
-            return self._iput_vars(start, count, stride, data)
+            return self._iput_vars(start, count, stride, data, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
-            return self._iput_varn(start, count, num, data)
+            return self._iput_varn(start, count, num, data, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [index, num]):
-            return self._iput_varm(data, start, count, stride, imap)
+            return self._iput_varm(data, start, count, stride, imap, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for iput_var")
 
-    def _iget_var(self, ndarray data):
+    def _iget_var(self, ndarray data, buff_count, Datatype mpi_datatype):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
         cdef int request
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_var(self._file_id, self._varid, PyArray_DATA(data), \
             bufcount, buftype, &request)
@@ -1920,7 +2035,7 @@ cdef class Variable:
         return request
 
 
-    def _iget_var1(self, ndarray buff, index):
+    def _iget_var1(self, ndarray buff, index, buff_count, Datatype mpi_datatype):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset bufcount
@@ -1928,10 +2043,16 @@ cdef class Variable:
         cdef int request
         ndim_index = len(index)
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         for i, val in enumerate(index):
             indexp[i] = val
-        buftype = MPI_DATATYPE_NULL
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_var1(self._file_id, self._varid, \
                                 <const MPI_Offset *>indexp, PyArray_DATA(buff), bufcount,\
@@ -1941,7 +2062,7 @@ cdef class Variable:
         return buff
 
 
-    def _iget_vara(self, ndarray data, start, count):
+    def _iget_vara(self, ndarray data, start, count, buff_count, Datatype mpi_datatype):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1954,8 +2075,15 @@ cdef class Variable:
         for n from 0 <= n < ndims:
             countp[n] = count[n]
             startp[n] = start[n]
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_vara(self._file_id, self._varid, \
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
@@ -1963,7 +2091,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iget_vars(self, ndarray buff, start, count, stride):
+    def _iget_vars(self, ndarray buff, start, count, stride, buff_count, Datatype mpi_datatype):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -1979,8 +2107,15 @@ cdef class Variable:
             countp[n] = count[n]
             startp[n] = start[n]
             stridep[n] = stride[n]
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_vars(self._file_id, self._varid, \
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
@@ -1988,7 +2123,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iget_varn(self, ndarray buff, start, count, num):
+    def _iget_varn(self, ndarray buff, start, count, num, buff_count, Datatype mpi_datatype):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -2011,9 +2146,15 @@ cdef class Variable:
             for j in range(ndims):
                 countp[i][j] = count[i][j]
 
-        bufcount = NC_COUNT_IGNORE
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
         #buftype = MPI_DATATYPE_NULL
-        buftype = _nptompitype[self.dtype.str[1:]]
+        if mpi_datatype is None:
+            buftype = _nptompitype[self.dtype.str[1:]]
+        else:
+            buftype = mpi_datatype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_varn(self._file_id, self._varid, num_req,\
                                     <const MPI_Offset **>startp, <const MPI_Offset **>countp, \
@@ -2022,7 +2163,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iget_varm(self, ndarray buff, start, count, stride, imap):
+    def _iget_varm(self, ndarray buff, start, count, stride, imap, buff_count, Datatype mpi_datatype):
         cdef int ierr, ndims
         cdef MPI_Offset bufcount
         cdef MPI_Datatype buftype
@@ -2044,8 +2185,14 @@ cdef class Variable:
             else: 
                 stridep[n] = 1
             imapp[n] = imap[n]
-        bufcount = NC_COUNT_IGNORE
-        buftype = MPI_DATATYPE_NULL
+        if buff_count is None:
+            bufcount = NC_COUNT_IGNORE
+        else:
+            bufcount = buff_count
+        if mpi_datatype is None:
+            buftype = MPI_DATATYPE_NULL
+        else:
+            buftype = mpi_datatype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_varm(self._file_id, self._varid, \
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
@@ -2053,19 +2200,19 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def iget_var(self, buff=None, index=None, start=None, count=None, stride=None, num=None, imap=None):
+    def iget_var(self, buff=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
         if buff is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
-            return self._iget_var(buff)
+            return self._iget_var(buff, buff_count, mpi_datatype)
         elif all(arg is not None for arg in [buff, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
-            return self._iget_var1(buff, index)
+            return self._iget_var1(buff, index, buff_count, mpi_datatype)
         elif all(arg is not None for arg in [buff, start, count]) and all(arg is None for arg in [index, stride, num, imap]):
-            return self._iget_vara(buff, start, count)
+            return self._iget_vara(buff, start, count, buff_count, mpi_datatype)
         elif all(arg is not None for arg in [buff, start, count, stride]) and all(arg is None for arg in [index, num, imap]):
-            return self._iget_vars(buff, start, count, stride)
+            return self._iget_vars(buff, start, count, stride, buff_count, mpi_datatype)
         elif all(arg is not None for arg in [buff, start, count, num]) and all(arg is None for arg in [index, stride, imap]):
-            return self._iget_varn(buff, start, count, num)
+            return self._iget_varn(buff, start, count, num, buff_count, mpi_datatype)
         elif all(arg is not None for arg in [buff, start, count, imap]) and all(arg is None for arg in [index, num]):
-            return self._iget_varm(buff, start, count, stride, imap)
+            return self._iget_varm(buff, start, count, stride, imap, buff_count, mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for iget_var")
 

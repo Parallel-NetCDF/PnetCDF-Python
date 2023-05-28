@@ -27,6 +27,7 @@ _private_atts = \
 
 ctypedef MPI.Comm Comm
 ctypedef MPI.Info Info
+ctypedef MPI.Datatype Datatype
 
 cdef class File:
     def __init__(self, filename, mode="w", format=None, Comm comm=None, Info info=None, **kwargs):
