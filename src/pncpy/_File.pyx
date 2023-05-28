@@ -27,7 +27,7 @@ _private_atts = \
 
 ctypedef MPI.Comm Comm
 ctypedef MPI.Info Info
-ctypedef MPI.Datatype Datatype
+
 
 cdef class File:
     def __init__(self, filename, mode="w", format=None, Comm comm=None, Info info=None, **kwargs):
@@ -228,6 +228,15 @@ cdef class File:
         _check_err(ierr)
         self.indep_mode = 0
 
+    def flush(self):
+        """
+        flush(self)
+        """
+        cdef int ierr
+        cdef int fileid = self._ncid
+        with nogil:
+            ierr = ncmpi_flush(fileid)
+        _check_err(ierr)
 
 
     def def_dim(self, dimname, size=-1):

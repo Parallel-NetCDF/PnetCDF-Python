@@ -121,49 +121,6 @@ def pnetcdf_check_mem_usage(comm):
         if rank == 0 and sum_size > 0:
             print("Heap memory allocated by PnetCDF internally has {} bytes yet to be freed".format(sum_size))
 
-def pnetcdf_io(comm, filename, file_format):
-    rank = comm.Get_rank()
-    nprocs = comm.Get_size()
-
-
-    buf = np.zeros(shape = (NY, NX), dtype = "i4") + rank
-    str_att = ""
-    float_att = np.arange(8, dtype = 'f4')
-    short_att = np.int16(1000)
-    global_ny = NY
-    global_nx = NX * nprocs
-    starts = [0, NX * rank]
-    counts = [NY, NX]
-
-
-    # Create the file
-    f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
-    # Add a global attribute: a time stamp at rank 0
-    if rank == 0:
-        str_att = "Sun May 14 15:47:48 2023"
-    else:
-        str_att = None
-    # Make sure the time string is consistent among all processes
-    str_att = comm.bcast(str_att, root=0)
-    f.put_att('history',str_att)
-    # Define dimensions
-    dim_y = f.def_dim("Y", global_ny)
-    dim_x = f.def_dim("X",global_nx)
-    # Define a 2D variable of integer type
-    var = f.def_var("var", pncpy.NC_INT, (dim_y, dim_x))
-    # Add attributes to the variable
-    str_att = "example attribute of type text."
-    var.put_att("str_att_name", str_att)
-    var.put_att("float_att_name", float_att)
-    var.put_att("short_att_name", short_att)
-
-     # Exit the define mode
-    f.enddef()
-    # Write data to the variable
-    var.put_var_all(buf, start = starts, count = counts)
-    # Close the file
-    f.close()
-
 def main():
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
