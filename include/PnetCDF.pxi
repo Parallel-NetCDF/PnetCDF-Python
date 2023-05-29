@@ -165,6 +165,9 @@ cdef extern from "pnetcdf.h":
     int ncmpi_buffer_detach(int ncid) nogil
     int ncmpi_set_fill(int  ncid, int  fillmode, int *old_modep) nogil
     int ncmpi_flush(int ncid) nogil
+    int ncmpi_rename_dim(int ncid, int dimid, const char *name) nogil
+    int ncmpi_rename_var(int ncid, int varid, const char *name) nogil
+
     # Dimension APIs
     int ncmpi_def_dim(int ncid, const char *name, MPI_Offset len, int *idp) nogil
     # Inquiry APIs

@@ -255,6 +255,56 @@ cdef class File:
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
     
+    def rename_var(self, oldname, newname):
+        """
+        rename_var(self, oldname, newname)
+
+        rename a `Variable` named `oldname` to `newname`
+        """
+        cdef char *namstring
+        cdef Variable var
+        cdef int _file_id, _varid
+        try:
+            var = self.variables[oldname]
+        except KeyError:
+            raise KeyError('%s not a valid variable name' % oldname)
+        bytestr = _strencode(newname)
+        namstring = bytestr
+        _file_id = self._ncid
+        _var_id = var._varid
+        with nogil:
+            ierr = ncmpi_rename_var(_file_id, _var_id, namstring)
+        _check_err(ierr)
+        # remove old key from dimensions dict.
+        self.variables.pop(oldname)
+        # add new key.
+        self.variables[newname] = var
+
+    def rename_dim(self, oldname, newname):
+        """
+        rename_var(self, oldname, newname)
+
+        rename a `Dimension` named `oldname` to `newname`
+        """
+        cdef char *namstring
+        cdef Variable var
+        cdef int _file_id, _dim_id
+        try:
+            dim = self.dimensions[oldname]
+        except KeyError:
+            raise KeyError('%s not a valid dimension name' % oldname)
+        bytestr = _strencode(newname)
+        namstring = bytestr
+        _file_id = self._ncid
+        _dim_id = dim._dimid
+        with nogil:
+            ierr = ncmpi_rename_dim(_file_id, _dim_id, namstring)
+        _check_err(ierr)
+        # remove old key from dimensions dict.
+        self.dimensions.pop(oldname)
+        # add new key.
+        self.dimensions[newname] = dim
+
 
     def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
         """
