@@ -42,14 +42,14 @@ Here's an example:
 Dimensions in a netCDF file
 -----------------------------------
 
-netCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
+ netCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
  the dimensions they depend on must be established. To create a dimension, the File.def_dim method is called 
  on a File instance under define mode. The dimension's name is set using a Python string, while the size 
  is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded), 
  the size can be omitted or assigned as -1. A "Dimension" object will be returned as a handler for this 
  dimension. 
 
-Here's an example:
+ Here's an example:
  .. code-block:: Python
 
     LAT_NAME="lat"
@@ -59,14 +59,14 @@ Here's an example:
     lat_dim = f.def_dim(LAT_NAME,LAT_LEN)
     time_dim = f.def_dim(TIME_NAME,-1)
 
-All of the Dimension instances are stored in a dictionary as an Python attribute of File.
+ All of the Dimension instances are stored in a dictionary as an Python attribute of File.
 
  .. code-block:: Python
 
     >>> print(f.dimensions)
     {'lat': <class 'pncpy._Dimension.Dimension'>: name = 'lat', size = 50, 'time': <class 'pncpy._Dimension.Dimension'> (unlimited): name = 'time', size = 0}
 
-The dimension information can be retrieved using following functions
+ The dimension information can be retrieved using following functions
 
  .. code-block:: Python
 
@@ -76,18 +76,18 @@ The dimension information can be retrieved using following functions
 Variables in a netCDF file
 ----------------------------------
 
-NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF 
-variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
-this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
-instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
-The supported datatypes given each file format can be found [here](http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types).
+ NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF 
+ variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
+ this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
+ instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
+ The supported datatypes given each file format can be found [here](http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types).
 
-Here's an example:
+ Here's an example:
  .. code-block:: Python
 
     var = f.def_var("var", pncpy.NC_INT, ("time", "lat"))
 
-All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions:
+ All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions:
 
  .. code-block:: Python
 
@@ -99,7 +99,7 @@ All of the variables in the file are stored in a Python dictionary, in the same 
     current shape = (0, 50)
     filling off}
 
-Up to this point a netCDF variable is properly defined. To write data to or read from this variable, see later sections for more details.
+ Up to this point a netCDF variable is properly defined. To write data to or read from this variable, see later sections for more details.
 
 Attributes in a netCDF file
 ----------------------------------
@@ -141,11 +141,12 @@ attribute name/value pairs in a python dictionary:
 Writing data to and reading values from a netCDF variable
 -------------------------------------------------------------------
 
-Now that you have a netCDF Variable instance, how do you put data into it? Firstly make sure the file is in data mode.
-Then for writing and reading, there are currently two options:
+ Now that you have a netCDF Variable instance, how do you put data into it? Firstly make sure the file is in data mode.
+ Then for writing and reading, there are currently two options:
 
-Option1 Indexer (or slicing) syntax - You can just treat it the variable like an numpy array and assign data
-to a slice. Slices are specified as a `start:stop:step` triplet.
+Option1 Indexer (or slicing) syntax 
+ You can just treat it the variable like an numpy array and assign data
+ to a slice. Slices are specified as a `start:stop:step` triplet.
 
  .. code-block:: Python
 
@@ -153,14 +154,15 @@ to a slice. Slices are specified as a `start:stop:step` triplet.
     var[:] = buff # put values to the variable
     print(var[:10, :10]) # read the topleft 10*10 corner from variable var
 
-Option2 Method calls of put/get_var() - Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
-to perform i/o according to specfic access pattern needs. This approaches might be particularly useful in mult-processing programs.
-:func:`Variable.put_var()` requires `data` as a mandatory argument, which serves as a buffer that stores values to be written. 
-The behavior of :func:`Variable.put_var()` varies depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, 
+Option2 Method calls of put/get_var() 
+ Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
+ to perform i/o according to specfic access pattern needs. This approaches might be particularly useful in mult-processing programs.
+ :func:`Variable.put_var()` requires `data` as a mandatory argument, which serves as a buffer that stores values to be written. 
+ The behavior of :func:`Variable.put_var()` varies depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, 
  `num` and `imap`. The suffix `_all` indicates this is collective I/O in contrast to indepedent I/O (without `_all`)
 
-Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (`start`)
-and a vector of edge lengths (`count`) that refer to an array section of the netCDF variable. 
+ Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (`start`)
+ and a vector of edge lengths (`count`) that refer to an array section of the netCDF variable. 
 
  .. code-block:: Python
 
@@ -168,5 +170,5 @@ and a vector of edge lengths (`count`) that refer to an array section of the net
     var.put_var_all(buff, start = [10, 0], count = [10, 50]) # Equivalent to var[10:20, :] = buff
     print(var.get_var_all(start = [10, 0], count = [10, 50]))
 
-Symetrically, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
+ Symetrically, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments.
