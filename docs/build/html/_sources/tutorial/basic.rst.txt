@@ -66,7 +66,7 @@ Dimensions in a netCDF file
     >>> print(f.dimensions)
     {'lat': <class 'pncpy._Dimension.Dimension'>: name = 'lat', size = 50, 'time': <class 'pncpy._Dimension.Dimension'> (unlimited): name = 'time', size = 0}
 
- The dimension information can be retrieved using following functions
+ The dimension information can be retrieved using following functions.
 
  .. code-block:: Python
 
@@ -80,7 +80,7 @@ Variables in a netCDF file
  variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
  this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
  instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
- The supported datatypes given each file format can be found [here](http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types).
+ The supported datatypes given each file format can be found `here <http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types>`_.
 
  Here's an example:
  .. code-block:: Python
