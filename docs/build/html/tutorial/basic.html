@@ -56,7 +56,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#dimensions-in-a-netcdf-file">Dimensions in a netCDF file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#variables-in-a-netcdf-file">Variables in a netCDF file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#attributes-in-a-netcdf-file">Attributes in a netCDF file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#writing-values-to-and-reading-values-from-a-netcdf-variable">Writing values to and reading values from a netCDF variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-data-to-and-reading-values-from-a-netcdf-variable">Writing data to and reading values from a netCDF variable</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="collective_indep.html">Collective vs Independent I/O</a></li>
@@ -104,25 +104,25 @@
 </div>
 <section id="running-python-scripts-with-mpi">
 <h2>Running Python scripts with MPI<a class="headerlink" href="#running-python-scripts-with-mpi" title="Permalink to this heading"></a></h2>
-<p>Python programs with PnetCDF-python can be run with the command <strong class="program">mpiexec</strong>. In
+<p>Python programs with PnetCDF-Python can be run with the command <strong class="program">mpiexec</strong>. In
 practice, running Python programs looks like:</p>
 <blockquote>
-<div><p>$ mpiexec -n 4 python script.py</p>
+<div><p>$ mpiexec -n 4 Python script.py</p>
 </div></blockquote>
 <p>to run the program with 4 processors.</p>
 </section>
 <section id="creating-opening-closing-a-netcdf-file">
 <h2>Creating/Opening/Closing a netCDF file<a class="headerlink" href="#creating-opening-closing-a-netcdf-file" title="Permalink to this heading"></a></h2>
-<p>To create a netCDF file from python, you simply call the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. This is also
+<p>To create a netCDF file from Python, you simply call the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. This is also
 the method used to open an existing netCDF file. If the file is open for write access
 (mode=’w’, ‘r+’ or ‘a’), you may write any type of data including new dimensions, variables
 and attributes. Currently, netCDF files can be created in classic formats, specifically the
 formats of CDF-1, 2, and 5. When creating a new file, the format may be specified using the
-format keyword in the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. The default format is NETCDF4. To see how a given
+format keyword in the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. The default format is CDF-1. To see how a given
 file is formatted, you can examine the <code class="docutils literal notranslate"><span class="pre">file_format</span></code> attribute. Closing the netCDF file is
 accomplished via the <code class="docutils literal notranslate"><span class="pre">File.close</span></code> method of the <code class="docutils literal notranslate"><span class="pre">File</span></code> instance.</p>
 <dl>
-<dt>Here’s an example:</dt><dd><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pncpy</span>
+<dt>Here’s an example:</dt><dd><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pncpy</span>
 <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
 <span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
 <span class="c1"># create a new file using &quot;w&quot; mode</span>
@@ -136,15 +136,129 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 </section>
 <section id="dimensions-in-a-netcdf-file">
 <h2>Dimensions in a netCDF file<a class="headerlink" href="#dimensions-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
+<dl>
+<dt>netCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,</dt><dd><p>the dimensions they depend on must be established. To create a dimension, the File.def_dim method is called
+on a File instance under define mode. The dimension’s name is set using a Python string, while the size
+is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded),
+the size can be omitted or assigned as -1. A “Dimension” object will be returned as a handler for this
+dimension.</p>
+</dd>
+<dt>Here’s an example:</dt><dd><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">LAT_NAME</span><span class="o">=</span><span class="s2">&quot;lat&quot;</span>
+<span class="n">LAT_LEN</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">TIME_NAME</span><span class="o">=</span><span class="s2">&quot;time&quot;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">pncpy</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;tmp.nc&quot;</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;64BIT_DATA&quot;</span><span class="p">,</span> <span class="n">comm</span><span class="o">=</span><span class="n">comm</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">lat_dim</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_dim</span><span class="p">(</span><span class="n">LAT_NAME</span><span class="p">,</span><span class="n">LAT_LEN</span><span class="p">)</span>
+<span class="n">time_dim</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_dim</span><span class="p">(</span><span class="n">TIME_NAME</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>All of the Dimension instances are stored in a dictionary as an Python attribute of File.</p>
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print(f.dimensions)
+{&#39;lat&#39;: &lt;class &#39;pncpy._Dimension.Dimension&#39;&gt;: name = &#39;lat&#39;, size = 50, &#39;time&#39;: &lt;class &#39;pncpy._Dimension.Dimension&#39;&gt; (unlimited): name = &#39;time&#39;, size = 0}
+</pre></div>
+</div>
+</div></blockquote>
+<p>The dimension information can be retrieved using following functions</p>
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lat_dim</span><span class="p">))</span> <span class="c1"># current size of the dimension</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lat_dim</span><span class="o">.</span><span class="n">isunlimited</span><span class="p">())</span> <span class="c1"># check if the dimension is unlimited</span>
+</pre></div>
+</div>
+</div></blockquote>
 </section>
 <section id="variables-in-a-netcdf-file">
 <h2>Variables in a netCDF file<a class="headerlink" href="#variables-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
+<p>NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF
+variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
+this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension
+instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
+The supported datatypes given each file format can be found [here](<a class="reference external" href="http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types">http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types</a>).</p>
+<dl>
+<dt>Here’s an example:</dt><dd><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_var</span><span class="p">(</span><span class="s2">&quot;var&quot;</span><span class="p">,</span> <span class="n">pncpy</span><span class="o">.</span><span class="n">NC_INT</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions:</p>
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print(f.variables)
+{&#39;var&#39;: &lt;class &#39;pncpy._Variable.Variable&#39;&gt;
+int32 var(time, lat)
+int32 data type: int32
+unlimited dimensions: time
+current shape = (0, 50)
+filling off}
+</pre></div>
+</div>
+</div></blockquote>
+<p>Up to this point a netCDF variable is properly defined. To write data to or read from this variable, see later sections for more details.</p>
 </section>
 <section id="attributes-in-a-netcdf-file">
 <h2>Attributes in a netCDF file<a class="headerlink" href="#attributes-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
+<p>In a netCDF file, there are two types of attributes: global attributes and variable attributes.
+Global attributes are usually related to the netCDF file as a whole and may be used for purposes
+such as providing a title or processing history for a netCDF file.Variable attributes are used to specify
+properties as units, special values, maximum and minimum valid values, scaling factors, and offsets.</p>
+<p>Attributes for a netCDF file are defined when the file is first created, while the netCDF dataset is in
+define mode. Additional attributes may be added later by reentering define mode. Attributes can take
+the form of strings, numbers, or sequences. Returning to our example,</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># set global attributes</span>
+<span class="n">f</span><span class="o">.</span><span class="n">floatatt</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="c1"># Option1: Python attribute assignment</span>
+<span class="n">f</span><span class="o">.</span><span class="n">put_att</span><span class="p">(</span><span class="s2">&quot;intatt&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># Option2: method put_att()</span>
+<span class="n">f</span><span class="o">.</span><span class="n">seqatt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># set variable attributes</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span>
+<span class="n">var</span><span class="o">.</span><span class="n">floatatt</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">var</span><span class="o">.</span><span class="n">put_att</span><span class="p">(</span><span class="s2">&quot;int_att&quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">var</span><span class="o">.</span><span class="n">seqatt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-func docutils literal notranslate"><span class="pre">File.ncattrs()</span></code> method of a File or Variable instance can be used to retrieve the names of all
+the netCDF attributes. And The __dict__ attribute of a File or Variable instance provides all the netCDF
+attribute name/value pairs in a python dictionary:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">())</span>
+<span class="p">[</span><span class="s1">&#39;floatatt&#39;</span><span class="p">,</span> <span class="s1">&#39;intatt&#39;</span><span class="p">,</span> <span class="s1">&#39;seqatt&#39;</span><span class="p">,</span> <span class="s1">&#39;int_att&#39;</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+<span class="p">{</span><span class="s1">&#39;floatatt&#39;</span><span class="p">:</span> <span class="mf">3.141592653589793</span><span class="p">,</span> <span class="s1">&#39;intatt&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;seqatt&#39;</span><span class="p">:</span> <span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">int32</span><span class="p">),</span> <span class="s1">&#39;int_att&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+</pre></div>
+</div>
 </section>
-<section id="writing-values-to-and-reading-values-from-a-netcdf-variable">
-<h2>Writing values to and reading values from a netCDF variable<a class="headerlink" href="#writing-values-to-and-reading-values-from-a-netcdf-variable" title="Permalink to this heading"></a></h2>
+<section id="writing-data-to-and-reading-values-from-a-netcdf-variable">
+<h2>Writing data to and reading values from a netCDF variable<a class="headerlink" href="#writing-data-to-and-reading-values-from-a-netcdf-variable" title="Permalink to this heading"></a></h2>
+<p>Now that you have a netCDF Variable instance, how do you put data into it? Firstly make sure the file is in data mode.
+Then for writing and reading, there are currently two options:</p>
+<p>Option1 Indexer (or slicing) syntax - You can just treat it the variable like an numpy array and assign data
+to a slice. Slices are specified as a <cite>start:stop:step</cite> triplet.</p>
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
+<span class="n">var</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">buff</span> <span class="c1"># put values to the variable</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span> <span class="c1"># read the topleft 10*10 corner from variable var</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Option2 Method calls of put/get_var() - Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
+to perform i/o according to specfic access pattern needs. This approaches might be particularly useful in mult-processing programs.
+<code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> requires <cite>data</cite> as a mandatory argument, which serves as a buffer that stores values to be written.
+The behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> varies depending on the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>,</p>
+<blockquote>
+<div><p><cite>num</cite> and <cite>imap</cite>. The suffix <cite>_all</cite> indicates this is collective I/O in contrast to indepedent I/O (without <cite>_all</cite>)</p>
+</div></blockquote>
+<p>Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (<cite>start</cite>)
+and a vector of edge lengths (<cite>count</cite>) that refer to an array section of the netCDF variable.</p>
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
+<span class="n">var</span><span class="o">.</span><span class="n">put_var_all</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span> <span class="c1"># Equivalent to var[10:20, :] = buff</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div></blockquote>
+<dl class="simple">
+<dt>Symetrically, <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> takes the same set of optional arguments and behave differently depending on the pattern of provided</dt><dd><p>optional arguments.</p>
+</dd>
+</dl>
 </section>
 </section>
 
