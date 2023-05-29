@@ -121,8 +121,9 @@ formats of CDF-1, 2, and 5. When creating a new file, the format may be specifie
 format keyword in the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. The default format is CDF-1. To see how a given
 file is formatted, you can examine the <code class="docutils literal notranslate"><span class="pre">file_format</span></code> attribute. Closing the netCDF file is
 accomplished via the <code class="docutils literal notranslate"><span class="pre">File.close</span></code> method of the <code class="docutils literal notranslate"><span class="pre">File</span></code> instance.</p>
-<dl>
-<dt>Here’s an example:</dt><dd><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pncpy</span>
+<p>Here’s an example:</p>
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pncpy</span>
 <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
 <span class="n">comm</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span>
 <span class="c1"># create a new file using &quot;w&quot; mode</span>
@@ -131,8 +132,7 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
-</dd>
-</dl>
+</div></blockquote>
 </section>
 <section id="dimensions-in-a-netcdf-file">
 <h2>Dimensions in a netCDF file<a class="headerlink" href="#dimensions-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
@@ -143,16 +143,15 @@ on a File instance under define mode. The dimension’s name is set using a Pyth
 is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded),
 the size can be omitted or assigned as -1. A “Dimension” object will be returned as a handler for this
 dimension.</p>
-<p>Here’s an example:
-.. code-block:: Python</p>
-<blockquote>
-<div><p>LAT_NAME=”lat”
-LAT_LEN = 50
-TIME_NAME=”time”
-f = pncpy.File(filename=”tmp.nc”, mode = ‘w’, format=”64BIT_DATA”, comm=comm, info=None)
-lat_dim = f.def_dim(LAT_NAME,LAT_LEN)
-time_dim = f.def_dim(TIME_NAME,-1)</p>
-</div></blockquote>
+<p>Here’s an example:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">LAT_NAME</span><span class="o">=</span><span class="s2">&quot;lat&quot;</span>
+<span class="n">LAT_LEN</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">TIME_NAME</span><span class="o">=</span><span class="s2">&quot;time&quot;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">pncpy</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;tmp.nc&quot;</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;64BIT_DATA&quot;</span><span class="p">,</span> <span class="n">comm</span><span class="o">=</span><span class="n">comm</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">lat_dim</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_dim</span><span class="p">(</span><span class="n">LAT_NAME</span><span class="p">,</span><span class="n">LAT_LEN</span><span class="p">)</span>
+<span class="n">time_dim</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_dim</span><span class="p">(</span><span class="n">TIME_NAME</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>All of the Dimension instances are stored in a dictionary as an Python attribute of File.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print(f.dimensions)
 {&#39;lat&#39;: &lt;class &#39;pncpy._Dimension.Dimension&#39;&gt;: name = &#39;lat&#39;, size = 50, &#39;time&#39;: &lt;class &#39;pncpy._Dimension.Dimension&#39;&gt; (unlimited): name = &#39;time&#39;, size = 0}
@@ -173,11 +172,10 @@ variable, you can utilize the File.def_var method within a File instance under d
 this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension
 instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
 The supported datatypes given each file format can be found <a class="reference external" href="http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types">here</a>.</p>
-<p>Here’s an example:
-.. code-block:: Python</p>
-<blockquote>
-<div><p>var = f.def_var(“var”, pncpy.NC_INT, (“time”, “lat”))</p>
-</div></blockquote>
+<p>Here’s an example:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_var</span><span class="p">(</span><span class="s2">&quot;var&quot;</span><span class="p">,</span> <span class="n">pncpy</span><span class="o">.</span><span class="n">NC_INT</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
 <p>All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print(f.variables)
 {&#39;var&#39;: &lt;class &#39;pncpy._Variable.Variable&#39;&gt;

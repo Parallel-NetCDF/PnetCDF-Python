@@ -29,6 +29,7 @@ file is formatted, you can examine the ``file_format`` attribute. Closing the ne
 accomplished via the ``File.close`` method of the ``File`` instance.
 
 Here's an example:
+
  .. code-block:: Python
 
     import pncpy
@@ -50,6 +51,7 @@ Dimensions in a netCDF file
  dimension. 
 
  Here's an example:
+
  .. code-block:: Python
 
     LAT_NAME="lat"
@@ -83,6 +85,7 @@ Variables in a netCDF file
  The supported datatypes given each file format can be found `here <http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types>`_.
 
  Here's an example:
+ 
  .. code-block:: Python
 
     var = f.def_var("var", pncpy.NC_INT, ("time", "lat"))
