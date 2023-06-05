@@ -738,6 +738,18 @@ cdef class File:
         _check_err(ierr)
         return size
 
+    def inq_put_size(self):
+        """
+        inq_put_size(self)
+
+        """
+        cdef int ierr
+        cdef int size
+        with nogil:
+            ierr = ncmpi_inq_put_size(self._ncid, <MPI_Offset *>&size)
+        _check_err(ierr)
+        return size
+
     def inq_header_extent(self):
         """
         inq_header_extent(self)
