@@ -16,7 +16,7 @@ All variables are partitioned among all processes in a 3D block-block-block
 fashion.
  Example commands for MPI run and outputs from running ncmpidump on the
  netCDF file produced by this example program:
-    % mpiexec -n 32 python3 collective_write.py tmp/test1.nc 100
+    % mpiexec -n 32 python3 collective_write.py tmp/test1.nc -l 100
     % ncmpidump tmp/test1.nc
     
     Example standard output:
