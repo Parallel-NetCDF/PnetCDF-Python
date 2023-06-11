@@ -104,6 +104,8 @@ def pnetcdf_io(comm, filename, file_format, length):
     for i in range(NDIMS-1, -1, -1):
         starts[i] = rank // lower_dims % psizes[i]
         lower_dims *= psizes[i]
+    if verbose:
+        print("proc {}: dim rank = {}".format(rank, starts))
     bufsize = 1
     for i in range(NDIMS):
         gsizes[i] = (length + i) * psizes[i]  # global array size
