@@ -1608,35 +1608,35 @@ cdef class Variable:
         _check_err(ierr)
         return data
 
-    def get_var(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
-        if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
+    def get_var(self, buff=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
+        if all(arg is None for arg in [buff, index, start, count, stride, num, imap]):
             return self._get_var(collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
+        elif index is not None and all(arg is None for arg in [buff, start, count, stride, num, imap]):
             return self._get_var1(index, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
+        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [buff, index, stride, num, imap]):
             return self._get_vara(start, count, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
+        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [buff, index, num, imap]):
             return self._get_vars(start, count, stride, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
+        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [buff, index, stride, imap]):
             return self._get_varn(start, count, num, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._get_varm(data, start, count, stride, imap, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
+        elif all(arg is not None for arg in [start, count, imap, buff]) and all(arg is None for arg in [index, num]):
+            return self._get_varm(buff, start, count, stride, imap, collective = False, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for get_var")
 
-    def get_var_all(self, data=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
-        if all(arg is None for arg in [data, index, start, count, stride, num, imap]):
+    def get_var_all(self, buff=None, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
+        if all(arg is None for arg in [buff, index, start, count, stride, num, imap]):
             return self._get_var(collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif index is not None and all(arg is None for arg in [data, start, count, stride, num, imap]):
+        elif index is not None and all(arg is None for arg in [buff, start, count, stride, num, imap]):
             return self._get_var1(index, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [data, index, stride, num, imap]):
+        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [buff, index, stride, num, imap]):
             return self._get_vara(start, count, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [data, index, num, imap]):
+        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [buff, index, num, imap]):
             return self._get_vars(start, count, stride, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [data, index, stride, imap]):
+        elif all(arg is not None for arg in [start, count, num]) and all(arg is None for arg in [buff, index, stride, imap]):
             return self._get_varn(start, count, num, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
-        elif all(arg is not None for arg in [start, count, stride, imap, data]) and all(arg is None for arg in [index, num]):
-            return self._get_varm(data, start, count, stride, imap, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
+        elif all(arg is not None for arg in [start, count, imap, buff]) and all(arg is None for arg in [index, num]):
+            return self._get_varm(buff, start, count, stride, imap, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         else:
             raise ValueError("Invalid input arguments for get_var")
 
