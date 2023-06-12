@@ -23,7 +23,6 @@ PnetCDF-Python Documentation
    :caption: Tutorial
 
    tutorial/basic
-   tutorial/collective_indep
    tutorial/read_write
    tutorial/non_blocking
    tutorial/datatypes

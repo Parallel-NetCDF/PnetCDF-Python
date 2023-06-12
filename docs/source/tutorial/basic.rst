@@ -173,4 +173,4 @@ Option2 Method calls of put/get_var()
  Symetrically, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments.
 
- To learn more about reading and writing, see the [Variable Read and Write](`read_write.rst`) page.
+ To learn more about reading and writing, see the `Variable Read and Write` page.

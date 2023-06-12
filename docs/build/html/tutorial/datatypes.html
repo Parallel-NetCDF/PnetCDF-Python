@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Datatypes in PnetCDF-python &mdash; PnetCDF Python 0.0.1 documentation</title>
+  <title>Datatype in PnetCDF-python &mdash; PnetCDF Python 0.0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -51,10 +51,9 @@
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="basic.html">Basics</a></li>
-<li class="toctree-l1"><a class="reference internal" href="collective_indep.html">Collective vs Independent I/O</a></li>
 <li class="toctree-l1"><a class="reference internal" href="read_write.html">Variable Read and Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="non_blocking.html">Non-blocking Reads and Writes</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Datatypes in PnetCDF-python</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Datatype in PnetCDF-python</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -78,7 +77,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Datatypes in PnetCDF-python</li>
+      <li class="breadcrumb-item active">Datatype in PnetCDF-python</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/datatypes.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,15 +87,101 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="datatypes-in-pnetcdf-python">
-<h1>Datatypes in PnetCDF-python<a class="headerlink" href="#datatypes-in-pnetcdf-python" title="Permalink to this heading"></a></h1>
+  <section id="datatype-in-pnetcdf-python">
+<h1>Datatype in PnetCDF-python<a class="headerlink" href="#datatype-in-pnetcdf-python" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
 </div>
-<p>This page should talk about what are the support datatypes in numpy with
-respect to different file formats and mechanisms of data type conversion
-between numpy and netCDF datatypes…</p>
+<dl class="simple">
+<dt>NetCDF Variable Types</dt><dd><p>The following table gives the netCDF external data types defined in CDF-1 and CDF-2 and the corresponding type constants for
+defining variables in the python interface. All these data types have direct numpy quivalent.</p>
+</dd>
+</dl>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>NC Constants</p></th>
+<th class="head"><p>Bits</p></th>
+<th class="head"><p>Intent of use</p></th>
+<th class="head"><p>Numpy Equivalent</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>char</p></td>
+<td><p>NC_CHAR</p></td>
+<td><p>8</p></td>
+<td><p>text data</p></td>
+<td><p>np.int8 or ‘i1’</p></td>
+</tr>
+<tr class="row-odd"><td><p>byte</p></td>
+<td><p>NC_BYTE</p></td>
+<td><p>8</p></td>
+<td><p>1-byte integer*</p></td>
+<td><p>np.int8 or ‘i1’</p></td>
+</tr>
+<tr class="row-even"><td><p>short</p></td>
+<td><p>NC_SHORT</p></td>
+<td><p>16</p></td>
+<td colspan="2"><p>2-byte signed integer                   | np.int16 or ‘i2’</p></td>
+</tr>
+<tr class="row-odd"><td><p>int</p></td>
+<td><p>NC_INT</p></td>
+<td><p>32</p></td>
+<td colspan="2"><p>4-byte signed integer                   | np.int32 or ‘i4’</p></td>
+</tr>
+<tr class="row-even"><td><p>float</p></td>
+<td><p>NC_FLOAT</p></td>
+<td><p>32</p></td>
+<td colspan="2"><p>4-byte floating point number            | np.float32 or ‘f4’</p></td>
+</tr>
+<tr class="row-odd"><td><p>double</p></td>
+<td><p>NC_DOUBLE</p></td>
+<td><p>64</p></td>
+<td colspan="2"><p>8-byte real number in double precision  | np.float64 or ‘f8’</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><p>New data types supported in CDF-5 format:</p>
+</div></blockquote>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>C #define</p></th>
+<th class="head"><p>Bits</p></th>
+<th class="head"><p>Intent of use</p></th>
+<th class="head"><p>Numpy Equivalent</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>unsigned byte</p></td>
+<td><p>NC_UBYTE</p></td>
+<td><p>8</p></td>
+<td colspan="2"><p>unsigned 1-byte integer                 | np.uint8 or ‘u1’</p></td>
+</tr>
+<tr class="row-odd"><td><p>unsigned short</p></td>
+<td><p>NC_USHORT</p></td>
+<td><p>16</p></td>
+<td colspan="2"><p>unsigned 2-byte integer                 | np.uint16 or ‘u2’</p></td>
+</tr>
+<tr class="row-even"><td><p>unsigned int</p></td>
+<td><p>NC_UINT</p></td>
+<td><p>32</p></td>
+<td colspan="2"><p>unsigned 4-byte integer                 | np.uint32 or ‘u4’</p></td>
+</tr>
+<tr class="row-odd"><td><p>long long</p></td>
+<td><p>NC_INT64</p></td>
+<td><p>64</p></td>
+<td colspan="2"><p>signed 8-byte integer                   | np.int64 or ‘i8’</p></td>
+</tr>
+<tr class="row-even"><td><p>unsigned long long</p></td>
+<td><p>NC_UINT64</p></td>
+<td><p>64</p></td>
+<td colspan="2"><p>unsigned 8-byte integer                 | np.uint64 or ‘u8’</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 
 

@@ -73,12 +73,12 @@ Read from netCDF variables
 Write to netCDF variables
  For writing, the behavior of :func:`Variable.put_var()` depends on the following provided input parameter pattern:
 
- - data - Write an entire variable
- - data, index - Write a single data value
- - data, start, count - Write an array of values
- - data, start, count, stride - Write a subsampled array of values
- - data, start, count, imap - Write a mapped array of values
- - start, count, num -  Write a list of subarrays of values
+ - `data` - Write an entire variable
+ - `data`, `index` - Write a single data value (a single element)
+ - `data`, `start`, `count` - Write an array of values
+ - `data`, `start`, `count`, `stride` - Write a subsampled array of values
+ - `data`, `start`, `count`, `imap` - Write a mapped array of values
+ - `start`, `count`, `num` -  Write a list of subarrays of values
 
  where `start`, `count` and `stride` represent a corner, a vector of edge lengths, and a stride vector respectively. Together, they specify an (subsampled) array 
  section to write to for a netCDF variable as illustrated in the diagramm below. Note that the buffer array (the numpy array to write) can take any shape as long as
