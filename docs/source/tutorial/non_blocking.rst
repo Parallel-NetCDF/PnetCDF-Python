@@ -6,11 +6,15 @@ Non-blocking Reads and Writes
 
    Under construction. 
 
- Alternative to blocking read/writes, PnetCDF nonblocking APIs allow users to first post multiple requests and later flush them altogether 
- in order to achieve a better performance. A common practice is writing (or reading) subarrays to (from) multiple variables, e.g. one or more
- subarrays for each variable defined in the NetCDF file.
+ 
+ 
+Alternative to blocking read/writes, PnetCDF nonblocking APIs allow users to first post multiple requests and later flush them altogether 
+in order to achieve a better performance. A common practice is writing (or reading) subarrays to (from) multiple variables, e.g. one or more
+subarrays for each variable defined in the NetCDF file.
 
 Nonblocking Write
+--------------------------------------
+
  Write requests can be posted by the method call of :func:`Variable.iput_var()`. Same as :func:`Variable.put_var()`, the behavior of :func:`Variable.iput_var()` varies 
  depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap` as shown below. Note that the method only posts the 
  request, which is not commited until :func:`File.wait()`. The method call returns a request id that can be optionally passed to :func:`File.wait()` to select this request.
@@ -39,6 +43,8 @@ Nonblocking Write
 
 
 Nonblocking Read
+--------------------------------------
+
  Read requests can be posted by the method call of :func:`Variable.iget_var()`. Note that unlike :func:`Variable.get_var()`, this method requires a 
  mandatory argument - an empty numpy array reserved to be filled in the future. Again, the method call returns a request id that can be optionally passed to 
  :func:`File.wait()` to select this request. Similar to :func:`Variable.get_var()`, the behavior of :func:`Variable.iget_var()` varies depending on 
@@ -68,6 +74,8 @@ Nonblocking Read
        v_datas.append(buff)
 
 Commit Read/Write Requests
+--------------------------------------
+
  Pending requests are eventually processed by :func:`File.wait()`. Requests to commited can be specified selectively specified by a request id list. 
  If so, optionally, user can pass in a empty list to collect error statuses of each request, which is useful in request-wise error tracking and debugging.
  Alternatively, user can flush all pending write and/or read requests using module-level NC constants (e.g. `pncpy.NC_REQ_ALL`) as input parameters. The suffix
@@ -86,6 +94,8 @@ Commit Read/Write Requests
     # f.wait_all(num = pncpy.NC_GET_REQ_ALL) # commit all read requests
 
 Buffered Non-blocking Write
+--------------------------------------
+
  One limitation of the above non-blocking write is that users should not alter the contents of the write buffer once the request is posted until the wait API is returned. 
  Any change to the buffer contents in between will result in unexpected error. To alleviate the this limitation, use can post buffered nonblocking write requests using 
  :func:`Variable.bput_var()`. The input parameters and returned values are identical to :func:`Variable.iput_var()`. However, user are free to alter/reuse/delete the write 

@@ -52,7 +52,13 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="basic.html">Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="read_write.html">Variable Read and Write</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-blocking Reads and Writes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Non-blocking Reads and Writes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#nonblocking-write">Nonblocking Write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#nonblocking-read">Nonblocking Read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#commit-read-write-requests">Commit Read/Write Requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buffered-non-blocking-write">Buffered Non-blocking Write</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="datatypes.html">Datatype in PnetCDF-python</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
@@ -91,15 +97,15 @@
 <h1>Non-blocking Reads and Writes<a class="headerlink" href="#non-blocking-reads-and-writes" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<blockquote>
-<div><p>Under construction.</p>
-</div></blockquote>
+<p>Under construction.</p>
+</div>
 <p>Alternative to blocking read/writes, PnetCDF nonblocking APIs allow users to first post multiple requests and later flush them altogether
 in order to achieve a better performance. A common practice is writing (or reading) subarrays to (from) multiple variables, e.g. one or more
 subarrays for each variable defined in the NetCDF file.</p>
-</div>
-<dl>
-<dt>Nonblocking Write</dt><dd><p>Write requests can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
+<section id="nonblocking-write">
+<h2>Nonblocking Write<a class="headerlink" href="#nonblocking-write" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>Write requests can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
 depending on the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite> as shown below. Note that the method only posts the
 request, which is not commited until <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code>. The method call returns a request id that can be optionally passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request.</p>
 <ul class="simple">
@@ -122,8 +128,12 @@ request, which is not commited until <code class="xref py py-func docutils liter
   <span class="n">req_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">req_id</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-<dt>Nonblocking Read</dt><dd><p>Read requests can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iget_var()</span></code>. Note that unlike <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code>, this method requires a
+</div></blockquote>
+</section>
+<section id="nonblocking-read">
+<h2>Nonblocking Read<a class="headerlink" href="#nonblocking-read" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>Read requests can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iget_var()</span></code>. Note that unlike <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code>, this method requires a
 mandatory argument - an empty numpy array reserved to be filled in the future. Again, the method call returns a request id that can be optionally passed to
 <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request. Similar to <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code>, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iget_var()</span></code> varies depending on
 the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>.</p>
@@ -149,8 +159,12 @@ the pattern of provided optional arguments - <cite>index</cite>, <cite>start</ci
    <span class="n">v_datas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">buff</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-<dt>Commit Read/Write Requests</dt><dd><p>Pending requests are eventually processed by <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code>. Requests to commited can be specified selectively specified by a request id list.
+</div></blockquote>
+</section>
+<section id="commit-read-write-requests">
+<h2>Commit Read/Write Requests<a class="headerlink" href="#commit-read-write-requests" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>Pending requests are eventually processed by <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code>. Requests to commited can be specified selectively specified by a request id list.
 If so, optionally, user can pass in a empty list to collect error statuses of each request, which is useful in request-wise error tracking and debugging.
 Alternatively, user can flush all pending write and/or read requests using module-level NC constants (e.g. <cite>pncpy.NC_REQ_ALL</cite>) as input parameters. The suffix
 <cite>_all</cite> indicates this is collective I/O in contrast to indepedent I/O (without <cite>_all</cite>).</p>
@@ -164,8 +178,12 @@ Alternatively, user can flush all pending write and/or read requests using modul
 <span class="c1"># f.wait_all(num = pncpy.NC_GET_REQ_ALL) # commit all read requests</span>
 </pre></div>
 </div>
-</dd>
-<dt>Buffered Non-blocking Write</dt><dd><p>One limitation of the above non-blocking write is that users should not alter the contents of the write buffer once the request is posted until the wait API is returned.
+</div></blockquote>
+</section>
+<section id="buffered-non-blocking-write">
+<h2>Buffered Non-blocking Write<a class="headerlink" href="#buffered-non-blocking-write" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>One limitation of the above non-blocking write is that users should not alter the contents of the write buffer once the request is posted until the wait API is returned.
 Any change to the buffer contents in between will result in unexpected error. To alleviate the this limitation, use can post buffered nonblocking write requests using
 <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.bput_var()</span></code>. The input parameters and returned values are identical to <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. However, user are free to alter/reuse/delete the write
 buffer once the requests is postsed. As a prerequisite, the user need to tell PnetCDF the size of memory space required for all future reqests to this netCDF file. This step
@@ -191,8 +209,8 @@ is achieved by <code class="xref py py-func docutils literal notranslate"><span 
 </pre></div>
 </div>
 <p>Remember to detach the write buffer after write requets are executed.</p>
-</dd>
-</dl>
+</div></blockquote>
+</section>
 </section>
 
 
