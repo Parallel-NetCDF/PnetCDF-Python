@@ -6,7 +6,7 @@ Variable Read and Write
 
    Under construction. 
 
-NumPy slicing syntax
+NumPy Slicing Syntax
 --------------------------------------
 
  PnetCDF-python datasets re-use the numpy slicing syntax to read and write to the file. Slice specifications are translated directly
@@ -33,7 +33,7 @@ NumPy slicing syntax
     # print(var[:10])
     # print(var[1,5])
 
-Method calls of put/get_var() 
+Method Call of put/get_var() 
 --------------------------------------
 
  This approaches might be particularly useful in mult-processing programs. :func:`Variable.put_var()` requires `data` as a mandatory argument, 
@@ -42,7 +42,6 @@ Method calls of put/get_var()
  indepedent I/O (without `_all`). The method returns a numpy array with dimension 
 
 Read from netCDF variables
-
  For reading, the behavior of :func:`Variable.get_var()` depends on the following provided input parameter pattern:
 
  - none - Read an entire variable
@@ -57,7 +56,7 @@ Read from netCDF variables
  (count[0], ... count[n]).
 
  .. image:: get_vars.png
-   :width: 600
+   :width: 500
    :align: center
 
  Here's a python example:
@@ -72,7 +71,6 @@ Read from netCDF variables
     # Equivalent to print(var[:10:2, :50:2])
 
 Write to netCDF variables
-
  For writing, the behavior of :func:`Variable.put_var()` depends on the following provided input parameter pattern:
 
  - data - Write an entire variable
@@ -87,7 +85,7 @@ Write to netCDF variables
  the total size is matched with `count`.
 
  .. image:: put_vars.png
-   :width: 600
+   :width: 500
    :align: center
 
  Here's a python example:
