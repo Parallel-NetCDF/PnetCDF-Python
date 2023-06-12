@@ -60,7 +60,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="collective_indep.html">Collective vs Independent I/O</a></li>
-<li class="toctree-l1"><a class="reference internal" href="read_write.html">Variable Reading and Writing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_write.html">Variable Read and Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="non_blocking.html">Non-blocking Reads and Writes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datatypes.html">Datatypes in PnetCDF-python</a></li>
 </ul>
@@ -236,10 +236,7 @@ to a slice. Slices are specified as a <cite>start:stop:step</cite> triplet.</p>
 </div>
 </dd>
 <dt>Option2 Method calls of put/get_var()</dt><dd><p>Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
-to perform i/o according to specfic access pattern needs. This approaches might be particularly useful in mult-processing programs.
-<code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> requires <cite>data</cite> as a mandatory argument, which serves as a buffer that stores values to be written.
-The behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> varies depending on the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>,
-<cite>num</cite> and <cite>imap</cite>. The suffix <cite>_all</cite> indicates this is collective I/O in contrast to indepedent I/O (without <cite>_all</cite>)</p>
+to perform i/o according to specfic access pattern needs.</p>
 <p>Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (<cite>start</cite>)
 and a vector of edge lengths (<cite>count</cite>) that refer to an array section of the netCDF variable.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
@@ -249,6 +246,7 @@ and a vector of edge lengths (<cite>count</cite>) that refer to an array section
 </div>
 <p>Symetrically, <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> takes the same set of optional arguments and behave differently depending on the pattern of provided
 optional arguments.</p>
+<p>To learn more about reading and writing, see the <span class="xref std std-doc">read_write.rst</span> page.</p>
 </dd>
 </dl>
 </section>

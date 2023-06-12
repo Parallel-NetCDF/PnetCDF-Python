@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Variable Reading and Writing &mdash; PnetCDF Python 0.0.1 documentation</title>
+  <title>Variable Read and Write &mdash; PnetCDF Python 0.0.1 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -52,7 +52,11 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="basic.html">Basics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="collective_indep.html">Collective vs Independent I/O</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Variable Reading and Writing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Variable Read and Write</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#numpy-slicing-syntax">NumPy slicing syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#method-calls-of-put-get-var">Method calls of put/get_var()</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="non_blocking.html">Non-blocking Reads and Writes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datatypes.html">Datatypes in PnetCDF-python</a></li>
 </ul>
@@ -78,7 +82,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Variable Reading and Writing</li>
+      <li class="breadcrumb-item active">Variable Read and Write</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/tutorial/read_write.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,13 +92,100 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="variable-reading-and-writing">
-<h1>Variable Reading and Writing<a class="headerlink" href="#variable-reading-and-writing" title="Permalink to this heading"></a></h1>
+  <section id="variable-read-and-write">
+<h1>Variable Read and Write<a class="headerlink" href="#variable-read-and-write" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
 </div>
-<p>This page should talk about different choices of syntax for writing and reading data</p>
+<section id="numpy-slicing-syntax">
+<h2>NumPy slicing syntax<a class="headerlink" href="#numpy-slicing-syntax" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>PnetCDF-python datasets re-use the numpy slicing syntax to read and write to the file. Slice specifications are translated directly
+to PnetCDF “start, count, stride” selections, and are a fast and efficient way to access data in the file. The following slicing arguments are
+recognized:</p>
+<ul class="simple">
+<li><p>Indices (var[1,5])</p></li>
+<li><p>Slices (i.e. [:] or [0:10])</p></li>
+<li><p>An empty tuple (()) to retrieve all data</p></li>
+<li><p>Multiple indexing(e.g. var[1][5]) NOT SUPPORTED in write</p></li>
+</ul>
+<p>The operational mode (collective/indepedent) is dependent on the current file mode status.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">enddef</span><span class="p">()</span> <span class="c1"># Exit define mode</span>
+<span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span>
+<span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">begin_indep</span><span class="p">()</span> <span class="c1"># turn on indepedent mode</span>
+<span class="n">var</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">buff</span> <span class="c1"># put values to the variable using indepedent i/o</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span> <span class="c1"># read the topleft 10*10 corner from variable var</span>
+<span class="c1"># print(var[2:10,9:3])</span>
+<span class="c1"># print(var[0])</span>
+<span class="c1"># print(var[:10])</span>
+<span class="c1"># print(var[1,5])</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="method-calls-of-put-get-var">
+<h2>Method calls of put/get_var()<a class="headerlink" href="#method-calls-of-put-get-var" title="Permalink to this heading"></a></h2>
+<blockquote>
+<div><p>This approaches might be particularly useful in mult-processing programs. <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> requires <cite>data</cite> as a mandatory argument,
+which serves as a buffer that stores values to be written. The behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> varies depending on the pattern of provided
+optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>. The suffix <cite>_all</cite> indicates this is collective I/O in contrast to
+indepedent I/O (without <cite>_all</cite>). The method returns a numpy array with dimension</p>
+</div></blockquote>
+<p>Read from netCDF variables</p>
+<blockquote>
+<div><p>For reading, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> depends on the following provided input parameter pattern:</p>
+<ul class="simple">
+<li><p>none - Read an entire variable</p></li>
+<li><p><cite>index</cite> - Read a single data value</p></li>
+<li><p><cite>start</cite>, <cite>count</cite> - Read an array of values</p></li>
+<li><p><cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Read a subsampled array of values</p></li>
+<li><p><cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>buff</cite> - Read a mapped array of values</p></li>
+<li><p><cite>start</cite>, <cite>count</cite>, <cite>num</cite> - Read a list of subarrays of a netCDF variable in an opened netCDF file</p></li>
+</ul>
+<p>where <cite>start</cite>, <cite>count</cite> and <cite>stride</cite> represent a corner, a vector of edge lengths, and a stride vector respectively. Together, they specify an (subsampled) array
+section to read from in a netCDF variable as illustrated in the diagramm below. By default, the method returns a multidimensional numpy array in the shape of
+(count[0], … count[n]).</p>
+<a class="reference internal image-reference" href="../_images/get_vars.png"><img alt="../_images/get_vars.png" class="align-center" src="../_images/get_vars.png" style="width: 600px;" /></a>
+<p>Here’s a python example:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collective i/o</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span> <span class="n">stride</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>  <span class="c1"># Read an array of values</span>
+<span class="c1"># Independent i/o</span>
+<span class="n">f</span><span class="o">.</span><span class="n">end_indep</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span> <span class="n">stride</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span>  <span class="c1"># Read an array of values</span>
+<span class="c1"># Equivalent to print(var[:10:2, :50:2])</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>Write to netCDF variables</p>
+<blockquote>
+<div><p>For writing, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> depends on the following provided input parameter pattern:</p>
+<ul class="simple">
+<li><p>data - Write an entire variable</p></li>
+<li><p>data, index - Write a single data value</p></li>
+<li><p>data, start, count - Write an array of values</p></li>
+<li><p>data, start, count, stride - Write a subsampled array of values</p></li>
+<li><p>data, start, count, imap - Write a mapped array of values</p></li>
+<li><p>start, count, num -  Write a list of subarrays of values</p></li>
+</ul>
+<p>where <cite>start</cite>, <cite>count</cite> and <cite>stride</cite> represent a corner, a vector of edge lengths, and a stride vector respectively. Together, they specify an (subsampled) array
+section to write to for a netCDF variable as illustrated in the diagramm below. Note that the buffer array (the numpy array to write) can take any shape as long as
+the total size is matched with <cite>count</cite>.</p>
+<a class="reference internal image-reference" href="../_images/put_vars.png"><img alt="../_images/put_vars.png" class="align-center" src="../_images/put_vars.png" style="width: 600px;" /></a>
+<p>Here’s a python example:</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Collective i/o</span>
+<span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
+<span class="n">var</span><span class="o">.</span><span class="n">put_var_all</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span> <span class="n">stride</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># Write an array of values</span>
+
+<span class="c1"># Independent i/o</span>
+<span class="n">f</span><span class="o">.</span><span class="n">end_indep</span><span class="p">()</span>
+<span class="n">var</span><span class="o">.</span><span class="n">put_var</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span> <span class="n">stride</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>  <span class="c1"># Write an array of values</span>
+<span class="c1"># Equivalent to var[:10:2, :50:2] = buff</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
 </section>
 
 

@@ -159,10 +159,7 @@ Option1 Indexer (or slicing) syntax
 
 Option2 Method calls of put/get_var() 
  Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
- to perform i/o according to specfic access pattern needs. This approaches might be particularly useful in mult-processing programs.
- :func:`Variable.put_var()` requires `data` as a mandatory argument, which serves as a buffer that stores values to be written. 
- The behavior of :func:`Variable.put_var()` varies depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, 
- `num` and `imap`. The suffix `_all` indicates this is collective I/O in contrast to indepedent I/O (without `_all`)
+ to perform i/o according to specfic access pattern needs.
 
  Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (`start`)
  and a vector of edge lengths (`count`) that refer to an array section of the netCDF variable. 
@@ -175,3 +172,5 @@ Option2 Method calls of put/get_var()
 
  Symetrically, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments.
+
+ To learn more about reading and writing, see the :doc:`read_write.rst` page.
