@@ -99,16 +99,16 @@ in order to achieve a better performance. A common practice is writing (or readi
 subarrays for each variable defined in the NetCDF file.</p>
 </div>
 <dl>
-<dt>Nonblocking Write</dt><dd><p>Write request can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
+<dt>Nonblocking Write</dt><dd><p>Write requests can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
 depending on the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite> as shown below. Note that the method only posts the
 request, which is not commited until <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code>. The method call returns a request id that can be optionally passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request.</p>
 <ul class="simple">
-<li><p>data - Reqeust to write an entire variable</p></li>
-<li><p>data, index - Reqeust to write a single data value</p></li>
-<li><p>data, start, count - Reqeust to write an array of values</p></li>
-<li><p>data, start, count, stride - Reqeust to write a subsampled array of values</p></li>
-<li><p>data, start, count, imap - Reqeust to write a mapped array of values</p></li>
-<li><p>start, count, num - Reqeust to write a list of subarrays of values</p></li>
+<li><p><cite>data</cite> - Reqeust to write an entire variable</p></li>
+<li><p><cite>data</cite>, <cite>index</cite> - Reqeust to write a single data value</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite> - Reqeust to write an array of values</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Reqeust to write a subsampled array of values</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite> - Reqeust to write a mapped array of values</p></li>
+<li><p><cite>start</cite>, <cite>count</cite>, <cite>num</cite> - Reqeust to write a list of subarrays of values</p></li>
 </ul>
 <p>Here’s a python example to post 10 write requests that write to 10 netCDF variables in the same file.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">req_ids</span> <span class="o">=</span> <span class="p">[]</span>

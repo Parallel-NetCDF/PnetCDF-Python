@@ -93,12 +93,11 @@
 <p class="admonition-title">Warning</p>
 <p>Under construction.</p>
 </div>
-<dl class="simple">
+<dl>
 <dt>NetCDF Variable Types</dt><dd><p>The following table gives the netCDF external data types defined in CDF-1 and CDF-2 and the corresponding type constants for
 defining variables in the python interface. All these data types have direct numpy quivalent.</p>
-</dd>
-</dl>
-<table class="docutils align-default">
+<blockquote>
+<div><table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
 <th class="head"><p>NC Constants</p></th>
@@ -123,29 +122,33 @@ defining variables in the python interface. All these data types have direct num
 <tr class="row-even"><td><p>short</p></td>
 <td><p>NC_SHORT</p></td>
 <td><p>16</p></td>
-<td colspan="2"><p>2-byte signed integer                   | np.int16 or ‘i2’</p></td>
+<td><p>2-byte signed integer</p></td>
+<td><p>np.int16 or ‘i2’</p></td>
 </tr>
 <tr class="row-odd"><td><p>int</p></td>
 <td><p>NC_INT</p></td>
 <td><p>32</p></td>
-<td colspan="2"><p>4-byte signed integer                   | np.int32 or ‘i4’</p></td>
+<td><p>4-byte signed integer</p></td>
+<td><p>np.int32 or ‘i4’</p></td>
 </tr>
 <tr class="row-even"><td><p>float</p></td>
 <td><p>NC_FLOAT</p></td>
 <td><p>32</p></td>
-<td colspan="2"><p>4-byte floating point number            | np.float32 or ‘f4’</p></td>
+<td><p>4-byte floating point number</p></td>
+<td><p>np.float32 or ‘f4’</p></td>
 </tr>
 <tr class="row-odd"><td><p>double</p></td>
 <td><p>NC_DOUBLE</p></td>
 <td><p>64</p></td>
-<td colspan="2"><p>8-byte real number in double precision  | np.float64 or ‘f8’</p></td>
+<td><p>8-byte real number in double precision</p></td>
+<td><p>np.float64 or ‘f8’</p></td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<div><p>New data types supported in CDF-5 format:</p>
 </div></blockquote>
-<table class="docutils align-default">
+<p>New data types supported in CDF-5 format:</p>
+<blockquote>
+<div><table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Type</p></th>
 <th class="head"><p>C #define</p></th>
@@ -158,30 +161,38 @@ defining variables in the python interface. All these data types have direct num
 <tr class="row-even"><td><p>unsigned byte</p></td>
 <td><p>NC_UBYTE</p></td>
 <td><p>8</p></td>
-<td colspan="2"><p>unsigned 1-byte integer                 | np.uint8 or ‘u1’</p></td>
+<td><p>unsigned 1-byte integer</p></td>
+<td><p>np.uint8 or ‘u1’</p></td>
 </tr>
 <tr class="row-odd"><td><p>unsigned short</p></td>
 <td><p>NC_USHORT</p></td>
 <td><p>16</p></td>
-<td colspan="2"><p>unsigned 2-byte integer                 | np.uint16 or ‘u2’</p></td>
+<td><p>unsigned 2-byte integer</p></td>
+<td><p>np.uint16 or ‘u2’</p></td>
 </tr>
 <tr class="row-even"><td><p>unsigned int</p></td>
 <td><p>NC_UINT</p></td>
 <td><p>32</p></td>
-<td colspan="2"><p>unsigned 4-byte integer                 | np.uint32 or ‘u4’</p></td>
+<td><p>unsigned 4-byte integer</p></td>
+<td><p>np.uint32 or ‘u4’</p></td>
 </tr>
 <tr class="row-odd"><td><p>long long</p></td>
 <td><p>NC_INT64</p></td>
 <td><p>64</p></td>
-<td colspan="2"><p>signed 8-byte integer                   | np.int64 or ‘i8’</p></td>
+<td><p>signed 8-byte integer</p></td>
+<td><p>np.int64 or ‘i8’</p></td>
 </tr>
 <tr class="row-even"><td><p>unsigned long long</p></td>
 <td><p>NC_UINT64</p></td>
 <td><p>64</p></td>
-<td colspan="2"><p>unsigned 8-byte integer                 | np.uint64 or ‘u8’</p></td>
+<td><p>unsigned 8-byte integer</p></td>
+<td><p>np.uint64 or ‘u8’</p></td>
 </tr>
 </tbody>
 </table>
+</div></blockquote>
+</dd>
+</dl>
 </section>
 
 

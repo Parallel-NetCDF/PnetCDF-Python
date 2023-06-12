@@ -11,16 +11,16 @@ Non-blocking Reads and Writes
  subarrays for each variable defined in the NetCDF file.
 
 Nonblocking Write
- Write request can be posted by the method call of :func:`Variable.iput_var()`. Same as :func:`Variable.put_var()`, the behavior of :func:`Variable.iput_var()` varies 
+ Write requests can be posted by the method call of :func:`Variable.iput_var()`. Same as :func:`Variable.put_var()`, the behavior of :func:`Variable.iput_var()` varies 
  depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap` as shown below. Note that the method only posts the 
  request, which is not commited until :func:`File.wait()`. The method call returns a request id that can be optionally passed to :func:`File.wait()` to select this request.
 
- - data - Reqeust to write an entire variable
- - data, index - Reqeust to write a single data value
- - data, start, count - Reqeust to write an array of values
- - data, start, count, stride - Reqeust to write a subsampled array of values
- - data, start, count, imap - Reqeust to write a mapped array of values
- - start, count, num - Reqeust to write a list of subarrays of values
+ - `data` - Reqeust to write an entire variable
+ - `data`, `index` - Reqeust to write a single data value
+ - `data`, `start`, `count` - Reqeust to write an array of values
+ - `data`, `start`, `count`, `stride` - Reqeust to write a subsampled array of values
+ - `data`, `start`, `count`, `imap` - Reqeust to write a mapped array of values
+ - `start`, `count`, `num` - Reqeust to write a list of subarrays of values
  
  Here's a python example to post 10 write requests that write to 10 netCDF variables in the same file. 
 
