@@ -17,7 +17,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Variable Read and Write" href="read_write.html" />
+    <link rel="next" title="Datatype in PnetCDF-python" href="datatypes.html" />
     <link rel="prev" title="Install from Source" href="../installation/install.html" /> 
 </head>
 
@@ -53,15 +53,15 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Basics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#running-python-scripts-with-mpi">Running Python scripts with MPI</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#creating-opening-closing-a-netcdf-file">Creating/Opening/Closing a netCDF file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dimensions-in-a-netcdf-file">Dimensions in a netCDF file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#variables-in-a-netcdf-file">Variables in a netCDF file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#attributes-in-a-netcdf-file">Attributes in a netCDF file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#writing-data-to-and-reading-values-from-a-netcdf-variable">Writing data to and reading values from a netCDF variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dimensions">Dimensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#writing-to-a-netcdf-variable">Writing to a netCDF variable</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="read_write.html">Variable Read and Write</a></li>
-<li class="toctree-l1"><a class="reference internal" href="non_blocking.html">Non-blocking Reads and Writes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datatypes.html">Datatype in PnetCDF-python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="read_write.html">Parallel Read and Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="non_blocking.html">Non-blocking Reads and Writes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
 <ul>
@@ -133,8 +133,8 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 </div>
 </div></blockquote>
 </section>
-<section id="dimensions-in-a-netcdf-file">
-<h2>Dimensions in a netCDF file<a class="headerlink" href="#dimensions-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
+<section id="dimensions">
+<h2>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>netCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
 the dimensions they depend on must be established. To create a dimension, the File.def_dim method is called
@@ -163,19 +163,20 @@ dimension.</p>
 </div>
 </div></blockquote>
 </section>
-<section id="variables-in-a-netcdf-file">
-<h2>Variables in a netCDF file<a class="headerlink" href="#variables-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
+<section id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF
 variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
 this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension
 instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
-The supported datatypes given each file format can be found <a class="reference external" href="http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types">here</a>.</p>
+The supported datatypes given each file format can be found <a class="reference internal" href="read_write.html#parallel-read-and-write"><span class="std std-ref">here</span></a></p>
 <p>Here’s an example:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_var</span><span class="p">(</span><span class="s2">&quot;var&quot;</span><span class="p">,</span> <span class="n">pncpy</span><span class="o">.</span><span class="n">NC_INT</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions:</p>
+<p>All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions. To retrieve the previous defined netCDF variable instance
+from the file, you can directly index the dictionary using variable name as the key.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print(f.variables)
 {&#39;var&#39;: &lt;class &#39;pncpy._Variable.Variable&#39;&gt;
 int32 var(time, lat)
@@ -183,13 +184,15 @@ int32 data type: int32
 unlimited dimensions: time
 current shape = (0, 50)
 filling off}
+
+var = f.variables[&#39;var&#39;]
 </pre></div>
 </div>
 <p>Up to this point a netCDF variable is properly defined. To write data to or read from this variable, see later sections for more details.</p>
 </div></blockquote>
 </section>
-<section id="attributes-in-a-netcdf-file">
-<h2>Attributes in a netCDF file<a class="headerlink" href="#attributes-in-a-netcdf-file" title="Permalink to this heading"></a></h2>
+<section id="attributes">
+<h2>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
 <p>In a netCDF file, there are two types of attributes: global attributes and variable attributes.
 Global attributes are usually related to the netCDF file as a whole and may be used for purposes
 such as providing a title or processing history for a netCDF file.Variable attributes are used to specify
@@ -219,18 +222,17 @@ attribute name/value pairs in a python dictionary:</p>
 </pre></div>
 </div>
 </section>
-<section id="writing-data-to-and-reading-values-from-a-netcdf-variable">
-<h2>Writing data to and reading values from a netCDF variable<a class="headerlink" href="#writing-data-to-and-reading-values-from-a-netcdf-variable" title="Permalink to this heading"></a></h2>
+<section id="writing-to-a-netcdf-variable">
+<h2>Writing to a netCDF variable<a class="headerlink" href="#writing-to-a-netcdf-variable" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>Now that you have a netCDF Variable instance, how do you put data into it? Firstly make sure the file is in data mode.
-Then for writing and reading, there are currently two options:</p>
+Then for writing, there are currently two options:</p>
 </div></blockquote>
 <dl>
 <dt>Option1 Indexer (or slicing) syntax</dt><dd><p>You can just treat it the variable like an numpy array and assign data
 to a slice. Slices are specified as a <cite>start:stop:step</cite> triplet.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
 <span class="n">var</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">buff</span> <span class="c1"># put values to the variable</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span> <span class="c1"># read the topleft 10*10 corner from variable var</span>
 </pre></div>
 </div>
 </dd>
@@ -239,15 +241,23 @@ to perform i/o according to specfic access pattern needs.</p>
 <p>Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (<cite>start</cite>)
 and a vector of edge lengths (<cite>count</cite>) that refer to an array section of the netCDF variable.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">buff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="s2">&quot;i4&quot;</span><span class="p">)</span>
-<span class="n">var</span><span class="o">.</span><span class="n">put_var_all</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span> <span class="c1"># Equivalent to var[10:20, :] = buff</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]))</span>
+<span class="n">var</span><span class="o">.</span><span class="n">put_var_all</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span> <span class="c1"># Equivalent to var[10:20, :50] = buff</span>
 </pre></div>
 </div>
 <p>Symetrically, <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> takes the same set of optional arguments and behave differently depending on the pattern of provided
 optional arguments.</p>
 <p>To learn more about reading and writing, see the <cite>Variable Read and Write</cite> page.</p>
+<p>Reading from a netCDF variable</p>
 </dd>
 </dl>
+<hr class="docutils" />
+<blockquote>
+<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span> <span class="c1"># Option1 Indexer: read the topleft 10*10 corner from variable var</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]))</span> <span class="c1"># Option2 Method Call: equivalent to var[10:20, :50]</span>
+</pre></div>
+</div>
+</div></blockquote>
 </section>
 </section>
 
@@ -256,7 +266,7 @@ optional arguments.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../installation/install.html" class="btn btn-neutral float-left" title="Install from Source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="read_write.html" class="btn btn-neutral float-right" title="Variable Read and Write" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="datatypes.html" class="btn btn-neutral float-right" title="Datatype in PnetCDF-python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

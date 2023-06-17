@@ -40,8 +40,8 @@ Here's an example:
     # close the file
     f.close()
 
-Dimensions in a netCDF file
------------------------------------
+Dimensions 
+-------------
 
  netCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
  the dimensions they depend on must be established. To create a dimension, the File.def_dim method is called 
@@ -75,14 +75,14 @@ Dimensions in a netCDF file
     print(len(lat_dim)) # current size of the dimension
     print(lat_dim.isunlimited()) # check if the dimension is unlimited
 
-Variables in a netCDF file
-----------------------------------
+Variables
+------------
 
  NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF 
  variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
  this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
  instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
- The supported datatypes given each file format can be found `here <http://cucis.ece.northwestern.edu/projects/PnetCDF/doc/pnetcdf-c/Variable-Types.html#Variable-Types>`_.
+ The supported datatypes given each file format can be found :ref:`here<Parallel Read and Write>`
 
  Here's an example:
  
@@ -90,7 +90,8 @@ Variables in a netCDF file
 
     var = f.def_var("var", pncpy.NC_INT, ("time", "lat"))
 
- All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions:
+ All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions. To retrieve the previous defined netCDF variable instance 
+ from the file, you can directly index the dictionary using variable name as the key.
 
  .. code-block:: Python
 
@@ -102,10 +103,12 @@ Variables in a netCDF file
     current shape = (0, 50)
     filling off}
 
+    var = f.variables['var']
+
  Up to this point a netCDF variable is properly defined. To write data to or read from this variable, see later sections for more details.
 
-Attributes in a netCDF file
-----------------------------------
+Attributes 
+------------
 
 In a netCDF file, there are two types of attributes: global attributes and variable attributes. 
 Global attributes are usually related to the netCDF file as a whole and may be used for purposes 
@@ -141,11 +144,11 @@ attribute name/value pairs in a python dictionary:
     {'floatatt': 3.141592653589793, 'intatt': 1, 'seqatt': array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], dtype=int32), 'int_att': 1}
 
 
-Writing data to and reading values from a netCDF variable
--------------------------------------------------------------------
+Writing to a netCDF variable
+------------------------------
 
  Now that you have a netCDF Variable instance, how do you put data into it? Firstly make sure the file is in data mode.
- Then for writing and reading, there are currently two options:
+ Then for writing, there are currently two options:
 
 Option1 Indexer (or slicing) syntax 
  You can just treat it the variable like an numpy array and assign data
@@ -155,7 +158,7 @@ Option1 Indexer (or slicing) syntax
 
     buff = np.zeros(shape = (10, 50), dtype = "i4")
     var[:] = buff # put values to the variable
-    print(var[:10, :10]) # read the topleft 10*10 corner from variable var
+
 
 Option2 Method calls of put/get_var() 
  Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
@@ -167,10 +170,20 @@ Option2 Method calls of put/get_var()
  .. code-block:: Python
 
     buff = np.zeros(shape = (10, 50), dtype = "i4")
-    var.put_var_all(buff, start = [10, 0], count = [10, 50]) # Equivalent to var[10:20, :] = buff
-    print(var.get_var_all(start = [10, 0], count = [10, 50]))
+    var.put_var_all(buff, start = [10, 0], count = [10, 50]) # Equivalent to var[10:20, :50] = buff
+    
 
  Symetrically, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments.
 
  To learn more about reading and writing, see the `Variable Read and Write` page.
+
+ Reading from a netCDF variable
+---------------------------------
+
+ .. code-block:: Python
+
+    var = f.variables['var'] 
+    print(var[:10, :10]) # Option1 Indexer: read the topleft 10*10 corner from variable var 
+    print(var.get_var_all(start = [10, 0], count = [10, 50])) # Option2 Method Call: equivalent to var[10:20, :50]
+    
