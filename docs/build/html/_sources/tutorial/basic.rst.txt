@@ -61,17 +61,19 @@ Dimensions
     lat_dim = f.def_dim(LAT_NAME,LAT_LEN)
     time_dim = f.def_dim(TIME_NAME,-1)
 
- All of the Dimension instances are stored in a dictionary as an Python attribute of File.
+ All of the Dimension instances are stored in a dictionary as an Python attribute of File. 
 
  .. code-block:: Python
 
     >>> print(f.dimensions)
     {'lat': <class 'pncpy._Dimension.Dimension'>: name = 'lat', size = 50, 'time': <class 'pncpy._Dimension.Dimension'> (unlimited): name = 'time', size = 0}
 
- The dimension information can be retrieved using following functions.
+ To retrieve the previous defined dimension instance from the file, you can directly index the dictionary using variable name as the key.
+ The dimension information can be retrieved using following functions. 
 
  .. code-block:: Python
 
+    lat_dim = f.dimensions['lat']
     print(len(lat_dim)) # current size of the dimension
     print(lat_dim.isunlimited()) # check if the dimension is unlimited
 
@@ -82,7 +84,7 @@ Variables
  variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
  this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
  instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
- The supported datatypes given each file format can be found :ref:`here<Parallel Read and Write>`
+ The supported datatypes given each file format can be found :ref:`here<Datatype>`
 
  Here's an example:
  
@@ -171,15 +173,13 @@ Option2 Method calls of put/get_var()
 
     buff = np.zeros(shape = (10, 50), dtype = "i4")
     var.put_var_all(buff, start = [10, 0], count = [10, 50]) # Equivalent to var[10:20, :50] = buff
-    
 
- Symetrically, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
- optional arguments.
+ 
 
- To learn more about reading and writing, see the `Variable Read and Write` page.
-
- Reading from a netCDF variable
+Reading from a netCDF variable
 ---------------------------------
+
+ Symmetrically, users can use two options with different syntaxes to retreive array values from the variable.
 
  .. code-block:: Python
 
@@ -187,3 +187,7 @@ Option2 Method calls of put/get_var()
     print(var[:10, :10]) # Option1 Indexer: read the topleft 10*10 corner from variable var 
     print(var.get_var_all(start = [10, 0], count = [10, 50])) # Option2 Method Call: equivalent to var[10:20, :50]
     
+ Similarly, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
+ optional arguments. 
+ 
+ To learn more about reading and writing, see the :ref:`here<Parallel Read and Write>` page.

@@ -1,5 +1,5 @@
 ===========================
-Datatype in PnetCDF-python
+Datatype 
 ===========================
 .. warning::
 
@@ -29,8 +29,6 @@ NetCDF Variable Types
 
 
  New data types supported in CDF-5 format:
-
-
 
       +---------------------+----------------+-------+----------------------------------------+---------------------+
       | Type                | C #define      | Bits  | Intent of use                          | Numpy Equivalent    |

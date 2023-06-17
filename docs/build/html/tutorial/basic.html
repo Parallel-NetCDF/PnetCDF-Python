@@ -17,7 +17,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Datatype in PnetCDF-python" href="datatypes.html" />
+    <link rel="next" title="Datatype" href="datatypes.html" />
     <link rel="prev" title="Install from Source" href="../installation/install.html" /> 
 </head>
 
@@ -57,9 +57,10 @@
 <li class="toctree-l2"><a class="reference internal" href="#variables">Variables</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#writing-to-a-netcdf-variable">Writing to a netCDF variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reading-from-a-netcdf-variable">Reading from a netCDF variable</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="datatypes.html">Datatype in PnetCDF-python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datatypes.html">Datatype</a></li>
 <li class="toctree-l1"><a class="reference internal" href="read_write.html">Parallel Read and Write</a></li>
 <li class="toctree-l1"><a class="reference internal" href="non_blocking.html">Non-blocking Reads and Writes</a></li>
 </ul>
@@ -156,8 +157,10 @@ dimension.</p>
 {&#39;lat&#39;: &lt;class &#39;pncpy._Dimension.Dimension&#39;&gt;: name = &#39;lat&#39;, size = 50, &#39;time&#39;: &lt;class &#39;pncpy._Dimension.Dimension&#39;&gt; (unlimited): name = &#39;time&#39;, size = 0}
 </pre></div>
 </div>
-<p>The dimension information can be retrieved using following functions.</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lat_dim</span><span class="p">))</span> <span class="c1"># current size of the dimension</span>
+<p>To retrieve the previous defined dimension instance from the file, you can directly index the dictionary using variable name as the key.
+The dimension information can be retrieved using following functions.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lat_dim</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lat_dim</span><span class="p">))</span> <span class="c1"># current size of the dimension</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">lat_dim</span><span class="o">.</span><span class="n">isunlimited</span><span class="p">())</span> <span class="c1"># check if the dimension is unlimited</span>
 </pre></div>
 </div>
@@ -170,7 +173,7 @@ dimension.</p>
 variable, you can utilize the File.def_var method within a File instance under define mode. The mandatory arguments for
 this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension
 instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
-The supported datatypes given each file format can be found <a class="reference internal" href="read_write.html#parallel-read-and-write"><span class="std std-ref">here</span></a></p>
+The supported datatypes given each file format can be found <a class="reference internal" href="datatypes.html#datatype"><span class="std std-ref">here</span></a></p>
 <p>Here’s an example:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">def_var</span><span class="p">(</span><span class="s2">&quot;var&quot;</span><span class="p">,</span> <span class="n">pncpy</span><span class="o">.</span><span class="n">NC_INT</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">))</span>
 </pre></div>
@@ -244,19 +247,21 @@ and a vector of edge lengths (<cite>count</cite>) that refer to an array section
 <span class="n">var</span><span class="o">.</span><span class="n">put_var_all</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span> <span class="c1"># Equivalent to var[10:20, :50] = buff</span>
 </pre></div>
 </div>
-<p>Symetrically, <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> takes the same set of optional arguments and behave differently depending on the pattern of provided
-optional arguments.</p>
-<p>To learn more about reading and writing, see the <cite>Variable Read and Write</cite> page.</p>
-<p>Reading from a netCDF variable</p>
 </dd>
 </dl>
-<hr class="docutils" />
+</section>
+<section id="reading-from-a-netcdf-variable">
+<h2>Reading from a netCDF variable<a class="headerlink" href="#reading-from-a-netcdf-variable" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span>
+<div><p>Symmetrically, users can use two options with different syntaxes to retreive array values from the variable.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">var</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">10</span><span class="p">])</span> <span class="c1"># Option1 Indexer: read the topleft 10*10 corner from variable var</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]))</span> <span class="c1"># Option2 Method Call: equivalent to var[10:20, :50]</span>
 </pre></div>
 </div>
+<p>Similarly, <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> takes the same set of optional arguments and behave differently depending on the pattern of provided
+optional arguments.</p>
+<p>To learn more about reading and writing, see the <a class="reference internal" href="read_write.html#parallel-read-and-write"><span class="std std-ref">here</span></a> page.</p>
 </div></blockquote>
 </section>
 </section>
@@ -266,7 +271,7 @@ optional arguments.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../installation/install.html" class="btn btn-neutral float-left" title="Install from Source" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="datatypes.html" class="btn btn-neutral float-right" title="Datatype in PnetCDF-python" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="datatypes.html" class="btn btn-neutral float-right" title="Datatype" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
