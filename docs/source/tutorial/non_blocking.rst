@@ -111,16 +111,16 @@ Buffered Non-blocking Write
     f.enddef()
     data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
     write_buff = [data] * num_reqs
-    # estimate the memory buffer size of all write requests
+    # Estimate the memory buffer size of all write requests
     buffsize = num_reqs * data.nbytes
-    # attach buffer for buffered put requests
+    # Attach buffer for buffered put requests
     f.attach_buff(buffsize)
     req_ids = []
     for i in range(num_reqs):
        v = f.variables[f'data{i}']
-       # post the request to write the whole variable
+       # Post the request to write the whole variable
        req_id = v.bput_var(write_buff[i])
-       # track the request ID for each write request
+       # Track the request ID for each write request
        req_ids.append(req_id)
    # Free to alter the contents of write_buff here enabled by buffered non-blocking
     f.wait_all()
@@ -131,7 +131,3 @@ Buffered Non-blocking Write
  Remember to detach the write buffer after write requets are executed.
  
  
-
-
-
-

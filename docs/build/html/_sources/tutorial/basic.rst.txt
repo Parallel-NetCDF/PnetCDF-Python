@@ -134,7 +134,7 @@ Attributes
     var.seqatt = np.int32(np.arange(10))
 
  The :func:`File.ncattrs` method of a File or Variable instance can be used to retrieve the names of all 
- the netCDF attributes. And The __dict__ attribute of a File or Variable instance provides all the netCDF 
+ the netCDF attributes. And the __dict__ attribute of a File or Variable instance provides all the netCDF 
  attribute name/value pairs in a python dictionary: 
 
  .. code-block:: Python

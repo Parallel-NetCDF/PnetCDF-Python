@@ -194,16 +194,16 @@ is achieved by <code class="xref py py-func docutils literal notranslate"><span 
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span> <span class="n">f</span><span class="o">.</span><span class="n">enddef</span><span class="p">()</span>
  <span class="n">data</span> <span class="o">=</span> <span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">xdim</span><span class="p">,</span><span class="n">ydim</span><span class="p">,</span><span class="n">zdim</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;i4&#39;</span><span class="p">)</span>
  <span class="n">write_buff</span> <span class="o">=</span> <span class="p">[</span><span class="n">data</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_reqs</span>
- <span class="c1"># estimate the memory buffer size of all write requests</span>
+ <span class="c1"># Estimate the memory buffer size of all write requests</span>
  <span class="n">buffsize</span> <span class="o">=</span> <span class="n">num_reqs</span> <span class="o">*</span> <span class="n">data</span><span class="o">.</span><span class="n">nbytes</span>
- <span class="c1"># attach buffer for buffered put requests</span>
+ <span class="c1"># Attach buffer for buffered put requests</span>
  <span class="n">f</span><span class="o">.</span><span class="n">attach_buff</span><span class="p">(</span><span class="n">buffsize</span><span class="p">)</span>
  <span class="n">req_ids</span> <span class="o">=</span> <span class="p">[]</span>
  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_reqs</span><span class="p">):</span>
     <span class="n">v</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;data</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span>
-    <span class="c1"># post the request to write the whole variable</span>
+    <span class="c1"># Post the request to write the whole variable</span>
     <span class="n">req_id</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">bput_var</span><span class="p">(</span><span class="n">write_buff</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-    <span class="c1"># track the request ID for each write request</span>
+    <span class="c1"># Track the request ID for each write request</span>
     <span class="n">req_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">req_id</span><span class="p">)</span>
 <span class="c1"># Free to alter the contents of write_buff here enabled by buffered non-blocking</span>
  <span class="n">f</span><span class="o">.</span><span class="n">wait_all</span><span class="p">()</span>

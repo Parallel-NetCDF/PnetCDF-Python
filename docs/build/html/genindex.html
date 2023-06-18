@@ -89,7 +89,10 @@
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
  | <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
+ | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
@@ -98,6 +101,7 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="_">_</h2>
@@ -115,7 +119,27 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/variable_api.html#pncpy.Variable.assignValue">assignValue() (pncpy.Variable method)</a>
+      <li><a href="api/file_api.html#pncpy.File.attach_buff">attach_buff() (pncpy.File method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.begin_indep">begin_indep() (pncpy.File method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="C">C</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.cancel">cancel() (pncpy.File method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.close">close() (pncpy.File method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -129,17 +153,31 @@
 </li>
       <li><a href="api/file_api.html#pncpy.File.def_var">def_var() (pncpy.File method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/file_api.html#pncpy.File.delncattr">delncattr() (pncpy.File method)</a>
+      <li><a href="api/file_api.html#pncpy.File.del_att">del_att() (pncpy.File method)</a>
 
       <ul>
-        <li><a href="api/variable_api.html#pncpy.Variable.delncattr">(pncpy.Variable method)</a>
+        <li><a href="api/variable_api.html#pncpy.Variable.del_att">(pncpy.Variable method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.detach_buff">detach_buff() (pncpy.File method)</a>
+</li>
       <li><a href="api/dimension_api.html#pncpy.Dimension">Dimension (class in pncpy)</a>
 </li>
       <li><a href="api/variable_api.html#pncpy.Variable.dimensions">dimensions (pncpy.Variable attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="E">E</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.end_indep">end_indep() (pncpy.File method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.enddef">enddef() (pncpy.File method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -153,25 +191,27 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/file_api.html#pncpy.File.filepath">filepath() (pncpy.File method)</a>
 </li>
+      <li><a href="api/file_api.html#pncpy.File.flush">flush() (pncpy.File method)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/variable_api.html#pncpy.Variable.get_dims">get_dims() (pncpy.Variable method)</a>
-</li>
-      <li><a href="api/dimension_api.html#pncpy.Dimension.getfile">getfile() (pncpy.Dimension method)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/file_api.html#pncpy.File.getncattr">getncattr() (pncpy.File method)</a>
+      <li><a href="api/file_api.html#pncpy.File.get_att">get_att() (pncpy.File method)</a>
 
       <ul>
-        <li><a href="api/variable_api.html#pncpy.Variable.getncattr">(pncpy.Variable method)</a>
+        <li><a href="api/variable_api.html#pncpy.Variable.get_att">(pncpy.Variable method)</a>
 </li>
       </ul></li>
-      <li><a href="api/variable_api.html#pncpy.Variable.getValue">getValue() (pncpy.Variable method)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/variable_api.html#pncpy.Variable.get_dims">get_dims() (pncpy.Variable method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.get_nreqs">get_nreqs() (pncpy.File method)</a>
+</li>
+      <li><a href="api/dimension_api.html#pncpy.Dimension.getfile">getfile() (pncpy.Dimension method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -179,10 +219,32 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/file_api.html#pncpy.File.inq_unlimdim">inq_unlimdim() (pncpy.File method)</a>
+      <li><a href="api/file_api.html#pncpy.File.inq_buff_size">inq_buff_size() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_buff_usage">inq_buff_usage() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_header_extent">inq_header_extent() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_header_size">inq_header_size() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_info">inq_info() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_num_fix_vars">inq_num_fix_vars() (pncpy.File method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.inq_num_rec_vars">inq_num_rec_vars() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_put_size">inq_put_size() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_recsize">inq_recsize() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_striping">inq_striping() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_unlimdim">inq_unlimdim() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.inq_version">inq_version() (pncpy.File method)</a>
+</li>
       <li><a href="api/dimension_api.html#pncpy.Dimension.isunlimited">isunlimited() (pncpy.Dimension method)</a>
 </li>
   </ul></td>
@@ -211,10 +273,10 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/file_api.html#pncpy.File.putncatt">putncatt() (pncpy.File method)</a>
+      <li><a href="api/file_api.html#pncpy.File.put_att">put_att() (pncpy.File method)</a>
 
       <ul>
-        <li><a href="api/variable_api.html#pncpy.Variable.putncatt">(pncpy.Variable method)</a>
+        <li><a href="api/variable_api.html#pncpy.Variable.put_att">(pncpy.Variable method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -223,12 +285,20 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="api/file_api.html#pncpy.File.renameAttribute">renameAttribute() (pncpy.File method)</a>
+      <li><a href="api/file_api.html#pncpy.File.redef">redef() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.rename_att">rename_att() (pncpy.File method)</a>
 
       <ul>
-        <li><a href="api/variable_api.html#pncpy.Variable.renameAttribute">(pncpy.Variable method)</a>
+        <li><a href="api/variable_api.html#pncpy.Variable.rename_att">(pncpy.Variable method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.rename_dim">rename_dim() (pncpy.File method)</a>
+</li>
+      <li><a href="api/file_api.html#pncpy.File.rename_var">rename_var() (pncpy.File method)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -241,7 +311,7 @@
 </li>
       <li><a href="api/variable_api.html#pncpy.Variable.set_auto_scale">set_auto_scale() (pncpy.Variable method)</a>
 </li>
-      <li><a href="api/variable_api.html#pncpy.Variable.setncatts">setncatts() (pncpy.Variable method)</a>
+      <li><a href="api/file_api.html#pncpy.File.set_fill">set_fill() (pncpy.File method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -262,6 +332,18 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="api/variable_api.html#pncpy.Variable">Variable (class in pncpy)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.wait">wait() (pncpy.File method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="api/file_api.html#pncpy.File.wait_all">wait_all() (pncpy.File method)</a>
 </li>
   </ul></td>
 </tr></table>

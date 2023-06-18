@@ -62,21 +62,18 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Variable</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pncpy.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.__init__"><code class="docutils literal notranslate"><span class="pre">Variable.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.assignValue"><code class="docutils literal notranslate"><span class="pre">Variable.assignValue()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.datatype"><code class="docutils literal notranslate"><span class="pre">Variable.datatype</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.delncattr"><code class="docutils literal notranslate"><span class="pre">Variable.delncattr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.del_att"><code class="docutils literal notranslate"><span class="pre">Variable.del_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.dimensions"><code class="docutils literal notranslate"><span class="pre">Variable.dimensions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.getValue"><code class="docutils literal notranslate"><span class="pre">Variable.getValue()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_att"><code class="docutils literal notranslate"><span class="pre">Variable.get_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_dims"><code class="docutils literal notranslate"><span class="pre">Variable.get_dims()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.getncattr"><code class="docutils literal notranslate"><span class="pre">Variable.getncattr()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.name"><code class="docutils literal notranslate"><span class="pre">Variable.name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.putncatt"><code class="docutils literal notranslate"><span class="pre">Variable.putncatt()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.renameAttribute"><code class="docutils literal notranslate"><span class="pre">Variable.renameAttribute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.rename_att"><code class="docutils literal notranslate"><span class="pre">Variable.rename_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_chartostring"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_mask"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_scale"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_scale()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.setncatts"><code class="docutils literal notranslate"><span class="pre">Variable.setncatts()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.shape"><code class="docutils literal notranslate"><span class="pre">Variable.shape</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.size"><code class="docutils literal notranslate"><span class="pre">Variable.size</span></code></a></li>
 </ul>
@@ -203,14 +200,6 @@ the variable is not pre-filled.</p>
 <cite>File.def_var</cite> method of a <cite>File</cite> instance, not using this class directly.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.assignValue">
-<span class="sig-name descname"><span class="pre">assignValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.assignValue" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`assignValue(self, val)`</strong></p>
-<p>assign a value to a scalar variable.  Provided for compatibility with
-Scientific.IO.NetCDF, can also be done by assigning to an Ellipsis slice ([…]).</p>
-</dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Variable.datatype">
 <span class="sig-name descname"><span class="pre">datatype</span></span><a class="headerlink" href="#pncpy.Variable.datatype" title="Permalink to this definition"></a></dt>
@@ -218,9 +207,9 @@ Scientific.IO.NetCDF, can also be done by assigning to an Ellipsis slice ([…])
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.delncattr">
-<span class="sig-name descname"><span class="pre">delncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.delncattr" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`delncattr(self,name,value)`</strong></p>
+<dt class="sig sig-object py" id="pncpy.Variable.del_att">
+<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.del_att" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`del_att(self,name,value)`</strong></p>
 <p>delete a netCDF variable attribute.  Use if you need to delete a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>
@@ -233,11 +222,14 @@ attributes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.getValue">
-<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.getValue" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`getValue(self)`</strong></p>
-<p>get the value of a scalar variable.  Provided for compatibility with
-Scientific.IO.NetCDF, can also be done by slicing with an Ellipsis ([…]).</p>
+<dt class="sig sig-object py" id="pncpy.Variable.get_att">
+<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_att" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`get_att(self,name)`</strong></p>
+<p>retrieve a netCDF variable attribute.  Use if you need to set a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+<p>option kwarg <cite>encoding</cite> can be used to specify the
+character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
@@ -246,17 +238,6 @@ Scientific.IO.NetCDF, can also be done by slicing with an Ellipsis ([…]).</p>
 <dd><p><strong>`get_dims(self)`</strong></p>
 <p>return a tuple of <cite>Dimension</cite> instances associated with this
 <cite>Variable</cite>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.getncattr">
-<span class="sig-name descname"><span class="pre">getncattr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.getncattr" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`getncattr(self,name)`</strong></p>
-<p>retrieve a netCDF variable attribute.  Use if you need to set a
-netCDF attribute with the same name as one of the reserved python
-attributes.</p>
-<p>option kwarg <cite>encoding</cite> can be used to specify the
-character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -273,18 +254,18 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.putncatt">
-<span class="sig-name descname"><span class="pre">putncatt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.putncatt" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`putncatt(self,name,value)`</strong></p>
+<dt class="sig sig-object py" id="pncpy.Variable.put_att">
+<span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_att" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`put_att(self,name,value)`</strong></p>
 <p>set a netCDF variable attribute using name,value pair.  Use if you need to set a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.renameAttribute">
-<span class="sig-name descname"><span class="pre">renameAttribute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.renameAttribute" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`renameAttribute(self, oldname, newname)`</strong></p>
+<dt class="sig sig-object py" id="pncpy.Variable.rename_att">
+<span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.rename_att" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`rename_att(self, oldname, newname)`</strong></p>
 <p>rename a <cite>Variable</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
 </dd></dl>
 
@@ -364,16 +345,6 @@ data in <cite>NETCDF3</cite> or <cite>NETCDF4_CLASSIC</cite> files (since the <c
 data model does not have unsigned integer data types).</p>
 <p>The default value of <cite>scale</cite> is <cite>True</cite>
 (automatic conversions are performed).</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.Variable.setncatts">
-<span class="sig-name descname"><span class="pre">setncatts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.setncatts" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`setncatts(self,attdict)`</strong></p>
-<p>set a bunch of netCDF variable attributes at once using a python dictionary.
-This may be faster when setting a lot of attributes for a <cite>NETCDF3</cite>
-formatted file, since nc_redef/nc_enddef is not called in between setting
-each attribute</p>
 </dd></dl>
 
 <dl class="py attribute">
