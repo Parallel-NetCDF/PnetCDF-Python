@@ -70,6 +70,8 @@ Read from netCDF variables
     print(var.get_var(start = [0, 0], count = [5, 25], stride = [2,2]))  # Read an array of values
     # Equivalent to print(var[:10:2, :50:2])
 
+ For more, see `examples/get_vara.py`.
+
 Write to netCDF variables
  For writing, the behavior of :func:`Variable.put_var()` depends on the following provided input parameter pattern:
 
@@ -83,7 +85,7 @@ Write to netCDF variables
  where `start`, `count` and `stride` represent a corner, a vector of edge lengths, and a stride vector respectively. Together, they specify an (subsampled) array 
  section to write to for a netCDF variable as illustrated in the diagramm below. Note that the buffer array (the numpy array to write) can take any shape as long as
  the total size is matched with `count`.
-
+ 
  .. image:: put_vars.png
    :width: 500
    :align: center
@@ -100,3 +102,7 @@ Write to netCDF variables
     f.end_indep()
     var.put_var(buff, start = [0, 0], count = [5, 25], stride = [2,2])  # Write an array of values
     # Equivalent to var[:10:2, :50:2] = buff
+    
+ For more, see `examples/put_vara.py` and `examples/collective_write.py`.
+
+
