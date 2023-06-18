@@ -80,10 +80,7 @@ elif rank == 3:
 else:
     num_reqs = 0
 #Obtain the size of returned dataframe, needed for generating reference dataframe
-buf_len = 0
-for i in range(num_reqs):
-    w_req_len = np.prod(counts[i,:])
-    buf_len += w_req_len
+buf_len = np.sum(np.prod(counts, axis=1))
 
 class VariablesTestCase(unittest.TestCase):
 
@@ -118,12 +115,14 @@ class VariablesTestCase(unittest.TestCase):
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o get_var
         v1 = f.variables['var1']
-        data_coll = v1.get_var_all(start = starts, count = counts, num = num_reqs)
-        assert_array_equal(data_coll, dataref)
+        buff = np.empty((buf_len,), v1.dtype)
+        v1.get_var_all(buff, start = starts, count = counts, num = num_reqs)
+        assert_array_equal(buff, dataref)
         # test independent i/o get_var
         f.begin_indep()
-        data_indep = v1.get_var(start = starts, count = counts, num = num_reqs)
-        assert_array_equal(data_indep, dataref)
+        buff = np.empty((buf_len,), v1.dtype)
+        v1.get_var(buff, start = starts, count = counts, num = num_reqs)
+        assert_array_equal(buff, dataref)
         f.close()
 
 if __name__ == '__main__':

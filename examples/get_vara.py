@@ -123,7 +123,8 @@ def pnetcdf_io(comm, filename, file_format):
     starts = [0,  local_nx * rank]
     counts = [local_ny, local_nx]
     # Read a subarray in collective mode
-    v_values = v.get_var_all(start = starts, count = counts)
+    buff = np.empty(tuple(counts), v.dtype)
+    v.get_var_all(buff, start = starts, count = counts)
     f.close()
 
 def main():

@@ -64,15 +64,17 @@ class VariablesTestCase(unittest.TestCase):
         index = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o
-        val = v1.get_var(index = index)
+        buff = np.empty((), v1.dtype)
+        v1.get_var(buff, index = index)
         # compare returned value against reference value
-        assert_equal(val, datarev[rank][rank][rank])
+        assert_equal(buff, datarev[rank][rank][rank])
         # test independent i/o put var1
         f.end_indep()
         # all processes read the designated cell of the variable using collective i/o
-        val = v1.get_var_all(index = index)
+        buff = np.empty((), v1.dtype)
+        v1.get_var_all(buff, index = index)
         # compare returned value against reference value
-        assert_equal(val, datarev[rank][rank][rank])
+        assert_equal(buff, datarev[rank][rank][rank])
         f.close()
 
     def tearDown(self):

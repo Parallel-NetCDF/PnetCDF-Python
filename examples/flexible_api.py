@@ -172,6 +172,7 @@ def main():
 
     buffer_len = (NZ + 2 * ghost_len) * (NY + 2 * ghost_len)
     buf_zy = np.full(buffer_len, rank, dtype=np.int32)
+
     starts = np.array([NZ * rank, 0])
     counts = np.array([NZ, NY])
     # calling a blocking flexible API using put_var_all()
@@ -181,18 +182,20 @@ def main():
     for i in range(buffer_len):
         if buf_zy[i] != rank:
             print(f"Error at line {sys._getframe().f_lineno} in {__file__}: put buffer[{i}] is altered")
-    buf_zy = buf_zy.reshape(array_of_sizes)
+
     buf_zy.fill(-1)
-    buf_zy[ghost_len:(ghost_len+NZ), ghost_len:(ghost_len+NY)] = var_zy.get_var_all(start = starts, count = counts)
+    var_zy.get_var_all(buf_zy, start = starts, count = counts, buff_count = 1, mpi_datatype = subarray)
+    # print(buf_zy.reshape(array_of_sizes))
     
     # check contents of the get buffer
     for i in range(array_of_sizes[0]):
         for j in range(array_of_sizes[1]):
+            index = i*array_of_sizes[1] + j
             if i < ghost_len or ghost_len + array_of_subsizes[0] <= i or j < ghost_len or ghost_len + array_of_subsizes[1] <= j:
-                if buf_zy[i][j] != -1:
+                if buf_zy[index] != -1:
                     print(f"Unexpected get buffer[{i}][{j}]={buf_zy[index]}")
             else:
-                if buf_zy[i][j] != rank:
+                if buf_zy[index] != rank:
                     print(f"Unexpected get buffer[{i}][{j}]={buf_zy[index]}")
 
     subarray.Free()
@@ -215,8 +218,7 @@ def main():
     # check request error msg for each unsuccessful requests
     if strerrno(status[0]) != "NC_NOERR":
         print(f"Error on request {i}:",  strerror(status[0]))
-    
-    # buf_yx = buf_yx.reshape(array_of_sizes).astype(np.float32)
+
     buf_yx.fill(-1)
     req_id = var_yx.iget_var(buf_yx, start = starts, count = counts, buff_count = 1, mpi_datatype=subarray)
     f.wait_all(1, [req_id], status = status)

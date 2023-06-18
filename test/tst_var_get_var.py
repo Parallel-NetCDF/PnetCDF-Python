@@ -64,15 +64,17 @@ class VariablesTestCase(unittest.TestCase):
         f.begin_indep()
         # mpi process rank 0 and 1 read the whole variable
         if rank < 2:
-            v1_data = v1.get_var()
+            buff = np.empty(v1.shape, v1.dtype)
+            v1.get_var(buff)
             # compare returned variable values against reference array
-            assert_equal(v1_data, datarev)
+            assert_equal(buff, datarev)
         # test collective i/o get_var_all
         f.end_indep()
         # all processes read the whole variable
-        v1_data = v1.get_var_all()
+        buff = np.empty(v1.shape, v1.dtype)
+        v1.get_var_all(buff)
         # compare returned variable values against reference array
-        assert_equal(v1_data, datarev)
+        assert_equal(buff, datarev)
         f.close()
 
     def tearDown(self):

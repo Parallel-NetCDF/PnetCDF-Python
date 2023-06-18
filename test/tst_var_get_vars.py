@@ -66,19 +66,21 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1,3,5])
         strides = np.array([1,2,2])
         # test collective i/o get_var
-
         v1 = f.variables['data1u']
+        buff = np.empty(tuple(counts), v1.dtype)
         # all processes read the designated slices of the variable using collective i/o
-        v1_data = v1.get_var_all(start = starts, count = counts, stride = strides)
+        buff = np.empty(tuple(counts), v1.dtype)
+        v1.get_var_all(buff, start = starts, count = counts, stride = strides)
         # compare returned numpy array against reference array
-        assert_array_equal(v1_data, dataref[rank])
+        assert_array_equal(buff, dataref[rank])
         # test independent i/o get_var
         f.begin_indep()
         if rank < 2:
             # mpi process rank 0 and rank 1 respectively read the assigned slice of the variable using independent i/o
-            v1_data_indep = v1.get_var(start = starts, count = counts, stride = strides)
+            buff = np.empty(tuple(counts), v1.dtype)
+            v1.get_var(buff, start = starts, count = counts, stride = strides)
             # compare returned numpy array against reference array
-            assert_array_equal(v1_data_indep, dataref[rank])
+            assert_array_equal(buff, dataref[rank])
         f.close()
 
     def tearDown(self):

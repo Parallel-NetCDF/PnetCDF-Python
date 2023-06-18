@@ -77,14 +77,15 @@ class VariablesTestCase(unittest.TestCase):
        
         f.end_indep()
         v1 = f.variables['data1']
-        v1_data = np.zeros((2,3), dtype = np.float32)
-        v1_data = v1.get_var_all(buff = v1_data, start = starts, count = counts, stride = strides, imap = imap)
+        v1_data = np.empty((2,3), dtype = np.float32)
+        v1.get_var_all(buff = v1_data, start = starts, count = counts, stride = strides, imap = imap)
         assert_array_equal(v1_data, dataref)
 
          # Test reading from the variable in independent mode
         f.begin_indep()
-        v1_data_ind = v1.get_var(buff = v1_data, start = starts, count = counts, stride = strides, imap = imap)
-        assert_array_equal(v1_data_ind, dataref)
+        v1_data = np.empty((2,3), dtype = np.float32)
+        v1.get_var(buff = v1_data, start = starts, count = counts, stride = strides, imap = imap)
+        assert_array_equal(v1_data, dataref)
         f.close()
 
 if __name__ == '__main__':
