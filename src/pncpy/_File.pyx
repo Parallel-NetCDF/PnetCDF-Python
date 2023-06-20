@@ -134,9 +134,10 @@ cdef class File:
     def filepath(self,encoding=None):
         """
         filepath(self,encoding=None)
-s
+
         Get the file system path which was used to open/create the Dataset. 
         The path is decoded into a string using `sys.getfilesystemencoding()` by default.
+
         """
         cdef int ierr
         cdef int pathlen
@@ -612,8 +613,8 @@ s
         :type requests: list of int
         
         :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the 
-        statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
-        obtain the status messages.
+         statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
+         obtain the status messages.
         
         Optional mode: it is an independent subroutine and must be called while the file 
         is in independent data mode.

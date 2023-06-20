@@ -177,15 +177,9 @@ relations among data fields stored in a netCDF file.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
-<dd><blockquote>
-<div><p>filepath(self,encoding=None)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>s</dt><dd><p>Get the file system path which was used to open/create the Dataset. 
+<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
+<dd><p>Get the file system path which was used to open/create the Dataset. 
 The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -362,19 +356,17 @@ with the same name as one of the reserved python attributes.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
-</dd>
-</dl>
-<p>Retrieve a netCDF dataset or file attribute.
+<dd><p>Retrieve a netCDF dataset or file attribute.
 Useful when you need to get a netCDF attribute with the same
 name as one of the reserved python attributes.</p>
 <p>option kwarg <cite>encoding</cite> can be used to specify the
 character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Rtype name<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -382,54 +374,52 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
-</dd>
-</dl>
-<p>delete a netCDF file attribute. Useful when you need to delete a
+<dd><p>Delete a netCDF file attribute. Useful when you need to delete a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span></dt>
-<dd><dl class="field-list simple">
+<dd><p>Rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
 </dd>
 </dl>
-<p>rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><p>This method is a blocking call that wait for the completion of nonblocking I/O requests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>num</strong> – [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it</p>
-</dd>
-</dl>
-<p>can be module-level constants:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
-<li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
-<li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
-</ul>
-</div></blockquote>
+<dd><p>This method is a blocking call that wait for the completion of nonblocking I/O requests made by <code class="docutils literal notranslate"><span class="pre">Variable.iput_var</span></code>, 
+<code class="docutils literal notranslate"><span class="pre">Variable.iget_var</span></code> and <code class="docutils literal notranslate"><span class="pre">Variable.bput_var</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) – <p>[Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
+can be module-level constants:</p>
+<blockquote>
+<div><ul>
+<li><p>None or <code class="docutils literal notranslate"><span class="pre">pncpy.NC_REQ_ALL</span></code>: flush all pending nonblocking  requests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_GET_REQ_ALL</span></code>: flush all pending nonblocking GET requests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_PUT_REQ_ALL</span></code>: flush all pending nonblocking PUT requests</p></li>
+</ul>
+</div></blockquote>
+</p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p></li>
 </ul>
 </dd>
 </dl>
-<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
-obtain the status messages.</p>
 <p>Optional mode: it is an independent subroutine and must be called while the file 
 is in independent data mode.</p>
 </dd></dl>
@@ -445,7 +435,9 @@ is in collective data mode.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
-<dd><dl class="field-list simple">
+<dd><p>This method cancels a list of pending nonblocking requests made by <code class="docutils literal notranslate"><span class="pre">Variable.iput_var</span></code>, <code class="docutils literal notranslate"><span class="pre">Variable.iget_var</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">Variable.bput_var</span></code></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num</strong> (<em>int</em>) – <p>[Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
@@ -459,13 +451,13 @@ can be module-level constants:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p></li>
 </ul>
 </dd>
 </dl>
-<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
-obtain the status messages.</p>
-<p>Optional mode: It can be called in either independent or collective data mode or define mode.</p>
+<p>Optional mode: it can be called in either independent or collective data mode or define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -614,7 +606,9 @@ this buffer is no longer needed.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.cancel">
 <span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.cancel" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>This method cancels a list of pending nonblocking requests made by <code class="docutils literal notranslate"><span class="pre">Variable.iput_var</span></code>, <code class="docutils literal notranslate"><span class="pre">Variable.iget_var</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">Variable.bput_var</span></code></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>num</strong> (<em>int</em>) – <p>[Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
@@ -628,13 +622,13 @@ can be module-level constants:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p></li>
 </ul>
 </dd>
 </dl>
-<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
-obtain the status messages.</p>
-<p>Optional mode: It can be called in either independent or collective data mode or define mode.</p>
+<p>Optional mode: it can be called in either independent or collective data mode or define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -716,14 +710,14 @@ or dimension class instances</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.del_att">
 <span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.del_att" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
-</dd>
-</dl>
-<p>delete a netCDF file attribute. Useful when you need to delete a
+<dd><p>Delete a netCDF file attribute. Useful when you need to delete a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -747,15 +741,9 @@ read or written.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.filepath">
-<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
-<dd><blockquote>
-<div><p>filepath(self,encoding=None)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>s</dt><dd><p>Get the file system path which was used to open/create the Dataset. 
+<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
+<dd><p>Get the file system path which was used to open/create the Dataset. 
 The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default.</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -766,19 +754,17 @@ The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.get_att">
 <span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_att" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
-</dd>
-</dl>
-<p>Retrieve a netCDF dataset or file attribute.
+<dd><p>Retrieve a netCDF dataset or file attribute.
 Useful when you need to get a netCDF attribute with the same
 name as one of the reserved python attributes.</p>
 <p>option kwarg <cite>encoding</cite> can be used to specify the
 character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Rtype name<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -886,12 +872,12 @@ renamed and attributes can be deleted</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.rename_att">
 <span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_att" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
 </dd>
 </dl>
-<p>rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -958,30 +944,28 @@ filled with fill values (either default or user-defined) at the time <code class
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.wait">
 <span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait" title="Permalink to this definition"></a></dt>
-<dd><p>This method is a blocking call that wait for the completion of nonblocking I/O requests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>num</strong> – [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it</p>
-</dd>
-</dl>
-<p>can be module-level constants:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
-<li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
-<li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
-</ul>
-</div></blockquote>
+<dd><p>This method is a blocking call that wait for the completion of nonblocking I/O requests made by <code class="docutils literal notranslate"><span class="pre">Variable.iput_var</span></code>, 
+<code class="docutils literal notranslate"><span class="pre">Variable.iget_var</span></code> and <code class="docutils literal notranslate"><span class="pre">Variable.bput_var</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) – <p>[Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
+can be module-level constants:</p>
+<blockquote>
+<div><ul>
+<li><p>None or <code class="docutils literal notranslate"><span class="pre">pncpy.NC_REQ_ALL</span></code>: flush all pending nonblocking  requests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_GET_REQ_ALL</span></code>: flush all pending nonblocking GET requests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_PUT_REQ_ALL</span></code>: flush all pending nonblocking PUT requests</p></li>
+</ul>
+</div></blockquote>
+</p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p></li>
 </ul>
 </dd>
 </dl>
-<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
-obtain the status messages.</p>
 <p>Optional mode: it is an independent subroutine and must be called while the file 
 is in independent data mode.</p>
 </dd></dl>
