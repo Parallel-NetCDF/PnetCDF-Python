@@ -142,33 +142,23 @@ relations among data fields stored in a netCDF file.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Members<span class="colon">:</span></dt>
-<dd class="field-odd"><p>__init__, close, filepath, redef, enddef, begin_indep, end_indep,
-sync, flush, def_dim, rename_var, rename_dim, def_var, ncattrs, put_att, get_att,
-del_att, rename_att, wait, wait_all, cancel, attach_buff, detach_buff, set_fill,
-inq_buff_usage, inq_buff_size, inq_num_rec_vars, inq_num_fix_vars, inq_striping,
-inq_recsize, inq_version, inq_info, inq_header_size, inq_put_size, inq_header_extent,
-inq_nreqs</p>
-</dd>
+<dd class="field-odd"><p></p></dd>
 <dt class="field-even">Undoc-members<span class="colon">:</span></dt>
 <dd class="field-even"><p></p></dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.File.dimensions">
 <span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#pncpy.File.dimensions" title="Permalink to this definition"></a></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">The</span> <span class="pre">dimensions</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">dimensions</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file</span></span></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">`Dimension`</span> <span class="pre">class.</span></span></dt>
-<dd></dd></dl>
+<dd><p>The dimensions dictionary maps the names of dimensions defined for the file
+to instances of the <cite>Dimension</cite> class.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.File.variables">
 <span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#pncpy.File.variables" title="Permalink to this definition"></a></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">The</span> <span class="pre">variables</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">variables</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">file</span></span></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">Variable</span> <span class="pre">class.</span></span></dt>
-<dd></dd></dl>
+<dd><p>The variables dictionary maps the names of variables defined for this file
+to instances of the Variable class.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.__init__">
