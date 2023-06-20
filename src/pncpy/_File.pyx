@@ -312,7 +312,7 @@ cdef class File:
 
     def rename_dim(self, oldname, newname):
         """
-        rename_var(self, oldname, newname)
+        rename_dim(self, oldname, newname)
 
         Rename a ``Dimension`` named `oldname` to `newname`
 
