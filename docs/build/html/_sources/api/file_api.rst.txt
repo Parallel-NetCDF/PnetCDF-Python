@@ -19,16 +19,19 @@ relations among data fields stored in a netCDF file.
    :noindex:
 
    .. attribute:: dimensions
+      :noindex:
 
     The dimensions dictionary maps the names of dimensions defined for the file 
     to instances of the ``Dimension`` class.
 
    .. attribute:: variables
+      :noindex:
       
     The variables dictionary maps the names of variables defined for this file 
     to instances of the ``Variable`` class.
 
    .. attribute:: file_format
+      :noindex:
     
     The file format in string of the netCDF file. Possible values include: "CLASSIC", "CDF2",
     "64BIT_OFFSET", "64BIT", "CDF5", "64BIT_DATA", "NETCDF4" and "BP"
