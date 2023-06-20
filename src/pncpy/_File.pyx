@@ -595,10 +595,12 @@ s
         This method is a blocking call that wait for the completion of nonblocking I/O requests. 
 
         :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
-         can be module-level constants:
+        can be module-level constants:
+
             - None or `pncpy.NC_REQ_ALL`: flush all pending nonblocking  requests
             - `pncpy.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
             - `pncpy.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
+        
         :type num: int
 
         :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
@@ -634,9 +636,11 @@ s
 
         :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
          can be module-level constants:
+        
             - None or `pncpy.NC_REQ_ALL`: flush all pending nonblocking  requests
             - `pncpy.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
             - `pncpy.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
+        
         :type num: int
 
         :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.

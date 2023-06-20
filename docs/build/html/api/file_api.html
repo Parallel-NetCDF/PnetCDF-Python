@@ -60,42 +60,78 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">File</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pncpy.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.__init__"><code class="docutils literal notranslate"><span class="pre">File.__init__()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.attach_buff"><code class="docutils literal notranslate"><span class="pre">File.attach_buff()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.begin_indep"><code class="docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.cancel"><code class="docutils literal notranslate"><span class="pre">File.cancel()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.close"><code class="docutils literal notranslate"><span class="pre">File.close()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.def_dim"><code class="docutils literal notranslate"><span class="pre">File.def_dim()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.def_var"><code class="docutils literal notranslate"><span class="pre">File.def_var()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.del_att"><code class="docutils literal notranslate"><span class="pre">File.del_att()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.detach_buff"><code class="docutils literal notranslate"><span class="pre">File.detach_buff()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.end_indep"><code class="docutils literal notranslate"><span class="pre">File.end_indep()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.enddef"><code class="docutils literal notranslate"><span class="pre">File.enddef()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.filepath"><code class="docutils literal notranslate"><span class="pre">File.filepath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.sync"><code class="docutils literal notranslate"><span class="pre">File.sync()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.redef"><code class="docutils literal notranslate"><span class="pre">File.redef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.enddef"><code class="docutils literal notranslate"><span class="pre">File.enddef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.begin_indep"><code class="docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.end_indep"><code class="docutils literal notranslate"><span class="pre">File.end_indep()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.flush"><code class="docutils literal notranslate"><span class="pre">File.flush()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.get_att"><code class="docutils literal notranslate"><span class="pre">File.get_att()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.get_nreqs"><code class="docutils literal notranslate"><span class="pre">File.get_nreqs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_buff_size"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_size()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_buff_usage"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_usage()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_header_extent"><code class="docutils literal notranslate"><span class="pre">File.inq_header_extent()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_header_size"><code class="docutils literal notranslate"><span class="pre">File.inq_header_size()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_info"><code class="docutils literal notranslate"><span class="pre">File.inq_info()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_num_fix_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_fix_vars()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_num_rec_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_rec_vars()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_put_size"><code class="docutils literal notranslate"><span class="pre">File.inq_put_size()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_recsize"><code class="docutils literal notranslate"><span class="pre">File.inq_recsize()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_striping"><code class="docutils literal notranslate"><span class="pre">File.inq_striping()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_unlimdim"><code class="docutils literal notranslate"><span class="pre">File.inq_unlimdim()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_version"><code class="docutils literal notranslate"><span class="pre">File.inq_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.def_dim"><code class="docutils literal notranslate"><span class="pre">File.def_dim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_var"><code class="docutils literal notranslate"><span class="pre">File.rename_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_dim"><code class="docutils literal notranslate"><span class="pre">File.rename_dim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.def_var"><code class="docutils literal notranslate"><span class="pre">File.def_var()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.ncattrs"><code class="docutils literal notranslate"><span class="pre">File.ncattrs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.put_att"><code class="docutils literal notranslate"><span class="pre">File.put_att()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.redef"><code class="docutils literal notranslate"><span class="pre">File.redef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.get_att"><code class="docutils literal notranslate"><span class="pre">File.get_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.del_att"><code class="docutils literal notranslate"><span class="pre">File.del_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_att"><code class="docutils literal notranslate"><span class="pre">File.rename_att()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_dim"><code class="docutils literal notranslate"><span class="pre">File.rename_dim()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_var"><code class="docutils literal notranslate"><span class="pre">File.rename_var()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.set_fill"><code class="docutils literal notranslate"><span class="pre">File.set_fill()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.sync"><code class="docutils literal notranslate"><span class="pre">File.sync()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait"><code class="docutils literal notranslate"><span class="pre">File.wait()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait_all"><code class="docutils literal notranslate"><span class="pre">File.wait_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.cancel"><code class="docutils literal notranslate"><span class="pre">File.cancel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.get_nreqs"><code class="docutils literal notranslate"><span class="pre">File.get_nreqs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.attach_buff"><code class="docutils literal notranslate"><span class="pre">File.attach_buff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.detach_buff"><code class="docutils literal notranslate"><span class="pre">File.detach_buff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.set_fill"><code class="docutils literal notranslate"><span class="pre">File.set_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_buff_usage"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_usage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_buff_size"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_num_rec_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_rec_vars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_num_fix_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_fix_vars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_striping"><code class="docutils literal notranslate"><span class="pre">File.inq_striping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_recsize"><code class="docutils literal notranslate"><span class="pre">File.inq_recsize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_version"><code class="docutils literal notranslate"><span class="pre">File.inq_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_info"><code class="docutils literal notranslate"><span class="pre">File.inq_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_header_size"><code class="docutils literal notranslate"><span class="pre">File.inq_header_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_put_size"><code class="docutils literal notranslate"><span class="pre">File.inq_put_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_header_extent"><code class="docutils literal notranslate"><span class="pre">File.inq_header_extent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">File.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id1"><code class="docutils literal notranslate"><span class="pre">File.attach_buff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2"><code class="docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3"><code class="docutils literal notranslate"><span class="pre">File.cancel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4"><code class="docutils literal notranslate"><span class="pre">File.close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id5"><code class="docutils literal notranslate"><span class="pre">File.def_dim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6"><code class="docutils literal notranslate"><span class="pre">File.def_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7"><code class="docutils literal notranslate"><span class="pre">File.del_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8"><code class="docutils literal notranslate"><span class="pre">File.detach_buff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id9"><code class="docutils literal notranslate"><span class="pre">File.end_indep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id10"><code class="docutils literal notranslate"><span class="pre">File.enddef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id11"><code class="docutils literal notranslate"><span class="pre">File.filepath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id12"><code class="docutils literal notranslate"><span class="pre">File.flush()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id13"><code class="docutils literal notranslate"><span class="pre">File.get_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id14"><code class="docutils literal notranslate"><span class="pre">File.get_nreqs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id15"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id16"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_usage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id17"><code class="docutils literal notranslate"><span class="pre">File.inq_header_extent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id18"><code class="docutils literal notranslate"><span class="pre">File.inq_header_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id19"><code class="docutils literal notranslate"><span class="pre">File.inq_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id20"><code class="docutils literal notranslate"><span class="pre">File.inq_num_fix_vars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id21"><code class="docutils literal notranslate"><span class="pre">File.inq_num_rec_vars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id22"><code class="docutils literal notranslate"><span class="pre">File.inq_put_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id23"><code class="docutils literal notranslate"><span class="pre">File.inq_recsize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id24"><code class="docutils literal notranslate"><span class="pre">File.inq_striping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_unlimdim"><code class="docutils literal notranslate"><span class="pre">File.inq_unlimdim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id25"><code class="docutils literal notranslate"><span class="pre">File.inq_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id26"><code class="docutils literal notranslate"><span class="pre">File.ncattrs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id27"><code class="docutils literal notranslate"><span class="pre">File.put_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id28"><code class="docutils literal notranslate"><span class="pre">File.redef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id29"><code class="docutils literal notranslate"><span class="pre">File.rename_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id30"><code class="docutils literal notranslate"><span class="pre">File.rename_dim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id31"><code class="docutils literal notranslate"><span class="pre">File.rename_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id32"><code class="docutils literal notranslate"><span class="pre">File.set_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id33"><code class="docutils literal notranslate"><span class="pre">File.sync()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id34"><code class="docutils literal notranslate"><span class="pre">File.wait()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id35"><code class="docutils literal notranslate"><span class="pre">File.wait_all()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
@@ -157,9 +193,9 @@ relations among data fields stored in a netCDF file.</p>
 -  <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">r+</span></code>: append, creates the file if it does not exist.</p></li>
 <li><p><strong>format</strong> (<em>str</em>) – <p>underlying file format. Only relevant when creating file</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_OFFSET</span></code>: NetCDF-2 format.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_DATA</span></code>: NetCDF-5 format.</p></li>
-<li><p><cite>None</cite> defaults to default file format (NetCDF-1 format)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_OFFSET</span></code>: CDF-2 format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_DATA</span></code>: CDF-5 format</p></li>
+<li><p><cite>None</cite> defaults to default file format (CDF-1 format)</p></li>
 </ul>
 </p></li>
 <li><p><strong>comm</strong> (<em>mpi4py.MPI.Comm</em><em> or </em><em>None</em>) – MPI communicator to use for file access. <cite>None</cite> defaults to MPI_COMM_WORLD.</p></li>
@@ -170,9 +206,43 @@ relations among data fields stored in a netCDF file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.attach_buff">
-<span class="sig-name descname"><span class="pre">attach_buff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.attach_buff" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="pncpy.File.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.close" title="Permalink to this definition"></a></dt>
+<dd><p>Close the opened netCDF file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.filepath">
+<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p>filepath(self,encoding=None)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>s</dt><dd><p>Get the file system path which was used to open/create the Dataset. 
+The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.sync">
+<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.sync" title="Permalink to this definition"></a></dt>
+<dd><p>Writes all buffered data in the <cite>File</cite> to the disk file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.redef">
+<span class="sig-name descname"><span class="pre">redef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.redef" title="Permalink to this definition"></a></dt>
+<dd><p>Enter define mode, so that dimensions, variables, and attributes can be added or 
+renamed and attributes can be deleted</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.enddef">
+<span class="sig-name descname"><span class="pre">enddef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.enddef" title="Permalink to this definition"></a></dt>
+<dd><p>Exit define mode. The netCDF file is then placed in data mode, so variable data can be
+read or written.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.begin_indep">
@@ -181,15 +251,15 @@ relations among data fields stored in a netCDF file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.cancel">
-<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.cancel" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="pncpy.File.end_indep">
+<span class="sig-name descname"><span class="pre">end_indep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.end_indep" title="Permalink to this definition"></a></dt>
+<dd><p>This file leaves from independent data mode and enters into collective data mode.</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.close" title="Permalink to this definition"></a></dt>
-<dd><p>Close the opened netCDF file</p>
-</dd></dl>
+<dt class="sig sig-object py" id="pncpy.File.flush">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.flush" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.def_dim">
@@ -212,194 +282,91 @@ instance. To determine if a dimension is ‘unlimited’, use the
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.rename_var">
+<span class="sig-name descname"><span class="pre">rename_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_var" title="Permalink to this definition"></a></dt>
+<dd><p>rename a <cite>Variable</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldname</strong> (<em>str</em>) – Old name of the variable.</p></li>
+<li><p><strong>newname</strong> (<em>str</em>) – New name of the variable.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: this method is collective subroutine, argument new name must
+be consistent among all calling processes. If the new name is longer than the old name, 
+then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
+define or data mode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.rename_dim">
+<span class="sig-name descname"><span class="pre">rename_dim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_dim" title="Permalink to this definition"></a></dt>
+<dd><p>rename_var(self, oldname, newname)</p>
+<p>rename a <cite>Dimension</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldname</strong> (<em>str</em>) – Old name of the dimension.</p></li>
+<li><p><strong>newname</strong> (<em>str</em>) – New name of the dimension.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: this method is collective subroutine, argument new name must
+be consistent among all calling processes. If the new name is longer than the old name, 
+then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
+define or data mode</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.def_var">
-<span class="sig-name descname"><span class="pre">def_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_var" title="Permalink to this definition"></a></dt>
-<dd><p>defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None)</p>
-<p>Create a new variable with the given parameters.</p>
+<span class="sig-name descname"><span class="pre">def_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_var" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new variable with the given parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
-<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported string specifiers are:</p>
+<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
 <blockquote>
 <div><ul>
-<li><p>NC_CHAR for text data</p></li>
-<li><p>NC_BYTE for 1-byte integer</p></li>
-<li><p>NC_SHORT for 2-byte signed integer</p></li>
-<li><p>NC_INT for 4-byte signed integer</p></li>
-<li><p>NC_FLOAT for 4-byte floating point number</p></li>
-<li><p>NC_DOUBLE for 8-byte real number in double precision</p></li>
+<li><p>pncpy.NC_CHAR for text data</p></li>
+<li><p>pncpy.NC_BYTE for 1-byte integer</p></li>
+<li><p>pncpy.NC_SHORT for 2-byte signed integer</p></li>
+<li><p>pncpy.NC_INT for 4-byte signed integer</p></li>
+<li><p>pncpy.NC_FLOAT for 4-byte floating point number</p></li>
+<li><p>pncpy.NC_DOUBLE for 8-byte real number in double precision</p></li>
 </ul>
 </div></blockquote>
-<dl class="simple">
-<dt>The following are <cite>CDF-5</cite> format only</dt><dd><ul>
-<li><p>NC_UBYTE for unsigned 1-byte integer</p></li>
-<li><p>NC_USHORT for unsigned 2-byte integer</p></li>
-<li><p>NC_UINT for unsigned 4-byte intege</p></li>
-<li><p>NC_INT64 for signed 8-byte integer</p></li>
-<li><p>NC_UINT64 for unsigned 8-byte integer</p></li>
+<p>The following are <cite>CDF-5</cite> format only</p>
+<blockquote>
+<div><ul>
+<li><p>pncpy.NC_UBYTE for unsigned 1-byte integer</p></li>
+<li><p>pncpy.NC_USHORT for unsigned 2-byte integer</p></li>
+<li><p>pncpy.NC_UINT for unsigned 4-byte intege</p></li>
+<li><p>pncpy.NC_INT64 for signed 8-byte integer</p></li>
+<li><p>pncpy.NC_UINT64 for unsigned 8-byte integer</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 </p></li>
-<li><p><strong>dimensions</strong> – The dimensions of the new variable. Can be either dimension names</p></li>
-</ul>
-</dd>
-</dl>
-<p>or dimension class instances</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
-<ul class="simple">
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Can be either dimension names
+or dimension class instances</p></li>
+<li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
+<ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
 <li><p>any other value: use the given value as fill value</p></li>
 </ul>
-</p>
+</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The created variable.</p>
+<dd class="field-even"><p>The created variable</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="variable_api.html#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.del_att">
-<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.del_att" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
-</dd>
-</dl>
-<p>delete a netCDF file attribute. Useful when you need to delete a
-netCDF attribute with the same name as one of the reserved python
-attributes.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.detach_buff">
-<span class="sig-name descname"><span class="pre">detach_buff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.detach_buff" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.end_indep">
-<span class="sig-name descname"><span class="pre">end_indep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.end_indep" title="Permalink to this definition"></a></dt>
-<dd><p>This file leaves from independent data mode and enters into collective data mode.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.enddef">
-<span class="sig-name descname"><span class="pre">enddef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.enddef" title="Permalink to this definition"></a></dt>
-<dd><p>Exit define mode. The netCDF file is then placed in data mode, so variable data can be
-read or written.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.filepath">
-<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
-<dd><blockquote>
-<div><p>filepath(self,encoding=None)</p>
-</div></blockquote>
-<dl class="simple">
-<dt>s</dt><dd><p>Get the file system path which was used to open/create the Dataset. 
-The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.flush">
-<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.flush" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.get_att">
-<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_att" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
-</dd>
-</dl>
-<p>Retrieve a netCDF dataset or file attribute.
-Useful when you need to get a netCDF attribute with the same
-name as one of the reserved python attributes.</p>
-<p>option kwarg <cite>encoding</cite> can be used to specify the
-character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Rtype name<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.get_nreqs">
-<span class="sig-name descname"><span class="pre">get_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_nreqs" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_buff_size">
-<span class="sig-name descname"><span class="pre">inq_buff_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_buff_size" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_buff_usage">
-<span class="sig-name descname"><span class="pre">inq_buff_usage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_buff_usage" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_header_extent">
-<span class="sig-name descname"><span class="pre">inq_header_extent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_header_extent" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_header_size">
-<span class="sig-name descname"><span class="pre">inq_header_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_header_size" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_info">
-<span class="sig-name descname"><span class="pre">inq_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_info" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_num_fix_vars">
-<span class="sig-name descname"><span class="pre">inq_num_fix_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_fix_vars" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_num_rec_vars">
-<span class="sig-name descname"><span class="pre">inq_num_rec_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_rec_vars" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_put_size">
-<span class="sig-name descname"><span class="pre">inq_put_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_put_size" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_recsize">
-<span class="sig-name descname"><span class="pre">inq_recsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_recsize" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_striping">
-<span class="sig-name descname"><span class="pre">inq_striping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_striping" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_unlimdim">
-<span class="sig-name descname"><span class="pre">inq_unlimdim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_unlimdim" title="Permalink to this definition"></a></dt>
-<dd><p>return the unlimited dim instance of the file</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.inq_version">
-<span class="sig-name descname"><span class="pre">inq_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_version" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.ncattrs">
@@ -429,10 +396,36 @@ with the same name as one of the reserved python attributes.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.redef">
-<span class="sig-name descname"><span class="pre">redef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.redef" title="Permalink to this definition"></a></dt>
-<dd><p>Enter define mode, so that dimensions, variables, and attributes can be added or 
-renamed and attributes can be deleted</p>
+<dt class="sig sig-object py" id="pncpy.File.get_att">
+<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_att" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+</dl>
+<p>Retrieve a netCDF dataset or file attribute.
+Useful when you need to get a netCDF attribute with the same
+name as one of the reserved python attributes.</p>
+<p>option kwarg <cite>encoding</cite> can be used to specify the
+character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rtype name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.del_att">
+<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.del_att" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+</dl>
+<p>delete a netCDF file attribute. Useful when you need to delete a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -447,8 +440,499 @@ renamed and attributes can be deleted</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.rename_dim">
-<span class="sig-name descname"><span class="pre">rename_dim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_dim" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="pncpy.File.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait" title="Permalink to this definition"></a></dt>
+<dd><p>This method is a blocking call that wait for the completion of nonblocking I/O requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num</strong> – [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it</p>
+</dd>
+</dl>
+<p>can be module-level constants:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
+<li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
+<li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
+</ul>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+</ul>
+</dd>
+</dl>
+<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p>
+<p>Optional mode: it is an independent subroutine and must be called while the file 
+is in independent data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.wait_all">
+<span class="sig-name descname"><span class="pre">wait_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait_all" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> but in collective data mode</p>
+<p>Optional mode: it is an collective subroutine and must be called while the file 
+is in collective data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.cancel" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) – <p>[Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
+can be module-level constants:</p>
+<blockquote>
+<div><ul>
+<li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
+<li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
+<li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+</ul>
+</dd>
+</dl>
+<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p>
+<p>Optional mode: It can be called in either independent or collective data mode or define mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.get_nreqs">
+<span class="sig-name descname"><span class="pre">get_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_nreqs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.attach_buff">
+<span class="sig-name descname"><span class="pre">attach_buff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.attach_buff" title="Permalink to this definition"></a></dt>
+<dd><p>Allow PnetCDF to allocate an internal buffer for accommodating the write requests. This method call
+is the prerequisite of buffered non-blocking write. A call to <code class="docutils literal notranslate"><span class="pre">File.detach_buff()</span></code> is required when 
+this buffer is no longer needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bufsize</strong> (<em>int</em>) – Size of the buffer in the unit of bytes. Can be obtained using <code class="docutils literal notranslate"><span class="pre">numpy.ndarray.nbytes</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.detach_buff">
+<span class="sig-name descname"><span class="pre">detach_buff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.detach_buff" title="Permalink to this definition"></a></dt>
+<dd><p>Detach the write buffer previously attached for buffered non-blocking write</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.set_fill">
+<span class="sig-name descname"><span class="pre">set_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillmode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.set_fill" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the fill mode for a netCDF file open for writing and returns the current fill mode. The fill mode
+can be specified as either NC_FILL or NC_NOFILL. The default mode of PnetCDF is NC_NOFILL. The method call
+will change the fill mode for all variables defined so far at the time this API is called. In other 
+words, it overwrites the fill mode for all variables previously defined. This method will also change the 
+default fill mode for new variables defined following this call. In PnetCDF, this API only affects non-record
+variables. In addition, it can only be called while in the define mode. All non-record variables will be 
+filled with fill values (either default or user-defined) at the time <code class="docutils literal notranslate"><span class="pre">File.enddef()</span></code> is called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fillmode</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">pncpy.NC_FILL</span></code> or <code class="docutils literal notranslate"><span class="pre">pncpy.NC_NOFILL</span></code></p>
+</dd>
+</dl>
+<p>Operational mode: This method is a collective subroutine and must be called in define mode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_buff_usage">
+<span class="sig-name descname"><span class="pre">inq_buff_usage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_buff_usage" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_buff_size">
+<span class="sig-name descname"><span class="pre">inq_buff_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_buff_size" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_num_rec_vars">
+<span class="sig-name descname"><span class="pre">inq_num_rec_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_rec_vars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_num_fix_vars">
+<span class="sig-name descname"><span class="pre">inq_num_fix_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_fix_vars" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_striping">
+<span class="sig-name descname"><span class="pre">inq_striping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_striping" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_recsize">
+<span class="sig-name descname"><span class="pre">inq_recsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_recsize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_version">
+<span class="sig-name descname"><span class="pre">inq_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_version" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_info">
+<span class="sig-name descname"><span class="pre">inq_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_info" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_header_size">
+<span class="sig-name descname"><span class="pre">inq_header_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_header_size" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_put_size">
+<span class="sig-name descname"><span class="pre">inq_put_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_put_size" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_header_extent">
+<span class="sig-name descname"><span class="pre">inq_header_extent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_header_extent" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format='64BIT_OFFSET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode=&quot;w&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Comm</span> <span class="pre">comm=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Info</span> <span class="pre">info=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition"></a></dt>
+<dd><p>The constructor for <a class="reference internal" href="#pncpy.File" title="pncpy.File"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.File</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<em>str</em>) – Name of the new file.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – Access mode.
+- <code class="docutils literal notranslate"><span class="pre">r</span></code>: Open a file for reading, error if the file does not exist.
+- <code class="docutils literal notranslate"><span class="pre">w</span></code>: Create a file, an existing file with the same name is deleted.
+- <code class="docutils literal notranslate"><span class="pre">x</span></code>: Creates the file, returns an error if the file exists.
+-  <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">r+</span></code>: append, creates the file if it does not exist.</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – <p>underlying file format. Only relevant when creating file</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_OFFSET</span></code>: CDF-2 format</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">64BIT_DATA</span></code>: CDF-5 format</p></li>
+<li><p><cite>None</cite> defaults to default file format (CDF-1 format)</p></li>
+</ul>
+</p></li>
+<li><p><strong>comm</strong> (<em>mpi4py.MPI.Comm</em><em> or </em><em>None</em>) – MPI communicator to use for file access. <cite>None</cite> defaults to MPI_COMM_WORLD.</p></li>
+<li><p><strong>info</strong> (<em>mpi4py.MPI.Info</em><em> or </em><em>None</em>) – MPI info object to use for file access. <cite>None</cite> defaults to MPI_INFO_NULL.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">attach_buff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufsize</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition"></a></dt>
+<dd><p>Allow PnetCDF to allocate an internal buffer for accommodating the write requests. This method call
+is the prerequisite of buffered non-blocking write. A call to <code class="docutils literal notranslate"><span class="pre">File.detach_buff()</span></code> is required when 
+this buffer is no longer needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bufsize</strong> (<em>int</em>) – Size of the buffer in the unit of bytes. Can be obtained using <code class="docutils literal notranslate"><span class="pre">numpy.ndarray.nbytes</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">begin_indep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Permalink to this definition"></a></dt>
+<dd><p>The file leaves from collective data mode and enters into independent data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id3" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num</strong> (<em>int</em>) – <p>[Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
+can be module-level constants:</p>
+<blockquote>
+<div><ul>
+<li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
+<li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
+<li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
+</ul>
+</dd>
+</dl>
+<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p>
+<p>Optional mode: It can be called in either independent or collective data mode or define mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id4" title="Permalink to this definition"></a></dt>
+<dd><p>Close the opened netCDF file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-name descname"><span class="pre">def_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id5" title="Permalink to this definition"></a></dt>
+<dd><p>Creates a new dimension with the given <cite>dimname</cite> and <cite>size</cite>.
+<cite>size</cite> must be a positive integer or <cite>-1</cite>, which stands for
+“unlimited” (default is <cite>-1</cite>). The return value is the <cite>Dimension</cite>
+class instance describing the new dimension.  To determine the current
+maximum size of the dimension, use the <cite>len</cite> function on the <cite>Dimension</cite>
+instance. To determine if a dimension is ‘unlimited’, use the
+<cite>Dimension.isunlimited</cite> method of the <cite>Dimension</cite> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dimnam</strong> (<em>str</em>) – Name of the new dimension.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Size of the new dimension</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-name descname"><span class="pre">def_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id6" title="Permalink to this definition"></a></dt>
+<dd><p>Create a new variable with the given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
+<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
+<blockquote>
+<div><ul>
+<li><p>pncpy.NC_CHAR for text data</p></li>
+<li><p>pncpy.NC_BYTE for 1-byte integer</p></li>
+<li><p>pncpy.NC_SHORT for 2-byte signed integer</p></li>
+<li><p>pncpy.NC_INT for 4-byte signed integer</p></li>
+<li><p>pncpy.NC_FLOAT for 4-byte floating point number</p></li>
+<li><p>pncpy.NC_DOUBLE for 8-byte real number in double precision</p></li>
+</ul>
+</div></blockquote>
+<p>The following are <cite>CDF-5</cite> format only</p>
+<blockquote>
+<div><ul>
+<li><p>pncpy.NC_UBYTE for unsigned 1-byte integer</p></li>
+<li><p>pncpy.NC_USHORT for unsigned 2-byte integer</p></li>
+<li><p>pncpy.NC_UINT for unsigned 4-byte intege</p></li>
+<li><p>pncpy.NC_INT64 for signed 8-byte integer</p></li>
+<li><p>pncpy.NC_UINT64 for unsigned 8-byte integer</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Can be either dimension names
+or dimension class instances</p></li>
+<li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
+<li><p>any other value: use the given value as fill value</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="variable_api.html#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id7" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+</dl>
+<p>delete a netCDF file attribute. Useful when you need to delete a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-name descname"><span class="pre">detach_buff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id8" title="Permalink to this definition"></a></dt>
+<dd><p>Detach the write buffer previously attached for buffered non-blocking write</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-name descname"><span class="pre">end_indep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id9" title="Permalink to this definition"></a></dt>
+<dd><p>This file leaves from independent data mode and enters into collective data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-name descname"><span class="pre">enddef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id10" title="Permalink to this definition"></a></dt>
+<dd><p>Exit define mode. The netCDF file is then placed in data mode, so variable data can be
+read or written.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id11" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p>filepath(self,encoding=None)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>s</dt><dd><p>Get the file system path which was used to open/create the Dataset. 
+The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id12" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id13">
+<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id13" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+</dl>
+<p>Retrieve a netCDF dataset or file attribute.
+Useful when you need to get a netCDF attribute with the same
+name as one of the reserved python attributes.</p>
+<p>option kwarg <cite>encoding</cite> can be used to specify the
+character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rtype name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id14">
+<span class="sig-name descname"><span class="pre">get_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id14" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id15">
+<span class="sig-name descname"><span class="pre">inq_buff_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id15" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id16">
+<span class="sig-name descname"><span class="pre">inq_buff_usage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id16" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id17">
+<span class="sig-name descname"><span class="pre">inq_header_extent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id17" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id18">
+<span class="sig-name descname"><span class="pre">inq_header_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id18" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id19">
+<span class="sig-name descname"><span class="pre">inq_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id19" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id20">
+<span class="sig-name descname"><span class="pre">inq_num_fix_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id20" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id21">
+<span class="sig-name descname"><span class="pre">inq_num_rec_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id21" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id22">
+<span class="sig-name descname"><span class="pre">inq_put_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id22" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id23">
+<span class="sig-name descname"><span class="pre">inq_recsize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id23" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id24">
+<span class="sig-name descname"><span class="pre">inq_striping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id24" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_unlimdim">
+<span class="sig-name descname"><span class="pre">inq_unlimdim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_unlimdim" title="Permalink to this definition"></a></dt>
+<dd><p>return the unlimited dim instance of the file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id25">
+<span class="sig-name descname"><span class="pre">inq_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id25" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id26">
+<span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id26" title="Permalink to this definition"></a></dt>
+<dd><p>return netCDF attribute names for this File in a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id27">
+<span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id27" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the new attribute.</p></li>
+<li><p><strong>value</strong> (<em>str</em><em>, </em><em>int</em><em>, </em><em>float</em><em> or </em><em>list</em><em> of </em><em>int and float</em>) – Value of the new attribute.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set a global attribute for this file using name,value pair.
+Especially useful when you need to set a netCDF attribute with the
+with the same name as one of the reserved python attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id28">
+<span class="sig-name descname"><span class="pre">redef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id28" title="Permalink to this definition"></a></dt>
+<dd><p>Enter define mode, so that dimensions, variables, and attributes can be added or 
+renamed and attributes can be deleted</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id29">
+<span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id29" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
+</dd>
+</dl>
+<p>rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id30">
+<span class="sig-name descname"><span class="pre">rename_dim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id30" title="Permalink to this definition"></a></dt>
 <dd><p>rename_var(self, oldname, newname)</p>
 <p>rename a <cite>Dimension</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
 <dl class="field-list simple">
@@ -466,8 +950,8 @@ define or data mode</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.rename_var">
-<span class="sig-name descname"><span class="pre">rename_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_var" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id31">
+<span class="sig-name descname"><span class="pre">rename_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id31" title="Permalink to this definition"></a></dt>
 <dd><p>rename a <cite>Variable</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -484,48 +968,64 @@ define or data mode</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.set_fill">
-<span class="sig-name descname"><span class="pre">set_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillmode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.set_fill" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="id32">
+<span class="sig-name descname"><span class="pre">set_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fillmode</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id32" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the fill mode for a netCDF file open for writing and returns the current fill mode. The fill mode
+can be specified as either NC_FILL or NC_NOFILL. The default mode of PnetCDF is NC_NOFILL. The method call
+will change the fill mode for all variables defined so far at the time this API is called. In other 
+words, it overwrites the fill mode for all variables previously defined. This method will also change the 
+default fill mode for new variables defined following this call. In PnetCDF, this API only affects non-record
+variables. In addition, it can only be called while in the define mode. All non-record variables will be 
+filled with fill values (either default or user-defined) at the time <code class="docutils literal notranslate"><span class="pre">File.enddef()</span></code> is called.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fillmode</strong> (<em>int</em>) – <code class="docutils literal notranslate"><span class="pre">pncpy.NC_FILL</span></code> or <code class="docutils literal notranslate"><span class="pre">pncpy.NC_NOFILL</span></code></p>
+</dd>
+</dl>
+<p>Operational mode: This method is a collective subroutine and must be called in define mode</p>
+</dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.sync">
-<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.sync" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="id33">
+<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id33" title="Permalink to this definition"></a></dt>
 <dd><p>Writes all buffered data in the <cite>File</cite> to the disk file.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.wait">
-<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dt class="sig sig-object py" id="id34">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id34" title="Permalink to this definition"></a></dt>
+<dd><p>This method is a blocking call that wait for the completion of nonblocking I/O requests.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>num</strong> – [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it</p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>can be module-level constants:</dt><dd><ul class="simple">
+<p>can be module-level constants:</p>
+<blockquote>
+<div><ul class="simple">
 <li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
 <li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
 <li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
+<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the</p></li>
 </ul>
 </dd>
 </dl>
+<p>statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
+obtain the status messages.</p>
 <p>Optional mode: it is an independent subroutine and must be called while the file 
 is in independent data mode.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.wait_all">
-<span class="sig-name descname"><span class="pre">wait_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait_all" title="Permalink to this definition"></a></dt>
-<dd><p>Same as <cite>File.wait</cite> but in collective mode</p>
+<dt class="sig sig-object py" id="id35">
+<span class="sig-name descname"><span class="pre">wait_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id35" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> but in collective data mode</p>
 <p>Optional mode: it is an collective subroutine and must be called while the file 
 is in collective data mode.</p>
 </dd></dl>
@@ -545,7 +1045,7 @@ is in collective data mode.</p>
 <dt class="sig sig-object py" id="variables">
 <span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#variables" title="Permalink to this definition"></a></dt>
 <dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">:</span> <span class="pre">The</span> <span class="pre">variables</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">variables</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">file</span></span></dt>
+<span class="sig-name descname"><span class="pre">The</span> <span class="pre">variables</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">variables</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">file</span></span></dt>
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">Variable</span> <span class="pre">class.</span></span></dt>
 <dd></dd></dl>
