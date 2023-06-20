@@ -456,17 +456,17 @@ s
         """
         get_att(self,name)
 
-        :param name: Name of the attribute.
-        :type name: str
-
         Retrieve a netCDF dataset or file attribute.
         Useful when you need to get a netCDF attribute with the same
         name as one of the reserved python attributes.
 
         option kwarg `encoding` can be used to specify the
         character encoding of a string attribute (default is `utf-8`).
-        
-        :rtype name: str
+
+        :param name: Name of the attribute.
+        :type name: str
+
+        :rtype: str
         """
 
 
@@ -484,12 +484,14 @@ s
         """
         del_att(self,name,value)
 
-        :param name: Name of the attribute.
+        Delete a netCDF file attribute. Useful when you need to delete a
+        netCDF attribute with the same name as one of the reserved python
+        attributes.
+    
+        :param name: Name of the attribute
         :type name: str
 
-        delete a netCDF file attribute. Useful when you need to delete a
-        netCDF attribute with the same name as one of the reserved python
-        attributes."""
+        """
         cdef char *attname
         cdef int ierr
         bytestr = _strencode(name)
@@ -532,10 +534,12 @@ s
         """
         rename_att(self, oldname, newname)
 
+        Rename a `File` attribute named `oldname` to `newname`
+
         :param oldname: Old name of the attribute.
         :type oldname: str
 
-        rename a `File` attribute named `oldname` to `newname`."""
+        """
         cdef char *oldnamec
         cdef char *newnamec
         cdef int ierr
@@ -592,14 +596,15 @@ s
         """
         wait(self, num=None, requests=None, status=None)
 
-        This method is a blocking call that wait for the completion of nonblocking I/O requests. 
+        This method is a blocking call that wait for the completion of nonblocking I/O requests made by ``Variable.iput_var``, 
+        ``Variable.iget_var`` and ``Variable.bput_var``
 
         :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
-        can be module-level constants:
+         can be module-level constants:
 
-            - None or `pncpy.NC_REQ_ALL`: flush all pending nonblocking  requests
-            - `pncpy.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
-            - `pncpy.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
+            - None or ``pncpy.NC_REQ_ALL``: flush all pending nonblocking  requests
+            - ``pncpy.NC_GET_REQ_ALL``: flush all pending nonblocking GET requests
+            - ``pncpy.NC_PUT_REQ_ALL``: flush all pending nonblocking PUT requests
         
         :type num: int
 
@@ -632,7 +637,9 @@ s
     def cancel(self, num=None, requests=None, status=None):
         """
         cancel(self, num=None, requests=None, status=None)
-
+        
+        This method cancels a list of pending nonblocking requests made by ``Variable.iput_var``, ``Variable.iget_var``,
+        and ``Variable.bput_var``
 
         :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
          can be module-level constants:
@@ -647,10 +654,10 @@ s
         :type requests: list of int
         
         :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the 
-        statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
-        obtain the status messages.
+         statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
+         obtain the status messages.
         
-        Optional mode: It can be called in either independent or collective data mode or define mode.
+        Optional mode: it can be called in either independent or collective data mode or define mode.
         
         """
         cdef int _file_id, ierr
@@ -754,6 +761,7 @@ s
         inq_unlimdim(self)
 
         return the unlimited dim instance of the file"""
+
         cdef int ierr, unlimdimid
         with nogil:
             ierr = ncmpi_inq_unlimdim(self._ncid, &unlimdimid)
