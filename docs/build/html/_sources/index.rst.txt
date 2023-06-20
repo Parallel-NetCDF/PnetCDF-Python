@@ -35,8 +35,6 @@ PnetCDF-Python Documentation
    :caption: API Documentation
 
    api/file_api
-   api/attribute_api
-   api/dimension_api
    api/variable_api
 
 .. #.. toctree::
