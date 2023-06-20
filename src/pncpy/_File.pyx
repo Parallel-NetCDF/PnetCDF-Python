@@ -438,15 +438,18 @@ cdef class File:
         """
         put_att(self,name,value)
 
+        Set a global attribute for this file using name,value pair. Especially 
+        useful when you need to set a netCDF attribute with the
+        with the same name as one of the reserved python attributes.
+
         :param name: Name of the new attribute.
         :type name: str
 
         :param value: Value of the new attribute.
         :type value: str, int, float or list of int and float
 
-        Set a global attribute for this file using name,value pair.
-        Especially useful when you need to set a netCDF attribute with the
-        with the same name as one of the reserved python attributes."""
+        Operational mode: This method must be called while the file is in define mode.
+        """
 
 
         cdef nc_type xtype
@@ -468,6 +471,8 @@ cdef class File:
         :type name: str
 
         :rtype: str
+
+        Operational mode: This method must be called while the file is in define mode.
         """
 
 
@@ -492,6 +497,7 @@ cdef class File:
         :param name: Name of the attribute
         :type name: str
 
+        Operational mode: This method must be called while the file is in define mode.
         """
         cdef char *attname
         cdef int ierr
@@ -539,6 +545,9 @@ cdef class File:
 
         :param oldname: Old name of the attribute.
         :type oldname: str
+
+        Operational mode: If the new name is longer than the original name, the netCDF file must be in define mode. 
+        Otherwise, the netCDF file can be in either define or data mode.
 
         """
         cdef char *oldnamec

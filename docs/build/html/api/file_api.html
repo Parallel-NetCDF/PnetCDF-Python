@@ -338,7 +338,10 @@ or dimension class instances</p></li>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span></dt>
-<dd><dl class="field-list simple">
+<dd><p>Set a global attribute for this file using name,value pair. Especially 
+useful when you need to set a netCDF attribute with the
+with the same name as one of the reserved python attributes.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the new attribute.</p></li>
@@ -346,9 +349,7 @@ or dimension class instances</p></li>
 </ul>
 </dd>
 </dl>
-<p>Set a global attribute for this file using name,value pair.
-Especially useful when you need to set a netCDF attribute with the
-with the same name as one of the reserved python attributes.</p>
+<p>Operational mode: This method must be called while the file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -367,6 +368,7 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dd class="field-even"><p>str</p>
 </dd>
 </dl>
+<p>Operational mode: This method must be called while the file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -380,6 +382,7 @@ attributes.</p>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute</p>
 </dd>
 </dl>
+<p>Operational mode: This method must be called while the file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -391,6 +394,8 @@ attributes.</p>
 <dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
 </dd>
 </dl>
+<p>Operational mode: If the new name is longer than the original name, the netCDF file must be in define mode. 
+Otherwise, the netCDF file can be in either define or data mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -716,6 +721,7 @@ attributes.</p>
 <dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute</p>
 </dd>
 </dl>
+<p>Operational mode: This method must be called while the file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -765,6 +771,7 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dd class="field-even"><p>str</p>
 </dd>
 </dl>
+<p>Operational mode: This method must be called while the file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -847,7 +854,10 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.put_att">
 <span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.put_att" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Set a global attribute for this file using name,value pair. Especially 
+useful when you need to set a netCDF attribute with the
+with the same name as one of the reserved python attributes.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the new attribute.</p></li>
@@ -855,9 +865,7 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </ul>
 </dd>
 </dl>
-<p>Set a global attribute for this file using name,value pair.
-Especially useful when you need to set a netCDF attribute with the
-with the same name as one of the reserved python attributes.</p>
+<p>Operational mode: This method must be called while the file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -876,6 +884,8 @@ renamed and attributes can be deleted</p>
 <dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
 </dd>
 </dl>
+<p>Operational mode: If the new name is longer than the original name, the netCDF file must be in define mode. 
+Otherwise, the netCDF file can be in either define or data mode.</p>
 </dd></dl>
 
 <dl class="py method">
