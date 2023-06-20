@@ -263,8 +263,8 @@ cdef class File:
         instance. To determine if a dimension is 'unlimited', use the
         `Dimension.isunlimited` method of the `Dimension` instance.
         
-        :param dimnam: Name of the new dimension.
-        :type dimnam: str
+        :param dimname: Name of the new dimension.
+        :type dimname: str
 
         :param size: Size of the new dimension
         :type size: int
@@ -310,9 +310,9 @@ cdef class File:
 
     def rename_dim(self, oldname, newname):
         """
-        rename_var(self, oldname, newname)
+        Rename_var(self, oldname, newname)
 
-        rename a `Dimension` named `oldname` to `newname`
+        rename a ``Dimension`` named `oldname` to `newname`
 
         :param oldname: Old name of the dimension.
         :type oldname: str
