@@ -9,7 +9,6 @@ variables, and attributes. Together they describe the meaning of data and
 relations among data fields stored in a netCDF file.
 
 .. autoclass:: pncpy::File
-
    :members: 
    :undoc-members:
 
