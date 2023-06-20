@@ -98,6 +98,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait_all"><code class="docutils literal notranslate"><span class="pre">File.wait_all()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variables"><code class="docutils literal notranslate"><span class="pre">variables</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="attribute_api.html">Attribute</a></li>
@@ -148,15 +150,12 @@ relations among data fields stored in a netCDF file.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<em>str</em>) – Name of the new file.</p></li>
-<li><p><strong>mode</strong> (<em>str</em>) – <p>Access mode.</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code>: Opens a file for reading, error if the file does not exist.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">w</span></code>: Opens a file for writing, creates the file if it does not exist.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">x</span></code>: Creates the file, returns an error if the file exists.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">r+</span></code>: append, creates the file if it does not exist.</p></li>
-</ul>
-</p></li>
-<li><p><strong>format</strong> (<em>str</em>) – <p>underlying file format. Only relevant if <code class="docutils literal notranslate"><span class="pre">mode</span></code> is <code class="docutils literal notranslate"><span class="pre">w</span></code> or <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<li><p><strong>mode</strong> (<em>str</em>) – Access mode.
+- <code class="docutils literal notranslate"><span class="pre">r</span></code>: Open a file for reading, error if the file does not exist.
+- <code class="docutils literal notranslate"><span class="pre">w</span></code>: Create a file, an existing file with the same name is deleted.
+- <code class="docutils literal notranslate"><span class="pre">x</span></code>: Creates the file, returns an error if the file exists.
+-  <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">r+</span></code>: append, creates the file if it does not exist.</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – <p>underlying file format. Only relevant when creating file</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">64BIT_OFFSET</span></code>: NetCDF-2 format.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">64BIT_DATA</span></code>: NetCDF-5 format.</p></li>
@@ -178,7 +177,8 @@ relations among data fields stored in a netCDF file.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.begin_indep">
 <span class="sig-name descname"><span class="pre">begin_indep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.begin_indep" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>The file leaves from collective data mode and enters into independent data mode.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.cancel">
@@ -188,19 +188,27 @@ relations among data fields stored in a netCDF file.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.close">
 <span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.close" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Close the opened netCDF file</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.def_dim">
 <span class="sig-name descname"><span class="pre">def_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_dim" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a new dimension with the given <cite>dimname</cite> and <cite>size</cite>.
 <cite>size</cite> must be a positive integer or <cite>-1</cite>, which stands for
-“unlimited” (default is <cite>-1</cite>). Specifying a size of 0 also
-results in an unlimited dimension. The return value is the <cite>Dimension</cite>
+“unlimited” (default is <cite>-1</cite>). The return value is the <cite>Dimension</cite>
 class instance describing the new dimension.  To determine the current
 maximum size of the dimension, use the <cite>len</cite> function on the <cite>Dimension</cite>
 instance. To determine if a dimension is ‘unlimited’, use the
 <cite>Dimension.isunlimited</cite> method of the <cite>Dimension</cite> instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dimnam</strong> (<em>str</em>) – Name of the new dimension.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Size of the new dimension</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -212,30 +220,42 @@ instance. To determine if a dimension is ‘unlimited’, use the
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
-<li><p><strong>nc_dtype</strong> (<em>str</em><em> or </em><em>numpy.dtype</em>) – <p>The datatype of the new variable. Supported string specifiers are:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">S1</span></code> or <code class="docutils literal notranslate"><span class="pre">c</span></code> for NC_CHAR</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">i1</span></code> or <code class="docutils literal notranslate"><span class="pre">b</span></code> or <code class="docutils literal notranslate"><span class="pre">B</span></code> for NC_BYTE</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">u1</span></code> for NC_UBYTE</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">i2</span></code> or <code class="docutils literal notranslate"><span class="pre">h</span></code> or <code class="docutils literal notranslate"><span class="pre">s</span></code> for NC_SHORT</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">u2</span></code> for NC_USHORT</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">i4</span></code> or <code class="docutils literal notranslate"><span class="pre">i</span></code> or <code class="docutils literal notranslate"><span class="pre">l</span></code> for NC_INT</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">u4</span></code> for NC_UINT</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">i8</span></code> for NC_INT64</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">u8</span></code> for NC_UINT64</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">f4</span></code> or <code class="docutils literal notranslate"><span class="pre">f</span></code> for NC_FLOAT</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">f8</span></code> or <code class="docutils literal notranslate"><span class="pre">d</span></code> for NC_DOUBLE</p></li>
+<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported string specifiers are:</p>
+<blockquote>
+<div><ul>
+<li><p>NC_CHAR for text data</p></li>
+<li><p>NC_BYTE for 1-byte integer</p></li>
+<li><p>NC_SHORT for 2-byte signed integer</p></li>
+<li><p>NC_INT for 4-byte signed integer</p></li>
+<li><p>NC_FLOAT for 4-byte floating point number</p></li>
+<li><p>NC_DOUBLE for 8-byte real number in double precision</p></li>
 </ul>
+</div></blockquote>
+<dl class="simple">
+<dt>The following are <cite>CDF-5</cite> format only</dt><dd><ul>
+<li><p>NC_UBYTE for unsigned 1-byte integer</p></li>
+<li><p>NC_USHORT for unsigned 2-byte integer</p></li>
+<li><p>NC_UINT for unsigned 4-byte intege</p></li>
+<li><p>NC_INT64 for signed 8-byte integer</p></li>
+<li><p>NC_UINT64 for unsigned 8-byte integer</p></li>
+</ul>
+</dd>
+</dl>
 </p></li>
-<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Empty tuple suggests a scalar.</p></li>
-<li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
-<ul>
+<li><p><strong>dimensions</strong> – The dimensions of the new variable. Can be either dimension names</p></li>
+</ul>
+</dd>
+</dl>
+<p>or dimension class instances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
+<ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
 <li><p>any other value: use the given value as fill value</p></li>
 </ul>
-</p></li>
-</ul>
+</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>The created variable.</p>
@@ -249,7 +269,12 @@ instance. To determine if a dimension is ‘unlimited’, use the
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.del_att">
 <span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.del_att" title="Permalink to this definition"></a></dt>
-<dd><p>delete a netCDF file attribute.  Use if you need to delete a
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+</dl>
+<p>delete a netCDF file attribute. Useful when you need to delete a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>
 </dd></dl>
@@ -262,20 +287,27 @@ attributes.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.end_indep">
 <span class="sig-name descname"><span class="pre">end_indep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.end_indep" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>This file leaves from independent data mode and enters into collective data mode.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.enddef">
 <span class="sig-name descname"><span class="pre">enddef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.enddef" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Exit define mode. The netCDF file is then placed in data mode, so variable data can be
+read or written.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.filepath">
-<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
-<dd><p>Get the file system path (or the opendap URL) which was used to
-open/create the Dataset. Requires netcdf &gt;= 4.1.2.  The path
-is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default, this can be
-changed using the <cite>encoding</cite> kwarg.</p>
+<span class="sig-name descname"><span class="pre">filepath</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.filepath" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p>filepath(self,encoding=None)</p>
+</div></blockquote>
+<dl class="simple">
+<dt>s</dt><dd><p>Get the file system path which was used to open/create the Dataset. 
+The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite> by default.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -286,11 +318,21 @@ changed using the <cite>encoding</cite> kwarg.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.get_att">
 <span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_att" title="Permalink to this definition"></a></dt>
-<dd><p>retrieve a netCDF dataset or file attribute.
-Use if you need to get a netCDF attribute with the same
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+</dl>
+<p>Retrieve a netCDF dataset or file attribute.
+Useful when you need to get a netCDF attribute with the same
 name as one of the reserved python attributes.</p>
 <p>option kwarg <cite>encoding</cite> can be used to specify the
 character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Rtype name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -363,25 +405,45 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dt class="sig sig-object py" id="pncpy.File.ncattrs">
 <span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.ncattrs" title="Permalink to this definition"></a></dt>
 <dd><p>return netCDF attribute names for this File in a list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.put_att">
 <span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.put_att" title="Permalink to this definition"></a></dt>
-<dd><p>set a netCDF file attribute using name,value pair.
-Use if you need to set a netCDF attribute with the
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the new attribute.</p></li>
+<li><p><strong>value</strong> (<em>str</em><em>, </em><em>int</em><em>, </em><em>float</em><em> or </em><em>list</em><em> of </em><em>int and float</em>) – Value of the new attribute.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Set a global attribute for this file using name,value pair.
+Especially useful when you need to set a netCDF attribute with the
 with the same name as one of the reserved python attributes.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.redef">
 <span class="sig-name descname"><span class="pre">redef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.redef" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Enter define mode, so that dimensions, variables, and attributes can be added or 
+renamed and attributes can be deleted</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.rename_att">
 <span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_att" title="Permalink to this definition"></a></dt>
-<dd><p>rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
+</dd>
+</dl>
+<p>rename a <cite>File</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -389,12 +451,36 @@ with the same name as one of the reserved python attributes.</p>
 <span class="sig-name descname"><span class="pre">rename_dim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_dim" title="Permalink to this definition"></a></dt>
 <dd><p>rename_var(self, oldname, newname)</p>
 <p>rename a <cite>Dimension</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldname</strong> (<em>str</em>) – Old name of the dimension.</p></li>
+<li><p><strong>newname</strong> (<em>str</em>) – New name of the dimension.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: this method is collective subroutine, argument new name must
+be consistent among all calling processes. If the new name is longer than the old name, 
+then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
+define or data mode</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.rename_var">
 <span class="sig-name descname"><span class="pre">rename_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_var" title="Permalink to this definition"></a></dt>
 <dd><p>rename a <cite>Variable</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>oldname</strong> (<em>str</em>) – Old name of the variable.</p></li>
+<li><p><strong>newname</strong> (<em>str</em>) – New name of the variable.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: this method is collective subroutine, argument new name must
+be consistent among all calling processes. If the new name is longer than the old name, 
+then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
+define or data mode</p>
 </dd></dl>
 
 <dl class="py method">
@@ -411,14 +497,58 @@ with the same name as one of the reserved python attributes.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.wait">
 <span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>num</strong> – [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>can be module-level constants:</dt><dd><ul class="simple">
+<li><p>None or <cite>pncpy.NC_REQ_ALL</cite>: flush all pending nonblocking  requests</p></li>
+<li><p><cite>pncpy.NC_GET_REQ_ALL</cite>: flush all pending nonblocking GET requests</p></li>
+<li><p><cite>pncpy.NC_PUT_REQ_ALL</cite>: flush all pending nonblocking PUT requests</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
+<li><p><strong>status</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Optional mode: it is an independent subroutine and must be called while the file 
+is in independent data mode.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.wait_all">
 <span class="sig-name descname"><span class="pre">wait_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requests</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.wait_all" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Same as <cite>File.wait</cite> but in collective mode</p>
+<p>Optional mode: it is an collective subroutine and must be called while the file 
+is in collective data mode.</p>
+</dd></dl>
 
 </dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#dimensions" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">The</span> <span class="pre">dimensions</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">dimensions</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">`Dimension`</span> <span class="pre">class.</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#variables" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">:</span> <span class="pre">The</span> <span class="pre">variables</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">variables</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">file</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">Variable</span> <span class="pre">class.</span></span></dt>
+<dd></dd></dl>
 
 </section>
 

@@ -67,6 +67,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.dimensions"><code class="docutils literal notranslate"><span class="pre">Variable.dimensions</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_att"><code class="docutils literal notranslate"><span class="pre">Variable.get_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_dims"><code class="docutils literal notranslate"><span class="pre">Variable.get_dims()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_var"><code class="docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.name"><code class="docutils literal notranslate"><span class="pre">Variable.name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
@@ -238,6 +239,20 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dd><p><strong>`get_dims(self)`</strong></p>
 <p>return a tuple of <cite>Dimension</cite> instances associated with this
 <cite>Variable</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.get_var">
+<span class="sig-name descname"><span class="pre">get_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_var" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`get_var(self)`</strong></p>
+<dl class="simple">
+<dt>..ignore-next::</dt><dd><p>Note that get_var requires a empty array as a buffer arg from caller to store returned array values. We understand this is 
+against python API convention. But removing this or making this optional will create two layers of inconsistency that 
+we don’t desire: 
+1. Among all behaviors of get_var get_varm always requires a buffer argument
+2. Other i/o methods (iget/put/iput) all require buffer array as mandatory argument</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py attribute">

@@ -40,15 +40,14 @@ cdef class File:
         :type filename: str
 
         :param mode: Access mode.
-
-            - ``r``: Opens a file for reading, error if the file does not exist.
-            - ``w``: Opens a file for writing, creates the file if it does not exist.
+            - ``r``: Open a file for reading, error if the file does not exist.
+            - ``w``: Create a file, an existing file with the same name is deleted.
             - ``x``: Creates the file, returns an error if the file exists.
             -  ``a`` and ``r+``: append, creates the file if it does not exist.
         
         :type mode: str
 
-        :param format: underlying file format. Only relevant if ``mode`` is ``w`` or ``x``.
+        :param format: underlying file format. Only relevant when creating file
 
             - ``64BIT_OFFSET``: NetCDF-2 format.
             - ``64BIT_DATA``: NetCDF-5 format.
@@ -119,6 +118,8 @@ cdef class File:
     def close(self):
         """
         close(self)
+
+        Close the opened netCDF file
         """
         self._close(True)
     
@@ -133,11 +134,10 @@ cdef class File:
     def filepath(self,encoding=None):
         """
         filepath(self,encoding=None)
-
-        Get the file system path (or the opendap URL) which was used to
-        open/create the Dataset. Requires netcdf >= 4.1.2.  The path
-        is decoded into a string using `sys.getfilesystemencoding()` by default, this can be
-        changed using the `encoding` kwarg."""
+s
+        Get the file system path which was used to open/create the Dataset. 
+        The path is decoded into a string using `sys.getfilesystemencoding()` by default.
+        """
         cdef int ierr
         cdef int pathlen
         cdef char *c_path
@@ -184,6 +184,9 @@ cdef class File:
     def redef(self):
         """
         redef(self)
+
+        Enter define mode, so that dimensions, variables, and attributes can be added or 
+        renamed and attributes can be deleted
         """
         self._redef()
 
@@ -196,6 +199,9 @@ cdef class File:
     def enddef(self):
         """
         enddef(self)
+
+        Exit define mode. The netCDF file is then placed in data mode, so variable data can be
+        read or written.
         """
         self._enddef()
 
@@ -209,6 +215,9 @@ cdef class File:
     def begin_indep(self):
         """
         begin_indep(self)
+
+        The file leaves from collective data mode and enters into independent data mode.
+
         """
         cdef int ierr
         cdef int fileid = self._ncid
@@ -220,6 +229,8 @@ cdef class File:
     def end_indep(self):
         """
         end_indep(self)
+
+        This file leaves from independent data mode and enters into collective data mode.
         """
         cdef int ierr
         cdef int fileid = self._ncid
@@ -245,12 +256,17 @@ cdef class File:
 
         Creates a new dimension with the given `dimname` and `size`.
         `size` must be a positive integer or `-1`, which stands for
-        "unlimited" (default is `-1`). Specifying a size of 0 also
-        results in an unlimited dimension. The return value is the `Dimension`
+        "unlimited" (default is `-1`). The return value is the `Dimension`
         class instance describing the new dimension.  To determine the current
         maximum size of the dimension, use the `len` function on the `Dimension`
         instance. To determine if a dimension is 'unlimited', use the
         `Dimension.isunlimited` method of the `Dimension` instance.
+        
+        :param dimnam: Name of the new dimension.
+        :type dimnam: str
+
+        :param size: Size of the new dimension
+        :type size: int
         """
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
@@ -260,6 +276,17 @@ cdef class File:
         rename_var(self, oldname, newname)
 
         rename a `Variable` named `oldname` to `newname`
+
+        :param oldname: Old name of the variable.
+        :type oldname: str
+
+        :param newname: New name of the variable.
+        :type newname: str
+
+        Operational mode: this method is collective subroutine, argument new name must
+        be consistent among all calling processes. If the new name is longer than the old name, 
+        then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
+        define or data mode
         """
         cdef char *namstring
         cdef Variable var
@@ -285,6 +312,17 @@ cdef class File:
         rename_var(self, oldname, newname)
 
         rename a `Dimension` named `oldname` to `newname`
+
+        :param oldname: Old name of the dimension.
+        :type oldname: str
+
+        :param newname: New name of the dimension.
+        :type newname: str
+
+        Operational mode: this method is collective subroutine, argument new name must
+        be consistent among all calling processes. If the new name is longer than the old name, 
+        then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
+        define or data mode
         """
         cdef char *namstring
         cdef Variable var
@@ -317,20 +355,23 @@ cdef class File:
 
         :param nc_dtype: The datatype of the new variable. Supported string specifiers are: 
 
-            - ``S1`` or ``c`` for NC_CHAR
-            - ``i1`` or ``b`` or ``B`` for NC_BYTE
-            - ``u1`` for NC_UBYTE
-            - ``i2`` or ``h`` or ``s`` for NC_SHORT
-            - ``u2`` for NC_USHORT
-            - ``i4`` or ``i`` or ``l`` for NC_INT
-            - ``u4`` for NC_UINT
-            - ``i8`` for NC_INT64
-            - ``u8`` for NC_UINT64
-            - ``f4`` or ``f`` for NC_FLOAT
-            - ``f8`` or ``d`` for NC_DOUBLE
-        :type nc_dtype: str or numpy.dtype
-
-        :param dimensions: The dimensions of the new variable. Empty tuple suggests a scalar.
+            - NC_CHAR for text data 
+            - NC_BYTE for 1-byte integer
+            - NC_SHORT for 2-byte signed integer 
+            - NC_INT for 4-byte signed integer
+            - NC_FLOAT for 4-byte floating point number
+            - NC_DOUBLE for 8-byte real number in double precision
+         
+         The following are `CDF-5` format only
+            - NC_UBYTE for unsigned 1-byte integer
+            - NC_USHORT for unsigned 2-byte integer
+            - NC_UINT for unsigned 4-byte intege
+            - NC_INT64 for signed 8-byte integer
+            - NC_UINT64 for unsigned 8-byte integer
+        
+        :type nc_dtype: int
+        :param dimensions: The dimensions of the new variable. Can be either dimension names
+        or dimension class instances
 
         :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
         
@@ -385,16 +426,27 @@ cdef class File:
         """
         ncattrs(self)
 
-        return netCDF attribute names for this File in a list."""
+        return netCDF attribute names for this File in a list.
+
+        :rtype: list
+        """
         return _get_att_names(self._ncid, NC_GLOBAL)
 
     def put_att(self,name,value):
         """
         put_att(self,name,value)
 
-        set a netCDF file attribute using name,value pair.
-        Use if you need to set a netCDF attribute with the
+        :param name: Name of the new attribute.
+        :type name: str
+
+        :param value: Value of the new attribute.
+        :type value: str, int, float or list of int and float
+
+        Set a global attribute for this file using name,value pair.
+        Especially useful when you need to set a netCDF attribute with the
         with the same name as one of the reserved python attributes."""
+
+
         cdef nc_type xtype
         xtype=-99
         _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
@@ -403,12 +455,20 @@ cdef class File:
         """
         get_att(self,name)
 
-        retrieve a netCDF dataset or file attribute.
-        Use if you need to get a netCDF attribute with the same
+        :param name: Name of the attribute.
+        :type name: str
+
+        Retrieve a netCDF dataset or file attribute.
+        Useful when you need to get a netCDF attribute with the same
         name as one of the reserved python attributes.
 
         option kwarg `encoding` can be used to specify the
-        character encoding of a string attribute (default is `utf-8`)."""
+        character encoding of a string attribute (default is `utf-8`).
+        
+        :rtype name: str
+        """
+
+
         return _get_att(self, NC_GLOBAL, name, encoding=encoding)
 
     def __delattr__(self,name):
@@ -423,7 +483,10 @@ cdef class File:
         """
         del_att(self,name,value)
 
-        delete a netCDF file attribute.  Use if you need to delete a
+        :param name: Name of the attribute.
+        :type name: str
+
+        delete a netCDF file attribute. Useful when you need to delete a
         netCDF attribute with the same name as one of the reserved python
         attributes."""
         cdef char *attname
@@ -467,6 +530,9 @@ cdef class File:
     def rename_att(self, oldname, newname):
         """
         rename_att(self, oldname, newname)
+
+        :param oldname: Old name of the attribute.
+        :type oldname: str
 
         rename a `File` attribute named `oldname` to `newname`."""
         cdef char *oldnamec
@@ -525,12 +591,34 @@ cdef class File:
         """
         wait(self, num=None, requests=None, status=None)
 
+        :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
+        can be module-level constants:
+            - None or `pncpy.NC_REQ_ALL`: flush all pending nonblocking  requests
+            - `pncpy.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
+            - `pncpy.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
+        :type num: int
+
+        :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
+        :type requests: list of int
+        
+        :param status: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
+        :type status: list of int
+        
+        Optional mode: it is an independent subroutine and must be called while the file 
+        is in independent data mode.
+
         """
         return self._wait(num, requests, status, collective=False)
 
     def wait_all(self, num=None, requests=None, status=None):
         """
         wait_all(self, num=None, requests=None, status=None)
+        
+        Same as `File.wait` but in collective mode
+
+        Optional mode: it is an collective subroutine and must be called while the file 
+        is in collective data mode.
+
         
         """
         return self._wait(num, requests, status, collective=True)

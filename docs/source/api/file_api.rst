@@ -10,3 +10,13 @@ relations among data fields stored in a netCDF file.
 
 .. autoclass:: pncpy::File
    :exclude-members: _close, _redef, _wait
+
+.. attribute:: dimensions
+   The dimensions dictionary maps the names of dimensions defined for the file 
+   to instances of the `Dimension` class.
+
+.. attribute:: variables
+   : The variables dictionary maps the names of variables defined for this file 
+   to instances of the Variable class.
+
+
