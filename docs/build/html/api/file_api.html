@@ -355,7 +355,8 @@ The path is decoded into a string using <cite>sys.getfilesystemencoding()</cite>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.flush">
 <span class="sig-name descname"><span class="pre">flush</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.flush" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Flush data cached in memory to the file system.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.get_att">
@@ -404,7 +405,13 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_nreqs">
 <span class="sig-name descname"><span class="pre">inq_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_nreqs" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reports the number of pending nonblocking requests.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_num_fix_vars">
@@ -414,7 +421,13 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_num_rec_vars">
 <span class="sig-name descname"><span class="pre">inq_num_rec_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_rec_vars" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Returns the number of record variables defined for this netCDF file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_put_size">
@@ -434,7 +447,15 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_unlimdim">
 <span class="sig-name descname"><span class="pre">inq_unlimdim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_unlimdim" title="Permalink to this definition"></a></dt>
-<dd><p>return the unlimited dim instance of the file</p>
+<dd><p>Return the unlimited dim instance of the file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The dimension instance with unlimited size</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -445,7 +466,7 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.ncattrs">
 <span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.ncattrs" title="Permalink to this definition"></a></dt>
-<dd><p>return netCDF attribute names for this File in a list.</p>
+<dd><p>Return netCDF attribute names for this File in a list.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
@@ -493,8 +514,8 @@ Otherwise, the netCDF file can be in either define or data mode.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.rename_dim">
 <span class="sig-name descname"><span class="pre">rename_dim</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_dim" title="Permalink to this definition"></a></dt>
-<dd><p>Rename_var(self, oldname, newname)</p>
-<p>rename a <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> named <cite>oldname</cite> to <cite>newname</cite></p>
+<dd><p>rename_var(self, oldname, newname)</p>
+<p>Rename a <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> named <cite>oldname</cite> to <cite>newname</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -512,7 +533,7 @@ define or data mode</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.rename_var">
 <span class="sig-name descname"><span class="pre">rename_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.rename_var" title="Permalink to this definition"></a></dt>
-<dd><p>rename a <cite>Variable</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
+<dd><p>Rename a <cite>Variable</cite> named <cite>oldname</cite> to <cite>newname</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

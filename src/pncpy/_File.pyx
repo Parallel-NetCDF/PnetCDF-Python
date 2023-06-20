@@ -243,6 +243,8 @@ cdef class File:
     def flush(self):
         """
         flush(self)
+
+        Flush data cached in memory to the file system.
         """
         cdef int ierr
         cdef int fileid = self._ncid
@@ -276,7 +278,7 @@ cdef class File:
         """
         rename_var(self, oldname, newname)
 
-        rename a `Variable` named `oldname` to `newname`
+        Rename a `Variable` named `oldname` to `newname`
 
         :param oldname: Old name of the variable.
         :type oldname: str
@@ -310,9 +312,9 @@ cdef class File:
 
     def rename_dim(self, oldname, newname):
         """
-        Rename_var(self, oldname, newname)
+        rename_var(self, oldname, newname)
 
-        rename a ``Dimension`` named `oldname` to `newname`
+        Rename a ``Dimension`` named `oldname` to `newname`
 
         :param oldname: Old name of the dimension.
         :type oldname: str
@@ -428,7 +430,7 @@ cdef class File:
         """
         ncattrs(self)
 
-        return netCDF attribute names for this File in a list.
+        Return netCDF attribute names for this File in a list.
 
         :rtype: list
         """
@@ -704,6 +706,10 @@ cdef class File:
     def inq_nreqs(self):
         """
         inq_nreqs(self)
+
+        Reports the number of pending nonblocking requests.
+
+        :rtype: int
         
         """
         cdef int _file_id, ierr
@@ -773,7 +779,11 @@ cdef class File:
         """
         inq_unlimdim(self)
 
-        return the unlimited dim instance of the file"""
+        Return the unlimited dim instance of the file
+        
+        :return: The dimension instance with unlimited size
+        :rtype: :class:`pncpy.Dimension`
+        """
 
         cdef int ierr, unlimdimid
         with nogil:
@@ -815,6 +825,10 @@ cdef class File:
     def inq_num_rec_vars(self):
         """
         inq_num_rec_vars(self)
+
+        Returns the number of record variables defined for this netCDF file
+
+        :rtype: int
 
         """
         cdef int ierr, num_rec_vars
