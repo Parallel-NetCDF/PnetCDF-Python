@@ -85,7 +85,7 @@ class FileTestCase(unittest.TestCase):
             req_ids_tst1.append(req_id) if i < 10 else req_ids_tst2.append(req_id)
         # TEST 1 - wait_all (collective i/o)
         # check number of pending requests
-        assert(f.get_nreqs() == num_reqs)
+        assert(f.inq_nreqs() == num_reqs)
         f.end_indep()
         # all processes commit the first 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
@@ -95,7 +95,7 @@ class FileTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         # check if all requests are committed
-        assert(f.get_nreqs() == 0)
+        assert(f.inq_nreqs() == 0)
 
         # TEST 2 - wait (independent i/o)
         req_ids_tst2.clear()
@@ -107,7 +107,7 @@ class FileTestCase(unittest.TestCase):
             # track the reqeust ID for each write reqeust 
             req_ids_tst2.append(req_id)
         # check number of pending requests
-        assert(f.get_nreqs() == num_reqs)
+        assert(f.inq_nreqs() == num_reqs)
         f.begin_indep()
         # each process commits the rest 10 requests to the file at once using wait (independent i/o)
         req_errs = [None] * num_reqs
@@ -117,7 +117,7 @@ class FileTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         # check if all requests are committed
-        assert(f.get_nreqs() == 0)
+        assert(f.inq_nreqs() == 0)
 
         # TEST 3 - wait on invalid req ids
         req_errs = [None] * num_reqs

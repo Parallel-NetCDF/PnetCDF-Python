@@ -73,12 +73,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.filepath"><code class="docutils literal notranslate"><span class="pre">File.filepath()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.flush"><code class="docutils literal notranslate"><span class="pre">File.flush()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.get_att"><code class="docutils literal notranslate"><span class="pre">File.get_att()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.get_nreqs"><code class="docutils literal notranslate"><span class="pre">File.get_nreqs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_buff_size"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_size()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_buff_usage"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_usage()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_header_extent"><code class="docutils literal notranslate"><span class="pre">File.inq_header_extent()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_header_size"><code class="docutils literal notranslate"><span class="pre">File.inq_header_size()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_info"><code class="docutils literal notranslate"><span class="pre">File.inq_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_nreqs"><code class="docutils literal notranslate"><span class="pre">File.inq_nreqs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_num_fix_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_fix_vars()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_num_rec_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_rec_vars()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.inq_put_size"><code class="docutils literal notranslate"><span class="pre">File.inq_put_size()</span></code></a></li>
@@ -140,6 +140,12 @@ relations among data fields stored in a netCDF file.</p>
 <dt class="sig sig-object py" id="pncpy.File">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#pncpy.File" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Members<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">Undoc-members<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format='64BIT_OFFSET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode=&quot;w&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Comm</span> <span class="pre">comm=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Info</span> <span class="pre">info=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span></dt>
@@ -285,22 +291,22 @@ define or data mode</p>
 <li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
 <blockquote>
 <div><ul>
-<li><p>pncpy.NC_CHAR for text data</p></li>
-<li><p>pncpy.NC_BYTE for 1-byte integer</p></li>
-<li><p>pncpy.NC_SHORT for 2-byte signed integer</p></li>
-<li><p>pncpy.NC_INT for 4-byte signed integer</p></li>
-<li><p>pncpy.NC_FLOAT for 4-byte floating point number</p></li>
-<li><p>pncpy.NC_DOUBLE for 8-byte real number in double precision</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> for text data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> for 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> for 2-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT</span></code> for 4-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_FLOAT</span></code> for 4-byte floating point number</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> for 8-byte real number in double precision</p></li>
 </ul>
 </div></blockquote>
 <p>The following are <cite>CDF-5</cite> format only</p>
 <blockquote>
 <div><ul>
-<li><p>pncpy.NC_UBYTE for unsigned 1-byte integer</p></li>
-<li><p>pncpy.NC_USHORT for unsigned 2-byte integer</p></li>
-<li><p>pncpy.NC_UINT for unsigned 4-byte intege</p></li>
-<li><p>pncpy.NC_INT64 for signed 8-byte integer</p></li>
-<li><p>pncpy.NC_UINT64 for unsigned 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> for unsigned 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> for unsigned 2-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> for unsigned 4-byte intege</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT64</span></code> for signed 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> for unsigned 8-byte integer</p></li>
 </ul>
 </div></blockquote>
 </p></li>
@@ -417,7 +423,7 @@ can be module-level constants:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+<li><p><strong>status</strong> (<em>list</em>) – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
 statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
 obtain the status messages.</p></li>
 </ul>
@@ -454,7 +460,7 @@ can be module-level constants:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+<li><p><strong>status</strong> (<em>list</em>) – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
 statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
 obtain the status messages.</p></li>
 </ul>
@@ -462,11 +468,6 @@ obtain the status messages.</p></li>
 </dl>
 <p>Optional mode: it can be called in either independent or collective data mode or define mode.</p>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -561,6 +562,11 @@ filled with fill values (either default or user-defined) at the time <code class
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">inq_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format='64BIT_OFFSET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode=&quot;w&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Comm</span> <span class="pre">comm=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Info</span> <span class="pre">info=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.__init__" title="Permalink to this definition"></a></dt>
 <dd><p>The constructor for <a class="reference internal" href="#pncpy.File" title="pncpy.File"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.File</span></code></a>.</p>
@@ -625,7 +631,7 @@ can be module-level constants:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+<li><p><strong>status</strong> (<em>list</em>) – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
 statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
 obtain the status messages.</p></li>
 </ul>
@@ -671,22 +677,22 @@ instance. To determine if a dimension is ‘unlimited’, use the
 <li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
 <blockquote>
 <div><ul>
-<li><p>pncpy.NC_CHAR for text data</p></li>
-<li><p>pncpy.NC_BYTE for 1-byte integer</p></li>
-<li><p>pncpy.NC_SHORT for 2-byte signed integer</p></li>
-<li><p>pncpy.NC_INT for 4-byte signed integer</p></li>
-<li><p>pncpy.NC_FLOAT for 4-byte floating point number</p></li>
-<li><p>pncpy.NC_DOUBLE for 8-byte real number in double precision</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> for text data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> for 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> for 2-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT</span></code> for 4-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_FLOAT</span></code> for 4-byte floating point number</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> for 8-byte real number in double precision</p></li>
 </ul>
 </div></blockquote>
 <p>The following are <cite>CDF-5</cite> format only</p>
 <blockquote>
 <div><ul>
-<li><p>pncpy.NC_UBYTE for unsigned 1-byte integer</p></li>
-<li><p>pncpy.NC_USHORT for unsigned 2-byte integer</p></li>
-<li><p>pncpy.NC_UINT for unsigned 4-byte intege</p></li>
-<li><p>pncpy.NC_INT64 for signed 8-byte integer</p></li>
-<li><p>pncpy.NC_UINT64 for unsigned 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> for unsigned 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> for unsigned 2-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> for unsigned 4-byte intege</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT64</span></code> for signed 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> for unsigned 8-byte integer</p></li>
 </ul>
 </div></blockquote>
 </p></li>
@@ -775,11 +781,6 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="pncpy.File.get_nreqs">
-<span class="sig-name descname"><span class="pre">get_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.get_nreqs" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_buff_size">
 <span class="sig-name descname"><span class="pre">inq_buff_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_buff_size" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -802,6 +803,11 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_info">
 <span class="sig-name descname"><span class="pre">inq_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_info" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.inq_nreqs">
+<span class="sig-name descname"><span class="pre">inq_nreqs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_nreqs" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -968,7 +974,7 @@ can be module-level constants:</p>
 </div></blockquote>
 </p></li>
 <li><p><strong>requests</strong> (<em>list</em><em> of </em><em>int</em>) – [Optional] Integers specifying the nonblocking request IDs that were made earlier.</p></li>
-<li><p><strong>status</strong> – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
+<li><p><strong>status</strong> (<em>list</em>) – [Optional] List of <cite>None</cite> to hold returned error codes from the call, specifying the 
 statuses of corresponding nonblocking requests. The values can be used in a call to <code class="docutils literal notranslate"><span class="pre">strerror()</span></code> to 
 obtain the status messages.</p></li>
 </ul>

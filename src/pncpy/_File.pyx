@@ -356,20 +356,20 @@ cdef class File:
 
         :param nc_dtype: The datatype of the new variable. Supported specifiers are: 
 
-            - pncpy.NC_CHAR for text data 
-            - pncpy.NC_BYTE for 1-byte integer
-            - pncpy.NC_SHORT for 2-byte signed integer 
-            - pncpy.NC_INT for 4-byte signed integer
-            - pncpy.NC_FLOAT for 4-byte floating point number
-            - pncpy.NC_DOUBLE for 8-byte real number in double precision
+            - ``pncpy.NC_CHAR`` for text data 
+            - ``pncpy.NC_BYTE`` for 1-byte integer
+            - ``pncpy.NC_SHORT`` for 2-byte signed integer 
+            - ``pncpy.NC_INT`` for 4-byte signed integer
+            - ``pncpy.NC_FLOAT`` for 4-byte floating point number
+            - ``pncpy.NC_DOUBLE`` for 8-byte real number in double precision
          
          The following are `CDF-5` format only
 
-            - pncpy.NC_UBYTE for unsigned 1-byte integer
-            - pncpy.NC_USHORT for unsigned 2-byte integer
-            - pncpy.NC_UINT for unsigned 4-byte intege
-            - pncpy.NC_INT64 for signed 8-byte integer
-            - pncpy.NC_UINT64 for unsigned 8-byte integer
+            - ``pncpy.NC_UBYTE`` for unsigned 1-byte integer
+            - ``pncpy.NC_USHORT`` for unsigned 2-byte integer
+            - ``pncpy.NC_UINT`` for unsigned 4-byte intege
+            - ``pncpy.NC_INT64`` for signed 8-byte integer
+            - ``pncpy.NC_UINT64`` for unsigned 8-byte integer
         
         :type nc_dtype: int
         :param dimensions: The dimensions of the new variable. Can be either dimension names
@@ -624,7 +624,8 @@ cdef class File:
         :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the 
          statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
          obtain the status messages.
-        
+        :type status: list
+
         Optional mode: it is an independent subroutine and must be called while the file 
         is in independent data mode.
 
@@ -666,6 +667,8 @@ cdef class File:
         :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the 
          statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
          obtain the status messages.
+        :type status: list
+
         
         Optional mode: it can be called in either independent or collective data mode or define mode.
         
@@ -698,9 +701,9 @@ cdef class File:
             _check_err(ierr)
 
 
-    def get_nreqs(self):
+    def inq_nreqs(self):
         """
-        get_nreqs(self)
+        inq_nreqs(self)
         
         """
         cdef int _file_id, ierr

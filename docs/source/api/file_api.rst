@@ -10,6 +10,9 @@ relations among data fields stored in a netCDF file.
 
 .. autoclass:: pncpy::File
 
+    :members:
+    :undoc-members:
+
     .. automethod:: __init__
        :noindex:
 
@@ -73,9 +76,6 @@ relations among data fields stored in a netCDF file.
     .. automethod:: cancel
        :noindex:
 
-    .. automethod:: get_nreqs
-       :noindex:
-
     .. automethod:: attach_buff
        :noindex:
 
@@ -118,6 +118,8 @@ relations among data fields stored in a netCDF file.
     .. automethod:: inq_header_extent
           :noindex:
 
+    .. automethod:: inq_nreqs
+       :noindex:
 
 
 
