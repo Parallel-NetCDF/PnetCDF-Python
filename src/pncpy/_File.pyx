@@ -49,9 +49,9 @@ cdef class File:
 
         :param format: underlying file format. Only relevant when creating file
 
-            - ``64BIT_OFFSET``: NetCDF-2 format.
-            - ``64BIT_DATA``: NetCDF-5 format.
-            - `None` defaults to default file format (NetCDF-1 format)
+            - ``64BIT_OFFSET``: CDF-2 format
+            - ``64BIT_DATA``: CDF-5 format
+            - `None` defaults to default file format (CDF-1 format)
 
         :type format: str
 
@@ -346,42 +346,43 @@ s
 
     def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
         """
-        defineVar(self, varname, nc_dtype, dimensions=(), fill_value=None)
+        def_var(self, varname, nc_dtype, dimensions=(), fill_value=None)
 
         Create a new variable with the given parameters.
 
         :param varname: Name of the new variable.
         :type varname: str
 
-        :param nc_dtype: The datatype of the new variable. Supported string specifiers are: 
+        :param nc_dtype: The datatype of the new variable. Supported specifiers are: 
 
-            - NC_CHAR for text data 
-            - NC_BYTE for 1-byte integer
-            - NC_SHORT for 2-byte signed integer 
-            - NC_INT for 4-byte signed integer
-            - NC_FLOAT for 4-byte floating point number
-            - NC_DOUBLE for 8-byte real number in double precision
+            - pncpy.NC_CHAR for text data 
+            - pncpy.NC_BYTE for 1-byte integer
+            - pncpy.NC_SHORT for 2-byte signed integer 
+            - pncpy.NC_INT for 4-byte signed integer
+            - pncpy.NC_FLOAT for 4-byte floating point number
+            - pncpy.NC_DOUBLE for 8-byte real number in double precision
          
          The following are `CDF-5` format only
-            - NC_UBYTE for unsigned 1-byte integer
-            - NC_USHORT for unsigned 2-byte integer
-            - NC_UINT for unsigned 4-byte intege
-            - NC_INT64 for signed 8-byte integer
-            - NC_UINT64 for unsigned 8-byte integer
+
+            - pncpy.NC_UBYTE for unsigned 1-byte integer
+            - pncpy.NC_USHORT for unsigned 2-byte integer
+            - pncpy.NC_UINT for unsigned 4-byte intege
+            - pncpy.NC_INT64 for signed 8-byte integer
+            - pncpy.NC_UINT64 for unsigned 8-byte integer
         
         :type nc_dtype: int
         :param dimensions: The dimensions of the new variable. Can be either dimension names
-        or dimension class instances
+         or dimension class instances
 
         :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
         
         :param fill_value: The fill value of the new variable. Accepted values are:
 
-            - ``None``: use the default fill value for the given datatype
-            - ``False``: fill mode is turned off
-            - any other value: use the given value as fill value
+         - ``None``: use the default fill value for the given datatype
+         - ``False``: fill mode is turned off
+         - any other value: use the given value as fill value
 
-        :return: The created variable.
+        :return: The created variable
         :rtype: :class:`pncpy.Variable`
         """
 
@@ -591,8 +592,10 @@ s
         """
         wait(self, num=None, requests=None, status=None)
 
+        This method is a blocking call that wait for the completion of nonblocking I/O requests. 
+
         :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
-        can be module-level constants:
+         can be module-level constants:
             - None or `pncpy.NC_REQ_ALL`: flush all pending nonblocking  requests
             - `pncpy.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
             - `pncpy.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
@@ -601,8 +604,9 @@ s
         :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
         :type requests: list of int
         
-        :param status: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
-        :type status: list of int
+        :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the 
+        statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
+        obtain the status messages.
         
         Optional mode: it is an independent subroutine and must be called while the file 
         is in independent data mode.
@@ -614,7 +618,7 @@ s
         """
         wait_all(self, num=None, requests=None, status=None)
         
-        Same as `File.wait` but in collective mode
+        Same as ``File.wait`` but in collective data mode
 
         Optional mode: it is an collective subroutine and must be called while the file 
         is in collective data mode.
@@ -626,6 +630,23 @@ s
     def cancel(self, num=None, requests=None, status=None):
         """
         cancel(self, num=None, requests=None, status=None)
+
+
+        :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it 
+         can be module-level constants:
+            - None or `pncpy.NC_REQ_ALL`: flush all pending nonblocking  requests
+            - `pncpy.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
+            - `pncpy.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
+        :type num: int
+
+        :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
+        :type requests: list of int
+        
+        :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the 
+        statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to 
+        obtain the status messages.
+        
+        Optional mode: It can be called in either independent or collective data mode or define mode.
         
         """
         cdef int _file_id, ierr
@@ -669,9 +690,16 @@ s
         _check_err(ierr)
         return num_req
 
-    def attach_buff(self, bufsize = None):
+    def attach_buff(self, bufsize):
         """
-        attach_buff(self, bufsize = None)
+        attach_buff(self, bufsize)
+
+        Allow PnetCDF to allocate an internal buffer for accommodating the write requests. This method call
+        is the prerequisite of buffered non-blocking write. A call to ``File.detach_buff()`` is required when 
+        this buffer is no longer needed.
+
+        :param bufsize: Size of the buffer in the unit of bytes. Can be obtained using ``numpy.ndarray.nbytes``
+        :type bufsize: int
         
         """
         cdef int buffsize, _file_id
@@ -684,6 +712,8 @@ s
     def detach_buff(self):
         """
         detach_buff(self)
+
+        Detach the write buffer previously attached for buffered non-blocking write
         
         """
         cdef int _file_id = self._ncid
@@ -734,6 +764,19 @@ s
     def set_fill(self, fillmode):
         """
         set_fill(self, fillmode)
+
+        Sets the fill mode for a netCDF file open for writing and returns the current fill mode. The fill mode
+        can be specified as either NC_FILL or NC_NOFILL. The default mode of PnetCDF is NC_NOFILL. The method call
+        will change the fill mode for all variables defined so far at the time this API is called. In other 
+        words, it overwrites the fill mode for all variables previously defined. This method will also change the 
+        default fill mode for new variables defined following this call. In PnetCDF, this API only affects non-record
+        variables. In addition, it can only be called while in the define mode. All non-record variables will be 
+        filled with fill values (either default or user-defined) at the time ``File.enddef()`` is called.
+
+        :param fillmode: ``pncpy.NC_FILL`` or ``pncpy.NC_NOFILL``
+        :type fillmode: int
+
+        Operational mode: This method is a collective subroutine and must be called in define mode
 
         """
         cdef int _file_id, _fillmode, _old_fillmode
