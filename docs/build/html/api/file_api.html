@@ -59,6 +59,8 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">File</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pncpy.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.dimensions"><code class="docutils literal notranslate"><span class="pre">File.dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.variables"><code class="docutils literal notranslate"><span class="pre">File.variables</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.__init__"><code class="docutils literal notranslate"><span class="pre">File.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.attach_buff"><code class="docutils literal notranslate"><span class="pre">File.attach_buff()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.begin_indep"><code class="docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a></li>
@@ -96,11 +98,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.sync"><code class="docutils literal notranslate"><span class="pre">File.sync()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait"><code class="docutils literal notranslate"><span class="pre">File.wait()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait_all"><code class="docutils literal notranslate"><span class="pre">File.wait_all()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#file-attributes"><cite>File</cite> Attributes</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#variables"><code class="docutils literal notranslate"><span class="pre">variables</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -145,15 +142,34 @@ relations among data fields stored in a netCDF file.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Members<span class="colon">:</span></dt>
-<dd class="field-odd"><p>__init__, close, filepath, redef, enddef, begin_indep, end_indep,</p>
-</dd>
-</dl>
-<p>sync, flush, def_dim, rename_var, rename_dim, def_var, ncattrs, put_att, get_att,
+<dd class="field-odd"><p>__init__, close, filepath, redef, enddef, begin_indep, end_indep,
+sync, flush, def_dim, rename_var, rename_dim, def_var, ncattrs, put_att, get_att,
 del_att, rename_att, wait, wait_all, cancel, attach_buff, detach_buff, set_fill,
 inq_buff_usage, inq_buff_size, inq_num_rec_vars, inq_num_fix_vars, inq_striping,
 inq_recsize, inq_version, inq_info, inq_header_size, inq_put_size, inq_header_extent,
-inq_nreqs
-:undoc-members:</p>
+inq_nreqs</p>
+</dd>
+<dt class="field-even">Undoc-members<span class="colon">:</span></dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.File.dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#pncpy.File.dimensions" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">The</span> <span class="pre">dimensions</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">dimensions</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">`Dimension`</span> <span class="pre">class.</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pncpy.File.variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#pncpy.File.variables" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">The</span> <span class="pre">variables</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">variables</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">file</span></span></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">Variable</span> <span class="pre">class.</span></span></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format='64BIT_OFFSET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode=&quot;w&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Comm</span> <span class="pre">comm=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Info</span> <span class="pre">info=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.__init__" title="Permalink to this definition"></a></dt>
@@ -582,29 +598,6 @@ is in collective data mode.</p>
 
 </dd></dl>
 
-<section id="file-attributes">
-<h2><cite>File</cite> Attributes<a class="headerlink" href="#file-attributes" title="Permalink to this heading"></a></h2>
-<blockquote>
-<div><dl class="py attribute">
-<dt class="sig sig-object py" id="dimensions">
-<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#dimensions" title="Permalink to this definition"></a></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">The</span> <span class="pre">dimensions</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">dimensions</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">the</span> <span class="pre">file</span></span></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">`Dimension`</span> <span class="pre">class.</span></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="variables">
-<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#variables" title="Permalink to this definition"></a></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">The</span> <span class="pre">variables</span> <span class="pre">dictionary</span> <span class="pre">maps</span> <span class="pre">the</span> <span class="pre">names</span> <span class="pre">of</span> <span class="pre">variables</span> <span class="pre">defined</span> <span class="pre">for</span> <span class="pre">this</span> <span class="pre">file</span></span></dt>
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">to</span> <span class="pre">instances</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">Variable</span> <span class="pre">class.</span></span></dt>
-<dd></dd></dl>
-
-</div></blockquote>
-</section>
 </section>
 
 
