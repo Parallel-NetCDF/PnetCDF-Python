@@ -15,16 +15,22 @@ relations among data fields stored in a netCDF file.
     inq_buff_usage, inq_buff_size, inq_num_rec_vars, inq_num_fix_vars, inq_striping,
     inq_recsize, inq_version, inq_info, inq_header_size, inq_put_size, inq_header_extent,
     inq_nreqs
-   :undoc-members:
+   :exclude-members: indep_mode, path
 
    .. attribute:: dimensions
 
     The dimensions dictionary maps the names of dimensions defined for the file 
-    to instances of the `Dimension` class.
+    to instances of the ``Dimension`` class.
 
    .. attribute:: variables
       
     The variables dictionary maps the names of variables defined for this file 
-    to instances of the Variable class.
+    to instances of the ``Variable`` class.
+
+   .. attribute:: file_format
+    
+    The file format in string of the netCDF file. Possible values include: "CLASSIC", "CDF2",
+    "64BIT_OFFSET", "64BIT", "CDF5", "64BIT_DATA", "NETCDF4" and "BP"
+
 
 
