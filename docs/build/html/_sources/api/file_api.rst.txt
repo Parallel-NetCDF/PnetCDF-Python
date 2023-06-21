@@ -16,7 +16,6 @@ relations among data fields stored in a netCDF file.
     inq_recsize, inq_version, inq_info, inq_header_size, inq_put_size, inq_header_extent,
     inq_nreqs
    :exclude-members: indep_mode, path
-   :noindex:
 
    .. attribute:: dimensions
 

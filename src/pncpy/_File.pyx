@@ -841,6 +841,11 @@ cdef class File:
         """
         inq_num_fix_vars(self)
 
+        Return the number of fixed-size variables defined for this netCDF file
+
+        :rtype: int
+
+
         """
         cdef int ierr, num_fix_vars
         with nogil:
@@ -862,6 +867,11 @@ cdef class File:
     def inq_recsize(self):
         """
         inq_recsize(self)
+
+        Return the size of record block, sum of individual record sizes (one record each) of 
+        all record variables, for this netCDF file.
+
+        :rtype: int
 
         """
         cdef int ierr, recsize
@@ -886,6 +896,10 @@ cdef class File:
         """
         inq_info(self)
 
+        Returns an MPI info object containing all the file hints used by PnetCDF library.
+
+        :rtype:  mpi4py.MPI.Info
+
         """
         cdef MPI_Info *mpiinfo
         cdef int ierr
@@ -899,6 +913,11 @@ cdef class File:
     def inq_header_size(self):
         """
         inq_header_size(self)
+        
+        Reports the current file header size (in bytes) of an opened netCDF file. Note 
+        this is the amount of space used by the metadata.
+
+        :rtype: int
 
         """
         cdef int ierr
@@ -912,6 +931,10 @@ cdef class File:
         """
         inq_put_size(self)
 
+        Reports the amount of data that has actually been written to the file since the 
+        file is opened/created.
+
+        :rtype: int
         """
         cdef int ierr
         cdef int size
@@ -924,6 +947,10 @@ cdef class File:
         """
         inq_header_extent(self)
 
+        Reports the current file header extent of an opened netCDF file. The amount 
+        is the file space allocated for the file header.
+
+        :rtype: int
         """
         cdef int ierr
         cdef int extent
