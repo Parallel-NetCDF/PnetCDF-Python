@@ -105,6 +105,7 @@ cdef class Dimension:
         isunlimited(self)
 
         Returns `True` if the ``Dimension`` instance is unlimited, ``False`` otherwise.
+        
         :rtype: bool
         """
         cdef int ierr, n, numunlimdims, ndims, nvars, ngatts, xdimid
