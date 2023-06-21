@@ -754,6 +754,10 @@ cdef class File:
     def inq_buff_usage(self):
         """
         inq_buff_usage(self)
+
+        Return the current usage of the internal buffer
+
+        :rtype: int
         
         """
         cdef int _file_id, usage
@@ -766,6 +770,11 @@ cdef class File:
     def inq_buff_size(self):
         """
         inq_buff_size(self)
+
+        Return the size (in number of bytes) of the attached buffer. This value is the same
+        as the one used in a call to ``File.attach_buff`` earlier.
+
+        :rtype: int
         
         """
         cdef int _file_id, buffsize
