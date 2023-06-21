@@ -13,7 +13,7 @@ in order to achieve a better performance. A common practice is writing (or readi
 subarrays for each variable defined in the NetCDF file.
 
 Nonblocking Write
---------------------------------------
+-------------------
 
  Write requests can be posted by the method call of :func:`Variable.iput_var()`. Same as :func:`Variable.put_var()`, the behavior of :func:`Variable.iput_var()` varies 
  depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap` as shown below. Note that the method only posts the 
@@ -40,10 +40,10 @@ Nonblocking Write
       # track the request ID for each write request
       req_ids.append(req_id)
 
- For more, see `examples/non_blocking_write.py`.
+ For more, see ``examples/non_blocking_write.py``.
 
 Nonblocking Read
---------------------------------------
+------------------
 
  Read requests can be posted by the method call of :func:`Variable.iget_var()`. Note that unlike :func:`Variable.get_var()`, this method requires a 
  mandatory argument - an empty numpy array reserved to be filled in the future. Again, the method call returns a request id that can be optionally passed to 
@@ -73,10 +73,10 @@ Nonblocking Read
        # store the reference of variable values
        v_datas.append(buff)
  
- For more, see `examples/flexible_api.py`.
+ For more, see ``examples/flexible_api.py``.
 
 Commit Read/Write Requests
---------------------------------------
+----------------------------
 
  Pending requests are eventually processed by :func:`File.wait()`. Requests to commited can be specified selectively specified by a request id list. 
  If so, optionally, user can pass in a empty list to collect error statuses of each request, which is useful in request-wise error tracking and debugging.
@@ -96,7 +96,7 @@ Commit Read/Write Requests
     # f.wait_all(num = pncpy.NC_GET_REQ_ALL) # commit all read requests
 
 Buffered Non-blocking Write
---------------------------------------
+-----------------------------
 
  One limitation of the above non-blocking write is that users should not alter the contents of the write buffer once the request is posted until the wait API is returned. 
  Any change to the buffer contents in between will result in unexpected error. To alleviate the this limitation, use can post buffered nonblocking write requests using 
@@ -126,7 +126,7 @@ Buffered Non-blocking Write
     f.wait_all()
     f.detach_buff()
  
- For more, see `examples/non_blocking_write.py`.
+ For more, see ``examples/non_blocking_write.py``.
 
  Remember to detach the write buffer after write requets are executed.
  
