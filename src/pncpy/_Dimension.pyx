@@ -55,14 +55,14 @@ cdef class Dimension:
         return namstring.decode('utf-8')
 
     property name:
-        """string name of Dimension instance"""
+        """String name of Dimension instance"""
         def __get__(self):
             return self._getname()
         def __set__(self,value):
             raise AttributeError("name cannot be altered")
 
     property size:
-        """current size of Dimension (calls `len` on Dimension instance)"""
+        """Current size of Dimension (calls ``len`` on Dimension instance)"""
         def __get__(self):
             return len(self)
         def __set__(self,value):
@@ -92,16 +92,21 @@ cdef class Dimension:
 
     def getfile(self):
         """
-        **`file(self)`**
+        getfile(self)
 
-        return the file that this `Dimension` is a member of."""
+        Return the file that this ``Dimension`` is a member of.
+
+        :rtype: :class:`pncpy.File`
+        """
         return self._file
 
     def isunlimited(self):
         """
-        **`isunlimited(self)`**
+        isunlimited(self)
 
-        returns `True` if the `Dimension` instance is unlimited, `False` otherwise."""
+        Returns `True` if the ``Dimension`` instance is unlimited, ``False`` otherwise.
+        :rtype: bool
+        """
         cdef int ierr, n, numunlimdims, ndims, nvars, ngatts, xdimid
         cdef int *unlimdimids
         with nogil:

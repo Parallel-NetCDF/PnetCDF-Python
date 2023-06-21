@@ -101,34 +101,43 @@
 coordinate data for multidimensional arrays. The <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> object,
 which is also a key component of <code class="docutils literal notranslate"><span class="pre">File</span></code> class, provides an interface
 to create, access and manipulate dimensions.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instances should be created using the <code class="docutils literal notranslate"><span class="pre">File.def_dim</span></code> method of a <code class="docutils literal notranslate"><span class="pre">File</span></code> instance,
+not using <cite>Dimension.__init__</cite> directly.</p>
+</div>
 <dl class="py class">
 <dt class="sig sig-object py" id="pncpy.Dimension">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">Dimension</span></span><a class="headerlink" href="#pncpy.Dimension" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Dimension.getfile">
-<span class="sig-name descname"><span class="pre">getfile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.getfile" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`file(self)`</strong></p>
-<p>return the file that this <cite>Dimension</cite> is a member of.</p>
+<span class="sig-name descname"><span class="pre">getfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.getfile" title="Permalink to this definition"></a></dt>
+<dd><p>Return the file that this <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> is a member of.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="file_api.html#pncpy.File" title="pncpy.File"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.File</span></code></a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Dimension.isunlimited">
-<span class="sig-name descname"><span class="pre">isunlimited</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.isunlimited" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`isunlimited(self)`</strong></p>
-<p>returns <cite>True</cite> if the <cite>Dimension</cite> instance is unlimited, <cite>False</cite> otherwise.</p>
+<span class="sig-name descname"><span class="pre">isunlimited</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.isunlimited" title="Permalink to this definition"></a></dt>
+<dd><p>Returns <cite>True</cite> if the <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instance is unlimited, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.
+:rtype: bool</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Dimension.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pncpy.Dimension.name" title="Permalink to this definition"></a></dt>
-<dd><p>string name of Dimension instance</p>
+<dd><p>String name of Dimension instance</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Dimension.size">
 <span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pncpy.Dimension.size" title="Permalink to this definition"></a></dt>
-<dd><p>current size of Dimension (calls <cite>len</cite> on Dimension instance)</p>
+<dd><p>Current size of Dimension (calls <code class="docutils literal notranslate"><span class="pre">len</span></code> on Dimension instance)</p>
 </dd></dl>
 
 </dd></dl>
