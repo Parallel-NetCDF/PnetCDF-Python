@@ -18,7 +18,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
-    'sphinx_autodoc_typehints',
+    'sphinx_autodoc_typehints'
 ]
 
 templates_path = ['_templates']
@@ -41,3 +41,15 @@ autodoc_default_options = {
     'show-inheritance': True,
     'special-members': '__init__',
 }
+
+def autodoc_skip_member(app, what, name, obj, skip, options):
+    # Ref: https://stackoverflow.com/a/21449475/
+    exclusions = ('name',  
+                  'datatype', 'size', 'shape',  # undoc-members
+                  )
+    exclude = name in exclusions
+    # return True if (skip or exclude) else None  # Can interfere with subsequent skip functions.
+    return True if exclude else None
+ 
+def setup(app):
+    app.connect('autodoc-skip-member', autodoc_skip_member)

@@ -18,6 +18,7 @@ function-call style methods or indexer-style (numpy-like) syntax.
    :exclude-members: name, shape, size
 
 
+
 .. rubric:: Variable Attributes
  The following class members are read-only and should not be modified by the user.
 
