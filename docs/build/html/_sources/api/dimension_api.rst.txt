@@ -5,7 +5,7 @@ Dimension
 Dimension defines the shape and structure of variables and stores 
 coordinate data for multidimensional arrays. The ``Dimension`` object,
 which is also a key component of ``File`` class, provides an interface
-to create, access and manipulate dimensions.
+to access dimensions.
 
 .. note:: 
 
@@ -13,4 +13,16 @@ to create, access and manipulate dimensions.
    not using `Dimension.__init__` directly.
 
 .. autoclass:: pncpy::Dimension
-   :exclude-members: __init__, _getname,  __repr__, __str__, __len__
+   :members: getfile, isunlimited
+
+.. rubric:: Attributes
+
+.. attribute:: name
+
+    String name of Dimension instance. This class member is read-only and
+    should not be modified by the user. To rename a dimension, use ``File.rename_dim`` method.
+
+.. attribute:: size
+      
+    The current size of Dimension (calls ``len`` on Dimension instance). This class member is read-only and
+    should not be modified by the user.

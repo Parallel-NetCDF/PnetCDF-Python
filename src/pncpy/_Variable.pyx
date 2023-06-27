@@ -29,59 +29,12 @@ cdef class Variable:
     analogous to numpy array objects. See `Variable.__init__` for more
     details.
 
-    A list of attribute names corresponding to netCDF attributes defined for
-    the variable can be obtained with the `Variable.ncattrs` method. These
-    attributes can be created by assigning to an attribute of the
-    `Variable` instance. A dictionary containing all the netCDF attribute
-    name/value pairs is provided by the `__dict__` attribute of a
-    `Variable` instance.
-
-    The following class variables are read-only:
-
-    **`dimensions`**: A tuple containing the names of the
-    dimensions associated with this variable.
-
-    **`dtype`**: A numpy dtype object describing the
-    variable's data type.
-
-    **`ndim`**: The number of variable dimensions.
-
-    **`shape`**: A tuple with the current shape (length of all dimensions).
-
-    **`scale`**: If True, `scale_factor` and `add_offset` are
-    applied, and signed integer data is automatically converted to
-    unsigned integer data if the `_Unsigned` attribute is set.
-    Default is `True`, can be reset using `Variable.set_auto_scale` and
-    `Variable.set_auto_maskandscale` methods.
-
-    **`mask`**: If True, data is automatically converted to/from masked
-    arrays when missing values or fill values are present. Default is `True`, can be
-    reset using `Variable.set_auto_mask` and `Variable.set_auto_maskandscale`
-    methods. Only relevant for Variables with primitive or enum types (ignored
-    for compound and vlen Variables).
-
-    **`chartostring`**: If True, data is automatically converted to/from character
-    arrays to string arrays when the `_Encoding` variable attribute is set.
-    Default is `True`, can be reset using
-    `Variable.set_auto_chartostring` method.
-
-    **`least_significant_digit`**: Describes the power of ten of the
-    smallest decimal place in the data the contains a reliable value.  Data is
-    truncated to this decimal place when it is assigned to the `Variable`
-    instance. If `None`, the data is not truncated.
-
-    **`__orthogonal_indexing__`**: Always `True`.  Indicates to client code
-    that the object supports 'orthogonal indexing', which means that slices
-    that are 1d arrays or lists slice along each dimension independently.  This
-    behavior is similar to Fortran or Matlab, but different than np.
-
-    **`datatype`**: numpy data type (for primitive data types) or VLType/CompoundType
-    instance (for compound or vlen data types).
-
-    **`name`**: String name.
-
-    **`size`**: The number of stored elements.
+    .. note:: `Variable` instances should be created using the
+     `File.def_var` method of a `File` instance, not using this class constructor 
+     directly.
     """
+
+
 
     def __init__(self, file, name, nc_dtype, dimensions=(), **kwargs):
         """
@@ -107,27 +60,11 @@ cdef class Variable:
         (defined previously with `def_dim`). Default is an empty tuple
         which means the variable is a scalar (and therefore has no dimensions).
 
-        **`least_significant_digit`**: If this or `significant_digits` are specified,
-        variable data will be truncated (quantized).
-        In conjunction with `compression='zlib'` this produces
-        'lossy', but significantly more efficient compression. For example, if
-        `least_significant_digit=1`, data will be quantized using
-        around(scale*data)/scale, where scale = 2**bits, and bits is determined
-        so that a precision of 0.1 is retained (in this case bits=4). Default is
-        `None`, or no quantization.
-
-        **`significant_digits`**: New in version 1.6.0.
-        As described for `least_significant_digit`
-        except the number of significant digits retained is prescribed independent
-        of the floating point exponent. Default `None` - no quantization done.
-
         **`fill_value`**:  If specified, the default netCDF `_FillValue` (the
         value that the variable gets filled with before any data is written to it)
         is replaced with this value.  If fill_value is set to `False`, then
         the variable is not pre-filled. 
 
-        ***Note***: `Variable` instances should be created using the
-        `File.def_var` method of a `File` instance, not using this class directly.
         """
 
         cdef int ierr, ndims, icontiguous, icomplevel, numdims, _file_id, nsd,
@@ -139,13 +76,7 @@ cdef class Variable:
         cdef size_t *chunksizesp
         cdef float preemptionp
         self._file_id = file._ncid
-        # TODO: decide whether to keep weakref feature
-        """        
-        if file.keepweakref:
-            self._file = weakref.proxy(file)
-        else:
-            self._file = file
-        """
+
         self._file = file
         _file_id = self._file_id
         #TODO: decide whether we need to check xtype at python-level
@@ -198,8 +129,6 @@ cdef class Variable:
         # to string arrays when _Encoding variable attribute is set.
         self.chartostring = True
         # propagate _ncstring_attrs__ setting from parent group.
-        if 'least_significant_digit' in self.ncattrs():
-            self._has_lsd = True
 
     def __array__(self):
         # numpy special method that returns a numpy array.

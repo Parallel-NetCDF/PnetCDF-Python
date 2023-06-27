@@ -349,7 +349,7 @@ cdef class File:
 
     def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
         """
-        def_var(self, varname, nc_dtype, dimensions=(), fill_value=None)
+        def_var(self, varname, nc_dtype, dimensions=(), fill_value=None, **kwargs)
 
         Create a new variable with the given parameters.
 

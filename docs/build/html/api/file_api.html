@@ -11,6 +11,8 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -59,9 +61,6 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">File</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pncpy.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.dimensions"><code class="docutils literal notranslate"><span class="pre">File.dimensions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.variables"><code class="docutils literal notranslate"><span class="pre">File.variables</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.file_format"><code class="docutils literal notranslate"><span class="pre">File.file_format</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.__init__"><code class="docutils literal notranslate"><span class="pre">File.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.attach_buff"><code class="docutils literal notranslate"><span class="pre">File.attach_buff()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.begin_indep"><code class="docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a></li>
@@ -101,6 +100,9 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait_all"><code class="docutils literal notranslate"><span class="pre">File.wait_all()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#variables"><code class="docutils literal notranslate"><span class="pre">variables</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#file_format"><code class="docutils literal notranslate"><span class="pre">file_format</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="dimension_api.html">Dimension</a></li>
@@ -142,27 +144,6 @@ relations among data fields stored in a netCDF file.</p>
 <dt class="sig sig-object py" id="pncpy.File">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">File</span></span><a class="headerlink" href="#pncpy.File" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pncpy.File.dimensions">
-<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#pncpy.File.dimensions" title="Permalink to this definition"></a></dt>
-<dd><p>The dimensions dictionary maps the names of dimensions defined for the file
-to instances of the <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> class.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pncpy.File.variables">
-<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#pncpy.File.variables" title="Permalink to this definition"></a></dt>
-<dd><p>The variables dictionary maps the names of variables defined for this file
-to instances of the <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pncpy.File.file_format">
-<span class="sig-name descname"><span class="pre">file_format</span></span><a class="headerlink" href="#pncpy.File.file_format" title="Permalink to this definition"></a></dt>
-<dd><p>The file format in string of the netCDF file. Possible values include: “CLASSIC”, “CDF2”,
-“64BIT_OFFSET”, “64BIT”, “CDF5”, “64BIT_DATA”, “NETCDF4” and “BP”</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format='64BIT_OFFSET'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode=&quot;w&quot;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Comm</span> <span class="pre">comm=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Info</span> <span class="pre">info=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.__init__" title="Permalink to this definition"></a></dt>
@@ -662,6 +643,31 @@ is in independent data mode.</p>
 is in collective data mode.</p>
 </dd></dl>
 
+</dd></dl>
+
+<p class="rubric">Attributes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#dimensions" title="Permalink to this definition"></a></dt>
+<dd><p>The dimensions dictionary maps the names of dimensions defined for the file
+to instances of the <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> class. This class member is read-only and
+should not be modified by the user.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="variables">
+<span class="sig-name descname"><span class="pre">variables</span></span><a class="headerlink" href="#variables" title="Permalink to this definition"></a></dt>
+<dd><p>The variables dictionary maps the names of variables defined for this file
+to instances of the <code class="docutils literal notranslate"><span class="pre">Variable</span></code> class. This class member is read-only and
+should not be modified by the user.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="file_format">
+<span class="sig-name descname"><span class="pre">file_format</span></span><a class="headerlink" href="#file_format" title="Permalink to this definition"></a></dt>
+<dd><p>The file format in string of the netCDF file. Possible values include: “CLASSIC”, “CDF2”,
+“64BIT_OFFSET”, “64BIT”, “CDF5”, “64BIT_DATA”, “NETCDF4” and “BP”. This class member is
+read-only and should not be modified by the user.</p>
 </dd></dl>
 
 </section>

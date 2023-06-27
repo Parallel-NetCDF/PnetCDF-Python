@@ -17,20 +17,25 @@ relations among data fields stored in a netCDF file.
     inq_nreqs
    :exclude-members: indep_mode, path
 
-   .. attribute:: dimensions
+.. rubric:: Attributes
+
+.. attribute:: dimensions
 
     The dimensions dictionary maps the names of dimensions defined for the file 
-    to instances of the ``Dimension`` class.
+    to instances of the ``Dimension`` class. This class member is read-only and
+    should not be modified by the user.
 
-   .. attribute:: variables
+.. attribute:: variables
       
     The variables dictionary maps the names of variables defined for this file 
-    to instances of the ``Variable`` class.
+    to instances of the ``Variable`` class. This class member is read-only and
+    should not be modified by the user.
 
-   .. attribute:: file_format
+.. attribute:: file_format
     
     The file format in string of the netCDF file. Possible values include: "CLASSIC", "CDF2",
-    "64BIT_OFFSET", "64BIT", "CDF5", "64BIT_DATA", "NETCDF4" and "BP"
+    "64BIT_OFFSET", "64BIT", "CDF5", "64BIT_DATA", "NETCDF4" and "BP". This class member is 
+    read-only and should not be modified by the user.
 
     
 

@@ -11,6 +11,8 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
@@ -60,12 +62,15 @@
 <li class="toctree-l1"><a class="reference internal" href="file_api.html">File</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Dimension</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#pncpy.Dimension"><code class="docutils literal notranslate"><span class="pre">Dimension</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Dimension.__init__"><code class="docutils literal notranslate"><span class="pre">Dimension.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Dimension.getfile"><code class="docutils literal notranslate"><span class="pre">Dimension.getfile()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Dimension.isunlimited"><code class="docutils literal notranslate"><span class="pre">Dimension.isunlimited()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Dimension.name"><code class="docutils literal notranslate"><span class="pre">Dimension.name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Dimension.size"><code class="docutils literal notranslate"><span class="pre">Dimension.size</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="variable_api.html">Variable</a></li>
@@ -100,7 +105,7 @@
 <p>Dimension defines the shape and structure of variables and stores
 coordinate data for multidimensional arrays. The <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> object,
 which is also a key component of <code class="docutils literal notranslate"><span class="pre">File</span></code> class, provides an interface
-to create, access and manipulate dimensions.</p>
+to access dimensions.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instances should be created using the <code class="docutils literal notranslate"><span class="pre">File.def_dim</span></code> method of a <code class="docutils literal notranslate"><span class="pre">File</span></code> instance,
@@ -110,6 +115,11 @@ not using <cite>Dimension.__init__</cite> directly.</p>
 <dt class="sig sig-object py" id="pncpy.Dimension">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">Dimension</span></span><a class="headerlink" href="#pncpy.Dimension" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Dimension.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Dimension.getfile">
 <span class="sig-name descname"><span class="pre">getfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Dimension.getfile" title="Permalink to this definition"></a></dt>
@@ -144,6 +154,21 @@ not using <cite>Dimension.__init__</cite> directly.</p>
 <dd><p>Current size of Dimension (calls <code class="docutils literal notranslate"><span class="pre">len</span></code> on Dimension instance)</p>
 </dd></dl>
 
+</dd></dl>
+
+<p class="rubric">Attributes</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#name" title="Permalink to this definition"></a></dt>
+<dd><p>String name of Dimension instance. This class member is read-only and
+should not be modified by the user. To rename a dimension, use <code class="docutils literal notranslate"><span class="pre">File.rename_dim</span></code> method.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#size" title="Permalink to this definition"></a></dt>
+<dd><p>The current size of Dimension (calls <code class="docutils literal notranslate"><span class="pre">len</span></code> on Dimension instance). This class member is read-only and
+should not be modified by the user.</p>
 </dd></dl>
 
 </section>
