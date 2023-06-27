@@ -18,7 +18,9 @@ relations among data fields stored in a netCDF file.
    :exclude-members: indep_mode, path
 
 .. rubric:: File Attributes
- The following class members are read-only and should not be modified by the user.
+ 
+The following class members are read-only and should not be modified by the user.
+
 .. attribute:: dimensions
 
     The dimensions dictionary maps the names of dimensions defined for the file 

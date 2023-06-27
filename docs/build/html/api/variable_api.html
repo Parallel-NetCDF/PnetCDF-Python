@@ -80,6 +80,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_scale"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_scale()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dtype"><code class="docutils literal notranslate"><span class="pre">dtype</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatype"><code class="docutils literal notranslate"><span class="pre">datatype</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shape"><code class="docutils literal notranslate"><span class="pre">shape</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ndim"><code class="docutils literal notranslate"><span class="pre">ndim</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scale"><code class="docutils literal notranslate"><span class="pre">scale</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mask"><code class="docutils literal notranslate"><span class="pre">mask</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chartostring"><code class="docutils literal notranslate"><span class="pre">chartostring</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -415,69 +425,69 @@ data model does not have unsigned integer data types).</p>
 
 </dd></dl>
 
-<p class="rubric">Variable Attributes
-The following class members are read-only and should not be modified by the user.</p>
+<p class="rubric">Variable Attributes</p>
+<p>The following class members are read-only and should not be modified by the user.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">name</span></span></dt>
+<dt class="sig sig-object py" id="name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#name" title="Permalink to this definition"></a></dt>
 <dd><p>The string name of Variable instance
 <strong>Type:</strong> <cite>str</cite></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">dtype</span></span></dt>
+<dt class="sig sig-object py" id="dtype">
+<span class="sig-name descname"><span class="pre">dtype</span></span><a class="headerlink" href="#dtype" title="Permalink to this definition"></a></dt>
 <dd><p>Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object
 describing the variable’s data type.
 <strong>Type:</strong> <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">datatype</span></span></dt>
+<dt class="sig sig-object py" id="datatype">
+<span class="sig-name descname"><span class="pre">datatype</span></span><a class="headerlink" href="#datatype" title="Permalink to this definition"></a></dt>
 <dd><p>Same as <code class="docutils literal notranslate"><span class="pre">Variable.dtype</span></code>.
 <strong>Type:</strong> <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">shape</span></span></dt>
+<dt class="sig sig-object py" id="shape">
+<span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#shape" title="Permalink to this definition"></a></dt>
 <dd><p>Return the shape of the variable, which is the current sizes of all variable
 dimensions
 <strong>Type:</strong> <cite>Tuple[int, int]</cite></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">ndim</span></span></dt>
+<dt class="sig sig-object py" id="ndim">
+<span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#ndim" title="Permalink to this definition"></a></dt>
 <dd><p>The number of variable dimensions.
 <strong>Type:</strong> <cite>int</cite></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">size</span></span></dt>
+<dt class="sig sig-object py" id="size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#size" title="Permalink to this definition"></a></dt>
 <dd><p>Return the number of stored elements
 <strong>Type:</strong> <cite>int</cite></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">dimensions</span></span></dt>
+<dt class="sig sig-object py" id="dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#dimensions" title="Permalink to this definition"></a></dt>
 <dd><p>Return the variable’s dimension names
 <strong>Type:</strong> <cite>List[str]</cite></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">scale</span></span></dt>
+<dt class="sig sig-object py" id="scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#scale" title="Permalink to this definition"></a></dt>
 <dd><p>Return the variable’s dimension names
 <strong>Type:</strong> <cite>bool</cite></p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">mask</span></span></dt>
+<dt class="sig sig-object py" id="mask">
+<span class="sig-name descname"><span class="pre">mask</span></span><a class="headerlink" href="#mask" title="Permalink to this definition"></a></dt>
 <dd><p>If <cite>True</cite>, data is automatically converted to/from masked
 arrays when missing values or fill values are present. Default is <cite>True</cite>, can be
 reset using <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask</span></code> and <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_maskandscale</span></code>
@@ -486,8 +496,8 @@ methods.
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">chartostring</span></span></dt>
+<dt class="sig sig-object py" id="chartostring">
+<span class="sig-name descname"><span class="pre">chartostring</span></span><a class="headerlink" href="#chartostring" title="Permalink to this definition"></a></dt>
 <dd><p>If <cite>True</cite>, data is automatically converted to/from character
 arrays to string arrays when the <cite>_Encoding</cite> variable attribute is set.
 Default is <cite>True</cite>, can be reset using <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring</span></code> method.

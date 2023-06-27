@@ -17,7 +17,8 @@ to access dimensions.
    :exclude-members: name, size
 
 .. rubric:: Dimension Attributes
-    The following class members are read-only and should not be modified by the user.
+    
+The following class members are read-only and should not be modified by the user.
 
 .. attribute:: name
 

@@ -20,60 +20,60 @@ function-call style methods or indexer-style (numpy-like) syntax.
 
 
 .. rubric:: Variable Attributes
- The following class members are read-only and should not be modified by the user.
+ 
+The following class members are read-only and should not be modified by the user.
 
 .. attribute:: name
-   :noindex:
 
    The string name of Variable instance
    **Type:** `str`
 
 .. attribute:: dtype
-   :noindex:
+
 
    Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object 
    describing the variable's data type.
    **Type:** ``numpy.dtype``
 
 .. attribute:: datatype
-   :noindex:
+
 
    Same as ``Variable.dtype``.
    **Type:** ``numpy.dtype``
 
 .. attribute:: shape
-   :noindex:
+
 
    Return the shape of the variable, which is the current sizes of all variable 
    dimensions
    **Type:** `Tuple[int, int]`
 
 .. attribute:: ndim
-   :noindex:
+
 
    The number of variable dimensions.
    **Type:** `int`
 
 .. attribute:: size
-   :noindex:
+
 
    Return the number of stored elements
    **Type:** `int`
 
 .. attribute:: dimensions
-   :noindex:
+
 
    Return the variable's dimension names
    **Type:** `List[str]`
 
 .. attribute:: scale
-   :noindex:
+
 
    Return the variable's dimension names
    **Type:** `bool`
 
 .. attribute:: mask
-   :noindex:
+
 
    If `True`, data is automatically converted to/from masked
    arrays when missing values or fill values are present. Default is `True`, can be
@@ -82,7 +82,7 @@ function-call style methods or indexer-style (numpy-like) syntax.
    **Type:** `bool`
 
 .. attribute:: chartostring
-   :noindex:
+
 
    If `True`, data is automatically converted to/from character
    arrays to string arrays when the `_Encoding` variable attribute is set.
