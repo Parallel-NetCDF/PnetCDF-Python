@@ -44,4 +44,9 @@ build/
 # dist
 dist/
 
+#image data
+*ubyte
+
 */tmp
+io_eval.py
+mnist_netcdf.ipynb
