@@ -16,15 +16,16 @@ to access dimensions.
    :members: getfile, isunlimited
    :exclude-members: name, size
 
-.. rubric:: Dimension Attributes
+Dimension Attributes
+---------------------
     
-The following class members are read-only and should not be modified by the user.
+ The following class members are read-only and should not be modified by the user.
 
-.. attribute:: name
+ .. attribute:: name
 
     String name of Dimension instance. This class member is read-only and
     should not be modified by the user. To rename a dimension, use ``File.rename_dim`` method.
 
-.. attribute:: size
+ .. attribute:: size
       
     The current size of Dimension (calls ``len`` on Dimension instance). 

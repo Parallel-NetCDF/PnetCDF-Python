@@ -19,60 +19,61 @@ function-call style methods or indexer-style (numpy-like) syntax.
 
 
 
-.. rubric:: Variable Attributes
+Variable Attributes
+--------------------
  
 The following class members are read-only and should not be modified by the user.
 
-.. attribute:: name
+ .. attribute:: name
 
    The string name of Variable instance
    **Type:** `str`
 
-.. attribute:: dtype
+ .. attribute:: dtype
 
 
    Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object 
    describing the variable's data type.
    **Type:** ``numpy.dtype``
 
-.. attribute:: datatype
+ .. attribute:: datatype
 
 
    Same as ``Variable.dtype``.
    **Type:** ``numpy.dtype``
 
-.. attribute:: shape
+ .. attribute:: shape
 
 
    Return the shape of the variable, which is the current sizes of all variable 
    dimensions
    **Type:** `Tuple[int, int]`
 
-.. attribute:: ndim
+ .. attribute:: ndim
 
 
    The number of variable dimensions.
    **Type:** `int`
 
-.. attribute:: size
+ .. attribute:: size
 
 
    Return the number of stored elements
    **Type:** `int`
 
-.. attribute:: dimensions
+ .. attribute:: dimensions
 
 
    Return the variable's dimension names
    **Type:** `List[str]`
 
-.. attribute:: scale
+ .. attribute:: scale
 
 
    Return the variable's dimension names
    **Type:** `bool`
 
-.. attribute:: mask
+ .. attribute:: mask
 
 
    If `True`, data is automatically converted to/from masked
@@ -81,7 +82,7 @@ The following class members are read-only and should not be modified by the user
    methods. 
    **Type:** `bool`
 
-.. attribute:: chartostring
+ .. attribute:: chartostring
 
 
    If `True`, data is automatically converted to/from character
