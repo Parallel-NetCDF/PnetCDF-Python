@@ -14,10 +14,10 @@ to access dimensions.
 
 .. autoclass:: pncpy::Dimension
    :members: getfile, isunlimited
+   :exclude-members: name, size
 
-.. rubric:: Attributes
+.. rubric:: Dimension Attributes
     The following class members are read-only and should not be modified by the user.
-
 
 .. attribute:: name
 

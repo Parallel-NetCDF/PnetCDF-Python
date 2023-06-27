@@ -25,11 +25,11 @@ ctypedef MPI.Datatype Datatype
 
 cdef class Variable:
     """
-    A PnetCDF `Variable` is used to read and write netCDF data.  They are
-    analogous to numpy array objects. See `Variable.__init__` for more
+    A PnetCDF variable is used to read and write netCDF data.  They are
+    analogous to numpy array objects. See ``Variable.__init__`` for more
     details.
 
-    .. note:: `Variable` instances should be created using the
+    .. note:: ``Variable`` instances should be created using the
      `File.def_var` method of a `File` instance, not using this class constructor 
      directly.
 
@@ -40,7 +40,7 @@ cdef class Variable:
         """
         __init__(self, file, name, nc_dtype, dimensions=(), **kwargs)
 
-        `Variable` constructor.
+        The constructor for :class:`pncpy.Variable`.
 
         :param varname: Name of the new variable.
         :type varname: str
@@ -272,7 +272,7 @@ cdef class Variable:
 
         Return the netCDF file instance that the variable is contained in.
 
-        :rtype: ``File``
+        :rtype: :class:`pncpy.File`
         """
         return self._file
     def ncattrs(self):
@@ -442,8 +442,9 @@ cdef class Variable:
         :type no_fill: int
 
         :param fill_value: Sets the customized fill value. Must be the same type as the variable. This will 
-        be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
-        and the default fill value is used.
+         be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
+         and the default fill value is used.
+        :type fill_value: any
 
         """
         cdef ndarray data

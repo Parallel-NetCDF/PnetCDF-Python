@@ -22,12 +22,12 @@ relations among data fields stored in a netCDF file.
 .. attribute:: dimensions
 
     The dimensions dictionary maps the names of dimensions defined for the file 
-    to instances of the ``Dimension`` class. 
+    to instances of the ``pncpy.Dimension`` class. 
 
 .. attribute:: variables
       
     The variables dictionary maps the names of variables defined for this file 
-    to instances of the ``Variable`` class. 
+    to instances of the ``pncpy.Variable`` class. 
 
 .. attribute:: file_format
     

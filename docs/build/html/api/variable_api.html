@@ -73,15 +73,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_dims"><code class="docutils literal notranslate"><span class="pre">Variable.get_dims()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_var"><code class="docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.inq_fill"><code class="docutils literal notranslate"><span class="pre">Variable.inq_fill()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.name"><code class="docutils literal notranslate"><span class="pre">Variable.name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.rename_att"><code class="docutils literal notranslate"><span class="pre">Variable.rename_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_chartostring"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_mask"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_scale"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_scale()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.shape"><code class="docutils literal notranslate"><span class="pre">Variable.shape</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.size"><code class="docutils literal notranslate"><span class="pre">Variable.size</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -125,19 +122,19 @@ function-call style methods or indexer-style (numpy-like) syntax.</p>
 <dt class="sig sig-object py" id="pncpy.Variable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">Variable</span></span><a class="headerlink" href="#pncpy.Variable" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A PnetCDF <cite>Variable</cite> is used to read and write netCDF data.  They are
-analogous to numpy array objects. See <cite>Variable.__init__</cite> for more
+<p>A PnetCDF variable is used to read and write netCDF data.  They are
+analogous to numpy array objects. See <code class="docutils literal notranslate"><span class="pre">Variable.__init__</span></code> for more
 details.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><cite>Variable</cite> instances should be created using the
+<p><code class="docutils literal notranslate"><span class="pre">Variable</span></code> instances should be created using the
 <cite>File.def_var</cite> method of a <cite>File</cite> instance, not using this class constructor 
 directly.</p>
 </div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.__init__" title="Permalink to this definition"></a></dt>
-<dd><p><cite>Variable</cite> constructor.</p>
+<dd><p>The constructor for <a class="reference internal" href="#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -202,12 +199,12 @@ the variable is not pre-filled.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>no_fill</strong> (<em>int</em>) – Set no_fill mode for a variable. 1 for on (not to fill) and 0 for off (to fill).</p></li>
-<li><p><strong>fill_value</strong> – Sets the customized fill value. Must be the same type as the variable. This will</p></li>
+<li><p><strong>fill_value</strong> (<em>any</em>) – Sets the customized fill value. Must be the same type as the variable. This will 
+be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
+and the default fill value is used.</p></li>
 </ul>
 </dd>
 </dl>
-<p>be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
-and the default fill value is used.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -236,7 +233,7 @@ attributes.</p>
 <dd><p>Return the netCDF file instance that the variable is contained in.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">File</span></code></p>
+<dd class="field-odd"><p><a class="reference internal" href="file_api.html#pncpy.File" title="pncpy.File"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.File</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -306,12 +303,6 @@ we don’t desire:
 <dd class="field-even"><p>tuple</p>
 </dd>
 </dl>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pncpy.Variable.name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pncpy.Variable.name" title="Permalink to this definition"></a></dt>
-<dd><p>string name of Variable instance</p>
 </dd></dl>
 
 <dl class="py method">
@@ -427,18 +418,6 @@ data in <cite>NETCDF3</cite> or <cite>NETCDF4_CLASSIC</cite> files (since the <c
 data model does not have unsigned integer data types).</p>
 <p>The default value of <cite>scale</cite> is <cite>True</cite>
 (automatic conversions are performed).</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pncpy.Variable.shape">
-<span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#pncpy.Variable.shape" title="Permalink to this definition"></a></dt>
-<dd><p>Find current sizes of all variable dimensions</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pncpy.Variable.size">
-<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pncpy.Variable.size" title="Permalink to this definition"></a></dt>
-<dd><p>Return the number of stored elements.</p>
 </dd></dl>
 
 </dd></dl>

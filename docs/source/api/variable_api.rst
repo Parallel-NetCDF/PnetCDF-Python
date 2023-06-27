@@ -15,10 +15,12 @@ function-call style methods or indexer-style (numpy-like) syntax.
     inq_fill, fill_rec, set_auto_chartostring, set_auto_scale, set_auto_mask, 
     set_auto_maskandscale, put_var, put_var_all, get_var, get_var_all, iput_var, bput_var
     iget_var, inq_offset
+   :exclude-members: name, shape, size
 
 
 .. rubric:: Variable Attributes
-   The following class members are read-only and should not be modified by the user.
+ The following class members are read-only and should not be modified by the user.
+
 .. attribute:: name
    :noindex:
 
