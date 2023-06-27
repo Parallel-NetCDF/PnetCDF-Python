@@ -460,9 +460,9 @@ cdef class File:
 
     def get_att(self,name,encoding='utf-8'):
         """
-        get_att(self,name)
+        get_att(self,name,encoding='utf-8')
 
-        Retrieve a netCDF dataset or file attribute.
+        Retrieve a netCDF file attribute.
         Useful when you need to get a netCDF attribute with the same
         name as one of the reserved python attributes.
 

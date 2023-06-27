@@ -32,33 +32,50 @@ cdef class Variable:
     .. note:: `Variable` instances should be created using the
      `File.def_var` method of a `File` instance, not using this class constructor 
      directly.
+
+
     """
-
-
 
     def __init__(self, file, name, nc_dtype, dimensions=(), **kwargs):
         """
-        **`__init__(self, file, name, datatype, dimensions=(), endian='native', least_significant_digit=None, significant_digits=None, fill_value=None, **kwargs)`**
+        __init__(self, file, name, nc_dtype, dimensions=(), **kwargs)
 
         `Variable` constructor.
 
-        **`group`**: `Group` or `Dataset` instance to associate with variable.
+        :param varname: Name of the new variable.
+        :type varname: str
 
-        **`name`**: Name of the variable.
+        :param nc_dtype: The datatype of the new variable. Supported specifiers are: 
 
-        **`datatype`**: `Variable` data type. Can be specified by providing a
-        numpy dtype object, or a string that describes a numpy dtype object.
-        Supported values, corresponding to `str` attribute of numpy dtype
-        objects, include `'f4'` (32-bit floating point), `'f8'` (64-bit floating
-        point), `'i4'` (32-bit signed integer), `'i2'` (16-bit signed integer),
-        `'i8'` (64-bit signed integer), `'i4'` (8-bit signed integer), `'i1'`
-        (8-bit signed integer), `'u1'` (8-bit unsigned integer), `'u2'` (16-bit
-        unsigned integer), `'u4'` (32-bit unsigned integer), `'u8'` (64-bit
-        unsigned integer), or `'S1'` (single-character string).
+            - ``pncpy.NC_CHAR`` for text data 
+            - ``pncpy.NC_BYTE`` for 1-byte integer
+            - ``pncpy.NC_SHORT`` for 2-byte signed integer 
+            - ``pncpy.NC_INT`` for 4-byte signed integer
+            - ``pncpy.NC_FLOAT`` for 4-byte floating point number
+            - ``pncpy.NC_DOUBLE`` for 8-byte real number in double precision
+         
+         The following are `CDF-5` format only
 
-        **`dimensions`**: a tuple containing the variable's Dimension instances
-        (defined previously with `def_dim`). Default is an empty tuple
-        which means the variable is a scalar (and therefore has no dimensions).
+            - ``pncpy.NC_UBYTE`` for unsigned 1-byte integer
+            - ``pncpy.NC_USHORT`` for unsigned 2-byte integer
+            - ``pncpy.NC_UINT`` for unsigned 4-byte intege
+            - ``pncpy.NC_INT64`` for signed 8-byte integer
+            - ``pncpy.NC_UINT64`` for unsigned 8-byte integer
+        
+        :type nc_dtype: int
+        :param dimensions: The dimensions of the new variable. Can be either dimension names
+         or dimension class instances
+
+        :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
+        
+        :param fill_value: The fill value of the new variable. Accepted values are:
+
+         - ``None``: use the default fill value for the given datatype
+         - ``False``: fill mode is turned off
+         - any other value: use the given value as fill value
+
+        :return: The created variable
+        :rtype: :class:`pncpy.Variable`
 
         **`fill_value`**:  If specified, the default netCDF `_FillValue` (the
         value that the variable gets filled with before any data is written to it)
@@ -222,15 +239,12 @@ cdef class Variable:
             raise AttributeError("name cannot be altered")
 
     property datatype:
-        """numpy data type"""
+        """Return the mapped numpy data type of the vairable netCDF datatype """
         def __get__(self):
             return self.dtype
-    """
+
     property shape:
-        pass #TODO: implement this!
-    """
-    property shape:
-        """find current sizes of all variable dimensions"""
+        """Find current sizes of all variable dimensions"""
         def __get__(self):
             shape = ()
             for dimname in self._getdims():
@@ -247,26 +261,44 @@ cdef class Variable:
             return int(np.prod(self.shape))
 
     property dimensions:
-        """get variables's dimension names"""
+        """Get variables's dimension names"""
         def __get__(self):
             return self._getdims()
         def __set__(self,value):
             raise AttributeError("dimensions cannot be altered")
     def file(self):
+        """
+        file(self)
+
+        Return the netCDF file instance that the variable is contained in.
+
+        :rtype: ``File``
+        """
         return self._file
     def ncattrs(self):
         """
-        **`ncattrs(self)`**
+        ncattrs(self)
 
-        return netCDF attribute names for this `Variable` in a list."""
+        Return netCDF attribute names for this variable in a list.
+        :rtype: list
+        """
         return _get_att_names(self._file_id, self._varid)
     def put_att(self,name,value):
         """
-        **`put_att(self,name,value)`**
+        put_att(self,name,value)
 
-        set a netCDF variable attribute using name,value pair.  Use if you need to set a
-        netCDF attribute with the same name as one of the reserved python
-        attributes."""
+        Set an attribute for this variable using name,value pair. Especially 
+        useful when you need to set a netCDF attribute with the
+        with the same name as one of the reserved python attributes.
+
+        :param name: Name of the new attribute.
+        :type name: str
+
+        :param value: Value of the new attribute.
+        :type value: str, int, float or list of int and float
+
+        Operational mode: This method must be called while the associated netCDF file is in define mode.
+        """
         cdef nc_type xtype
         xtype=-99
         _set_att(self._file, self._varid, name, value, xtype=xtype)
@@ -274,23 +306,36 @@ cdef class Variable:
 
     def get_att(self,name,encoding='utf-8'):
         """
-        **`get_att(self,name)`**
+        get_att(self,name,encoding='utf-8')
 
-        retrieve a netCDF variable attribute.  Use if you need to set a
-        netCDF attribute with the same name as one of the reserved python
-        attributes.
+        Retrieve a netCDF variable attribute. Useful when you need to get a netCDF attribute with the same
+        name as one of the reserved python attributes.
 
         option kwarg `encoding` can be used to specify the
-        character encoding of a string attribute (default is `utf-8`)."""
+        character encoding of a string attribute (default is `utf-8`).
+
+        :param name: Name of the attribute.
+        :type name: str
+
+        :rtype: str
+
+        Operational mode: This method must be called while the associated netCDF file is in define mode.
+        """
         return _get_att(self._file, self._file_id, name, encoding=encoding)
 
     def del_att(self, name):
         """
-        **`del_att(self,name,value)`**
+        del_att(self,name,value)
 
-        delete a netCDF variable attribute.  Use if you need to delete a
+        Delete a netCDF variable attribute. Useful when you need to delete a
         netCDF attribute with the same name as one of the reserved python
-        attributes."""
+        attributes.
+    
+        :param name: Name of the attribute
+        :type name: str
+
+        Operational mode: This method must be called while the associated netCDF file is in define mode.
+        """
         cdef char *attname
         bytestr = _strencode(name)
         attname = bytestr
@@ -354,9 +399,17 @@ cdef class Variable:
 
     def rename_att(self, oldname, newname):
         """
-        **`rename_att(self, oldname, newname)`**
+        rename_att(self, oldname, newname)
 
-        rename a `Variable` attribute named `oldname` to `newname`."""
+        Rename a variable attribute named `oldname` to `newname`
+
+        :param oldname: Old name of the attribute.
+        :type oldname: str
+
+        Operational mode: If the new name is longer than the original name, the associated netCDF file must be in define mode. 
+        Otherwise, the netCDF file can be in either define or data mode.
+
+        """
         cdef char *oldnamec
         cdef char *newnamec
         cdef int ierr
@@ -370,14 +423,29 @@ cdef class Variable:
 
     def get_dims(self):
         """
-        **`get_dims(self)`**
+        get_dims(self)
 
-        return a tuple of `Dimension` instances associated with this
+        return a tuple of ``Dimension`` instances associated with this
         `Variable`.
-                """
+        :rtype: tuple of ``Dimension``
+
+        """
         return tuple(self._file.dimensions[dim] for dim in self.dimensions)
 
     def def_fill(self, int no_fill, fill_value = None):
+        """
+        def_fill(self, int no_fill, fill_value = None)
+
+        Sets the fill mode parameters for a variable.
+
+        :param no_fill: Set no_fill mode for a variable. 1 for on (not to fill) and 0 for off (to fill).
+        :type no_fill: int
+
+        :param fill_value: Sets the customized fill value. Must be the same type as the variable. This will 
+        be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
+        and the default fill value is used.
+
+        """
         cdef ndarray data
         cdef int ierr, _no_fill
         _no_fill = no_fill
@@ -393,15 +461,39 @@ cdef class Variable:
         _check_err(ierr)
 
     def inq_fill(self):
+        """
+        inq_fill(self)
+
+        Returns te fill mode settings of this variable. A tuple of two values representing no_fill mode and fill value.
+
+        :return: A tuple of two value which are ``no_fill`` mode and ``fill_value``. 
+             - ``no_fill``: will be 1 if no_fill mode is set (else 0).
+             - ``fill_value``: the fill value for this variable.
+
+        :rtype: tuple
+
+        """
+
         cdef int ierr, no_fill
         cdef ndarray fill_value
         fill_value = np.empty((1,), self.dtype)
         with nogil:
             ierr = ncmpi_inq_var_fill(self._file_id, self._varid, &no_fill, PyArray_DATA(fill_value))
         _check_err(ierr)
+
         return no_fill, fill_value[0]
 
     def fill_rec(self, int rec_no):
+        """
+        fill_rec(self, int rec_no)
+
+        Fills a record of a record variable with predefined or user-defined fill values.
+
+        :param rec_no: the index of the record to be filled
+        :type rec_no: int
+
+        
+        """
         cdef int recno, ierr
         recno = rec_no
         with nogil:

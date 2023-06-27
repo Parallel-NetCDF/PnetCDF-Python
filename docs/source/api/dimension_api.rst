@@ -16,6 +16,8 @@ to access dimensions.
    :members: getfile, isunlimited
 
 .. rubric:: Attributes
+    The following class members are read-only and should not be modified by the user.
+
 
 .. attribute:: name
 
@@ -24,5 +26,4 @@ to access dimensions.
 
 .. attribute:: size
       
-    The current size of Dimension (calls ``len`` on Dimension instance). This class member is read-only and
-    should not be modified by the user.
+    The current size of Dimension (calls ``len`` on Dimension instance). 

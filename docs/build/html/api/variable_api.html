@@ -64,11 +64,15 @@
 <li class="toctree-l2"><a class="reference internal" href="#pncpy.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.__init__"><code class="docutils literal notranslate"><span class="pre">Variable.__init__()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.datatype"><code class="docutils literal notranslate"><span class="pre">Variable.datatype</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.def_fill"><code class="docutils literal notranslate"><span class="pre">Variable.def_fill()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.del_att"><code class="docutils literal notranslate"><span class="pre">Variable.del_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.dimensions"><code class="docutils literal notranslate"><span class="pre">Variable.dimensions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.file"><code class="docutils literal notranslate"><span class="pre">Variable.file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.fill_rec"><code class="docutils literal notranslate"><span class="pre">Variable.fill_rec()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_att"><code class="docutils literal notranslate"><span class="pre">Variable.get_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_dims"><code class="docutils literal notranslate"><span class="pre">Variable.get_dims()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_var"><code class="docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.inq_fill"><code class="docutils literal notranslate"><span class="pre">Variable.inq_fill()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.name"><code class="docutils literal notranslate"><span class="pre">Variable.name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
@@ -124,122 +128,154 @@ function-call style methods or indexer-style (numpy-like) syntax.</p>
 <p>A PnetCDF <cite>Variable</cite> is used to read and write netCDF data.  They are
 analogous to numpy array objects. See <cite>Variable.__init__</cite> for more
 details.</p>
-<p>A list of attribute names corresponding to netCDF attributes defined for
-the variable can be obtained with the <cite>Variable.ncattrs</cite> method. These
-attributes can be created by assigning to an attribute of the
-<cite>Variable</cite> instance. A dictionary containing all the netCDF attribute
-name/value pairs is provided by the <cite>__dict__</cite> attribute of a
-<cite>Variable</cite> instance.</p>
-<p>The following class variables are read-only:</p>
-<p><strong>`dimensions`</strong>: A tuple containing the names of the
-dimensions associated with this variable.</p>
-<p><strong>`dtype`</strong>: A numpy dtype object describing the
-variable’s data type.</p>
-<p><strong>`ndim`</strong>: The number of variable dimensions.</p>
-<p><strong>`shape`</strong>: A tuple with the current shape (length of all dimensions).</p>
-<p><strong>`scale`</strong>: If True, <cite>scale_factor</cite> and <cite>add_offset</cite> are
-applied, and signed integer data is automatically converted to
-unsigned integer data if the <cite>_Unsigned</cite> attribute is set.
-Default is <cite>True</cite>, can be reset using <cite>Variable.set_auto_scale</cite> and
-<cite>Variable.set_auto_maskandscale</cite> methods.</p>
-<p><strong>`mask`</strong>: If True, data is automatically converted to/from masked
-arrays when missing values or fill values are present. Default is <cite>True</cite>, can be
-reset using <cite>Variable.set_auto_mask</cite> and <cite>Variable.set_auto_maskandscale</cite>
-methods. Only relevant for Variables with primitive or enum types (ignored
-for compound and vlen Variables).</p>
-<p><strong>`chartostring`</strong>: If True, data is automatically converted to/from character
-arrays to string arrays when the <cite>_Encoding</cite> variable attribute is set.
-Default is <cite>True</cite>, can be reset using
-<cite>Variable.set_auto_chartostring</cite> method.</p>
-<p><strong>`least_significant_digit`</strong>: Describes the power of ten of the
-smallest decimal place in the data the contains a reliable value.  Data is
-truncated to this decimal place when it is assigned to the <cite>Variable</cite>
-instance. If <cite>None</cite>, the data is not truncated.</p>
-<p><strong>`__orthogonal_indexing__`</strong>: Always <cite>True</cite>.  Indicates to client code
-that the object supports ‘orthogonal indexing’, which means that slices
-that are 1d arrays or lists slice along each dimension independently.  This
-behavior is similar to Fortran or Matlab, but different than np.</p>
-<p><strong>`datatype`</strong>: numpy data type (for primitive data types) or VLType/CompoundType
-instance (for compound or vlen data types).</p>
-<p><strong>`name`</strong>: String name.</p>
-<p><strong>`size`</strong>: The number of stored elements.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><cite>Variable</cite> instances should be created using the
+<cite>File.def_var</cite> method of a <cite>File</cite> instance, not using this class constructor 
+directly.</p>
+</div>
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.__init__" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`__init__(self, file, name, datatype, dimensions=(), endian=’native’, least_significant_digit=None, significant_digits=None, fill_value=None, **kwargs)`</strong></p>
-<p><cite>Variable</cite> constructor.</p>
-<p><strong>`group`</strong>: <cite>Group</cite> or <cite>Dataset</cite> instance to associate with variable.</p>
-<p><strong>`name`</strong>: Name of the variable.</p>
-<p><strong>`datatype`</strong>: <cite>Variable</cite> data type. Can be specified by providing a
-numpy dtype object, or a string that describes a numpy dtype object.
-Supported values, corresponding to <cite>str</cite> attribute of numpy dtype
-objects, include <cite>‘f4’</cite> (32-bit floating point), <cite>‘f8’</cite> (64-bit floating
-point), <cite>‘i4’</cite> (32-bit signed integer), <cite>‘i2’</cite> (16-bit signed integer),
-<cite>‘i8’</cite> (64-bit signed integer), <cite>‘i4’</cite> (8-bit signed integer), <cite>‘i1’</cite>
-(8-bit signed integer), <cite>‘u1’</cite> (8-bit unsigned integer), <cite>‘u2’</cite> (16-bit
-unsigned integer), <cite>‘u4’</cite> (32-bit unsigned integer), <cite>‘u8’</cite> (64-bit
-unsigned integer), or <cite>‘S1’</cite> (single-character string).</p>
-<p><strong>`dimensions`</strong>: a tuple containing the variable’s Dimension instances
-(defined previously with <cite>def_dim</cite>). Default is an empty tuple
-which means the variable is a scalar (and therefore has no dimensions).</p>
-<p><strong>`least_significant_digit`</strong>: If this or <cite>significant_digits</cite> are specified,
-variable data will be truncated (quantized).
-In conjunction with <cite>compression=’zlib’</cite> this produces
-‘lossy’, but significantly more efficient compression. For example, if
-<cite>least_significant_digit=1</cite>, data will be quantized using
-around(scale*data)/scale, where scale = 2**bits, and bits is determined
-so that a precision of 0.1 is retained (in this case bits=4). Default is
-<cite>None</cite>, or no quantization.</p>
-<p><strong>`significant_digits`</strong>: New in version 1.6.0.
-As described for <cite>least_significant_digit</cite>
-except the number of significant digits retained is prescribed independent
-of the floating point exponent. Default <cite>None</cite> - no quantization done.</p>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.__init__" title="Permalink to this definition"></a></dt>
+<dd><p><cite>Variable</cite> constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
+<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> for text data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> for 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> for 2-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT</span></code> for 4-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_FLOAT</span></code> for 4-byte floating point number</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> for 8-byte real number in double precision</p></li>
+</ul>
+</div></blockquote>
+<p>The following are <cite>CDF-5</cite> format only</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> for unsigned 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> for unsigned 2-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> for unsigned 4-byte intege</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT64</span></code> for signed 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> for unsigned 8-byte integer</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Can be either dimension names
+or dimension class instances</p></li>
+<li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
+<li><p>any other value: use the given value as fill value</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a></p>
+</dd>
+</dl>
 <p><strong>`fill_value`</strong>:  If specified, the default netCDF <cite>_FillValue</cite> (the
 value that the variable gets filled with before any data is written to it)
 is replaced with this value.  If fill_value is set to <cite>False</cite>, then
 the variable is not pre-filled.</p>
-<p><strong>*Note*</strong>: <cite>Variable</cite> instances should be created using the
-<cite>File.def_var</cite> method of a <cite>File</cite> instance, not using this class directly.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Variable.datatype">
 <span class="sig-name descname"><span class="pre">datatype</span></span><a class="headerlink" href="#pncpy.Variable.datatype" title="Permalink to this definition"></a></dt>
-<dd><p>numpy data type</p>
+<dd><p>Return the mapped numpy data type of the vairable netCDF datatype</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.def_fill">
+<span class="sig-name descname"><span class="pre">def_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">no_fill</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.def_fill" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the fill mode parameters for a variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>no_fill</strong> (<em>int</em>) – Set no_fill mode for a variable. 1 for on (not to fill) and 0 for off (to fill).</p></li>
+<li><p><strong>fill_value</strong> – Sets the customized fill value. Must be the same type as the variable. This will</p></li>
+</ul>
+</dd>
+</dl>
+<p>be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
+and the default fill value is used.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.del_att">
-<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.del_att" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`del_att(self,name,value)`</strong></p>
-<p>delete a netCDF variable attribute.  Use if you need to delete a
+<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.del_att" title="Permalink to this definition"></a></dt>
+<dd><p>Delete a netCDF variable attribute. Useful when you need to delete a
 netCDF attribute with the same name as one of the reserved python
 attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute</p>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the associated netCDF file is in define mode.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Variable.dimensions">
 <span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#pncpy.Variable.dimensions" title="Permalink to this definition"></a></dt>
-<dd><p>get variables’s dimension names</p>
+<dd><p>Get variables’s dimension names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.file">
+<span class="sig-name descname"><span class="pre">file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.file" title="Permalink to this definition"></a></dt>
+<dd><p>Return the netCDF file instance that the variable is contained in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">File</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.fill_rec">
+<span class="sig-name descname"><span class="pre">fill_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">rec_no</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.fill_rec" title="Permalink to this definition"></a></dt>
+<dd><p>Fills a record of a record variable with predefined or user-defined fill values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rec_no</strong> (<em>int</em>) – the index of the record to be filled</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.get_att">
-<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_att" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`get_att(self,name)`</strong></p>
-<p>retrieve a netCDF variable attribute.  Use if you need to set a
-netCDF attribute with the same name as one of the reserved python
-attributes.</p>
+<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_att" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve a netCDF variable attribute. Useful when you need to get a netCDF attribute with the same
+name as one of the reserved python attributes.</p>
 <p>option kwarg <cite>encoding</cite> can be used to specify the
 character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the associated netCDF file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.get_dims">
-<span class="sig-name descname"><span class="pre">get_dims</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_dims" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`get_dims(self)`</strong></p>
-<p>return a tuple of <cite>Dimension</cite> instances associated with this
-<cite>Variable</cite>.</p>
+<span class="sig-name descname"><span class="pre">get_dims</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_dims" title="Permalink to this definition"></a></dt>
+<dd><p>return a tuple of <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instances associated with this
+<cite>Variable</cite>.
+:rtype: tuple of <code class="docutils literal notranslate"><span class="pre">Dimension</span></code></p>
 </dd></dl>
 
 <dl class="py method">
@@ -256,6 +292,22 @@ we don’t desire:
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.inq_fill">
+<span class="sig-name descname"><span class="pre">inq_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.inq_fill" title="Permalink to this definition"></a></dt>
+<dd><p>Returns te fill mode settings of this variable. A tuple of two values representing no_fill mode and fill value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple of two value which are <code class="docutils literal notranslate"><span class="pre">no_fill</span></code> mode and <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>. 
+- <code class="docutils literal notranslate"><span class="pre">no_fill</span></code>: will be 1 if no_fill mode is set (else 0).
+- <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>: the fill value for this variable.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Variable.name">
 <span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pncpy.Variable.name" title="Permalink to this definition"></a></dt>
@@ -264,25 +316,39 @@ we don’t desire:
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.ncattrs">
-<span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.ncattrs" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`ncattrs(self)`</strong></p>
-<p>return netCDF attribute names for this <cite>Variable</cite> in a list.</p>
+<span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.ncattrs" title="Permalink to this definition"></a></dt>
+<dd><p>Return netCDF attribute names for this variable in a list.
+:rtype: list</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.put_att">
-<span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_att" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`put_att(self,name,value)`</strong></p>
-<p>set a netCDF variable attribute using name,value pair.  Use if you need to set a
-netCDF attribute with the same name as one of the reserved python
-attributes.</p>
+<span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_att" title="Permalink to this definition"></a></dt>
+<dd><p>Set an attribute for this variable using name,value pair. Especially 
+useful when you need to set a netCDF attribute with the
+with the same name as one of the reserved python attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the new attribute.</p></li>
+<li><p><strong>value</strong> (<em>str</em><em>, </em><em>int</em><em>, </em><em>float</em><em> or </em><em>list</em><em> of </em><em>int and float</em>) – Value of the new attribute.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the associated netCDF file is in define mode.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.rename_att">
-<span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.rename_att" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`rename_att(self, oldname, newname)`</strong></p>
-<p>rename a <cite>Variable</cite> attribute named <cite>oldname</cite> to <cite>newname</cite>.</p>
+<span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.rename_att" title="Permalink to this definition"></a></dt>
+<dd><p>Rename a variable attribute named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
+</dd>
+</dl>
+<p>Operational mode: If the new name is longer than the original name, the associated netCDF file must be in define mode. 
+Otherwise, the netCDF file can be in either define or data mode.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -366,7 +432,7 @@ data model does not have unsigned integer data types).</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pncpy.Variable.shape">
 <span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#pncpy.Variable.shape" title="Permalink to this definition"></a></dt>
-<dd><p>find current sizes of all variable dimensions</p>
+<dd><p>Find current sizes of all variable dimensions</p>
 </dd></dl>
 
 <dl class="py attribute">
@@ -375,6 +441,85 @@ data model does not have unsigned integer data types).</p>
 <dd><p>Return the number of stored elements.</p>
 </dd></dl>
 
+</dd></dl>
+
+<p class="rubric">Variable Attributes
+The following class members are read-only and should not be modified by the user.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">name</span></span></dt>
+<dd><p>The string name of Variable instance
+<strong>Type:</strong> <cite>str</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">dtype</span></span></dt>
+<dd><p>Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object
+describing the variable’s data type.
+<strong>Type:</strong> <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">datatype</span></span></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">Variable.dtype</span></code>.
+<strong>Type:</strong> <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">shape</span></span></dt>
+<dd><p>Return the shape of the variable, which is the current sizes of all variable
+dimensions
+<strong>Type:</strong> <cite>Tuple[int, int]</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">ndim</span></span></dt>
+<dd><p>The number of variable dimensions.
+<strong>Type:</strong> <cite>int</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">size</span></span></dt>
+<dd><p>Return the number of stored elements
+<strong>Type:</strong> <cite>int</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">dimensions</span></span></dt>
+<dd><p>Return the variable’s dimension names
+<strong>Type:</strong> <cite>List[str]</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">scale</span></span></dt>
+<dd><p>Return the variable’s dimension names
+<strong>Type:</strong> <cite>bool</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">mask</span></span></dt>
+<dd><p>If <cite>True</cite>, data is automatically converted to/from masked
+arrays when missing values or fill values are present. Default is <cite>True</cite>, can be
+reset using <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask</span></code> and <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_maskandscale</span></code>
+methods.
+<strong>Type:</strong> <cite>bool</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">chartostring</span></span></dt>
+<dd><p>If <cite>True</cite>, data is automatically converted to/from character
+arrays to string arrays when the <cite>_Encoding</cite> variable attribute is set.
+Default is <cite>True</cite>, can be reset using <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring</span></code> method.
+<strong>Type:</strong> <cite>bool</cite></p>
 </dd></dl>
 
 </section>
