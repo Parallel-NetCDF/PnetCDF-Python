@@ -18,9 +18,6 @@ relations among data fields stored in a netCDF file.
    :exclude-members: indep_mode, path
 
 File Attributes
-----------------
-
- 
  The following class members are read-only and should not be modified by the user.
 
  .. attribute:: dimensions

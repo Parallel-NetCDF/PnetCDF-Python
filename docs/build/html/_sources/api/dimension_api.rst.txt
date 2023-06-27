@@ -17,8 +17,6 @@ to access dimensions.
    :exclude-members: name, size
 
 Dimension Attributes
----------------------
-    
  The following class members are read-only and should not be modified by the user.
 
  .. attribute:: name

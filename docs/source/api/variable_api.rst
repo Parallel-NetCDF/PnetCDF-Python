@@ -20,9 +20,7 @@ function-call style methods or indexer-style (numpy-like) syntax.
 
 
 Variable Attributes
---------------------
- 
-The following class members are read-only and should not be modified by the user.
+ The following class members are read-only and should not be modified by the user.
 
  .. attribute:: name
 
