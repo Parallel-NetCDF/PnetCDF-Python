@@ -44,9 +44,7 @@ autodoc_default_options = {
 
 def autodoc_skip_member(app, what, name, obj, skip, options):
     # Ref: https://stackoverflow.com/a/21449475/
-    exclusions = ('name',  
-                  'datatype', 'size', 'shape',  # undoc-members
-                  )
+    exclusions = ('name', 'datatype', 'size', 'shape', 'dimensions')
     exclude = name in exclusions
     # return True if (skip or exclude) else None  # Can interfere with subsequent skip functions.
     return True if exclude else None

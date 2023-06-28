@@ -503,7 +503,7 @@ cdef class Variable:
 
     def set_auto_chartostring(self,chartostring):
         """
-        **`set_auto_chartostring(self,chartostring)`**
+        set_auto_chartostring(self,chartostring)
 
         turn on or off automatic conversion of character variable data to and
         from numpy fixed length string arrays when the `_Encoding` variable attribute
@@ -526,7 +526,7 @@ cdef class Variable:
 
     def set_auto_scale(self,scale):
         """
-        **`set_auto_scale(self,scale)`**
+        set_auto_scale(self,scale)
 
         turn on or off automatic packing/unpacking of variable
         data using `scale_factor` and `add_offset` attributes.
@@ -566,7 +566,7 @@ cdef class Variable:
 
     def set_auto_mask(self,mask):
         """
-        **`set_auto_mask(self,mask)`**
+        set_auto_mask(self,mask)
 
         turn on or off automatic conversion of variable data to and
         from masked arrays .
