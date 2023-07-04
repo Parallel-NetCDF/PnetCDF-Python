@@ -997,8 +997,8 @@ cdef class Variable:
     def _put_var1(self, value, tuple index, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef size_t *indexp
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef ndarray data
         # rank of variable.
         data = np.array(value)
@@ -1007,63 +1007,63 @@ cdef class Variable:
             data = data.copy()
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         for i, val in enumerate(index):
             indexp[i] = val
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_var1_all(self._file_id, self._varid, \
-                                    <const MPI_Offset *>indexp, PyArray_DATA(data), bufcount, buftype)
+                                    <const MPI_Offset *>indexp, PyArray_DATA(data), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_put_var1(self._file_id, self._varid, \
-                                    <const MPI_Offset *>indexp, PyArray_DATA(data), bufcount, buftype)
+                                    <const MPI_Offset *>indexp, PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
         free(indexp)
 
     def _put_var(self, ndarray data, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
-        #buftype = MPI_DATATYPE_NULL
+            bufftype = buftype.ob_mpi
+        #bufftype = MPI_DATATYPE_NULL
         if collective:
             with nogil:
                 ierr = ncmpi_put_var_all(self._file_id, self._varid, \
-                                     PyArray_DATA(data), bufcount, buftype)
+                                     PyArray_DATA(data), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_put_var(self._file_id, self._varid, \
-                                     PyArray_DATA(data), bufcount, buftype)
+                                     PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
     def _put_vara(self, start, count, ndarray data, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         ndims = len(self.dimensions)
@@ -1076,31 +1076,31 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_vara_all(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                     PyArray_DATA(data), bufcount, buftype)
+                                     PyArray_DATA(data), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_put_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                     PyArray_DATA(data), bufcount, buftype)
+                                     PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
     def _put_varn(self, start, count, num, ndarray data, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t **startp
         cdef size_t **countp
         cdef int num_req
@@ -1124,31 +1124,31 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_varn_all(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
-                                     PyArray_DATA(data), bufcount, buftype)
+                                     PyArray_DATA(data), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_put_varn(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
-                                     PyArray_DATA(data), bufcount, buftype)
+                                     PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
     def _put_vars(self, start, count, stride, ndarray data, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -1164,34 +1164,34 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_vars_all(self._file_id, self._varid, \
                                         <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        <const MPI_Offset *>stridep, PyArray_DATA(data), bufcount, buftype)
+                                        <const MPI_Offset *>stridep, PyArray_DATA(data), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_put_vars(self._file_id, self._varid, \
                                         <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        <const MPI_Offset *>stridep, PyArray_DATA(data), bufcount, buftype)
+                                        <const MPI_Offset *>stridep, PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
 
     def _put_varm(self, ndarray data, start, count, stride, imap, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -1216,32 +1216,170 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_put_varm_all(self._file_id, self._varid, <const MPI_Offset *>startp, \
                                         <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
-                                        <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype)
+                                        <const MPI_Offset *>imapp, PyArray_DATA(data), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_put_varm(self._file_id, self._varid, <const MPI_Offset *>startp, \
                                         <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
-                                        <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype)
+                                        <const MPI_Offset *>imapp, PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
 
 
 
     def put_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
+        """        
+        put_var(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
+
+        Method call to write independently in parallel to the netCDF variable. The behavior of the method varies depends on the 
+        pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. 
+
+        - `data` - Write an entire variable
+         Write all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
+         to use for writing a value in a scalar variable or whenever all the values of a multidimensional variable can all be written at once. 
+       
+        .. note:: Take care when using the simplest forms of this interface with record variables. If you try to write all the values of a record variable 
+         into a netCDF file that has no record data yet (hence has 0 records), nothing will be written. Similarly, if you try to write all of a record 
+         variable but there are more records in the file than you assume, more data may be written to the file than you supply, which may result in a 
+         segmentation violation.
+
+        - `data`, `index` - Write a single data value (a single element)
+         Put a single data value specified by `index` into a variable of an opened netCDF file that is in data mode. For example, index = [0,5] would specify the following 
+         position in a 4 * 10 two-dimensional variable ("-" means skip).
+
+        ::
+
+                       -  -  -  -  -  a  -  -  -  - \n
+            a     ->   -  -  -  -  -  -  -  -  -  - \n
+                       -  -  -  -  -  -  -  -  -  - \n
+                       -  -  -  -  -  -  -  -  -  - \n
+
+        - `data`, `start`, `count` - Write an array of values
+         The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
+         an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
+         section in a 4 * 10 two-dimensional variable ("-" means skip).
+
+        ::
+
+                        -  -  -  -  -  a  b  -  -  - \n
+            a  b   ->   -  -  -  -  -  c  d  -  -  - \n
+            c  d        -  -  -  -  -  -  -  -  -  - \n
+                        -  -  -  -  -  -  -  -  -  - \n
+
+        - `data`, `start`, `count`, `stride` - Write a subsampled array of values
+         The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
+         refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
+         would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
+
+        ::
+
+                          -  -  a  -  b  -  c  -  d  - \n
+         a  b  c  d   ->  -  -  e  -  f  -  g  -  h  - \n
+         e  f  g  h       -  -  -  -  -  -  -  -  -  - \n
+                          -  -  -  -  -  -  -  -  -  - \n
+
+        - `data`, `start`, `count`, `imap`, `stride`(optional) - Write a mapped array of values
+         The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
+         The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
+         and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
+         section in write butter and array section in a 4 * 10 two-dimensional variable ("-" means skip). 
+
+        ::
+
+                                       -  -  -  -  -  a  c  -  -  - \n
+            a - - b         a  c       -  -  -  -  -  b  d  -  -  - \n
+            - - - -    ->   b  d  ->   -  -  -  -  -  -  -  -  -  - \n
+            c - - d                    -  -  -  -  -  -  -  -  -  - \n
+            distance from a to b is 3 in buffer => imap[0] = 3
+            distance from a to c is 8 in buffer => imap[1] = 8
+                         
+        - `data`, `start`, `count`, `num` -  Write a list of subarrays of values
+          The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+
+
+        ::
+
+            num = 4
+            start[0][0] = 0; start[0][1] = 5; count[0][0] = 1; count[0][1] = 2
+            start[1][0] = 1; start[1][1] = 0; count[1][0] = 1; count[1][1] = 1
+            start[2][0] = 2; start[2][1] = 6; count[2][0] = 1; count[2][1] = 2
+            start[3][0] = 3; start[3][1] = 0; count[3][0] = 1; count[3][1] = 3
+                                 -  -  -  -  -  a  b  -  -  - 
+            a b c d e f g h  ->  c  -  -  -  -  -  -  -  -  - 
+                                 -  -  -  -  -  -  d  e  -  - 
+                                 f  g  h  -  -  -  -  -  -  - 
+
+        :param data: the numpy array that stores array values to be written, which serves as a write buffer. When writing a single data value, 
+         it can also be a single numeric (e.g. np.int32) python variable. The datatype should match with the variable's datatype. Note this numpy array
+         write buffer can be in any shape as long as the number of elements (buffer size) is matched.
+    
+        :type data: numpy.ndarray
+
+        :param index: [Optional] Only relevant when writing a single data value. The index of the data value to be written as a single element 
+         in the multi-dimensional variable array. For example, the index of top-left corner value of a two-dimensional varaible should be (0,0). 
+         If the variable uses the unlimited dimension, the first index value would correspond to the unlimited dimension. 
+
+        :type index: tuple of int
+
+        :param start: [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
+         An array of integers specifying the index in the variable where the first of the data values will be written. The
+         elements of `start` must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+         index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, `start`
+         is 2D array of size [num][ndims] and each start[i] is a vector specifying the index in the variable where the first of the data values
+         will be written.
+        :type start: numpy.ndarray
+
+        :param count: [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
+         An array of integers specifying  the edge lengths along each dimension of the block of data values to be written. The
+         elements of `count` must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+         index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, `count`
+         is 2D array of size [num][ndims] and each count[i] is a vector specifying the edge lengths along each dimension of the block of 
+         data values to be written.
+
+        :type count: numpy.ndarray
+
+        :param stride: [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers specifying 
+         the sampling interval along each dimension of the netCDF variable. The elements of the stride vector correspond, in order, to the 
+         netCDF variable’s dimensions.
+        :type stride: numpy.ndarray
+
+        :param num: [Optional] Only relevant when writing a list of subarrays. An integer specifying the number of subarrays.
+        :type num: int
+
+        :param imap: [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers the mapping between 
+         the dimensions of a netCDF variable and the in-memory structure of the internal data array. The elements of the index mapping vector 
+         correspond, in order, to the netCDF variable’s dimensions. Each element value of imap should equal the memory location distance in write buffer between two adjacent elements along the corresponding dimension of netCDF variable. 
+        :type imap: numpy.ndarray
+
+        :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
+        in the write buffer to be written to the file.
+        :type bufcount: int
+
+        :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
+        in the write buffer to be written to the file.
+        :type bufcount: int
+
+        :param buftype: [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the 
+        write buffer. 
+        :type buftype: mpi4py.MPI.Datatype
+        
+        Operational mode: This method must be called while the file is in independent data mode."""
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
             self._put_var(data, collective = False, bufcount = bufcount, buftype = buftype)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):
@@ -1316,11 +1454,10 @@ cdef class Variable:
 
         ::
 
-                         -  -  -  -  -  a  c  -  -  - \n
-            a - - b      -  -  -  -  -  b  d  -  -  - \n
-            - - - -  ->  -  -  -  -  -  -  -  -  -  - \n
-            c - - d      -  -  -  -  -  -  -  -  -  - \n
-
+                                       -  -  -  -  -  a  c  -  -  - \n
+            a - - b         a  c       -  -  -  -  -  b  d  -  -  - \n
+            - - - -    ->   b  d  ->   -  -  -  -  -  -  -  -  -  - \n
+            c - - d                    -  -  -  -  -  -  -  -  -  - \n
             distance from a to b is 3 in buffer => imap[0] = 3
             distance from a to c is 8 in buffer => imap[1] = 8
                          
@@ -1391,6 +1528,10 @@ cdef class Variable:
         :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
         in the write buffer to be written to the file.
         :type bufcount: int
+
+        :param buftype: [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the 
+        write buffer. 
+        :type buftype: mpi4py.MPI.Datatype
         
         Operational mode: This method must be called while the file is in collective data mode.
         """
@@ -1509,63 +1650,63 @@ cdef class Variable:
     def _get_var1(self, ndarray buff, index, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef size_t *indexp
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
 
         ndim_index = len(index)
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         for i, val in enumerate(index):
             indexp[i] = val
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_var1_all(self._file_id, self._varid, \
-                                    <const MPI_Offset *>indexp, PyArray_DATA(buff), bufcount, buftype)
+                                    <const MPI_Offset *>indexp, PyArray_DATA(buff), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_get_var1(self._file_id, self._varid, \
-                                    <const MPI_Offset *>indexp, PyArray_DATA(buff), bufcount, buftype)
+                                    <const MPI_Offset *>indexp, PyArray_DATA(buff), buffcount, bufftype)
         _check_err(ierr)
         free(indexp)
 
 
     def _get_var(self, ndarray buff, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef ndarray data
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
 
         if collective:
             with nogil:
                 ierr = ncmpi_get_var_all(self._file_id, self._varid, \
-                                    PyArray_DATA(buff), bufcount, buftype)
+                                    PyArray_DATA(buff), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_get_var(self._file_id, self._varid, \
-                                    PyArray_DATA(buff), bufcount, buftype)
+                                    PyArray_DATA(buff), buffcount, bufftype)
 
         _check_err(ierr)
 
 
     def _get_vara(self, ndarray buff, start, count, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         ndims = len(self.dimensions)
@@ -1576,30 +1717,30 @@ cdef class Variable:
             startp[n] = start[n]
 
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_vara_all(self._file_id, self._varid, \
                                         <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        PyArray_DATA(buff), bufcount, buftype)
+                                        PyArray_DATA(buff), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_get_vara(self._file_id, self._varid, \
                                         <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        PyArray_DATA(buff), bufcount, buftype)
+                                        PyArray_DATA(buff), buffcount, bufftype)
 
         _check_err(ierr)
 
     def _get_varn(self, ndarray buff, start, count, num, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t **startp
         cdef size_t **countp
 
@@ -1620,32 +1761,32 @@ cdef class Variable:
                 countp[i][j] = count[i][j]
 
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
-        #buftype = MPI_DATATYPE_NULL
+            buffcount = bufcount
+        #bufftype = MPI_DATATYPE_NULL
         if buftype is None:
-            buftype = _nptompitype[self.dtype.str[1:]]
+            bufftype = _nptompitype[self.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_varn_all(self._file_id, self._varid, num_req,\
                                         <const MPI_Offset **>startp, <const MPI_Offset **>countp, \
-                                        PyArray_DATA(buff), bufcount, buftype)
+                                        PyArray_DATA(buff), buffcount, bufftype)
 
         else:
             with nogil:
                 ierr = ncmpi_get_varn(self._file_id, self._varid, num_req,\
                                         <const MPI_Offset **>startp, <const MPI_Offset **>countp, \
-                                        PyArray_DATA(buff), bufcount, buftype)
+                                        PyArray_DATA(buff), buffcount, bufftype)
 
         _check_err(ierr)
 
     def _get_vars(self, ndarray buff, start, count, stride, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -1659,30 +1800,30 @@ cdef class Variable:
             startp[n] = start[n]
             stridep[n] = stride[n]
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_vars_all(self._file_id, self._varid, \
                                         <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        <const MPI_Offset *>stridep, PyArray_DATA(buff), bufcount, buftype)
+                                        <const MPI_Offset *>stridep, PyArray_DATA(buff), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_get_vars(self._file_id, self._varid, \
                                         <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                        <const MPI_Offset *>stridep, PyArray_DATA(buff), bufcount, buftype)
+                                        <const MPI_Offset *>stridep, PyArray_DATA(buff), buffcount, bufftype)
 
         _check_err(ierr)
 
     def _get_varm(self, ndarray buff, start, count, stride, imap, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -1701,23 +1842,23 @@ cdef class Variable:
                 stridep[n] = 1
             imapp[n] = imap[n]
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if collective:
             with nogil:
                 ierr = ncmpi_get_varm_all(self._file_id, self._varid, <const MPI_Offset *>startp, \
                                         <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
-                                        <const MPI_Offset *>imapp, PyArray_DATA(buff), bufcount, buftype)
+                                        <const MPI_Offset *>imapp, PyArray_DATA(buff), buffcount, bufftype)
         else:
             with nogil:
                 ierr = ncmpi_get_varm(self._file_id, self._varid, <const MPI_Offset *>startp, \
                                         <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
-                                        <const MPI_Offset *>imapp, PyArray_DATA(buff), bufcount, buftype)
+                                        <const MPI_Offset *>imapp, PyArray_DATA(buff), buffcount, bufftype)
         _check_err(ierr)
 
     def get_var(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
@@ -1861,41 +2002,41 @@ cdef class Variable:
 
     def _iput_var(self, ndarray data, bufcount, Datatype buftype, buffered = False):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef int request
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
-        #buftype = MPI_DATATYPE_NULL
+            bufftype = buftype.ob_mpi
+        #bufftype = MPI_DATATYPE_NULL
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_var(self._file_id, self._varid, \
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         else:
             with nogil:
                 ierr = ncmpi_bput_var(self._file_id, self._varid, \
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
     def _iput_var1(self, value, index, bufcount, Datatype buftype, buffered=False):
         cdef int ierr, ndims
         cdef size_t *indexp
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef ndarray data
         cdef int request
         # rank of variable.
@@ -1905,33 +2046,33 @@ cdef class Variable:
             data = data.copy()
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         for i, val in enumerate(index):
             indexp[i] = val
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_var1(self._file_id, self._varid, <const MPI_Offset *>indexp,\
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         else:
             with nogil:
                 ierr = ncmpi_bput_var1(self._file_id, self._varid, <const MPI_Offset *>indexp,\
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
     def _iput_vara(self, start, count, ndarray data, bufcount, Datatype buftype, buffered=False):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef int request
@@ -1945,32 +2086,32 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         else:
             with nogil:
                 ierr = ncmpi_bput_vara(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
     def _iput_vars(self, start, count, stride, ndarray data, bufcount, Datatype buftype, buffered=False):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -1986,31 +2127,31 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_vars(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                        <const MPI_Offset *>stridep, PyArray_DATA(data), bufcount, buftype, &request)
+                                        <const MPI_Offset *>stridep, PyArray_DATA(data), buffcount, bufftype, &request)
         else:
             with nogil:
                 ierr = ncmpi_bput_vars(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                        <const MPI_Offset *>stridep, PyArray_DATA(data), bufcount, buftype, &request)
+                                        <const MPI_Offset *>stridep, PyArray_DATA(data), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
     def _iput_varn(self, start, count, num, ndarray data, bufcount, Datatype buftype, buffered=False):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t **startp
         cdef size_t **countp
         cdef int num_req
@@ -2034,33 +2175,33 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         #bufcount = data.size
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_varn(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
         else:
             with nogil:
                 ierr = ncmpi_bput_varn(self._file_id, self._varid, num_req, <const MPI_Offset **>startp, <const MPI_Offset **>countp,\
-                                        PyArray_DATA(data), bufcount, buftype, &request)
+                                        PyArray_DATA(data), buffcount, bufftype, &request)
 
         _check_err(ierr)
         return request
 
     def _iput_varm(self, ndarray data, start, count, stride, imap, bufcount, Datatype buftype, buffered=False):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -2085,24 +2226,24 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            buftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = _nptompitype[data.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         if not buffered:
             with nogil:
                 ierr = ncmpi_iput_varm(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                        <const MPI_Offset *>stridep, <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype, &request)
+                                        <const MPI_Offset *>stridep, <const MPI_Offset *>imapp, PyArray_DATA(data), buffcount, bufftype, &request)
         else:
             with nogil:
                 ierr = ncmpi_bput_varm(self._file_id, self._varid, <const MPI_Offset *>startp, <const MPI_Offset *>countp,\
-                                        <const MPI_Offset *>stridep, <const MPI_Offset *>imapp, PyArray_DATA(data), bufcount, buftype, &request)
+                                        <const MPI_Offset *>stridep, <const MPI_Offset *>imapp, PyArray_DATA(data), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
@@ -2140,20 +2281,20 @@ cdef class Variable:
 
     def _iget_var(self, ndarray data, bufcount, Datatype buftype):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef int request
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_var(self._file_id, self._varid, PyArray_DATA(data), \
-            bufcount, buftype, &request)
+            buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
@@ -2161,25 +2302,25 @@ cdef class Variable:
     def _iget_var1(self, ndarray buff, index, bufcount, Datatype buftype):
         cdef int ierr, ndims
         cdef size_t *indexp
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef int request
         ndim_index = len(index)
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         for i, val in enumerate(index):
             indexp[i] = val
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_var1(self._file_id, self._varid, \
-                                <const MPI_Offset *>indexp, PyArray_DATA(buff), bufcount,\
-                                buftype, &request)
+                                <const MPI_Offset *>indexp, PyArray_DATA(buff), buffcount,\
+                                bufftype, &request)
         _check_err(ierr)
         free(indexp)
         return buff
@@ -2187,8 +2328,8 @@ cdef class Variable:
 
     def _iget_vara(self, ndarray data, start, count, bufcount, Datatype buftype):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef int request
@@ -2199,25 +2340,25 @@ cdef class Variable:
             countp[n] = count[n]
             startp[n] = start[n]
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
 
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_vara(self._file_id, self._varid, \
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                    PyArray_DATA(data), bufcount, buftype, &request)
+                                    PyArray_DATA(data), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
     def _iget_vars(self, ndarray buff, start, count, stride, bufcount, Datatype buftype):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -2231,25 +2372,25 @@ cdef class Variable:
             startp[n] = start[n]
             stridep[n] = stride[n]
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
 
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_vars(self._file_id, self._varid, \
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, \
-                                    <const MPI_Offset *>stridep, PyArray_DATA(buff), bufcount, buftype, &request)
+                                    <const MPI_Offset *>stridep, PyArray_DATA(buff), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
     def _iget_varn(self, ndarray buff, start, count, num, bufcount, Datatype buftype):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t **startp
         cdef size_t **countp
         cdef int num_req
@@ -2270,26 +2411,26 @@ cdef class Variable:
                 countp[i][j] = count[i][j]
 
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
-        #buftype = MPI_DATATYPE_NULL
+            buffcount = bufcount
+        #bufftype = MPI_DATATYPE_NULL
         if buftype is None:
-            buftype = _nptompitype[self.dtype.str[1:]]
+            bufftype = _nptompitype[self.dtype.str[1:]]
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_varn(self._file_id, self._varid, num_req,\
                                     <const MPI_Offset **>startp, <const MPI_Offset **>countp, \
-                                    PyArray_DATA(buff), bufcount, buftype, &request)
+                                    PyArray_DATA(buff), buffcount, bufftype, &request)
 
         _check_err(ierr)
         return request
 
     def _iget_varm(self, ndarray buff, start, count, stride, imap, bufcount, Datatype buftype):
         cdef int ierr, ndims
-        cdef MPI_Offset bufcount
-        cdef MPI_Datatype buftype
+        cdef MPI_Offset buffcount
+        cdef MPI_Datatype bufftype
         cdef size_t *startp
         cdef size_t *countp
         cdef ptrdiff_t *stridep
@@ -2309,17 +2450,17 @@ cdef class Variable:
                 stridep[n] = 1
             imapp[n] = imap[n]
         if bufcount is None:
-            bufcount = NC_COUNT_IGNORE
+            buffcount = NC_COUNT_IGNORE
         else:
-            bufcount = bufcount
+            buffcount = bufcount
         if buftype is None:
-            buftype = MPI_DATATYPE_NULL
+            bufftype = MPI_DATATYPE_NULL
         else:
-            buftype = buftype.ob_mpi
+            bufftype = buftype.ob_mpi
         with nogil:
             ierr = ncmpi_iget_varm(self._file_id, self._varid, \
                                     <const MPI_Offset *>startp, <const MPI_Offset *>countp, <const MPI_Offset *>stridep, \
-                                    <const MPI_Offset *>imapp, PyArray_DATA(buff), bufcount, buftype, &request)
+                                    <const MPI_Offset *>imapp, PyArray_DATA(buff), buffcount, bufftype, &request)
         _check_err(ierr)
         return request
 
