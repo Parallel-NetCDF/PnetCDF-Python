@@ -40,7 +40,7 @@ Creating/Opening/Closing a netCDF file
     # close the file
     f.close()
 
- For more, see ``examples/craete_open.py``.
+ For the full example program, see ``examples/craete_open.py``.
 
 Dimensions 
 -------------
@@ -79,7 +79,7 @@ Dimensions
     print(len(lat_dim)) # current size of the dimension
     print(lat_dim.isunlimited()) # check if the dimension is unlimited
 
- For more, see ``test/tst_dim.py``.
+ For the full example program, see ``test/tst_dim.py``.
 
 Variables
 ------------
@@ -145,7 +145,7 @@ Attributes
     {'floatatt': 3.141592653589793, 'intatt': 1, 'seqatt': array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9], dtype=int32), 'int_att': 1}
 
 
- For more, see ``examples/global_attributes.py``.
+ For the full example program, see ``examples/global_attributes.py``.
 
 Writing to variable
 --------------------

@@ -108,7 +108,7 @@ recognized:</p>
 <li><p>Indices (var[1,5])</p></li>
 <li><p>Slices (i.e. [:] or [0:10])</p></li>
 <li><p>An empty tuple (()) to retrieve all data</p></li>
-<li><p>Multiple indexing(e.g. var[1][5]) NOT SUPPORTED in write</p></li>
+<li><p>Multiple indexing (e.g. var[1][5]) is NOT SUPPORTED in write</p></li>
 </ul>
 <p>The operational mode (collective/indepedent) is dependent on the current file mode status.</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="o">.</span><span class="n">enddef</span><span class="p">()</span> <span class="c1"># Exit define mode</span>
@@ -128,20 +128,21 @@ recognized:</p>
 <section id="method-call-of-put-get-var">
 <h2>Method Call of put/get_var()<a class="headerlink" href="#method-call-of-put-get-var" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><p>This approaches might be particularly useful in mult-processing programs. <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> requires <cite>data</cite> as a mandatory argument,
-which serves as a buffer that stores values to be written. The behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> varies depending on the pattern of provided
+<div><p>Using specific method calls to perform I/O is particularly useful in mult-processing programs. <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> requires <cite>data</cite> as a mandatory argument,
+which serves as a write buffer that stores values to be written. <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> requires <cite>buff</cite> as a mandatory argument,
+which serves as a read buffer that stores values to be read. The behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> varies depending on the pattern of provided
 optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>. The suffix <cite>_all</cite> indicates this is collective I/O in contrast to
-indepedent I/O (without <cite>_all</cite>). The method returns a numpy array with dimension</p>
+indepedent I/O (without <cite>_all</cite>).</p>
 </div></blockquote>
 <dl>
 <dt>Read from netCDF variables</dt><dd><p>For reading, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> depends on the following provided input parameter pattern:</p>
 <ul class="simple">
-<li><p>none - Read an entire variable</p></li>
-<li><p><cite>index</cite> - Read a single data value</p></li>
-<li><p><cite>start</cite>, <cite>count</cite> - Read an array of values</p></li>
-<li><p><cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Read a subsampled array of values</p></li>
-<li><p><cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>buff</cite> - Read a mapped array of values</p></li>
-<li><p><cite>start</cite>, <cite>count</cite>, <cite>num</cite> - Read a list of subarrays of a netCDF variable in an opened netCDF file</p></li>
+<li><p><cite>buff</cite> - Read an entire variable</p></li>
+<li><p><cite>buff</cite>, <cite>index</cite> - Read a single data value</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite> - Read an array of values</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Read a subsampled array of values</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>buff</cite> - Read a mapped array of values</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> - Read a list of subarrays of a netCDF variable in an opened netCDF file</p></li>
 </ul>
 <p>where <cite>start</cite>, <cite>count</cite> and <cite>stride</cite> represent a corner, a vector of edge lengths, and a stride vector respectively. Together, they specify an (subsampled) array
 section to read from in a netCDF variable as illustrated in the diagramm below. By default, the method returns a multidimensional numpy array in the shape of
@@ -156,7 +157,7 @@ section to read from in a netCDF variable as illustrated in the diagramm below. 
 <span class="c1"># Equivalent to print(var[:10:2, :50:2])</span>
 </pre></div>
 </div>
-<p>For more, see <code class="docutils literal notranslate"><span class="pre">examples/get_vara.py</span></code>.</p>
+<p>For full example program, see <code class="docutils literal notranslate"><span class="pre">examples/get_vara.py</span></code>.</p>
 </dd>
 <dt>Write to netCDF variables</dt><dd><p>For writing, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> depends on the following provided input parameter pattern:</p>
 <ul class="simple">
@@ -165,7 +166,7 @@ section to read from in a netCDF variable as illustrated in the diagramm below. 
 <li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite> - Write an array of values</p></li>
 <li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Write a subsampled array of values</p></li>
 <li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite> - Write a mapped array of values</p></li>
-<li><p><cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values</p></li>
 </ul>
 <p>where <cite>start</cite>, <cite>count</cite> and <cite>stride</cite> represent a corner, a vector of edge lengths, and a stride vector respectively. Together, they specify an (subsampled) array
 section to write to for a netCDF variable as illustrated in the diagramm below. Note that the buffer array (the numpy array to write) can take any shape as long as
@@ -182,7 +183,7 @@ the total size is matched with <cite>count</cite>.</p>
 <span class="c1"># Equivalent to var[:10:2, :50:2] = buff</span>
 </pre></div>
 </div>
-<p>For more, see <code class="docutils literal notranslate"><span class="pre">examples/put_vara.py</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/collective_write.py</span></code>.</p>
+<p>For the full example program, see <code class="docutils literal notranslate"><span class="pre">examples/put_vara.py</span></code> and <code class="docutils literal notranslate"><span class="pre">examples/collective_write.py</span></code>.</p>
 </dd>
 </dl>
 </section>

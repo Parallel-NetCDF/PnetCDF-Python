@@ -63,8 +63,9 @@ cdef class Variable:
             - ``pncpy.NC_UINT64`` for unsigned 8-byte integer
         
         :type nc_dtype: int
-        :param dimensions: The dimensions of the new variable. Can be either dimension names
-         or dimension class instances
+        :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
+         or dimension class instances. Default is an empty tuple which means the variable is 
+         a scalar (and therefore has no dimensions).
 
         :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
         
@@ -135,12 +136,9 @@ cdef class Variable:
         _check_err(ierr)
         self.ndim = numdims
         self._name = name
-        # default for automatically applying scale_factor and
-        # add_offset, and converting to/from masked arrays is True.
+
         self.scale = False
         self.mask = False
-        # issue 809: default for converting arrays with no missing values to
-        # regular numpy arrays
         self.always_mask = False
         # default is to automatically convert to/from character
         # to string arrays when _Encoding variable attribute is set.
@@ -150,7 +148,6 @@ cdef class Variable:
     def __array__(self):
         # numpy special method that returns a numpy array.
         # allows numpy ufuncs to work faster on Variable objects
-        # (issue 216).
         return self[...]
 
     def __repr__(self):
@@ -547,19 +544,13 @@ cdef class Variable:
         If either scale_factor is present, but add_offset is missing, add_offset
         is assumed zero.  If add_offset is present, but scale_factor is missing,
         scale_factor is assumed to be one.
-        For more information on how `scale_factor` and `add_offset` can be
-        used to provide simple compression, see the
-        [PSL metadata conventions](http://www.esrl.noaa.gov/psl/data/gridded/conventions/cdc_netcdf_standard.shtml).
 
         In addition, if `scale` is set to `True`, and if the variable has an
         attribute `_Unsigned` set, and the variable has a signed integer data type,
         a view to the data is returned with the corresponding unsigned integer datatype.
-        This convention is used by the netcdf-java library to save unsigned integer
-        data in `NETCDF3` or `NETCDF4_CLASSIC` files (since the `NETCDF3`
-        data model does not have unsigned integer data types).
 
-        The default value of `scale` is `True`
-        (automatic conversions are performed).
+        The default value of `scale` is `False`
+
         """
         self.scale = bool(scale)
 
@@ -586,8 +577,7 @@ cdef class Variable:
         exists).  If the variable has no missing_value attribute, the _FillValue
         is used instead. 
 
-        The default value of `mask` is `True`
-        (automatic conversions are performed).
+        The default value of `mask` is `False`
         """
         self.mask = bool(mask)
 
@@ -598,8 +588,7 @@ cdef class Variable:
     def _toma(self,data):
         cdef int ierr, no_fill
         # if attribute _Unsigned is True, and variable has signed integer
-        # dtype, return view with corresponding unsigned dtype (issues #656,
-        # #794)
+        # dtype, return view with corresponding unsigned dtype 
         is_unsigned = getattr(self, '_Unsigned', False)
         is_unsigned_int = is_unsigned and data.dtype.kind == 'i'
         if self.scale and is_unsigned_int:  # only do this if autoscale option is on.
@@ -655,25 +644,20 @@ cdef class Variable:
                 if fill_value is None:
                     fill_value = fval
                 totalmask += mask
-        # issue 209: don't return masked array if variable filling
-        # is disabled.
         else:
             with nogil:
                 ierr = ncmpi_inq_var_fill(self._file_id,self._varid,&no_fill,NULL)
             _check_err(ierr)
             # if no_fill is not 1, and not a byte variable, then use default fill value.
-            # from http://www.unidata.ucar.edu/software/netcdf/docs/netcdf-c/Fill-Values.html#Fill-Values
             # "If you need a fill value for a byte variable, it is recommended
             # that you explicitly define an appropriate _FillValue attribute, as
             # generic utilities such as ncdump will not assume a default fill
             # value for byte variables."
-            # Explained here too:
-            # http://www.unidata.ucar.edu/software/netcdf/docs/known_problems.html#ncdump_ubyte_fill
+
             # "There should be no default fill values when reading any byte
             # type, signed or unsigned, because the byte ranges are too
             # small to assume one of the values should appear as a missing
             # value unless a _FillValue attribute is set explicitly."
-            # (do this only for non-vlens, since vlens don't have a default _FillValue)
             if  (no_fill != 1 or self.dtype.str[1:] not in ['u1','i1']):
                 fillval = np.array(default_fillvals[self.dtype.str[1:]],self.dtype)
                 has_fillval = data == fillval
@@ -686,7 +670,7 @@ cdef class Variable:
                     mask=data==fillval
                     totalmask += mask
         # set mask=True for data outside valid_min,valid_max.
-        # (issue #576)
+  
         validmin = None; validmax = None
         # if valid_range exists use that, otherwise
         # look for valid_min, valid_max.  No special
@@ -1274,6 +1258,65 @@ cdef class Variable:
             raise ValueError("Invalid input arguments for put_var")
 
     def put_var_all(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None):
+        """
+        put_var_all(self, data, index=None, start=None, count=None, stride=None, num=None, imap=None, buff_count=None, mpi_datatype=None)
+
+        Method call to write collectively in parallel to the netCDF variable. The behavior of the method varies depends on the 
+        pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. 
+
+        - `data` - Write an entire variable
+         Write all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
+         to use for writing a value in a scalar variable or whenever all the values of a multidimensional variable can all be written at once. 
+       
+        .. note:: Take care when using the simplest forms of this interface with record variables. If you try to write all the values of a record variable 
+         into a netCDF file that has no record data yet (hence has 0 records), nothing will be written. Similarly, if you try to write all of a record 
+         variable but there are more records in the file than you assume, more data may be written to the file than you supply, which may result in a 
+         segmentation violation.
+
+        - `data`, `index` - Write a single data value (a single element)
+         Put a single data value specified by `index` into a variable of an opened netCDF file that is in data mode. 
+
+        - `data`, `start`, `count` - Write an array of values
+         The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
+         an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
+         section in a 4 * 10 two-dimensional variable ("-" means skip).
+                     -  -  -  -  -  1  2  -  -  - \
+         1  2   ->   -  -  -  -  -  3  4  -  -  - \
+         3  4        -  -  -  -  -  -  -  -  -  - \
+                     -  -  -  -  -  -  -  -  -  - \
+
+        - `data`, `start`, `count`, `stride` - Write a subsampled array of values
+         The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
+         refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
+         would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
+                          -  -  1  -  2  -  3  -  4  - \
+         1  2  3  4   ->  -  -  5  -  6  -  7  -  8  - \
+         5  6  7  8       -  -  -  -  -  -  -  -  -  - \
+                          -  -  -  -  -  -  -  -  -  - \
+
+        - `data`, `start`, `count`, `imap` - Write a mapped array of values
+
+
+        - `data`, `start`, `count`, `num` -  Write a list of subarrays of values
+
+        :param data: the numpy array that stores array values to be written, which serves as a write buffer. When writing a single data value, 
+         it can also be a single numeric (e.g. np.int32) python variable. The datatype should match with the variable's datatype. Note this numpy array
+         write buffer can be in any shape as long as the number of elements is matched.
+    
+        :type data: numpy.ndarray
+
+        :param index: [Optional] Only relevant when writing a single data value. The index of the data value to be written as a single element 
+        in the multi-dimensional variable array. For example, the index of top-left corner value of a two-dimensional varaible should be (0,0). 
+        If the variable uses the unlimited dimension, the first index value would correspond to the unlimited dimension. 
+
+        :type index: tuple of int
+
+        :param start: [Optional] Only relevant when writing a single data value.
+
+
+
+        Operational mode: This method must be called while the file is in data mode.
+        """
         if data is not None and all(arg is None for arg in [index, start, count, stride, num, imap]):
             self._put_var(data, collective = True, buff_count = buff_count, mpi_datatype = mpi_datatype)
         elif all(arg is not None for arg in [data, index]) and all(arg is None for arg in [start, count, stride, num, imap]):

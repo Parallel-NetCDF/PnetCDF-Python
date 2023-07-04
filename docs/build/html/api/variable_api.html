@@ -73,6 +73,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.inq_fill"><code class="docutils literal notranslate"><span class="pre">Variable.inq_fill()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_var_all"><code class="docutils literal notranslate"><span class="pre">Variable.put_var_all()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.rename_att"><code class="docutils literal notranslate"><span class="pre">Variable.rename_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_chartostring"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_mask"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask()</span></code></a></li>
@@ -169,8 +170,9 @@ directly.</p>
 </ul>
 </div></blockquote>
 </p></li>
-<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Can be either dimension names
-or dimension class instances</p></li>
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – [Optional] The dimensions of the new variable. Can be either dimension names
+or dimension class instances. Default is an empty tuple which means the variable is 
+a scalar (and therefore has no dimensions).</p></li>
 <li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
@@ -326,6 +328,96 @@ with the same name as one of the reserved python attributes.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.put_var_all">
+<span class="sig-name descname"><span class="pre">put_var_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buff_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mpi_datatype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_var_all" title="Permalink to this definition"></a></dt>
+<dd><p>Method call to write collectively in parallel to the netCDF variable. The behavior of the method varies depends on the 
+pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>.</p>
+<ul class="simple">
+<li><p><cite>data</cite> - Write an entire variable</p></li>
+</ul>
+<blockquote>
+<div><p>Write all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
+to use for writing a value in a scalar variable or whenever all the values of a multidimensional variable can all be written at once.</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Take care when using the simplest forms of this interface with record variables. If you try to write all the values of a record variable 
+into a netCDF file that has no record data yet (hence has 0 records), nothing will be written. Similarly, if you try to write all of a record 
+variable but there are more records in the file than you assume, more data may be written to the file than you supply, which may result in a 
+segmentation violation.</p>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>index</cite> - Write a single data value (a single element)</p></li>
+</ul>
+<blockquote>
+<div><p>Put a single data value specified by <cite>index</cite> into a variable of an opened netCDF file that is in data mode.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite> - Write an array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
+an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
+section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+<blockquote>
+<div><ul class="simple">
+<li><ul>
+<li><ul>
+<li><ul>
+<li><ul>
+<li><p>1  2  -  -  -          1  2   -&gt;   -  -  -  -  -  3  4  -  -  -          3  4        -  -  -  -  -  -  -  -  -  -                      -  -  -  -  -  -  -  -  -  -</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Write a subsampled array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
+refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
+would specify the following array section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+<blockquote>
+<div><ul class="simple">
+<li><ul>
+<li><p>1  -  2  -  3  -  4  -          1  2  3  4   -&gt;  -  -  5  -  6  -  7  -  8  -          5  6  7  8       -  -  -  -  -  -  -  -  -  -                           -  -  -  -  -  -  -  -  -  -</p></li>
+</ul>
+</li>
+</ul>
+</div></blockquote>
+</div></blockquote>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite> - Write a mapped array of values</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.ndarray</em>) – the numpy array that stores array values to be written, which serves as a write buffer. When writing a single data value, 
+it can also be a single numeric (e.g. np.int32) python variable. The datatype should match with the variable’s datatype. Note this numpy array
+write buffer can be in any shape as long as the number of elements is matched.</p></li>
+<li><p><strong>index</strong> – [Optional] Only relevant when writing a single data value. The index of the data value to be written as a single element</p></li>
+</ul>
+</dd>
+</dl>
+<p>in the multi-dimensional variable array. For example, the index of top-left corner value of a two-dimensional varaible should be (0,0). 
+If the variable uses the unlimited dimension, the first index value would correspond to the unlimited dimension.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>start</strong> – [Optional] Only relevant when writing a single data value.</p>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the file is in data mode.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.rename_att">
 <span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.rename_att" title="Permalink to this definition"></a></dt>
 <dd><p>Rename a variable attribute named <cite>oldname</cite> to <cite>newname</cite></p>
@@ -375,8 +467,7 @@ array is converted back to a regular numpy array by replacing all the
 masked values by the missing_value attribute of the variable (if it
 exists).  If the variable has no missing_value attribute, the _FillValue
 is used instead.</p>
-<p>The default value of <cite>mask</cite> is <cite>True</cite>
-(automatic conversions are performed).</p>
+<p>The default value of <cite>mask</cite> is <cite>False</cite></p>
 </dd></dl>
 
 <dl class="py method">
@@ -399,18 +490,11 @@ from that variable is unpacked using:</p>
 </div>
 <p>If either scale_factor is present, but add_offset is missing, add_offset
 is assumed zero.  If add_offset is present, but scale_factor is missing,
-scale_factor is assumed to be one.
-For more information on how <cite>scale_factor</cite> and <cite>add_offset</cite> can be
-used to provide simple compression, see the
-[PSL metadata conventions](<a class="reference external" href="http://www.esrl.noaa.gov/psl/data/gridded/conventions/cdc_netcdf_standard.shtml">http://www.esrl.noaa.gov/psl/data/gridded/conventions/cdc_netcdf_standard.shtml</a>).</p>
+scale_factor is assumed to be one.</p>
 <p>In addition, if <cite>scale</cite> is set to <cite>True</cite>, and if the variable has an
 attribute <cite>_Unsigned</cite> set, and the variable has a signed integer data type,
-a view to the data is returned with the corresponding unsigned integer datatype.
-This convention is used by the netcdf-java library to save unsigned integer
-data in <cite>NETCDF3</cite> or <cite>NETCDF4_CLASSIC</cite> files (since the <cite>NETCDF3</cite>
-data model does not have unsigned integer data types).</p>
-<p>The default value of <cite>scale</cite> is <cite>True</cite>
-(automatic conversions are performed).</p>
+a view to the data is returned with the corresponding unsigned integer datatype.</p>
+<p>The default value of <cite>scale</cite> is <cite>False</cite></p>
 </dd></dl>
 
 </dd></dl>

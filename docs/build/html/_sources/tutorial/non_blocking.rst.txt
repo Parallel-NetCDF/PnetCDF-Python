@@ -40,7 +40,7 @@ Nonblocking Write
       # track the request ID for each write request
       req_ids.append(req_id)
 
- For more, see ``examples/non_blocking_write.py``.
+ For the full example program, see ``examples/non_blocking_write.py``.
 
 Nonblocking Read
 ------------------
@@ -73,7 +73,7 @@ Nonblocking Read
        # store the reference of variable values
        v_datas.append(buff)
  
- For more, see ``examples/flexible_api.py``.
+ For the full example program, see ``examples/flexible_api.py``.
 
 Commit Read/Write Requests
 ----------------------------
@@ -126,7 +126,7 @@ Buffered Non-blocking Write
     f.wait_all()
     f.detach_buff()
  
- For more, see ``examples/non_blocking_write.py``.
+ For the full example program, see ``examples/non_blocking_write.py``.
 
  Remember to detach the write buffer after write requets are executed.
  

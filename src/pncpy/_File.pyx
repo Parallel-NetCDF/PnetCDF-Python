@@ -55,10 +55,10 @@ cdef class File:
 
         :type format: str
 
-        :param comm: MPI communicator to use for file access. `None` defaults to MPI_COMM_WORLD.
+        :param comm: [Optional] MPI communicator to use for file access. `None` defaults to MPI_COMM_WORLD.
         :type comm: mpi4py.MPI.Comm or None
 
-        :param info: MPI info object to use for file access. `None` defaults to MPI_INFO_NULL.
+        :param info: [Optional] MPI info object to use for file access. `None` defaults to MPI_INFO_NULL.
         :type info: mpi4py.MPI.Info or None
         """
         cdef int ncid
@@ -374,8 +374,9 @@ cdef class File:
             - ``pncpy.NC_UINT64`` for unsigned 8-byte integer
         
         :type nc_dtype: int
-        :param dimensions: The dimensions of the new variable. Can be either dimension names
-         or dimension class instances
+        :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
+         or dimension class instances. Default is an empty tuple which means the variable is a scalar 
+         (and therefore has no dimensions).
 
         :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
         

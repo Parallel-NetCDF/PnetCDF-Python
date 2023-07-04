@@ -164,8 +164,8 @@ relations among data fields stored in a netCDF file.</p>
 <li><p><cite>None</cite> defaults to default file format (CDF-1 format)</p></li>
 </ul>
 </p></li>
-<li><p><strong>comm</strong> (<em>mpi4py.MPI.Comm</em><em> or </em><em>None</em>) – MPI communicator to use for file access. <cite>None</cite> defaults to MPI_COMM_WORLD.</p></li>
-<li><p><strong>info</strong> (<em>mpi4py.MPI.Info</em><em> or </em><em>None</em>) – MPI info object to use for file access. <cite>None</cite> defaults to MPI_INFO_NULL.</p></li>
+<li><p><strong>comm</strong> (<em>mpi4py.MPI.Comm</em><em> or </em><em>None</em>) – [Optional] MPI communicator to use for file access. <cite>None</cite> defaults to MPI_COMM_WORLD.</p></li>
+<li><p><strong>info</strong> (<em>mpi4py.MPI.Info</em><em> or </em><em>None</em>) – [Optional] MPI info object to use for file access. <cite>None</cite> defaults to MPI_INFO_NULL.</p></li>
 </ul>
 </dd>
 </dl>
@@ -274,8 +274,9 @@ instance. To determine if a dimension is ‘unlimited’, use the
 </ul>
 </div></blockquote>
 </p></li>
-<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – The dimensions of the new variable. Can be either dimension names
-or dimension class instances</p></li>
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – [Optional] The dimensions of the new variable. Can be either dimension names
+or dimension class instances. Default is an empty tuple which means the variable is a scalar 
+(and therefore has no dimensions).</p></li>
 <li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
