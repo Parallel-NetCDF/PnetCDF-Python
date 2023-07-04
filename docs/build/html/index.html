@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PnetCDF-Python Documentation &mdash; PnetCDF Python 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Overview" href="introduction/overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            PnetCDF Python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction/overview.html">Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation/install.html">Install from Source</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/basic.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/datatypes.html">Datatype</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/read_write.html">Parallel Read and Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/non_blocking.html">Non-blocking Reads and Writes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/file_api.html">File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/dimension_api.html">Dimension</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/variable_api.html">Variable</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">PnetCDF Python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PnetCDF-Python Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="pnetcdf-python-documentation">
+<h1>PnetCDF-Python Documentation<a class="headerlink" href="#pnetcdf-python-documentation" title="Permalink to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction/overview.html">Overview</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="installation/install.html">Install from Source</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation/install.html#software-requirements">Software Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/install.html#building-pnetcdf-c-library">Building PnetCDF C library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/install.html#building-pnetcdf-python-from-source">Building PnetCDF-python from source</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/basic.html">Basics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#running-python-scripts-with-mpi">Running Python scripts with MPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#creating-opening-closing-a-netcdf-file">Creating/Opening/Closing a netCDF file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#dimensions">Dimensions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#variables">Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#attributes">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#writing-to-variable">Writing to variable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/basic.html#reading-from-variable">Reading from variable</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/datatypes.html">Datatype</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/read_write.html">Parallel Read and Write</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/read_write.html#numpy-slicing-syntax">NumPy Slicing Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/read_write.html#method-call-of-put-get-var">Method Call of put/get_var()</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial/non_blocking.html">Non-blocking Reads and Writes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/non_blocking.html#nonblocking-write">Nonblocking Write</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/non_blocking.html#nonblocking-read">Nonblocking Read</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/non_blocking.html#commit-read-write-requests">Commit Read/Write Requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial/non_blocking.html#buffered-non-blocking-write">Buffered Non-blocking Write</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/file_api.html">File</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/file_api.html#pncpy.File"><code class="docutils literal notranslate"><span class="pre">File</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.__init__"><code class="docutils literal notranslate"><span class="pre">File.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.attach_buff"><code class="docutils literal notranslate"><span class="pre">File.attach_buff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.begin_indep"><code class="docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.cancel"><code class="docutils literal notranslate"><span class="pre">File.cancel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.close"><code class="docutils literal notranslate"><span class="pre">File.close()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.def_dim"><code class="docutils literal notranslate"><span class="pre">File.def_dim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.def_var"><code class="docutils literal notranslate"><span class="pre">File.def_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.del_att"><code class="docutils literal notranslate"><span class="pre">File.del_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.detach_buff"><code class="docutils literal notranslate"><span class="pre">File.detach_buff()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.end_indep"><code class="docutils literal notranslate"><span class="pre">File.end_indep()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.enddef"><code class="docutils literal notranslate"><span class="pre">File.enddef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.filepath"><code class="docutils literal notranslate"><span class="pre">File.filepath()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.flush"><code class="docutils literal notranslate"><span class="pre">File.flush()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.get_att"><code class="docutils literal notranslate"><span class="pre">File.get_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_buff_size"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_buff_usage"><code class="docutils literal notranslate"><span class="pre">File.inq_buff_usage()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_header_extent"><code class="docutils literal notranslate"><span class="pre">File.inq_header_extent()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_header_size"><code class="docutils literal notranslate"><span class="pre">File.inq_header_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_info"><code class="docutils literal notranslate"><span class="pre">File.inq_info()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_nreqs"><code class="docutils literal notranslate"><span class="pre">File.inq_nreqs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_num_fix_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_fix_vars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_num_rec_vars"><code class="docutils literal notranslate"><span class="pre">File.inq_num_rec_vars()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_put_size"><code class="docutils literal notranslate"><span class="pre">File.inq_put_size()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_recsize"><code class="docutils literal notranslate"><span class="pre">File.inq_recsize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_striping"><code class="docutils literal notranslate"><span class="pre">File.inq_striping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_unlimdim"><code class="docutils literal notranslate"><span class="pre">File.inq_unlimdim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.inq_version"><code class="docutils literal notranslate"><span class="pre">File.inq_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.ncattrs"><code class="docutils literal notranslate"><span class="pre">File.ncattrs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.put_att"><code class="docutils literal notranslate"><span class="pre">File.put_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.redef"><code class="docutils literal notranslate"><span class="pre">File.redef()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.rename_att"><code class="docutils literal notranslate"><span class="pre">File.rename_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.rename_dim"><code class="docutils literal notranslate"><span class="pre">File.rename_dim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.rename_var"><code class="docutils literal notranslate"><span class="pre">File.rename_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.set_fill"><code class="docutils literal notranslate"><span class="pre">File.set_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.sync"><code class="docutils literal notranslate"><span class="pre">File.sync()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.wait"><code class="docutils literal notranslate"><span class="pre">File.wait()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/file_api.html#pncpy.File.wait_all"><code class="docutils literal notranslate"><span class="pre">File.wait_all()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/file_api.html#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/file_api.html#variables"><code class="docutils literal notranslate"><span class="pre">variables</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/file_api.html#file_format"><code class="docutils literal notranslate"><span class="pre">file_format</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/dimension_api.html">Dimension</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/dimension_api.html#pncpy.Dimension"><code class="docutils literal notranslate"><span class="pre">Dimension</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/dimension_api.html#pncpy.Dimension.__init__"><code class="docutils literal notranslate"><span class="pre">Dimension.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/dimension_api.html#pncpy.Dimension.getfile"><code class="docutils literal notranslate"><span class="pre">Dimension.getfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/dimension_api.html#pncpy.Dimension.isunlimited"><code class="docutils literal notranslate"><span class="pre">Dimension.isunlimited()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/dimension_api.html#name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/dimension_api.html#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/variable_api.html">Variable</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#pncpy.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.__init__"><code class="docutils literal notranslate"><span class="pre">Variable.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.def_fill"><code class="docutils literal notranslate"><span class="pre">Variable.def_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.del_att"><code class="docutils literal notranslate"><span class="pre">Variable.del_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.file"><code class="docutils literal notranslate"><span class="pre">Variable.file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.fill_rec"><code class="docutils literal notranslate"><span class="pre">Variable.fill_rec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.get_att"><code class="docutils literal notranslate"><span class="pre">Variable.get_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.get_dims"><code class="docutils literal notranslate"><span class="pre">Variable.get_dims()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.get_var"><code class="docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.inq_fill"><code class="docutils literal notranslate"><span class="pre">Variable.inq_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.put_var"><code class="docutils literal notranslate"><span class="pre">Variable.put_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.put_var_all"><code class="docutils literal notranslate"><span class="pre">Variable.put_var_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.rename_att"><code class="docutils literal notranslate"><span class="pre">Variable.rename_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.set_auto_chartostring"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.set_auto_mask"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="api/variable_api.html#pncpy.Variable.set_auto_scale"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_scale()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#dtype"><code class="docutils literal notranslate"><span class="pre">dtype</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#datatype"><code class="docutils literal notranslate"><span class="pre">datatype</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#shape"><code class="docutils literal notranslate"><span class="pre">shape</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#ndim"><code class="docutils literal notranslate"><span class="pre">ndim</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#scale"><code class="docutils literal notranslate"><span class="pre">scale</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#mask"><code class="docutils literal notranslate"><span class="pre">mask</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/variable_api.html#chartostring"><code class="docutils literal notranslate"><span class="pre">chartostring</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction/overview.html" class="btn btn-neutral float-right" title="Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, CUCIS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

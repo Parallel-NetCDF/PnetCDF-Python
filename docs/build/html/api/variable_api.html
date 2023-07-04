@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Variable &mdash; PnetCDF Python 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Dimension" href="dimension_api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PnetCDF Python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/overview.html">Overview</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/install.html">Install from Source</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/basic.html">Basics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/datatypes.html">Datatype</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/read_write.html">Parallel Read and Write</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial/non_blocking.html">Non-blocking Reads and Writes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="file_api.html">File</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dimension_api.html">Dimension</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Variable</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pncpy.Variable"><code class="docutils literal notranslate"><span class="pre">Variable</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.__init__"><code class="docutils literal notranslate"><span class="pre">Variable.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.def_fill"><code class="docutils literal notranslate"><span class="pre">Variable.def_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.del_att"><code class="docutils literal notranslate"><span class="pre">Variable.del_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.file"><code class="docutils literal notranslate"><span class="pre">Variable.file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.fill_rec"><code class="docutils literal notranslate"><span class="pre">Variable.fill_rec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_att"><code class="docutils literal notranslate"><span class="pre">Variable.get_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_dims"><code class="docutils literal notranslate"><span class="pre">Variable.get_dims()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.get_var"><code class="docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.inq_fill"><code class="docutils literal notranslate"><span class="pre">Variable.inq_fill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.ncattrs"><code class="docutils literal notranslate"><span class="pre">Variable.ncattrs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_att"><code class="docutils literal notranslate"><span class="pre">Variable.put_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_var"><code class="docutils literal notranslate"><span class="pre">Variable.put_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.put_var_all"><code class="docutils literal notranslate"><span class="pre">Variable.put_var_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.rename_att"><code class="docutils literal notranslate"><span class="pre">Variable.rename_att()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_chartostring"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_mask"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.Variable.set_auto_scale"><code class="docutils literal notranslate"><span class="pre">Variable.set_auto_scale()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dtype"><code class="docutils literal notranslate"><span class="pre">dtype</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatype"><code class="docutils literal notranslate"><span class="pre">datatype</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shape"><code class="docutils literal notranslate"><span class="pre">shape</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ndim"><code class="docutils literal notranslate"><span class="pre">ndim</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dimensions"><code class="docutils literal notranslate"><span class="pre">dimensions</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scale"><code class="docutils literal notranslate"><span class="pre">scale</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mask"><code class="docutils literal notranslate"><span class="pre">mask</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#chartostring"><code class="docutils literal notranslate"><span class="pre">chartostring</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PnetCDF Python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Variable</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/variable_api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="variable">
+<h1>Variable<a class="headerlink" href="#variable" title="Permalink to this heading"></a></h1>
+<p>Variable is a core component of a netCDF file representing an array
+of data values organized along one or more dimensions, with associated
+metadata in the form of attributes. The <code class="docutils literal notranslate"><span class="pre">Variable</span></code> object in the library
+provides operations to read and write the data and metadata of a variable
+within a netCDF file. Particularly, data mode operations have a flexible
+interface, where reads and writes can be done through either explicit
+function-call style methods or indexer-style (numpy-like) syntax.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pncpy.Variable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">Variable</span></span><a class="headerlink" href="#pncpy.Variable" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A PnetCDF variable is used to read and write netCDF data.  They are
+analogous to numpy array objects. See <code class="docutils literal notranslate"><span class="pre">Variable.__init__</span></code> for more
+details.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">Variable</span></code> instances should be created using the
+<cite>File.def_var</cite> method of a <cite>File</cite> instance, not using this class constructor 
+directly.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>The constructor for <a class="reference internal" href="#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
+<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> for text data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> for 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> for 2-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT</span></code> for 4-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_FLOAT</span></code> for 4-byte floating point number</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> for 8-byte real number in double precision</p></li>
+</ul>
+</div></blockquote>
+<p>The following are <cite>CDF-5</cite> format only</p>
+<blockquote>
+<div><ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> for unsigned 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> for unsigned 2-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> for unsigned 4-byte intege</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT64</span></code> for signed 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> for unsigned 8-byte integer</p></li>
+</ul>
+</div></blockquote>
+</p></li>
+<li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="dimension_api.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – [Optional] The dimensions of the new variable. Can be either dimension names
+or dimension class instances. Default is an empty tuple which means the variable is 
+a scalar (and therefore has no dimensions).</p></li>
+<li><p><strong>fill_value</strong> – <p>The fill value of the new variable. Accepted values are:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
+<li><p>any other value: use the given value as fill value</p></li>
+</ul>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The created variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a></p>
+</dd>
+</dl>
+<p><strong>`fill_value`</strong>:  If specified, the default netCDF <cite>_FillValue</cite> (the
+value that the variable gets filled with before any data is written to it)
+is replaced with this value.  If fill_value is set to <cite>False</cite>, then
+the variable is not pre-filled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.def_fill">
+<span class="sig-name descname"><span class="pre">def_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">no_fill</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.def_fill" title="Permalink to this definition"></a></dt>
+<dd><p>Sets the fill mode parameters for a variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>no_fill</strong> (<em>int</em>) – Set no_fill mode for a variable. 1 for on (not to fill) and 0 for off (to fill).</p></li>
+<li><p><strong>fill_value</strong> (<em>any</em>) – Sets the customized fill value. Must be the same type as the variable. This will 
+be written to a _FillValue attribute, created for this purpose. If None, this argument will be ignored 
+and the default fill value is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.del_att">
+<span class="sig-name descname"><span class="pre">del_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.del_att" title="Permalink to this definition"></a></dt>
+<dd><p>Delete a netCDF variable attribute. Useful when you need to delete a
+netCDF attribute with the same name as one of the reserved python
+attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute</p>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the associated netCDF file is in define mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.file">
+<span class="sig-name descname"><span class="pre">file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.file" title="Permalink to this definition"></a></dt>
+<dd><p>Return the netCDF file instance that the variable is contained in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="file_api.html#pncpy.File" title="pncpy.File"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.File</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.fill_rec">
+<span class="sig-name descname"><span class="pre">fill_rec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span> <span class="pre">rec_no</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.fill_rec" title="Permalink to this definition"></a></dt>
+<dd><p>Fills a record of a record variable with predefined or user-defined fill values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rec_no</strong> (<em>int</em>) – the index of the record to be filled</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.get_att">
+<span class="sig-name descname"><span class="pre">get_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_att" title="Permalink to this definition"></a></dt>
+<dd><p>Retrieve a netCDF variable attribute. Useful when you need to get a netCDF attribute with the same
+name as one of the reserved python attributes.</p>
+<p>option kwarg <cite>encoding</cite> can be used to specify the
+character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Name of the attribute.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the associated netCDF file is in define mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.get_dims">
+<span class="sig-name descname"><span class="pre">get_dims</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_dims" title="Permalink to this definition"></a></dt>
+<dd><p>return a tuple of <code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instances associated with this
+<cite>Variable</cite>.
+:rtype: tuple of <code class="docutils literal notranslate"><span class="pre">Dimension</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.get_var">
+<span class="sig-name descname"><span class="pre">get_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_var" title="Permalink to this definition"></a></dt>
+<dd><p><strong>`get_var(self)`</strong></p>
+<dl class="simple">
+<dt>..ignore-next::</dt><dd><p>Note that get_var requires a empty array as a buffer arg from caller to store returned array values. We understand this is 
+against python API convention. But removing this or making this optional will create two layers of inconsistency that 
+we don’t desire: 
+1. Among all behaviors of get_var get_varm always requires a buffer argument
+2. Other i/o methods (iget/put/iput) all require buffer array as mandatory argument</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.inq_fill">
+<span class="sig-name descname"><span class="pre">inq_fill</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.inq_fill" title="Permalink to this definition"></a></dt>
+<dd><p>Returns te fill mode settings of this variable. A tuple of two values representing no_fill mode and fill value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple of two value which are <code class="docutils literal notranslate"><span class="pre">no_fill</span></code> mode and <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>. 
+- <code class="docutils literal notranslate"><span class="pre">no_fill</span></code>: will be 1 if no_fill mode is set (else 0).
+- <code class="docutils literal notranslate"><span class="pre">fill_value</span></code>: the fill value for this variable.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.ncattrs">
+<span class="sig-name descname"><span class="pre">ncattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.ncattrs" title="Permalink to this definition"></a></dt>
+<dd><p>Return netCDF attribute names for this variable in a list.
+:rtype: list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.put_att">
+<span class="sig-name descname"><span class="pre">put_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_att" title="Permalink to this definition"></a></dt>
+<dd><p>Set an attribute for this variable using name,value pair. Especially 
+useful when you need to set a netCDF attribute with the
+with the same name as one of the reserved python attributes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Name of the new attribute.</p></li>
+<li><p><strong>value</strong> (<em>str</em><em>, </em><em>int</em><em>, </em><em>float</em><em> or </em><em>list</em><em> of </em><em>int and float</em>) – Value of the new attribute.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the associated netCDF file is in define mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.put_var">
+<span class="sig-name descname"><span class="pre">put_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufcount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_var" title="Permalink to this definition"></a></dt>
+<dd><p>Method call to write independently in parallel to the netCDF variable. The behavior of the method varies depends on the 
+pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>.</p>
+<ul class="simple">
+<li><p><cite>data</cite> - Write an entire variable</p></li>
+</ul>
+<blockquote>
+<div><p>Write all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
+to use for writing a value in a scalar variable or whenever all the values of a multidimensional variable can all be written at once.</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Take care when using the simplest forms of this interface with record variables. If you try to write all the values of a record variable 
+into a netCDF file that has no record data yet (hence has 0 records), nothing will be written. Similarly, if you try to write all of a record 
+variable but there are more records in the file than you assume, more data may be written to the file than you supply, which may result in a 
+segmentation violation.</p>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>index</cite> - Write a single data value (a single element)</p></li>
+</ul>
+<blockquote>
+<div><p>Put a single data value specified by <cite>index</cite> into a variable of an opened netCDF file that is in data mode. For example, index = [0,5] would specify the following 
+position in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">a</span>     <span class="o">-&gt;</span>   <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite> - Write an array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
+an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
+section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="n">b</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">a</span>  <span class="n">b</span>   <span class="o">-&gt;</span>   <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">c</span>  <span class="n">d</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">c</span>  <span class="n">d</span>        <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+            <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Write a subsampled array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
+refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
+would specify the following array section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                 <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="o">-</span>  <span class="n">b</span>  <span class="o">-</span>  <span class="n">c</span>  <span class="o">-</span>  <span class="n">d</span>  <span class="o">-</span> 
+
+<span class="n">a</span>  <span class="n">b</span>  <span class="n">c</span>  <span class="n">d</span>   <span class="o">-&gt;</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">e</span>  <span class="o">-</span>  <span class="n">f</span>  <span class="o">-</span>  <span class="n">g</span>  <span class="o">-</span>  <span class="n">h</span>  <span class="o">-</span> 
+
+<span class="n">e</span>  <span class="n">f</span>  <span class="n">g</span>  <span class="n">h</span>       <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+                 <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <a href="#id1"><span class="problematic" id="id2">`</span></a>stride`(optional) - Write a mapped array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
+The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
+and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
+section in write butter and array section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="n">c</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">a</span> <span class="o">-</span> <span class="o">-</span> <span class="n">b</span>         <span class="n">a</span>  <span class="n">c</span>       <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">b</span>  <span class="n">d</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="o">-</span> <span class="o">-</span> <span class="o">-</span> <span class="o">-</span>    <span class="o">-&gt;</span>   <span class="n">b</span>  <span class="n">d</span>  <span class="o">-&gt;</span>   <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">c</span> <span class="o">-</span> <span class="o">-</span> <span class="n">d</span>                    <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">distance</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">to</span> <span class="n">b</span> <span class="ow">is</span> <span class="mi">3</span> <span class="ow">in</span> <span class="n">buffer</span> <span class="o">=&gt;</span> <span class="n">imap</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">distance</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">to</span> <span class="n">c</span> <span class="ow">is</span> <span class="mi">8</span> <span class="ow">in</span> <span class="n">buffer</span> <span class="o">=&gt;</span> <span class="n">imap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values
+The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+                     <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="n">b</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+<span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span> <span class="n">f</span> <span class="n">g</span> <span class="n">h</span>  <span class="o">-&gt;</span>  <span class="n">c</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+                     <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">d</span>  <span class="n">e</span>  <span class="o">-</span>  <span class="o">-</span> 
+                     <span class="n">f</span>  <span class="n">g</span>  <span class="n">h</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.ndarray</em>) – the numpy array that stores array values to be written, which serves as a write buffer. When writing a single data value, 
+it can also be a single numeric (e.g. np.int32) python variable. The datatype should match with the variable’s datatype. Note this numpy array
+write buffer can be in any shape as long as the number of elements (buffer size) is matched.</p></li>
+<li><p><strong>index</strong> (<em>tuple</em><em> of </em><em>int</em>) – [Optional] Only relevant when writing a single data value. The index of the data value to be written as a single element 
+in the multi-dimensional variable array. For example, the index of top-left corner value of a two-dimensional varaible should be (0,0). 
+If the variable uses the unlimited dimension, the first index value would correspond to the unlimited dimension.</p></li>
+<li><p><strong>start</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
+An array of integers specifying the index in the variable where the first of the data values will be written. The
+elements of <cite>start</cite> must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, <cite>start</cite>
+is 2D array of size [num][ndims] and each start[i] is a vector specifying the index in the variable where the first of the data values
+will be written.</p></li>
+<li><p><strong>count</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
+An array of integers specifying  the edge lengths along each dimension of the block of data values to be written. The
+elements of <cite>count</cite> must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, <cite>count</cite>
+is 2D array of size [num][ndims] and each count[i] is a vector specifying the edge lengths along each dimension of the block of 
+data values to be written.</p></li>
+<li><p><strong>stride</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers specifying 
+the sampling interval along each dimension of the netCDF variable. The elements of the stride vector correspond, in order, to the 
+netCDF variable’s dimensions.</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – [Optional] Only relevant when writing a list of subarrays. An integer specifying the number of subarrays.</p></li>
+<li><p><strong>imap</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers the mapping between 
+the dimensions of a netCDF variable and the in-memory structure of the internal data array. The elements of the index mapping vector 
+correspond, in order, to the netCDF variable’s dimensions. Each element value of imap should equal the memory location distance in write buffer between two adjacent elements along the corresponding dimension of netCDF variable.</p></li>
+<li><p><strong>bufcount</strong> (<em>int</em>) – [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
+in the write buffer to be written to the file.</p></li>
+<li><p><strong>buftype</strong> (<em>mpi4py.MPI.Datatype</em>) – [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the 
+write buffer.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the file is in independent data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.put_var_all">
+<span class="sig-name descname"><span class="pre">put_var_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufcount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.put_var_all" title="Permalink to this definition"></a></dt>
+<dd><p>Method call to write collectively in parallel to the netCDF variable. The behavior of the method varies depends on the 
+pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>.</p>
+<ul class="simple">
+<li><p><cite>data</cite> - Write an entire variable</p></li>
+</ul>
+<blockquote>
+<div><p>Write all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
+to use for writing a value in a scalar variable or whenever all the values of a multidimensional variable can all be written at once.</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Take care when using the simplest forms of this interface with record variables. If you try to write all the values of a record variable 
+into a netCDF file that has no record data yet (hence has 0 records), nothing will be written. Similarly, if you try to write all of a record 
+variable but there are more records in the file than you assume, more data may be written to the file than you supply, which may result in a 
+segmentation violation.</p>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>index</cite> - Write a single data value (a single element)</p></li>
+</ul>
+<blockquote>
+<div><p>Put a single data value specified by <cite>index</cite> into a variable of an opened netCDF file that is in data mode. For example, index = [0,5] would specify the following 
+position in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">a</span>     <span class="o">-&gt;</span>   <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite> - Write an array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
+an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
+section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>            <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="n">b</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">a</span>  <span class="n">b</span>   <span class="o">-&gt;</span>   <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">c</span>  <span class="n">d</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">c</span>  <span class="n">d</span>        <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+            <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite> - Write a subsampled array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
+refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
+would specify the following array section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                 <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="o">-</span>  <span class="n">b</span>  <span class="o">-</span>  <span class="n">c</span>  <span class="o">-</span>  <span class="n">d</span>  <span class="o">-</span> 
+
+<span class="n">a</span>  <span class="n">b</span>  <span class="n">c</span>  <span class="n">d</span>   <span class="o">-&gt;</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">e</span>  <span class="o">-</span>  <span class="n">f</span>  <span class="o">-</span>  <span class="n">g</span>  <span class="o">-</span>  <span class="n">h</span>  <span class="o">-</span> 
+
+<span class="n">e</span>  <span class="n">f</span>  <span class="n">g</span>  <span class="n">h</span>       <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+                 <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <a href="#id3"><span class="problematic" id="id4">`</span></a>stride`(optional) - Write a mapped array of values</p></li>
+</ul>
+<blockquote>
+<div><p>The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
+The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
+and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
+section in write butter and array section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                           <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="n">c</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">a</span> <span class="o">-</span> <span class="o">-</span> <span class="n">b</span>         <span class="n">a</span>  <span class="n">c</span>       <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">b</span>  <span class="n">d</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="o">-</span> <span class="o">-</span> <span class="o">-</span> <span class="o">-</span>    <span class="o">-&gt;</span>   <span class="n">b</span>  <span class="n">d</span>  <span class="o">-&gt;</span>   <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">c</span> <span class="o">-</span> <span class="o">-</span> <span class="n">d</span>                    <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+
+<span class="n">distance</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">to</span> <span class="n">b</span> <span class="ow">is</span> <span class="mi">3</span> <span class="ow">in</span> <span class="n">buffer</span> <span class="o">=&gt;</span> <span class="n">imap</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">distance</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">to</span> <span class="n">c</span> <span class="ow">is</span> <span class="mi">8</span> <span class="ow">in</span> <span class="n">buffer</span> <span class="o">=&gt;</span> <span class="n">imap</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">8</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values
+The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">start</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span>
+                     <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">a</span>  <span class="n">b</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+<span class="n">a</span> <span class="n">b</span> <span class="n">c</span> <span class="n">d</span> <span class="n">e</span> <span class="n">f</span> <span class="n">g</span> <span class="n">h</span>  <span class="o">-&gt;</span>  <span class="n">c</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+                     <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="n">d</span>  <span class="n">e</span>  <span class="o">-</span>  <span class="o">-</span> 
+                     <span class="n">f</span>  <span class="n">g</span>  <span class="n">h</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span>  <span class="o">-</span> 
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>numpy.ndarray</em>) – the numpy array that stores array values to be written, which serves as a write buffer. When writing a single data value, 
+it can also be a single numeric (e.g. np.int32) python variable. The datatype should match with the variable’s datatype. Note this numpy array
+write buffer can be in any shape as long as the number of elements (buffer size) is matched.</p></li>
+<li><p><strong>index</strong> (<em>tuple</em><em> of </em><em>int</em>) – [Optional] Only relevant when writing a single data value. The index of the data value to be written as a single element 
+in the multi-dimensional variable array. For example, the index of top-left corner value of a two-dimensional varaible should be (0,0). 
+If the variable uses the unlimited dimension, the first index value would correspond to the unlimited dimension.</p></li>
+<li><p><strong>start</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
+An array of integers specifying the index in the variable where the first of the data values will be written. The
+elements of <cite>start</cite> must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, <cite>start</cite>
+is 2D array of size [num][ndims] and each start[i] is a vector specifying the index in the variable where the first of the data values
+will be written.</p></li>
+<li><p><strong>count</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
+An array of integers specifying  the edge lengths along each dimension of the block of data values to be written. The
+elements of <cite>count</cite> must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, <cite>count</cite>
+is 2D array of size [num][ndims] and each count[i] is a vector specifying the edge lengths along each dimension of the block of 
+data values to be written.</p></li>
+<li><p><strong>stride</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers specifying 
+the sampling interval along each dimension of the netCDF variable. The elements of the stride vector correspond, in order, to the 
+netCDF variable’s dimensions.</p></li>
+<li><p><strong>num</strong> (<em>int</em>) – [Optional] Only relevant when writing a list of subarrays. An integer specifying the number of subarrays.</p></li>
+<li><p><strong>imap</strong> (<em>numpy.ndarray</em>) – [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers the mapping between 
+the dimensions of a netCDF variable and the in-memory structure of the internal data array. The elements of the index mapping vector 
+correspond, in order, to the netCDF variable’s dimensions. Each element value of imap should equal the memory location distance in write buffer between two adjacent elements along the corresponding dimension of netCDF variable.</p></li>
+<li><p><strong>bufcount</strong> (<em>int</em>) – [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
+in the write buffer to be written to the file.</p></li>
+<li><p><strong>buftype</strong> (<em>mpi4py.MPI.Datatype</em>) – [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the 
+write buffer.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Operational mode: This method must be called while the file is in collective data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.rename_att">
+<span class="sig-name descname"><span class="pre">rename_att</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.rename_att" title="Permalink to this definition"></a></dt>
+<dd><p>Rename a variable attribute named <cite>oldname</cite> to <cite>newname</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>oldname</strong> (<em>str</em>) – Old name of the attribute.</p>
+</dd>
+</dl>
+<p>Operational mode: If the new name is longer than the original name, the associated netCDF file must be in define mode. 
+Otherwise, the netCDF file can be in either define or data mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.set_auto_chartostring">
+<span class="sig-name descname"><span class="pre">set_auto_chartostring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chartostring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.set_auto_chartostring" title="Permalink to this definition"></a></dt>
+<dd><p>turn on or off automatic conversion of character variable data to and
+from numpy fixed length string arrays when the <cite>_Encoding</cite> variable attribute
+is set.</p>
+<p>If <cite>chartostring</cite> is set to <cite>True</cite>, when data is read from a character variable
+(dtype = <cite>S1</cite>) that has an <cite>_Encoding</cite> attribute, it is converted to a numpy
+fixed length unicode string array (dtype = <cite>UN</cite>, where <cite>N</cite> is the length
+of the the rightmost dimension of the variable).  The value of <cite>_Encoding</cite>
+is the unicode encoding that is used to decode the bytes into strings.</p>
+<p>When numpy string data is written to a variable it is converted back to
+indiviual bytes, with the number of bytes in each string equalling the
+rightmost dimension of the variable.</p>
+<p>The default value of <cite>chartostring</cite> is <cite>True</cite>
+(automatic conversions are performed).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.set_auto_mask">
+<span class="sig-name descname"><span class="pre">set_auto_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.set_auto_mask" title="Permalink to this definition"></a></dt>
+<dd><p>turn on or off automatic conversion of variable data to and
+from masked arrays.</p>
+<p>If <cite>mask</cite> is set to <cite>True</cite>, when data is read from a variable
+it is converted to a masked array if any of the values are exactly
+equal to the either the netCDF _FillValue or the value specified by the
+missing_value variable attribute. The fill_value of the masked array
+is set to the missing_value attribute (if it exists), otherwise
+the netCDF _FillValue attribute (which has a default value
+for each data type). If the variable has no missing_value attribute, the
+_FillValue is used instead. If the variable has valid_min/valid_max and
+missing_value attributes, data outside the specified range will be masked.
+When data is written to a variable, the masked
+array is converted back to a regular numpy array by replacing all the
+masked values by the missing_value attribute of the variable (if it
+exists).  If the variable has no missing_value attribute, the _FillValue
+is used instead.</p>
+<p>The default value of <cite>mask</cite> is <cite>False</cite></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.Variable.set_auto_scale">
+<span class="sig-name descname"><span class="pre">set_auto_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.set_auto_scale" title="Permalink to this definition"></a></dt>
+<dd><p>turn on or off automatic packing/unpacking of variable
+data using <cite>scale_factor</cite> and <cite>add_offset</cite> attributes.
+Also turns on and off automatic conversion of signed integer data
+to unsigned integer data if the variable has an <cite>_Unsigned</cite>
+attribute.</p>
+<p>If <cite>scale</cite> is set to <cite>True</cite>, and the variable has a
+<cite>scale_factor</cite> or an <cite>add_offset</cite> attribute, then data read
+from that variable is unpacked using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="o">*</span><span class="n">data</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_offset</span>
+</pre></div>
+</div>
+<p>When data is written to a variable it is packed using:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">data</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_offset</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span>
+</pre></div>
+</div>
+<p>If either scale_factor is present, but add_offset is missing, add_offset
+is assumed zero.  If add_offset is present, but scale_factor is missing,
+scale_factor is assumed to be one.</p>
+<p>In addition, if <cite>scale</cite> is set to <cite>True</cite>, and if the variable has an
+attribute <cite>_Unsigned</cite> set, and the variable has a signed integer data type,
+a view to the data is returned with the corresponding unsigned integer datatype.</p>
+<p>The default value of <cite>scale</cite> is <cite>False</cite></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl>
+<dt>Variable Attributes</dt><dd><p>The following class members are read-only and should not be modified by the user.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#name" title="Permalink to this definition"></a></dt>
+<dd><p>The string name of Variable instance
+<strong>Type:</strong> <cite>str</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dtype">
+<span class="sig-name descname"><span class="pre">dtype</span></span><a class="headerlink" href="#dtype" title="Permalink to this definition"></a></dt>
+<dd><p>Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object
+describing the variable’s data type.
+<strong>Type:</strong> <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datatype">
+<span class="sig-name descname"><span class="pre">datatype</span></span><a class="headerlink" href="#datatype" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">Variable.dtype</span></code>.
+<strong>Type:</strong> <code class="docutils literal notranslate"><span class="pre">numpy.dtype</span></code></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="shape">
+<span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#shape" title="Permalink to this definition"></a></dt>
+<dd><p>Return the shape of the variable, which is the current sizes of all variable
+dimensions
+<strong>Type:</strong> <cite>Tuple[int, int]</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ndim">
+<span class="sig-name descname"><span class="pre">ndim</span></span><a class="headerlink" href="#ndim" title="Permalink to this definition"></a></dt>
+<dd><p>The number of variable dimensions.
+<strong>Type:</strong> <cite>int</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#size" title="Permalink to this definition"></a></dt>
+<dd><p>Return the number of stored elements
+<strong>Type:</strong> <cite>int</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dimensions">
+<span class="sig-name descname"><span class="pre">dimensions</span></span><a class="headerlink" href="#dimensions" title="Permalink to this definition"></a></dt>
+<dd><p>Return the variable’s dimension names
+<strong>Type:</strong> <cite>List[str]</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="scale">
+<span class="sig-name descname"><span class="pre">scale</span></span><a class="headerlink" href="#scale" title="Permalink to this definition"></a></dt>
+<dd><p>Return the variable’s dimension names
+<strong>Type:</strong> <cite>bool</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="mask">
+<span class="sig-name descname"><span class="pre">mask</span></span><a class="headerlink" href="#mask" title="Permalink to this definition"></a></dt>
+<dd><p>If <cite>True</cite>, data is automatically converted to/from masked
+arrays when missing values or fill values are present. Default is <cite>True</cite>, can be
+reset using <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_mask</span></code> and <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_maskandscale</span></code>
+methods.
+<strong>Type:</strong> <cite>bool</cite></p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="chartostring">
+<span class="sig-name descname"><span class="pre">chartostring</span></span><a class="headerlink" href="#chartostring" title="Permalink to this definition"></a></dt>
+<dd><p>If <cite>True</cite>, data is automatically converted to/from character
+arrays to string arrays when the <cite>_Encoding</cite> variable attribute is set.
+Default is <cite>True</cite>, can be reset using <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring</span></code> method.
+<strong>Type:</strong> <cite>bool</cite></p>
+</dd></dl>
+
+</dd>
+</dl>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dimension_api.html" class="btn btn-neutral float-left" title="Dimension" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, CUCIS.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
