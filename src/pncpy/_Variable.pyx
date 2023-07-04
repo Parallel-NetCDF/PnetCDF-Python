@@ -560,7 +560,7 @@ cdef class Variable:
         set_auto_mask(self,mask)
 
         turn on or off automatic conversion of variable data to and
-        from masked arrays .
+        from masked arrays.
 
         If `mask` is set to `True`, when data is read from a variable
         it is converted to a masked array if any of the values are exactly
@@ -1279,11 +1279,12 @@ cdef class Variable:
         - `data`, `start`, `count` - Write an array of values
          The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
          an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
-         section in a 4 * 10 two-dimensional variable ("_" means skip).
-                     _  _  _  _  _  1  2  _  _  _ \n
-         1  2   ->   _  _  _  _  _  3  4  _  _  _ \n
-         3  4        _  _  _  _  _  _  _  _  _  _ \n
-                     _  _  _  _  _  _  _  _  _  _ \n
+         section in a 4 * 10 two-dimensional variable ("_" means skip).:
+
+                        _  _  _  _  _  1  2  _  _  _ \n
+            1  2   ->   _  _  _  _  _  3  4  _  _  _ \n
+            3  4        _  _  _  _  _  _  _  _  _  _ \n
+                        _  _  _  _  _  _  _  _  _  _ \n
 
         - `data`, `start`, `count`, `stride` - Write a subsampled array of values
          The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
