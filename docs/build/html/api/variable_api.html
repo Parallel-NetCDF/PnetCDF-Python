@@ -358,23 +358,14 @@ segmentation violation.</p>
 <blockquote>
 <div><p>The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
 an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
-section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+section in a 4 * 10 two-dimensional variable (“_” means skip).</p>
 <blockquote>
-<div><ul class="simple">
-<li><ul>
-<li><ul>
-<li><ul>
-<li><ul>
-<li><p>1  2  -  -  -          1  2   -&gt;   -  -  -  -  -  3  4  -  -  -          3  4        -  -  -  -  -  -  -  -  -  -                      -  -  -  -  -  -  -  -  -  -</p></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<div><p>_  _  _  _  _  1  2  _  _  _</p>
+</div></blockquote>
+<p>1  2   -&gt;   _  _  _  _  _  3  4  _  _  _</p>
+<p>3  4        _  _  _  _  _  _  _  _  _  _</p>
+<blockquote>
+<div><p>_  _  _  _  _  _  _  _  _  _</p>
 </div></blockquote>
 </div></blockquote>
 <ul class="simple">
@@ -385,16 +376,16 @@ section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
 refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
 would specify the following array section in a 4 * 10 two-dimensional variable (“-” means skip).</p>
 <blockquote>
-<div><ul class="simple">
-<li><ul>
-<li><p>1  -  2  -  3  -  4  -          1  2  3  4   -&gt;  -  -  5  -  6  -  7  -  8  -          5  6  7  8       -  -  -  -  -  -  -  -  -  -                           -  -  -  -  -  -  -  -  -  -</p></li>
-</ul>
-</li>
-</ul>
+<div><p>_  _  1  _  2  _  3  _  4  _</p>
+</div></blockquote>
+<p>1  2  3  4   -&gt;  _  _  5  _  6  _  7  _  8  _</p>
+<p>5  6  7  8       _  _  _  _  _  _  _  _  _  _</p>
+<blockquote>
+<div><p>_  _  _  _  _  _  _  _  _  _</p>
 </div></blockquote>
 </div></blockquote>
+<p>_ <cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite> - Write a mapped array of values</p>
 <ul class="simple">
-<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite> - Write a mapped array of values</p></li>
 <li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values</p></li>
 </ul>
 <dl class="field-list simple">

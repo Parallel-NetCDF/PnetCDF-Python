@@ -1279,22 +1279,22 @@ cdef class Variable:
         - `data`, `start`, `count` - Write an array of values
          The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
          an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
-         section in a 4 * 10 two-dimensional variable ("-" means skip).
-                     -  -  -  -  -  1  2  -  -  - \
-         1  2   ->   -  -  -  -  -  3  4  -  -  - \
-         3  4        -  -  -  -  -  -  -  -  -  - \
-                     -  -  -  -  -  -  -  -  -  - \
+         section in a 4 * 10 two-dimensional variable ("_" means skip).
+                     _  _  _  _  _  1  2  _  _  _ \n
+         1  2   ->   _  _  _  _  _  3  4  _  _  _ \n
+         3  4        _  _  _  _  _  _  _  _  _  _ \n
+                     _  _  _  _  _  _  _  _  _  _ \n
 
         - `data`, `start`, `count`, `stride` - Write a subsampled array of values
          The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
          refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
          would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
-                          -  -  1  -  2  -  3  -  4  - \
-         1  2  3  4   ->  -  -  5  -  6  -  7  -  8  - \
-         5  6  7  8       -  -  -  -  -  -  -  -  -  - \
-                          -  -  -  -  -  -  -  -  -  - \
+                          _  _  1  _  2  _  3  _  4  _ \n
+         1  2  3  4   ->  _  _  5  _  6  _  7  _  8  _ \n
+         5  6  7  8       _  _  _  _  _  _  _  _  _  _ \n
+                          _  _  _  _  _  _  _  _  _  _ \n
 
-        - `data`, `start`, `count`, `imap` - Write a mapped array of values
+        _ `data`, `start`, `count`, `imap` - Write a mapped array of values
 
 
         - `data`, `start`, `count`, `num` -  Write a list of subarrays of values
