@@ -1368,15 +1368,11 @@ cdef class Variable:
         :type imap: numpy.ndarray
 
         :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
-        in the write buffer to be written to the file.
-        :type bufcount: int
-
-        :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
-        in the write buffer to be written to the file.
+         in the write buffer to be written to the file.
         :type bufcount: int
 
         :param buftype: [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the 
-        write buffer. 
+         write buffer. 
         :type buftype: mpi4py.MPI.Datatype
         
         Operational mode: This method must be called while the file is in independent data mode."""
@@ -1522,15 +1518,11 @@ cdef class Variable:
         :type imap: numpy.ndarray
 
         :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
-        in the write buffer to be written to the file.
-        :type bufcount: int
-
-        :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements 
-        in the write buffer to be written to the file.
+         in the write buffer to be written to the file.
         :type bufcount: int
 
         :param buftype: [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the 
-        write buffer. 
+         write buffer. 
         :type buftype: mpi4py.MPI.Datatype
         
         Operational mode: This method must be called while the file is in collective data mode.
