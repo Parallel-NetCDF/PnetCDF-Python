@@ -176,7 +176,7 @@ def main():
     starts = np.array([NZ * rank, 0])
     counts = np.array([NZ, NY])
     # calling a blocking flexible API using put_var_all()
-    var_zy.put_var_all(buf_zy, start = starts, count = counts, buff_count = 1, mpi_datatype = subarray)
+    var_zy.put_var_all(buf_zy, start = starts, count = counts, bufcount = 1, buftype = subarray)
 
 
     for i in range(buffer_len):
@@ -184,7 +184,7 @@ def main():
             print(f"Error at line {sys._getframe().f_lineno} in {__file__}: put buffer[{i}] is altered")
 
     buf_zy.fill(-1)
-    var_zy.get_var_all(buf_zy, start = starts, count = counts, buff_count = 1, mpi_datatype = subarray)
+    var_zy.get_var_all(buf_zy, start = starts, count = counts, bufcount = 1, buftype = subarray)
     # print(buf_zy.reshape(array_of_sizes))
     
     # check contents of the get buffer
@@ -212,7 +212,7 @@ def main():
     counts = np.array([NY, NX])
 
     # calling a blocking flexible API using put_var_all()
-    req_id = var_yx.iput_var(buf_yx, start = starts, count = counts, buff_count = 1, mpi_datatype=subarray)
+    req_id = var_yx.iput_var(buf_yx, start = starts, count = counts, bufcount = 1, buftype=subarray)
     status = [None]
     f.wait_all(1, [req_id], status = status)
     # check request error msg for each unsuccessful requests
@@ -220,7 +220,7 @@ def main():
         print(f"Error on request {i}:",  strerror(status[0]))
 
     buf_yx.fill(-1)
-    req_id = var_yx.iget_var(buf_yx, start = starts, count = counts, buff_count = 1, mpi_datatype=subarray)
+    req_id = var_yx.iget_var(buf_yx, start = starts, count = counts, bufcount = 1, buftype=subarray)
     f.wait_all(1, [req_id], status = status)
     # check request error msg for each unsuccessful requests
     if strerrno(status[0]) != "NC_NOERR":
