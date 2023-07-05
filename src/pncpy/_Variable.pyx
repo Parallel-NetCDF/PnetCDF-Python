@@ -1398,8 +1398,8 @@ cdef class Variable:
         Method call to write collectively in parallel to the netCDF variable. The behavior of the method varies depends on the 
         pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. 
 
-        - `data` - Write an entire variable
-         Write all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
+        - `data` - Read an entire variable
+         Read all the values of a variable into a netCDF variable of an opened netCDF file. This is the simplest interface 
          to use for writing a value in a scalar variable or whenever all the values of a multidimensional variable can all be written at once. 
        
         .. note:: Take care when using the simplest forms of this interface with record variables. If you try to write all the values of a record variable 
@@ -1407,7 +1407,7 @@ cdef class Variable:
          variable but there are more records in the file than you assume, more data may be written to the file than you supply, which may result in a 
          segmentation violation.
 
-        - `data`, `index` - Write a single data value (a single element)
+        - `data`, `index` - Read a single data value (a single element)
          Put a single data value specified by `index` into a variable of an opened netCDF file that is in data mode. For example, index = [0,5] would specify the following 
          position in a 4 * 10 two-dimensional variable ("-" means skip).
 
@@ -1418,7 +1418,7 @@ cdef class Variable:
                        -  -  -  -  -  -  -  -  -  - \n
                        -  -  -  -  -  -  -  -  -  - \n
 
-        - `data`, `start`, `count` - Write an array of values
+        - `data`, `start`, `count` - Read an array of values
          The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to 
          an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
          section in a 4 * 10 two-dimensional variable ("-" means skip).
@@ -1430,7 +1430,7 @@ cdef class Variable:
             c  d        -  -  -  -  -  -  -  -  -  - \n
                         -  -  -  -  -  -  -  -  -  - \n
 
-        - `data`, `start`, `count`, `stride` - Write a subsampled array of values
+        - `data`, `start`, `count`, `stride` - Read a subsampled array of values
          The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that 
          refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
          would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
@@ -1442,7 +1442,7 @@ cdef class Variable:
          e  f  g  h       -  -  -  -  -  -  -  -  -  - \n
                           -  -  -  -  -  -  -  -  -  - \n
 
-        - `data`, `start`, `count`, `imap`, `stride`(optional) - Write a mapped array of values
+        - `data`, `start`, `count`, `imap`, `stride`(optional) - Read a mapped array of values
          The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
          The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
          and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
@@ -1457,7 +1457,7 @@ cdef class Variable:
             distance from a to b is 3 in buffer => imap[0] = 3
             distance from a to c is 8 in buffer => imap[1] = 8
                          
-        - `data`, `start`, `count`, `num` -  Write a list of subarrays of values
+        - `data`, `start`, `count`, `num` -  Read a list of subarrays of values
           The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
           edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
           subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
@@ -1857,13 +1857,12 @@ cdef class Variable:
         """
         **`get_var(self)`**
 
-        ..ignore-next::
-            Note that get_var requires a empty array as a buffer arg from caller to store returned array values. We understand this is 
-            against python API convention. But removing this or making this optional will create two layers of inconsistency that 
-            we don't desire: 
-            1. Among all behaviors of get_var get_varm always requires a buffer argument
-            2. Other i/o methods (iget/put/iput) all require buffer array as mandatory argument
-        
+        ..exclude::    Note that get_var requires a empty array as a buffer arg from caller to store returned array values. We understand this is 
+        ..exclude::    against python API convention. But removing this or making this optional will create two layers of inconsistency that 
+        ..exclude::    we don't desire: 
+        ..exclude::    1. Among all behaviors of get_var get_varm always requires a buffer argument
+        ..exclude::    2. Other i/o methods (iget/put/iput) all require buffer array as mandatory argument
+
         """
         if all(arg is None for arg in [index, start, count, stride, num, imap]):
             self._get_var(buff, collective = False, bufcount = bufcount, buftype = buftype)
@@ -1881,6 +1880,140 @@ cdef class Variable:
             raise ValueError("Invalid input arguments for get_var")
 
     def get_var_all(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
+        """
+        get_var_all(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
+
+        Method call to read collectively in parallel from the netCDF variable. The behavior of the method varies depends on the 
+        pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. The method requires
+        a empty array (`buff`) as a read buffer from caller to store returned array values.
+
+        - `buff` - Read an entire variable
+         Read all the values from a netCDF variable of an opened netCDF file. This is the simplest interface to use for reading the value of a scalar variable
+          or when all the values of a multidimensional variable can be read at once. 
+       
+        .. note:: Take care when using the simplest forms of this interface with record variables when you don’t specify how many records are to be read.
+         If you try to read all the values of a record variable into an array but there are more records in the file than you assume, more data will be 
+         read than you expect, which may cause a segmentation violation.
+
+        - `buff`, `index` - Read a single data value (a single element)
+         Put a single data value specified by `index` from a variable of an opened netCDF file that is in data mode. For example, index = [0,5] would specify the following 
+         position in a 4 * 10 two-dimensional variable ("-" means skip).
+
+        ::
+
+            -  -  -  -  -  a  -  -  -  - \n
+            -  -  -  -  -  -  -  -  -  -      ->   a\n
+            -  -  -  -  -  -  -  -  -  - \n
+            -  -  -  -  -  -  -  -  -  - \n
+
+        - `buff`, `start`, `count` - Read an array of values
+         The part of the netCDF variable to read is specified by giving a corner index and a vector of edge lengths that refer to 
+         an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array 
+         section in a 4 * 10 two-dimensional variable ("-" means skip).
+
+        ::
+
+            -  -  -  -  -  a  b  -  -  - \n
+            -  -  -  -  -  c  d  -  -  -         a  b
+            -  -  -  -  -  -  -  -  -  -     ->  c  d
+            -  -  -  -  -  -  -  -  -  - \n
+
+        - `buff`, `start`, `count`, `stride` - Read a subsampled array of values
+         The part of the netCDF variable to read is specified by giving a corner, a vector of edge lengths and stride vector that 
+         refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2] 
+         would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
+
+        ::
+
+            -  -  a  -  b  -  c  -  d  - \n
+            -  -  e  -  f  -  g  -  h  -                a  b  c  d\n   
+            -  -  -  -  -  -  -  -  -  -       ->       e  f  g  h\n       
+            -  -  -  -  -  -  -  -  -  - \n
+
+        - `buff`, `start`, `count`, `imap`, `stride`(optional) - Read a mapped array of values
+         The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
+         The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
+         and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
+         section in read butter and array section in a 4 * 10 two-dimensional variable ("-" means skip). 
+
+        ::
+
+                                       -  -  -  -  -  a  c  -  -  - \n
+            a - - b         a  c       -  -  -  -  -  b  d  -  -  - \n
+            - - - -    <=   b  d  <=   -  -  -  -  -  -  -  -  -  - \n
+            c - - d                    -  -  -  -  -  -  -  -  -  - \n
+            distance from a to b is 3 in buffer => imap[0] = 3
+            distance from a to c is 8 in buffer => imap[1] = 8
+                         
+        - `buff`, `start`, `count`, `num` -  Read a list of subarrays of values
+          The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+
+
+        ::
+
+            num = 4
+            start[0][0] = 0; start[0][1] = 5; count[0][0] = 1; count[0][1] = 2
+            start[1][0] = 1; start[1][1] = 0; count[1][0] = 1; count[1][1] = 1
+            start[2][0] = 2; start[2][1] = 6; count[2][0] = 1; count[2][1] = 2
+            start[3][0] = 3; start[3][1] = 0; count[3][0] = 1; count[3][1] = 3
+                                 -  -  -  -  -  a  b  -  -  - 
+            a b c d e f g h  <=  c  -  -  -  -  -  -  -  -  - 
+                                 -  -  -  -  -  -  d  e  -  - 
+                                 f  g  h  -  -  -  -  -  -  - 
+
+        :param buff: the numpy array that stores array values to be written, which serves as a read buffer. The datatype should match with the 
+         variable's datatype. Note this numpy array read buffer can be in any shape as long as the number of elements (buffer size) is matched.
+    
+        :type buff: numpy.ndarray
+
+        :param index: [Optional] Only relevant when reading a single data value. The index of the data value to be written as a single element 
+         in the multi-dimensional variable array. For example, the index of top-left corner value of a two-dimensional varaible should be (0,0). 
+         If the variable uses the unlimited dimension, the first index value would correspond to the unlimited dimension. 
+
+        :type index: tuple of int
+
+        :param start: [Optional] Only relevant when reading a array of values, a subsampled array, a mapped array or a list of subarrays.
+         An array of integers specifying the index in the variable where the first of the data values will be written. The
+         elements of `start` must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+         index would correspond to the starting record number for reading the data values. When reading to a list of subarrays, `start`
+         is 2D array of size [num][ndims] and each start[i] is a vector specifying the index in the variable where the first of the data values
+         will be written.
+        :type start: numpy.ndarray
+
+        :param count: [Optional] Only relevant when reading a array of values, a subsampled array, a mapped array or a list of subarrays.
+         An array of integers specifying  the edge lengths along each dimension of the block of data values to be written. The
+         elements of `count` must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
+         index would correspond to the starting record number for reading the data values. When reading to a list of subarrays, `count`
+         is 2D array of size [num][ndims] and each count[i] is a vector specifying the edge lengths along each dimension of the block of 
+         data values to be written.
+
+        :type count: numpy.ndarray
+
+        :param stride: [Optional] Only relevant when reading a subsampled array or a mapped array. An array of integers specifying 
+         the sampling interval along each dimension of the netCDF variable. The elements of the stride vector correspond, in order, to the 
+         netCDF variable’s dimensions.
+        :type stride: numpy.ndarray
+
+        :param num: [Optional] Only relevant when reading a list of subarrays. An integer specifying the number of subarrays.
+        :type num: int
+
+        :param imap: [Optional] Only relevant when reading a subsampled array or a mapped array. An array of integers the mapping between 
+         the dimensions of a netCDF variable and the in-memory structure of the internal data array. The elements of the index mapping vector 
+         correspond, in order, to the netCDF variable’s dimensions. Each element value of imap should equal the memory location distance in read buffer between two adjacent elements along the corresponding dimension of netCDF variable. 
+        :type imap: numpy.ndarray
+
+        :param bufcount: [Optional] Optional for all types of reading patterns. An integer indicates the number of MPI derived data type elements 
+         in the read buffer to be written to the file.
+        :type bufcount: int
+
+        :param buftype: [Optional] Optional for all types of reading patterns. An MPI derived data type that describes the memory layout of the 
+         read buffer. 
+        :type buftype: mpi4py.MPI.Datatype
+        
+        Operational mode: This method must be called while the file is in collective data mode.
+        """
         if all(arg is None for arg in [index, start, count, stride, num, imap]):
             self._get_var(buff, collective = True, bufcount = bufcount, buftype = buftype)
         elif all(arg is not None for arg in [index]) and all(arg is None for arg in [start, count, stride, num, imap]):
