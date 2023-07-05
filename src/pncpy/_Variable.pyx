@@ -502,7 +502,7 @@ cdef class Variable:
         """
         set_auto_chartostring(self,chartostring)
 
-        turn on or off automatic conversion of character variable data to and
+        Turn on or off automatic conversion of character variable data to and
         from numpy fixed length string arrays when the `_Encoding` variable attribute
         is set.
 
@@ -525,7 +525,7 @@ cdef class Variable:
         """
         set_auto_scale(self,scale)
 
-        turn on or off automatic packing/unpacking of variable
+        Turn on or off automatic packing/unpacking of variable
         data using `scale_factor` and `add_offset` attributes.
         Also turns on and off automatic conversion of signed integer data
         to unsigned integer data if the variable has an `_Unsigned`
@@ -559,7 +559,7 @@ cdef class Variable:
         """
         set_auto_mask(self,mask)
 
-        turn on or off automatic conversion of variable data to and
+        Turn on or off automatic conversion of variable data to and
         from masked arrays.
 
         If `mask` is set to `True`, when data is read from a variable
@@ -1292,7 +1292,7 @@ cdef class Variable:
          e  f  g  h       -  -  -  -  -  -  -  -  -  - 
                           -  -  -  -  -  -  -  -  -  - 
 
-        - `data`, `start`, `count`, `imap`, `stride`(optional) - Write a mapped array of values
+        - `data`, `start`, `count`, `imap`, `stride` (optional) - Write a mapped array of values
          The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
          The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
          and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
