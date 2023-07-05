@@ -1863,7 +1863,7 @@ cdef class Variable:
 
         - `buff` - Read an entire variable
          Read all the values from a netCDF variable of an opened netCDF file. This is the simplest interface to use for reading the value of a scalar variable
-          or when all the values of a multidimensional variable can be read at once. 
+         or when all the values of a multidimensional variable can be read at once. 
        
         .. note:: Take care when using the simplest forms of this interface with record variables when you don’t specify how many records are to be read.
          If you try to read all the values of a record variable into an array but there are more records in the file than you assume, more data will be 
@@ -2019,7 +2019,7 @@ cdef class Variable:
 
         - `buff` - Read an entire variable
          Read all the values from a netCDF variable of an opened netCDF file. This is the simplest interface to use for reading the value of a scalar variable
-          or when all the values of a multidimensional variable can be read at once. 
+         or when all the values of a multidimensional variable can be read at once. 
        
         .. note:: Take care when using the simplest forms of this interface with record variables when you don’t specify how many records are to be read.
          If you try to read all the values of a record variable into an array but there are more records in the file than you assume, more data will be 
