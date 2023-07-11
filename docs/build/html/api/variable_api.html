@@ -165,7 +165,7 @@ directly.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> for 8-byte real number in double precision</p></li>
 </ul>
 </div></blockquote>
-<p>The following are <cite>CDF-5</cite> format only</p>
+<p>The following datatypes are <cite>CDF-5</cite> format only</p>
 <blockquote>
 <div><ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> for unsigned 1-byte integer</p></li>
@@ -183,8 +183,10 @@ a scalar (and therefore has no dimensions).</p></li>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: use the default fill value for the given datatype</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: fill mode is turned off</p></li>
-<li><p>any other value: use the given value as fill value</p></li>
+<li><p>If specified with other value, the default netCDF <cite>_FillValue</cite> (the</p></li>
 </ul>
+<p>value that the variable gets filled with before any data is written to it)
+is replaced with this value.</p>
 </p></li>
 </ul>
 </dd>
@@ -195,10 +197,6 @@ a scalar (and therefore has no dimensions).</p></li>
 <dd class="field-odd"><p><a class="reference internal" href="#pncpy.Variable" title="pncpy.Variable"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Variable</span></code></a></p>
 </dd>
 </dl>
-<p><strong>`fill_value`</strong>:  If specified, the default netCDF <cite>_FillValue</cite> (the
-value that the variable gets filled with before any data is written to it)
-is replaced with this value.  If fill_value is set to <cite>False</cite>, then
-the variable is not pre-filled.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -341,7 +339,7 @@ write buffer.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The reqeust ID, which can be used in a successive call to <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> or <a href="#id1"><span class="problematic" id="id2">``</span></a>File.wait_all``for the completion of the nonblocking operation.</p>
+<dd class="field-even"><p>The reqeust ID, which can be used in a successive call to <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> or <code class="docutils literal notranslate"><span class="pre">File.wait_all</span></code> for the completion of the nonblocking operation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -489,7 +487,7 @@ would specify the following array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <a href="#id3"><span class="problematic" id="id4">`</span></a>stride`(optional) - Read a mapped array of values</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>stride</cite> (optional) - Read a mapped array of values</p></li>
 </ul>
 <blockquote>
 <div><p>The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
@@ -622,7 +620,7 @@ would specify the following array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <a href="#id5"><span class="problematic" id="id6">`</span></a>stride`(optional) - Read a mapped array of values</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>stride</cite> (optional) - Read a mapped array of values</p></li>
 </ul>
 <blockquote>
 <div><p>The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
@@ -761,7 +759,7 @@ would specify the following array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <a href="#id7"><span class="problematic" id="id8">`</span></a>stride`(optional) - Request to read a mapped array of values</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>stride</cite> (optional) - Request to read a mapped array of values</p></li>
 </ul>
 <blockquote>
 <div><p>The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
@@ -830,7 +828,7 @@ read buffer.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The reqeust ID, which can be used in a successive call to <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> or <a href="#id9"><span class="problematic" id="id10">``</span></a>File.wait_all``for the completion of the nonblocking operation.</p>
+<dd class="field-even"><p>The reqeust ID, which can be used in a successive call to <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> or <code class="docutils literal notranslate"><span class="pre">File.wait_all</span></code> for the completion of the nonblocking operation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -999,7 +997,7 @@ write buffer.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The reqeust ID, which can be used in a successive call to <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> or <a href="#id11"><span class="problematic" id="id12">``</span></a>File.wait_all``for the completion of the nonblocking operation.</p>
+<dd class="field-even"><p>The reqeust ID, which can be used in a successive call to <code class="docutils literal notranslate"><span class="pre">File.wait</span></code> or <code class="docutils literal notranslate"><span class="pre">File.wait_all</span></code> for the completion of the nonblocking operation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
@@ -1110,11 +1108,13 @@ section in write butter and array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values
-The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Write a list of subarrays of values</p></li>
 </ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -1225,7 +1225,7 @@ would specify the following array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <a href="#id13"><span class="problematic" id="id14">`</span></a>stride`(optional) - Write a mapped array of values</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>imap</cite>, <cite>stride</cite> (optional) - Write a mapped array of values</p></li>
 </ul>
 <blockquote>
 <div><p>The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.

@@ -54,7 +54,7 @@ cdef class Variable:
             - ``pncpy.NC_FLOAT`` for 4-byte floating point number
             - ``pncpy.NC_DOUBLE`` for 8-byte real number in double precision
          
-         The following are `CDF-5` format only
+         The following datatypes are `CDF-5` format only
 
             - ``pncpy.NC_UBYTE`` for unsigned 1-byte integer
             - ``pncpy.NC_USHORT`` for unsigned 2-byte integer
@@ -73,15 +73,12 @@ cdef class Variable:
 
          - ``None``: use the default fill value for the given datatype
          - ``False``: fill mode is turned off
-         - any other value: use the given value as fill value
+         - If specified with other value, the default netCDF `_FillValue` (the
+         value that the variable gets filled with before any data is written to it)
+         is replaced with this value.
 
         :return: The created variable
         :rtype: :class:`pncpy.Variable`
-
-        **`fill_value`**:  If specified, the default netCDF `_FillValue` (the
-        value that the variable gets filled with before any data is written to it)
-        is replaced with this value.  If fill_value is set to `False`, then
-        the variable is not pre-filled. 
 
         """
 
@@ -1308,9 +1305,9 @@ cdef class Variable:
             distance from a to c is 8 in buffer => imap[1] = 8
                          
         - `data`, `start`, `count`, `num` -  Write a list of subarrays of values
-          The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+         The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+         edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+         subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
 
 
         ::
@@ -1442,7 +1439,7 @@ cdef class Variable:
          e  f  g  h       -  -  -  -  -  -  -  -  -  - 
                           -  -  -  -  -  -  -  -  -  - 
 
-        - `data`, `start`, `count`, `imap`, `stride`(optional) - Write a mapped array of values
+        - `data`, `start`, `count`, `imap`, `stride` (optional) - Write a mapped array of values
          The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
          The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
          and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
@@ -1904,7 +1901,7 @@ cdef class Variable:
             -  -  -  -  -  -  -  -  -  -       ->       e  f  g  h       
             -  -  -  -  -  -  -  -  -  - 
 
-        - `buff`, `start`, `count`, `imap`, `stride`(optional) - Read a mapped array of values
+        - `buff`, `start`, `count`, `imap`, `stride` (optional) - Read a mapped array of values
          The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
          The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
          and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
@@ -2060,7 +2057,7 @@ cdef class Variable:
             -  -  -  -  -  -  -  -  -  -       ->       e  f  g  h       
             -  -  -  -  -  -  -  -  -  - 
 
-        - `buff`, `start`, `count`, `imap`, `stride`(optional) - Read a mapped array of values
+        - `buff`, `start`, `count`, `imap`, `stride` (optional) - Read a mapped array of values
          The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
          The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
          and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
@@ -2643,7 +2640,7 @@ cdef class Variable:
          write buffer. 
         :type buftype: mpi4py.MPI.Datatype
     
-        :return: The reqeust ID, which can be used in a successive call to ``File.wait`` or ``File.wait_all``for the completion of the nonblocking operation.
+        :return: The reqeust ID, which can be used in a successive call to ``File.wait`` or ``File.wait_all`` for the completion of the nonblocking operation.
         :rtype: int
         
         Operational mode: This method must be called while the file is in independent data mode."""
@@ -2802,7 +2799,7 @@ cdef class Variable:
          write buffer. 
         :type buftype: mpi4py.MPI.Datatype
     
-        :return: The reqeust ID, which can be used in a successive call to ``File.wait`` or ``File.wait_all``for the completion of the nonblocking operation.
+        :return: The reqeust ID, which can be used in a successive call to ``File.wait`` or ``File.wait_all`` for the completion of the nonblocking operation.
         :rtype: int
         
         Operational mode: This method must be called while the file is in independent data mode."""
@@ -3061,7 +3058,7 @@ cdef class Variable:
             -  -  -  -  -  -  -  -  -  -       ->       e  f  g  h       
             -  -  -  -  -  -  -  -  -  - 
 
-        - `buff`, `start`, `count`, `imap`, `stride`(optional) - Request to read a mapped array of values
+        - `buff`, `start`, `count`, `imap`, `stride` (optional) - Request to read a mapped array of values
          The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
          The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable 
          and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
@@ -3143,7 +3140,7 @@ cdef class Variable:
          read buffer. 
         :type buftype: mpi4py.MPI.Datatype
 
-        :return: The reqeust ID, which can be used in a successive call to ``File.wait`` or ``File.wait_all``for the completion of the nonblocking operation.
+        :return: The reqeust ID, which can be used in a successive call to ``File.wait`` or ``File.wait_all`` for the completion of the nonblocking operation.
         :rtype: int
         
         Operational mode: This method can be called in either define or (collective or independent) data mode. 
