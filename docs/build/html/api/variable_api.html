@@ -288,11 +288,13 @@ section in write butter and array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Request to write a list of subarrays of values
-The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Request to write a list of subarrays of values</p></li>
 </ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -428,9 +430,8 @@ character encoding of a string attribute (default is <cite>utf-8</cite>).</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.Variable.get_var">
-<span class="sig-name descname"><span class="pre">get_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_var" title="Permalink to this definition"></a></dt>
-<dd><p>get_var_all(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)</p>
-<p>Method call to read independently in parallel from the netCDF variable. The behavior of the method varies depends on the 
+<span class="sig-name descname"><span class="pre">get_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bufcount</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buftype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.Variable.get_var" title="Permalink to this definition"></a></dt>
+<dd><p>Method call to read independently in parallel from the netCDF variable. The behavior of the method varies depends on the 
 pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>. The method requires
 a empty array (<cite>buff</cite>) as a read buffer from caller to store returned array values.</p>
 <ul class="simple">
@@ -505,11 +506,13 @@ section in read butter and array section in a 4 * 10 two-dimensional variable (�
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Read a list of subarrays of values
-The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Read a list of subarrays of values</p></li>
 </ul>
+<blockquote>
+<div><p>The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -636,11 +639,13 @@ section in read butter and array section in a 4 * 10 two-dimensional variable (�
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Read a list of subarrays of values
-The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Read a list of subarrays of values</p></li>
 </ul>
+<blockquote>
+<div><p>The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -773,11 +778,13 @@ section in read butter and array section in a 4 * 10 two-dimensional variable (�
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Request to read a list of subarrays of values
-The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+<li><p><cite>buff</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Request to read a list of subarrays of values</p></li>
 </ul>
+<blockquote>
+<div><p>The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
@@ -939,11 +946,13 @@ section in write butter and array section in a 4 * 10 two-dimensional variable (
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Request to write a list of subarrays of values
-The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p></li>
+<li><p><cite>data</cite>, <cite>start</cite>, <cite>count</cite>, <cite>num</cite> -  Request to write a list of subarrays of values</p></li>
 </ul>
+<blockquote>
+<div><p>The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+subarray sections in a 4 * 10 two-dimensional variable (“-” means skip).</p>
+</div></blockquote>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">num</span> <span class="o">=</span> <span class="mi">4</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">count</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>

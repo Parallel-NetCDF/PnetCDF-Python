@@ -1855,7 +1855,7 @@ cdef class Variable:
 
     def get_var(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
         """
-        get_var_all(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
+        get_var(self, buff, index=None, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
 
         Method call to read independently in parallel from the netCDF variable. The behavior of the method varies depends on the 
         pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. The method requires
@@ -1920,9 +1920,9 @@ cdef class Variable:
             distance from a to c is 8 in buffer => imap[1] = 8
                          
         - `buff`, `start`, `count`, `num` -  Read a list of subarrays of values
-          The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+         The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+         edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+         subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
 
 
         ::
@@ -2076,9 +2076,9 @@ cdef class Variable:
             distance from a to c is 8 in buffer => imap[1] = 8
                          
         - `buff`, `start`, `count`, `num` -  Read a list of subarrays of values
-          The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+         The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+         edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+         subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
 
 
         ::
@@ -2576,9 +2576,9 @@ cdef class Variable:
             distance from a to c is 8 in buffer => imap[1] = 8
                          
         - `data`, `start`, `count`, `num` -  Request to write a list of subarrays of values
-          The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+         The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+         edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+         subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
 
 
         ::
@@ -2735,9 +2735,9 @@ cdef class Variable:
             distance from a to c is 8 in buffer => imap[1] = 8
                          
         - `data`, `start`, `count`, `num` -  Request to write a list of subarrays of values
-          The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+         The part of the netCDF variable to write is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+         edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+         subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
 
 
         ::
@@ -3077,9 +3077,9 @@ cdef class Variable:
             distance from a to c is 8 in buffer => imap[1] = 8
                          
         - `buff`, `start`, `count`, `num` -  Request to read a list of subarrays of values
-          The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
-          edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
-          subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
+         The part of the netCDF variable to read is specified by giving a list of subarrays and each subarray is specified by a corner and a vector of 
+         edge lengths that refer to an array section of the netCDF variable. The example code and diagram below illustrates a lists of 4 specified
+         subarray sections in a 4 * 10 two-dimensional variable ("-" means skip).
 
 
         ::
