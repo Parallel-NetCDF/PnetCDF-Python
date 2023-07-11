@@ -67,17 +67,19 @@ Variable Attributes
 
  .. attribute:: scale
 
-
-   Return the variable's dimension names
+   Only relevant when using indexer syntax to read from or write to netCDF variable. 
+   If True, `scale_factor` and `add_offset` are applied, and signed integer data is 
+   automatically converted to unsigned integer data if the `_Unsigned` attribute is set.
+   Default is `True`, can be reset using `Variable.set_auto_scale` and
+   `Variable.set_auto_maskandscale` methods.
    **Type:** `bool`
 
  .. attribute:: mask
 
-
-   If `True`, data is automatically converted to/from masked
-   arrays when missing values or fill values are present. Default is `True`, can be
-   reset using ``Variable.set_auto_mask`` and ``Variable.set_auto_maskandscale``
-   methods. 
+   Only relevant when using indexer syntax to read from netCDF variable. If `True`, 
+   data is automatically converted to/from masked arrays when missing values or fill 
+   values are present. Default is `True`, can be reset using ``Variable.set_auto_mask`` 
+   and ``Variable.set_auto_maskandscale`` methods. 
    **Type:** `bool`
 
  .. attribute:: chartostring
