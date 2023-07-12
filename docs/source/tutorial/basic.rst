@@ -40,6 +40,14 @@ Creating/Opening/Closing a netCDF file
     # close the file
     f.close()
 
+ Equivalent example codes in ``netCDF4-python``:
+ 
+ .. code-block:: Python
+
+    from netCDF4 import Dataset
+    rootgrp = Dataset("test.nc", "w", format="NETCDF3_CLASSIC")
+    rootgrp.close()
+
  For the full example program, see ``examples/craete_open.py``.
 
 Dimensions 
@@ -56,12 +64,25 @@ Dimensions
 
  .. code-block:: Python
 
+    from netCDF4 import Dataset
     LAT_NAME="lat"
     LAT_LEN = 50
     TIME_NAME="time"
     f = pncpy.File(filename="tmp.nc", mode = 'w', format="64BIT_DATA", comm=comm, info=None)
     lat_dim = f.def_dim(LAT_NAME,LAT_LEN)
     time_dim = f.def_dim(TIME_NAME,-1)
+
+  Equivalent example codes in ``netCDF4-python``:
+ 
+ .. code-block:: Python
+
+    LAT_NAME="lat"
+    LAT_LEN = 50
+    TIME_NAME="time"
+    rootgrp = Dataset("tmp.nc", "w", format="NETCDF3_64BIT_DATA")
+    time = rootgrp.createDimension(TIME_NAME, None)
+    lat = rootgrp.createDimension(LAT_NAME, LAT_LEN)
+
 
  All of the Dimension instances are stored in a dictionary as an Python attribute of File. 
 
@@ -96,14 +117,24 @@ Variables
 
     var = f.def_var("var", pncpy.NC_INT, ("time", "lat"))
 
+ Equivalent example codes in ``netCDF4-python``:
+ 
+ .. code-block:: Python
+
+    var = rootgrp.createVariable("time","i4",("time", "lat"))
+
  All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions. To retrieve the previous defined
  netCDF variable instance from the file, you can directly index the dictionary using variable name as the key.
 
  .. code-block:: Python
 
-    >>> print
+    >>> print(f.variables)
+    {'var': <class 'pncpy._Variable.Variable'>
+    int32 var(time, lat)
+    int32 data type: int32
     unlimited dimensions: time
     current shape = (0, 50)
+    filling off}
    
  
  Up to this point a netCDF variable is properly defined. To write data to or read from this variable, see later sections for more details.
@@ -133,6 +164,21 @@ Attributes
     var.put_att("int_att", np.int32(1)) 
     var.seqatt = np.int32(np.arange(10))
 
+ Equivalent example codes in ``netCDF4-python``:
+ 
+ .. code-block:: Python
+
+    # set root group attributes
+    f.floatatt = math.pi # Option1: Python attribute assignment 
+    f.setncattr("intatt", np.int32(1)) # Option2: method put_att()
+    f.seqatt = np.int32(np.arange(10))
+
+    # set variable attributes
+    var = f.variables['var'] 
+    var.floatatt = math.pi 
+    var.setncattr("int_att", np.int32(1)) 
+    var.seqatt = np.int32(np.arange(10))
+
  The :func:`File.ncattrs` method of a File or Variable instance can be used to retrieve the names of all 
  the netCDF attributes. And the __dict__ attribute of a File or Variable instance provides all the netCDF 
  attribute name/value pairs in a python dictionary: 
@@ -154,7 +200,7 @@ Writing to variable
  Then for writing, there are currently two options:
 
 Option1 Indexer (or slicing) syntax 
- You can just treat it the variable like an numpy array and assign data
+ You can just treat the variable like an numpy array and assign data
  to a slice. Slices are specified as a `start:stop:step` triplet.
 
  .. code-block:: Python
@@ -162,6 +208,7 @@ Option1 Indexer (or slicing) syntax
     buff = np.zeros(shape = (10, 50), dtype = "i4")
     var[:] = buff # put values to the variable
 
+ The indexer syntax is the same as in ``netcdf4-python`` library for writing to netCDF variable. 
 
 Option2 Method calls of put/get_var() 
  Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
@@ -180,7 +227,8 @@ Reading from variable
 ----------------------
 
  Symmetrically, users can use two options with different syntaxes to retreive array values from the variable.
-
+ The indexer syntax is the same as in ``netcdf4-python`` library for reading from netCDF variable. 
+ 
  .. code-block:: Python
 
     var = f.variables['var'] 
