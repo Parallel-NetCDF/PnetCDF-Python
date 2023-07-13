@@ -953,6 +953,22 @@ cdef class File:
         _check_err(ierr)
         return size
 
+    def inq_get_size(self):
+        """
+        inq_get_size(self)
+
+        Reports the amount of data that has actually the amount of data that has been actually read from the 
+        file since the file is opened/created.
+
+        :rtype: int
+        """
+        cdef int ierr
+        cdef int size
+        with nogil:
+            ierr = ncmpi_inq_get_size(self._ncid, <MPI_Offset *>&size)
+        _check_err(ierr)
+        return size
+
     def inq_header_extent(self):
         """
         inq_header_extent(self)

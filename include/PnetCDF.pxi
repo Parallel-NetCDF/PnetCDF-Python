@@ -198,7 +198,7 @@ cdef extern from "pnetcdf.h":
     int ncmpi_inq_malloc_size(MPI_Offset *size) nogil
     int ncmpi_inq_malloc_max_size(MPI_Offset *size) nogil
     int ncmpi_inq_put_size(int ncid,MPI_Offset *size) nogil
-
+    int ncmpi_inq_get_size(int ncid,MPI_Offset *size) nogil
 
     # Attibute APIs
     int ncmpi_put_att_text(int ncid, int varid, const char *name, MPI_Offset len, const char *op) nogil

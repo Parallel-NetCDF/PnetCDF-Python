@@ -54,7 +54,7 @@ Dimensions
 -------------
 
  NetCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
- the dimensions they depend on must be established. To create a dimension, the :func:`File.def_dim` method is called 
+ the dimensions they depend on must be established. To create a dimension, the ``File.def_dim`` method is called 
  on a File instance under define mode. The dimension's name is set using a Python string, while the size 
  is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded), 
  the size can be omitted or assigned as -1. A "Dimension" object will be returned as a handler for this 
@@ -228,7 +228,7 @@ Reading from variable
 
  Symmetrically, users can use two options with different syntaxes to retreive array values from the variable.
  The indexer syntax is the same as in ``netcdf4-python`` library for reading from netCDF variable. 
- 
+
  .. code-block:: Python
 
     var = f.variables['var'] 

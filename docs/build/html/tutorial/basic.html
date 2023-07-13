@@ -148,7 +148,7 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 <h2>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>NetCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
-the dimensions they depend on must be established. To create a dimension, the <code class="xref py py-func docutils literal notranslate"><span class="pre">File.def_dim()</span></code> method is called
+the dimensions they depend on must be established. To create a dimension, the <code class="docutils literal notranslate"><span class="pre">File.def_dim</span></code> method is called
 on a File instance under define mode. The dimension’s name is set using a Python string, while the size
 is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded),
 the size can be omitted or assigned as -1. A “Dimension” object will be returned as a handler for this
