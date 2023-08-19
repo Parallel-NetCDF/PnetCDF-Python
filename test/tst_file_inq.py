@@ -100,7 +100,7 @@ class FileTestCase(unittest.TestCase):
 
 
     def runTest(self):
-        """testing file inq for CDF-1/CDF-2/CDF-5/CDF-2/CDF-1 file format"""
+        """testing file inq for CDF-1/CDF-2/CDF-5 file format"""
         self.assertEqual(self.nvars, 4)
         self.assertEqual(self.ndims, 4)
         self.assertEqual(self.nattrs, 2)

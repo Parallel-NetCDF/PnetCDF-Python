@@ -7,7 +7,7 @@
 """
     This example is the same as nonblocking_write.py expect all nonblocking
     write requests (calls to iput and bput) are posted in define mode.
-     It creates a netcdf file in CD-5 format and writes a number of
+     It creates a netcdf file in CDF-5 format and writes a number of
      3D integer non-record variables. The measured write bandwidth is reported
      at the end. Usage: (for example)
 

@@ -6,7 +6,7 @@
 ####################################################################
 """
     This example is similar to collective_write.py but using nonblocking APIs.
-     It creates a netcdf file in CD-5 format and writes a number of
+     It creates a netcdf file in CDF-5 format and writes a number of
      3D integer non-record variables. The measured write bandwidth is reported
      at the end. Usage: (for example)
 
