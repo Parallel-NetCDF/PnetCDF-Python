@@ -8,6 +8,7 @@ from setuptools import setup, Extension
 from setuptools.dist import Distribution
 import mpi4py
 import json
+from packaging import version
 
 open_kwargs = {'encoding': 'utf-8'}
 
@@ -42,8 +43,7 @@ if not HAS_PNCCONFIG:
 
 
 if not HAS_PNCCONFIG:
-    print("Error: cannot find pnetcdf-config in PNETCDF_DIR, PATH or from setup.cfg. Abort.", file=sys.stderr)
-    exit(-1)
+    raise ValueError("Error: cannot find pnetcdf-config in PNETCDF_DIR, PATH or from setup.cfg. Abort.")
 
 
 def get_str_from_pnc_config(pnc_config, option: str) -> str:
@@ -59,7 +59,10 @@ pnc_ver = get_str_from_pnc_config(pnc_config, "--version")
 def is_pnc_ver_valid(pnc_ver: str) -> bool:
     if pnc_ver.split()[0] != "PnetCDF":
         return False
-    # TODO: add more checks
+    current_version = version.parse(pnc_ver.split()[1])
+    target_version = version.parse("1.12.3")
+    if current_version < target_version:
+        return False
     return True
 
 
@@ -122,7 +125,10 @@ ext_modules = [
               libraries=libs,
               library_dirs=lib_dirs,
               include_dirs=inc_dirs + ['include'],
-              runtime_library_dirs=runtime_lib_dirs)
+              runtime_library_dirs=runtime_lib_dirs,
+              extra_compile_args=['-Wno-unreachable-code-fallthrough',
+                                  '-Wno-unused-function']
+              )
     for x in src_base_all
 ]
 

@@ -4,9 +4,7 @@ from cpython.mem cimport PyMem_Malloc, PyMem_Free
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
 from libc.stdlib cimport malloc, free
-#from mpi4py.libmpi cimport MPI_Offset, MPI_CHAR, MPI_BYTE, MPI_UNSIGNED_CHAR, MPI_INT16_T, MPI_UNSIGNED_SHORT,\
-#                          MPI_INT, MPI_UNSIGNED, MPI_INT64, MPI_UNSIGNED64, MPI_FLOAT, MPI_DOUBLE
-
+from mpi4py.libmpi cimport MPI_Offset
 from mpi4py import MPI
 
 
@@ -85,8 +83,7 @@ _intnptonctype  = {'i1' : NC_BYTE_C,
                    'u8' : NC_UINT64_C}
 
 # default fill_value to numpy datatype mapping.
-default_fillvals = {#'S1': '\0',
-                     'S1':NC_FILL_CHAR_C,
+default_fillvals = { 'S1':NC_FILL_CHAR_C,
                      'i1':NC_FILL_BYTE_C,
                      'u1':NC_FILL_UBYTE_C,
                      'i2':NC_FILL_SHORT_C,
@@ -162,6 +159,10 @@ NC_64BIT_DATA = NC_64BIT_DATA_C
 NC_NETCDF4 = NC_NETCDF4_C
 NC_BP = NC_BP_C
 
+#Attributes that only exist at the python level (not in the netCDF file)
+_private_atts = \
+['_ncid','_varid','dimensions','variables', 'file_format',
+ '_nunlimdim','path', 'name', '__orthogonal_indexing__', '_buffer']
 # internal C functions.
 cdef _strencode(pystr,encoding=""):
     # encode a string into bytes.  If already bytes, do nothing.
@@ -182,8 +183,6 @@ cdef _check_err(ierr, err_cls=RuntimeError, filename=""):
                 filename = filename.decode()
             raise err_cls(ierr, err_str, filename)
         else:
-        #TODO: Fix seg error when raising rumtime error
-            #print(err_str)
             raise err_cls(err_str)
 
 
@@ -406,21 +405,19 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
     This style of indexing can be very powerful, but it is very hard
     to understand, explain, and implement (and can lead to hard to find bugs).
     Most other python packages and array processing
-    languages (such as netcdf4-python, xray, biggus, matlab and fortran)
-    use "orthogonal indexing" which only allows for 1-d index arrays and
+    languages use "orthogonal indexing" which only allows for 1-d index arrays and
     treats these arrays of indices independently along each dimension.
 
     The implementation of "orthogonal indexing" used here requires that
     index arrays be 1-d boolean or integer. If integer arrays are used,
     the index values must be sorted and contain no duplicates.
 
-    In summary, slicing netcdf4-python variable objects with 1-d integer or
-    boolean arrays is allowed, but may give a different result than slicing a
-    numpy array.
+    In summary, slicing netcdf variable objects with 1-d integer or boolean arrays 
+    is allowed, but may give a different result than slicing a numpy array.
 
     Numpy also supports slicing an array with a boolean array of the same
     shape. For example x[x>0] returns a 1-d array with all the positive values of x.
-    This is also not supported in netcdf4-python, if x.ndim > 1.
+    This is also not supported in pnetcdf, if x.ndim > 1.
 
     Orthogonal indexing can be used in to select netcdf variable slices
     using the dimension variables. For example, you can use v[lat>60,lon<180]
@@ -818,7 +815,7 @@ cpdef inq_malloc_max_size():
     cdef int ierr
     cdef int size
     with nogil:
-        ierr = ncmpi_inq_malloc_max_size(&size)
+        ierr = ncmpi_inq_malloc_max_size(<MPI_Offset *>&size)
     _check_err(ierr)
     return size
 
@@ -826,7 +823,7 @@ cpdef inq_malloc_size():
     cdef int ierr
     cdef int size
     with nogil:
-        ierr = ncmpi_inq_malloc_size(&size)
+        ierr = ncmpi_inq_malloc_size(<MPI_Offset *>&size)
     _check_err(ierr)
     return size
 """

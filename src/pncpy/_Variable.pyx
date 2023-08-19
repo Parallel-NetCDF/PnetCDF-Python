@@ -14,11 +14,9 @@ from libc.string cimport memcpy, memset
 from ._Dimension cimport Dimension
 from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _tostr, _safecast, chartostring, stringtochar
 from ._utils cimport _nptonctype, _notcdf2dtypes, _nctonptype, _nptompitype, _supportedtypes, _supportedtypescdf2, \
-                     default_fillvals, _StartCountStride, _out_array_shape
+                     default_fillvals, _StartCountStride, _out_array_shape, _private_atts
 import_array()
-_private_atts = \
-['_ncid','_varid','dimensions','variables','file_format','disk_format',
- '_nunlimdim','path', 'name', '__orthogoral_indexing__', '_buffer']
+
 
 ctypedef MPI.Datatype Datatype
 

@@ -16,14 +16,11 @@ from libc.stdlib cimport malloc, free
 
 from ._Dimension cimport Dimension
 from ._Variable cimport Variable
-from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _get_format
+from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _get_format, _private_atts
 from._utils cimport _nctonptype
 import numpy as np
 
-#TODO: confirm the final list of private attributes
-_private_atts = \
-['_ncid','_varid','dimensions','variables', 'file_format',
- '_nunlimdim','path', 'name', '__orthogoral_indexing__', '_buffer']
+
 
 ctypedef MPI.Comm Comm
 ctypedef MPI.Info Info
@@ -42,7 +39,7 @@ cdef class File:
         :param mode: Access mode.
             - ``r``: Open a file for reading, error if the file does not exist.
             - ``w``: Create a file, an existing file with the same name is deleted.
-            - ``x``: Creates the file, returns an error if the file exists.
+            - ``x``: Create the file, returns an error if the file exists.
             -  ``a`` and ``r+``: append, creates the file if it does not exist.
         
         :type mode: str
@@ -764,7 +761,7 @@ cdef class File:
         cdef int _file_id, usage
         _file_id = self._ncid
         with nogil:
-            ierr = ncmpi_inq_buffer_usage(_file_id, &usage)
+            ierr = ncmpi_inq_buffer_usage(_file_id, <MPI_Offset *>&usage)
         _check_err(ierr)
         return usage
 
@@ -781,7 +778,7 @@ cdef class File:
         cdef int _file_id, buffsize
         _file_id = self._ncid
         with nogil:
-            ierr = ncmpi_inq_buffer_size(_file_id, &buffsize)
+            ierr = ncmpi_inq_buffer_size(_file_id, <MPI_Offset *>&buffsize)
         _check_err(ierr)
         return buffsize
     
@@ -886,7 +883,7 @@ cdef class File:
         """
         cdef int ierr, recsize
         with nogil:
-            ierr = ncmpi_inq_recsize(self._ncid, &recsize)
+            ierr = ncmpi_inq_recsize(self._ncid, <MPI_Offset *>&recsize)
         _check_err(ierr)
         return recsize
 
