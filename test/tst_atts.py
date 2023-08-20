@@ -25,29 +25,29 @@ DIM3_NAME="z"
 DIM3_LEN=25
 STRATT = 'string attribute'
 EMPTYSTRATT = ''
-INTATT = 1
+INTATT = np.int32(1)
 FLOATATT = math.pi
-SEQATT = np.arange(10)
+SEQATT = np.arange(10).astype('i4')
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
 
-#ATTDICT = {'stratt':STRATT,'floatatt':FLOATATT,'seqatt':SEQATT,
-#           'stringseqatt':''.join(STRINGSEQATT), # changed in issue #770
-#           'emptystratt':EMPTYSTRATT,'intatt':INTATT}
 ATTDICT = {'stratt':STRATT,'floatatt':FLOATATT,'seqatt':SEQATT,
            'emptystratt':EMPTYSTRATT,'intatt':INTATT}
 
-class VariablesTestCase(unittest.TestCase):
+NUM_TESTS = 3
+file_formats = [fmt for fmt in ['64BIT_DATA', '64BIT_OFFSET', None] for i in range(NUM_TESTS)]
+
+class AttrTestCase(unittest.TestCase):
 
     def setUp(self):
         if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
             self.file_path = os.path.join(sys.argv[1], FILE_NAME)
         else:
             self.file_path = FILE_NAME
-        self._file_format = "64BIT_DATA"
+        self._file_format = file_formats.pop(0)
         with pncpy.File(self.file_path,'w', format = self._file_format) as f:
             # try to set a dataset attribute with one of the reserved names.
             f.put_att('file_format','netcdf5_format')
@@ -125,9 +125,11 @@ class VariablesTestCase(unittest.TestCase):
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
-    suite.addTest(VariablesTestCase("test_file_attr_dict_"))
-    suite.addTest(VariablesTestCase("test_attr_access"))
-    suite.addTest(VariablesTestCase("test_var_attr_dict_"))
+
+    for i in range(len(file_formats) // NUM_TESTS):
+        suite.addTest(AttrTestCase("test_file_attr_dict_"))
+        suite.addTest(AttrTestCase("test_attr_access"))
+        suite.addTest(AttrTestCase("test_var_attr_dict_"))
     runner = unittest.TextTestRunner()
     result = runner.run(suite)
     if not result.wasSuccessful():
