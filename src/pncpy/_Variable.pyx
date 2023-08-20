@@ -1002,7 +1002,7 @@ cdef class Variable:
             data = data.copy()
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         for i, val in enumerate(index):
@@ -1011,7 +1011,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if collective:
@@ -1033,7 +1033,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -1041,7 +1041,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         #bufftype = MPI_DATATYPE_NULL
@@ -1071,7 +1071,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -1079,7 +1079,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if collective:
@@ -1119,7 +1119,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -1127,7 +1127,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if collective:
@@ -1159,7 +1159,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -1167,7 +1167,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if collective:
@@ -1211,14 +1211,14 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if collective:
@@ -1595,7 +1595,7 @@ cdef class Variable:
             data = data.byteswap()
         # strides all 1 or scalar variable, use put_vara (faster)
         #bufcount = data.size
-        bufcount = NC_COUNT_IGNORE
+        bufcount = 1
         if self._file.file_format != "64BIT_DATA":
             #check if dtype meets CDF-5 variable standards
             if data.dtype.str[1:] not in _supportedtypescdf2:
@@ -1605,7 +1605,7 @@ cdef class Variable:
         elif data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
-        buftype = _nptompitype[data.dtype.str[1:]]
+        buftype = MPI_DATATYPE_NULL
         if self._file.indep_mode:
             if sum(stride) == ndims or ndims == 0:
                 with nogil:
@@ -1643,7 +1643,7 @@ cdef class Variable:
         ndim_index = len(index)
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         for i, val in enumerate(index):
@@ -1670,7 +1670,7 @@ cdef class Variable:
         cdef MPI_Datatype bufftype
         cdef ndarray data
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if buftype is None:
@@ -1704,7 +1704,7 @@ cdef class Variable:
             startp[n] = start[n]
 
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if buftype is None:
@@ -1748,12 +1748,12 @@ cdef class Variable:
                 countp[i][j] = count[i][j]
 
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufftype = MPI_DATATYPE_NULL
         if buftype is None:
-            bufftype = _nptompitype[self.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if collective:
@@ -1787,7 +1787,7 @@ cdef class Variable:
             startp[n] = start[n]
             stridep[n] = stride[n]
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if buftype is None:
@@ -1829,7 +1829,7 @@ cdef class Variable:
                 stridep[n] = 1
             imapp[n] = imap[n]
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if buftype is None:
@@ -2201,7 +2201,7 @@ cdef class Variable:
         data = np.empty(shapeout, self.dtype)
         # strides all 1 or scalar variable, use get_vara (faster)
         # if count contains a zero element, no data is being read
-        bufcount = NC_COUNT_IGNORE
+        bufcount = 1
         buftype = MPI_DATATYPE_NULL
 
         if 0 not in count:
@@ -2259,7 +2259,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -2267,7 +2267,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         #bufftype = MPI_DATATYPE_NULL
@@ -2296,7 +2296,7 @@ cdef class Variable:
             data = data.copy()
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         for i, val in enumerate(index):
@@ -2305,7 +2305,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if not buffered:
@@ -2336,7 +2336,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -2344,7 +2344,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if not buffered:
@@ -2377,14 +2377,14 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if not buffered:
@@ -2425,7 +2425,7 @@ cdef class Variable:
             data = data.copy()
         #data = data.flatten()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufcount = data.size
@@ -2433,7 +2433,7 @@ cdef class Variable:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if not buffered:
@@ -2476,14 +2476,14 @@ cdef class Variable:
         if not PyArray_ISCONTIGUOUS(data):
             data = data.copy()
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if data.dtype.str[1:] not in _supportedtypes:
             raise TypeError, 'illegal data type, must be one of %s, got %s' % \
             (_supportedtypes, data.dtype.str[1:])
         if buftype is None:
-            bufftype = _nptompitype[data.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         if not buffered:
@@ -2822,7 +2822,7 @@ cdef class Variable:
         cdef MPI_Datatype bufftype
         cdef int request
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if buftype is None:
@@ -2845,7 +2845,7 @@ cdef class Variable:
         ndim_index = len(index)
         indexp = <size_t *>malloc(sizeof(size_t) * ndim_index)
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         for i, val in enumerate(index):
@@ -2877,7 +2877,7 @@ cdef class Variable:
             countp[n] = count[n]
             startp[n] = start[n]
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
 
@@ -2909,7 +2909,7 @@ cdef class Variable:
             startp[n] = start[n]
             stridep[n] = stride[n]
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
 
@@ -2948,12 +2948,12 @@ cdef class Variable:
                 countp[i][j] = count[i][j]
 
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         #bufftype = MPI_DATATYPE_NULL
         if buftype is None:
-            bufftype = _nptompitype[self.dtype.str[1:]]
+            bufftype = MPI_DATATYPE_NULL
         else:
             bufftype = buftype.ob_mpi
         with nogil:
@@ -2987,7 +2987,7 @@ cdef class Variable:
                 stridep[n] = 1
             imapp[n] = imap[n]
         if bufcount is None:
-            buffcount = NC_COUNT_IGNORE
+            buffcount = 1
         else:
             buffcount = bufcount
         if buftype is None:

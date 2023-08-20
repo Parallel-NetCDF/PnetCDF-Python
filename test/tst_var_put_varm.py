@@ -56,8 +56,8 @@ class VariablesTestCase(unittest.TestCase):
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
 
-        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y'))
-        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y'))
+        v1 = f.def_var('data1', pncpy.NC_FLOAT, ('x','y'))
+        v2 = f.def_var('data2', pncpy.NC_FLOAT, ('x','y'))
 
         # initialize variable values
         f.enddef()

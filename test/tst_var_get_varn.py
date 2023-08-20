@@ -79,7 +79,7 @@ elif rank == 3:
     #         -  -  -  -  -  -  -  3  3  3 
 else:
     num_reqs = 0
-#Obtain the size of returned dataframe, needed for generating reference dataframe
+#Obtain the size of returned array, needed for generating reference array
 buf_len = np.sum(np.prod(counts, axis=1))
 
 class VariablesTestCase(unittest.TestCase):
@@ -110,7 +110,7 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
     def runTest(self):
-        """testing variable put varn for CDF-5 file"""
+        """testing variable get varn for CDF-5/CDF-2/CDF-1 file"""
         dataref = np.full((buf_len,), rank, np.float32)
         f = pncpy.File(self.file_path, 'r')
         # test collective i/o get_var

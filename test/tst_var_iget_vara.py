@@ -30,7 +30,7 @@ size = comm.Get_size()
 xdim=9; ydim=10; zdim=size*10
 # initial values for netCDF variable
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
-# generate reference dataframes for testing
+# generate reference arrayes for testing
 dataref = []
 for i in range(size):
     dataref.append(data[3:4,:5,i*10:(i+1)*10])

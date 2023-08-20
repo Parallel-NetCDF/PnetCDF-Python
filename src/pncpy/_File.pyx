@@ -830,9 +830,10 @@ cdef class File:
         return _old_fillmode
 
     def inq_num_rec_vars(self):
+        #TODO: currently not working with PnetCDF-C version <= 1.12.3
         """
-        inq_num_rec_vars(self)
-
+        
+        
         Returns the number of record variables defined for this netCDF file
 
         :rtype: int
@@ -845,13 +846,11 @@ cdef class File:
         return num_rec_vars
 
     def inq_num_fix_vars(self):
+        #TODO: currently not working with PnetCDF-C version <= 1.12.3
         """
-        inq_num_fix_vars(self)
-
         Return the number of fixed-size variables defined for this netCDF file
 
         :rtype: int
-
 
         """
         cdef int ierr, num_fix_vars

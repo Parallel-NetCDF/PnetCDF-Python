@@ -63,7 +63,7 @@ class VariablesTestCase(unittest.TestCase):
         assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
-            v = f.def_var(f'data{i}', pncpy.NC_INT, ('x','y'))
+            v = f.def_var(f'data{i}', pncpy.NC_FLOAT, ('x','y'))
         # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):

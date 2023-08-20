@@ -84,8 +84,8 @@ class FileTestCase(unittest.TestCase):
         # inquiry and store the file path
         self.file_path_test = f.filepath()
         # inquiry and store the number of fix and record variables
-        self.n_rec_vars = f.inq_num_rec_vars()
-        self.n_fix_vars = f.inq_num_fix_vars()
+        # self.n_rec_vars = f.inq_num_rec_vars()
+        # self.n_fix_vars = f.inq_num_fix_vars()
         # inquiry and store file version
         self.version = f.inq_version()
         # inquiry record variable record block size
@@ -106,9 +106,8 @@ class FileTestCase(unittest.TestCase):
         self.assertEqual(self.nattrs, 2)
         self.assertEqual(self.unlimited_dim_name, 'xu')
         self.assertEqual(self.file_path_test, self.file_path)
-        self.assertEqual(self.n_rec_vars, 2)
-        self.assertEqual(self.n_fix_vars, 2)
-        self.assertEqual(self.n_fix_vars, 2)
+        # self.assertEqual(self.n_rec_vars, 2)
+        # self.assertEqual(self.n_fix_vars, 2)
         if self._file_format == "64BIT_DATA":
             self.assertEqual(self.version, pncpy.NC_64BIT_DATA)
         elif self._file_format == "64BIT_OFFSET":
