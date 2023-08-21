@@ -131,7 +131,7 @@ cdef extern from "pnetcdf.h":
         NC_ENOTINDEP
         NC_EIOMISMATCH
         NC_ENOTSUPPORT
-        NC_COUNT_IGNORE
+
 
 
 
