@@ -332,20 +332,26 @@ cdef _safecast(a,b):
 
 cpdef chartostring(b,encoding='utf-8'):
     """
-    **`chartostring(b,encoding='utf-8')`**
+    chartostring(b,encoding='utf-8')
 
-    convert a character array to a string array with one less dimension.
-
-    **`b`**:  Input character array (numpy datatype `'S1'` or `'U1'`).
-    Will be converted to a array of strings, where each string has a fixed
-    length of `b.shape[-1]` characters.
-
-    optional kwarg `encoding` can be used to specify character encoding (default
-    `utf-8`). If `encoding` is 'none' or 'bytes', a `np.string_` btye array is
-    returned.
+    Convert a character array to a string array with one less dimension.
 
     returns a numpy string array with datatype `'UN'` (or `'SN'`) and shape
-    `b.shape[:-1]` where where `N=b.shape[-1]`."""
+    `b.shape[:-1]` where where `N=b.shape[-1]`.
+
+    :param b: Input character array (numpy datatype `'S1'` or `'U1'`).
+    Will be converted to a array of strings, where each string has a fixed
+    length of `b.shape[-1]` characters.
+    :type b: numpy.ndarray
+
+    :param encoding: [Optional] Can be used to specify character encoding (default
+    `utf-8`). If `encoding` is 'none' or 'bytes', a `np.string_` btye array is
+    returned.
+    :type encoding: str
+
+    :rtype: numpy.ndarray
+
+    """
     dtype = b.dtype.kind
     if dtype not in ["S","U"]:
         raise ValueError("type must be string or unicode ('S' or 'U')")
@@ -363,20 +369,23 @@ cpdef chartostring(b,encoding='utf-8'):
 
 cpdef stringtochar(a,encoding='utf-8'):
     """
-    **`stringtochar(a,encoding='utf-8')`**
+    stringtochar(a,encoding='utf-8')
 
-    convert a string array to a character array with one extra dimension
+    Convert a string array to a character array with one extra dimension.
 
-    **`a`**:  Input numpy string array with numpy datatype `'SN'` or `'UN'`, where N
+    Returns a numpy character array with datatype `'S1'` or `'U1'`
+    and shape `a.shape + (N,)`, where N is the length of each string in a.
+
+    :param a: Input numpy string array with numpy datatype `'SN'` or `'UN'`, where N
     is the number of characters in each string.  Will be converted to
     an array of characters (datatype `'S1'` or `'U1'`) of shape `a.shape + (N,)`.
+    :type a: numpy.ndarray
 
-    optional kwarg `encoding` can be used to specify character encoding (default
+    :param encoding: [Optional] Can be used to specify character encoding (default
     `utf-8`). If `encoding` is 'none' or 'bytes', a `numpy.string_` the input array
     is treated a raw byte strings (`numpy.string_`).
-
-    returns a numpy character array with datatype `'S1'` or `'U1'`
-    and shape `a.shape + (N,)`, where N is the length of each string in a."""
+    :type encoding: str
+    """
     dtype = a.dtype.kind
     if dtype not in ["S","U"]:
         raise ValueError("type must string or unicode ('S' or 'U')")
@@ -775,6 +784,20 @@ cdef _get_format(int ncid):
     return _reverse_format_dict[formatp]
 # external C functions.
 cpdef strerror(err_code):
+    """
+    strerror(err_code)
+
+    The function strerror returns a static reference to an error message string corresponding 
+    to an integer netCDF error status or to a system error number, presumably returned by a previous
+    call to some other PnetCDF function. 
+
+    :param err_code: An error status that might have been returned from a previous call 
+    to some PnetCDF function.
+    :type err_code: int.
+
+    :rtype: str
+
+    """
     cdef int ierr
     ierr = err_code
 
@@ -782,6 +805,19 @@ cpdef strerror(err_code):
     return err_str
 
 cpdef strerrno(err_code):
+    """
+    strerror(err_code)
+
+    The function strerrno returns a character string containing the name of the NC error code. 
+    For instance, ncmpi_strerrno(NC_EBADID) returns string "NC_EBADID". 
+
+    :param err_code: An error status that might have been returned from a previous call 
+    to some PnetCDF function.
+    :type err_code: int.
+
+    :rtype: str
+
+    """
     cdef int ierr
     ierr = err_code
     err_code_str = (<char *>ncmpi_strerrno(ierr)).decode('ascii')

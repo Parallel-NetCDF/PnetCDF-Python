@@ -37,6 +37,7 @@ PnetCDF-Python Documentation
    api/file_api
    api/dimension_api
    api/variable_api
+   api/function_api
 
 .. #.. toctree::
 .. #   :maxdepth: 2
