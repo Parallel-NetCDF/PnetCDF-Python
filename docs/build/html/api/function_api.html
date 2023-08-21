@@ -98,42 +98,95 @@
 <h1>Functions<a class="headerlink" href="#functions" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="pncpy.strerror">
-<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">strerror</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.strerror" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">strerror</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.strerror" title="Permalink to this definition"></a></dt>
+<dd><p>The function strerror returns a static reference to an error message string corresponding 
+to an integer netCDF error status or to a system error number, presumably returned by a previous
+call to some other PnetCDF function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>err_code</strong> – An error status that might have been returned from a previous call</p>
+</dd>
+</dl>
+<p>to some PnetCDF function.
+:type err_code: int.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pncpy.strerrno">
 <span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">strerrno</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.strerrno" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>strerror(err_code)</p>
+<p>The function strerrno returns a character string containing the name of the NC error code. 
+For instance, ncmpi_strerrno(NC_EBADID) returns string “NC_EBADID”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>err_code</strong> – An error status that might have been returned from a previous call</p>
+</dd>
+</dl>
+<p>to some PnetCDF function.
+:type err_code: int.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pncpy.chartostring">
-<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">chartostring</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.chartostring" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`chartostring(b,encoding=’utf-8’)`</strong></p>
-<p>convert a character array to a string array with one less dimension.</p>
-<p><strong>`b`</strong>:  Input character array (numpy datatype <cite>‘S1’</cite> or <cite>‘U1’</cite>).
-Will be converted to a array of strings, where each string has a fixed
-length of <cite>b.shape[-1]</cite> characters.</p>
-<p>optional kwarg <cite>encoding</cite> can be used to specify character encoding (default
-<cite>utf-8</cite>). If <cite>encoding</cite> is ‘none’ or ‘bytes’, a <cite>np.string_</cite> btye array is
-returned.</p>
+<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">chartostring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.chartostring" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a character array to a string array with one less dimension.</p>
 <p>returns a numpy string array with datatype <cite>‘UN’</cite> (or <cite>‘SN’</cite>) and shape
 <cite>b.shape[:-1]</cite> where where <cite>N=b.shape[-1]</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>b</strong> – Input character array (numpy datatype <cite>‘S1’</cite> or <cite>‘U1’</cite>).</p>
+</dd>
+</dl>
+<p>Will be converted to a array of strings, where each string has a fixed
+length of <cite>b.shape[-1]</cite> characters.
+:type b: numpy.ndarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>encoding</strong> – [Optional] Can be used to specify character encoding (default</p>
+</dd>
+</dl>
+<p><cite>utf-8</cite>). If <cite>encoding</cite> is ‘none’ or ‘bytes’, a <cite>np.string_</cite> btye array is
+returned.
+:type encoding: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pncpy.stringtochar">
-<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">stringtochar</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.stringtochar" title="Permalink to this definition"></a></dt>
-<dd><p><strong>`stringtochar(a,encoding=’utf-8’)`</strong></p>
-<p>convert a string array to a character array with one extra dimension</p>
-<p><strong>`a`</strong>:  Input numpy string array with numpy datatype <cite>‘SN’</cite> or <cite>‘UN’</cite>, where N
-is the number of characters in each string.  Will be converted to
-an array of characters (datatype <cite>‘S1’</cite> or <cite>‘U1’</cite>) of shape <cite>a.shape + (N,)</cite>.</p>
-<p>optional kwarg <cite>encoding</cite> can be used to specify character encoding (default
-<cite>utf-8</cite>). If <cite>encoding</cite> is ‘none’ or ‘bytes’, a <cite>numpy.string_</cite> the input array
-is treated a raw byte strings (<cite>numpy.string_</cite>).</p>
-<p>returns a numpy character array with datatype <cite>‘S1’</cite> or <cite>‘U1’</cite>
+<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">stringtochar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'utf-8'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.stringtochar" title="Permalink to this definition"></a></dt>
+<dd><p>Convert a string array to a character array with one extra dimension.</p>
+<p>Returns a numpy character array with datatype <cite>‘S1’</cite> or <cite>‘U1’</cite>
 and shape <cite>a.shape + (N,)</cite>, where N is the length of each string in a.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>a</strong> – Input numpy string array with numpy datatype <cite>‘SN’</cite> or <cite>‘UN’</cite>, where N</p>
+</dd>
+</dl>
+<p>is the number of characters in each string.  Will be converted to
+an array of characters (datatype <cite>‘S1’</cite> or <cite>‘U1’</cite>) of shape <cite>a.shape + (N,)</cite>.
+:type a: numpy.ndarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>encoding</strong> – [Optional] Can be used to specify character encoding (default</p>
+</dd>
+</dl>
+<p><cite>utf-8</cite>). If <cite>encoding</cite> is ‘none’ or ‘bytes’, a <cite>numpy.string_</cite> the input array
+is treated a raw byte strings (<cite>numpy.string_</cite>).
+:type encoding: str</p>
 </dd></dl>
 
 </section>
