@@ -12,7 +12,8 @@ from mpi4py.libmpi cimport MPI_Comm, MPI_Info, MPI_Comm_dup, MPI_Info_dup, \
 from libc.stdlib cimport malloc, free
 from libc.string cimport memcpy, memset
 from ._Dimension cimport Dimension
-from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _tostr, _safecast, chartostring, stringtochar
+from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names, _tostr, _safecast, stringtochar
+from ._utils import chartostring
 from ._utils cimport _nptonctype, _notcdf2dtypes, _nctonptype, _nptompitype, _supportedtypes, _supportedtypescdf2, \
                      default_fillvals, _StartCountStride, _out_array_shape, _private_atts
 import_array()
@@ -313,7 +314,7 @@ cdef class Variable:
 
         Operational mode: This method must be called while the associated netCDF file is in define mode.
         """
-        return _get_att(self._file, self._file_id, name, encoding=encoding)
+        return _get_att(self._file, self._varid, name, encoding=encoding)
 
     def del_att(self, name):
         """
@@ -918,6 +919,7 @@ cdef class Variable:
                 # variable.
                 if type(data) in [str,bytes]: data = np.asarray(data,dtype='S'+repr(self.shape[-1]))
                 if data.dtype.kind in ['S','U'] and data.dtype.itemsize > 1:
+                    print("HERE2")
                     # if data is a numpy string array, convert it to an array
                     # of characters with one more dimension.
                     data = stringtochar(data, encoding=encoding)

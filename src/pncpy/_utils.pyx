@@ -241,7 +241,7 @@ cdef _set_att(file, int varid, name, value,\
 
 cdef _get_att(file, int varid, name, encoding='utf-8'):
     # Private function to get an attribute value given its name
-    cdef int ierr, n, file_id
+    cdef int ierr, n, file_id, var_id
     cdef MPI_Offset att_len
     cdef char *attname
     cdef nc_type att_type
@@ -250,6 +250,7 @@ cdef _get_att(file, int varid, name, encoding='utf-8'):
     bytestr = _strencode(name,encoding='utf-8')
     attname = bytestr
     file_id = file._ncid
+    var_id = varid
     with nogil:
         ierr = ncmpi_inq_att(file_id, varid, attname, &att_type, &att_len)
     _check_err(ierr, err_cls=AttributeError)
@@ -329,7 +330,7 @@ cdef _safecast(a,b):
             is_safe = False
     return is_safe
 
-cdef chartostring(b,encoding='utf-8'):
+cpdef chartostring(b,encoding='utf-8'):
     """
     **`chartostring(b,encoding='utf-8')`**
 
@@ -360,7 +361,7 @@ cdef chartostring(b,encoding='utf-8'):
     a.shape = b.shape[:-1]
     return a
 
-cdef stringtochar(a,encoding='utf-8'):
+cpdef stringtochar(a,encoding='utf-8'):
     """
     **`stringtochar(a,encoding='utf-8')`**
 
