@@ -829,6 +829,23 @@ cdef class File:
         _check_err(ierr)
         return _old_fillmode
 
+    def set_auto_chartostring(self, value):
+        """
+        set_auto_chartostring(self, value)
+
+        Call ``Variable.set_auto_chartostring()`` for all variables contained in this `File`. Calling this function only affects
+        existing variables. Variables defined after calling this function will follow the default behaviour.
+
+        :param value: True or False
+        :type value: bool
+        Operational mode: Any
+        """
+
+        _vars = self.variables
+        for var in _vars.values():
+            var.set_auto_chartostring(value)
+
+
     def inq_num_rec_vars(self):
         #TODO: currently not working with PnetCDF-C version <= 1.12.3
         """
