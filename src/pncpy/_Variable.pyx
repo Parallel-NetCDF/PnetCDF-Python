@@ -919,7 +919,6 @@ cdef class Variable:
                 # variable.
                 if type(data) in [str,bytes]: data = np.asarray(data,dtype='S'+repr(self.shape[-1]))
                 if data.dtype.kind in ['S','U'] and data.dtype.itemsize > 1:
-                    print("HERE2")
                     # if data is a numpy string array, convert it to an array
                     # of characters with one more dimension.
                     data = stringtochar(data, encoding=encoding)
