@@ -95,6 +95,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_att"><code class="docutils literal notranslate"><span class="pre">File.rename_att()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_dim"><code class="docutils literal notranslate"><span class="pre">File.rename_dim()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.rename_var"><code class="docutils literal notranslate"><span class="pre">File.rename_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pncpy.File.set_auto_chartostring"><code class="docutils literal notranslate"><span class="pre">File.set_auto_chartostring()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.set_fill"><code class="docutils literal notranslate"><span class="pre">File.set_fill()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.sync"><code class="docutils literal notranslate"><span class="pre">File.sync()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.File.wait"><code class="docutils literal notranslate"><span class="pre">File.wait()</span></code></a></li>
@@ -156,7 +157,7 @@ relations among data fields stored in a netCDF file.</p>
 <li><p><strong>mode</strong> (<em>str</em>) – Access mode.
 - <code class="docutils literal notranslate"><span class="pre">r</span></code>: Open a file for reading, error if the file does not exist.
 - <code class="docutils literal notranslate"><span class="pre">w</span></code>: Create a file, an existing file with the same name is deleted.
-- <code class="docutils literal notranslate"><span class="pre">x</span></code>: Creates the file, returns an error if the file exists.
+- <code class="docutils literal notranslate"><span class="pre">x</span></code>: Create the file, returns an error if the file exists.
 -  <code class="docutils literal notranslate"><span class="pre">a</span></code> and <code class="docutils literal notranslate"><span class="pre">r+</span></code>: append, creates the file if it does not exist.</p></li>
 <li><p><strong>format</strong> (<em>str</em>) – <p>underlying file format. Only relevant when creating file</p>
 <ul>
@@ -444,7 +445,7 @@ this is the amount of space used by the metadata.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_num_fix_vars">
-<span class="sig-name descname"><span class="pre">inq_num_fix_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_fix_vars" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">inq_num_fix_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_fix_vars" title="Permalink to this definition"></a></dt>
 <dd><p>Return the number of fixed-size variables defined for this netCDF file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -455,7 +456,7 @@ this is the amount of space used by the metadata.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.inq_num_rec_vars">
-<span class="sig-name descname"><span class="pre">inq_num_rec_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_rec_vars" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">inq_num_rec_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.inq_num_rec_vars" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the number of record variables defined for this netCDF file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -594,6 +595,19 @@ define or data mode</p>
 be consistent among all calling processes. If the new name is longer than the old name, 
 then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either 
 define or data mode</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.set_auto_chartostring">
+<span class="sig-name descname"><span class="pre">set_auto_chartostring</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.set_auto_chartostring" title="Permalink to this definition"></a></dt>
+<dd><p>Call <code class="docutils literal notranslate"><span class="pre">Variable.set_auto_chartostring()</span></code> for all variables contained in this <cite>File</cite>. Calling this function only affects
+existing variables. Variables defined after calling this function will follow the default behaviour.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>bool</em>) – True or False</p>
+</dd>
+</dl>
+<p>Operational mode: Any</p>
 </dd></dl>
 
 <dl class="py method">
