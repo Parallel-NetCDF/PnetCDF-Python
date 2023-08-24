@@ -446,8 +446,8 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
     dimensions : sequence
       The name of the dimensions.
       __setitem__.
-    file  : netCDF Group
-      The netCDF group to which the variable being set belongs to.
+    file  : netCDF File instance
+      The netCDF file to which the variable being set belongs to.
     datashape : sequence
       The shape of the data that is being stored. Only needed by __setitem__
     put : True|False (default False).  If called from __setitem__, put is True.
@@ -478,10 +478,7 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
     stride is a n-tuple that contains the step length between each element.
 
     """
-    # Adapted from pycdf (http://pysclint.sourceforge.net/pycdf)
-    # by Andre Gosselin..
-    # Modified by David Huard to handle efficiently fancy indexing with
-    # sequences of integers or booleans.
+    # Adapted from netcdf4-python (https://unidata.github.io/netcdf4-python/)
 
     nDims = len(shape)
     if nDims == 0:
@@ -824,6 +821,23 @@ cpdef strerrno(err_code):
     return err_code_str
 
 cpdef set_default_format(int new_format):
+    """
+    set_default_format(int new_format)
+
+    The function  allows the user to change the format of the netCDF file to be created by future 
+    calls to ncmpi_create without specifying the file format. It returns the existing default 
+    format while setting a new default format. 
+
+    :param new_format: ``pncpy.NC_FORMAT_CLASSIC`` (the default setting), ``pncpy.NC_FORMAT_CDF2`` 
+    (``pncpy.NC_FORMAT_64BIT``), or ``pncpy.NC_FORMAT_CDF5`` (``pncpy.NC_FORMAT_64BIT_DATA``).
+
+    :rtype: int
+
+    Operational mode: This function is an independent subroutine, but is expected to be called by all processes that
+    intend to create a file later.
+
+
+    """
     cdef int ierr, newformat, oldformat
     newformat = new_format
     with nogil:
@@ -832,6 +846,16 @@ cpdef set_default_format(int new_format):
     return oldformat
 
 cpdef inq_default_format():
+    """
+    inq_default_format()
+
+    The function returns the current setting for default file format.
+
+    :rtype: int 
+
+    Operational mode: This function is an independent subroutine.
+
+    """
     cdef int curformat
     with nogil:
         ierr = ncmpi_inq_default_format(&curformat)
@@ -839,6 +863,16 @@ cpdef inq_default_format():
     return curformat
 
 cpdef inq_file_format(str file_name):
+    """
+    inq_file_format(str file_name)
+
+    The function returns the current setting for default file format.
+
+    :rtype: int 
+
+    Operational mode: This function is an independent subroutine.
+
+    """
     cdef char *filename
     cdef int ierr, curformat
     filename_bytestr =  _strencode(file_name)
@@ -849,6 +883,12 @@ cpdef inq_file_format(str file_name):
     return curformat
 
 cpdef inq_malloc_max_size():
+    """
+    inq_malloc_max_size()
+
+    Return the maximum size in bytes of memory allocated internally
+    :rtype: int
+    """
     cdef int ierr
     cdef int size
     with nogil:
@@ -857,6 +897,12 @@ cpdef inq_malloc_max_size():
     return size
 
 cpdef inq_malloc_size():
+    """
+    inq_malloc_size()
+
+    Return the size in bytes of current memory allocated internally
+    :rtype: int
+    """
     cdef int ierr
     cdef int size
     with nogil:
