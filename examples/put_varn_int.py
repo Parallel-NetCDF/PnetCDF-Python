@@ -98,7 +98,7 @@ def main():
     NY = 4
     NX = 10
     NDIMS = 2
-    verbose = True
+    global verbose
     if parse_help(comm):
         MPI.Finalize()
         return 1

@@ -128,7 +128,7 @@ def main():
 
     nprocs = size
     ghost_len = 3
-    verbose = True
+    global verbose
     if parse_help(comm):
         MPI.Finalize()
         return 1

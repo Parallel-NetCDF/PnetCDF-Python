@@ -180,7 +180,7 @@ def main():
 
     nprocs = size
     
-    verbose = True
+    global verbose
     if parse_help(comm):
         MPI.Finalize()
         return 1

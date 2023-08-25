@@ -71,6 +71,7 @@ def print_info(info_used):
     print("MPI hint: striping_unit   =", info_used.Get("striping_unit"))
 
 def pnetcdf_check_mem_usage(comm):
+    global verbose
     rank = comm.Get_rank()
     malloc_size, sum_size = 0, 0
     # print info about PnetCDF internal malloc usage
@@ -89,6 +90,7 @@ def pnetcdf_check_mem_usage(comm):
             print("Heap memory allocated by PnetCDF internally has {} bytes yet to be freed".format(sum_size))
 
 def pnetcdf_io(comm, filename, file_format, length):
+    global verbose
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
@@ -179,8 +181,8 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
-    verbose = True
+    global verbose
+
     if parse_help(comm):
         MPI.Finalize()
         return 1

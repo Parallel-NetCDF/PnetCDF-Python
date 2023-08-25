@@ -45,6 +45,7 @@ def parse_help():
     return help_flag
 
 def pnetcdf_check_mem_usage(comm):
+    global verbose
     malloc_size, sum_size = 0, 0
     # print info about PnetCDF internal malloc usage
     malloc_size = inq_malloc_max_size()
@@ -59,7 +60,7 @@ def pnetcdf_check_mem_usage(comm):
 
 
 def main():
-    verbose = True
+    global verbose
     if parse_help():
         MPI.Finalize()
         return 1

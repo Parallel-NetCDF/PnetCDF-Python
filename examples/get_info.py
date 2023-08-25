@@ -89,7 +89,7 @@ def print_info(info_used):
 def main():
     nprocs = size
     
-    verbose = True
+    global verbose
     if parse_help():
         MPI.Finalize()
         return 1
