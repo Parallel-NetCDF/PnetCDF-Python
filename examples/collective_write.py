@@ -125,7 +125,7 @@ def pnetcdf_io(comm, filename, file_format, length):
         f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
-        MPI.Abort(comm, -1)
+        comm.Abort()
         exit(1)
 
     # Define dimensions
