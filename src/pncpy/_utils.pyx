@@ -23,7 +23,6 @@ MPI_Datatype MPI_UNSIGNED64 = MPI.UINT64
 MPI_Datatype MPI_FLOAT = MPI.FLOAT
 MPI_Datatype MPI_DOUBLE = MPI.DOUBLE"""
 
-
 import_array()
 
 # np data type <--> netCDF data type mapping.

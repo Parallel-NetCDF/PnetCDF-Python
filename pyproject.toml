@@ -1,0 +1,8 @@
+[build-system]
+requires = [
+    "Cython>=0.29",
+    "oldest-supported-numpy",
+    "setuptools>=65",
+    "mpi4py>=3.1.4",
+    "packaging>=23.1"
+]

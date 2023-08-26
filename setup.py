@@ -127,7 +127,8 @@ ext_modules = [
               include_dirs=inc_dirs + ['include'],
               runtime_library_dirs=runtime_lib_dirs,
               extra_compile_args=['-Wno-unreachable-code-fallthrough',
-                                  '-Wno-unused-function']
+                                  '-Wno-unused-function',
+                                  '-Wno-unreachable-code']
               )
     for x in src_base_all
 ]
