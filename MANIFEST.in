@@ -17,4 +17,4 @@ include include/mpi-compat.h
 include *.md
 include *.py
 include *.csh
-include COPYRIGHT
+include LICENSE
