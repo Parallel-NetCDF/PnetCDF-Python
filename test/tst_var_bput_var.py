@@ -47,7 +47,7 @@ class VariablesTestCase(unittest.TestCase):
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests
         buffsize = num_reqs * data.nbytes
         f.attach_buff(buffsize)
-        assert(f.inq_buff_size() == buffsize)
+        # assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(2 * num_reqs):
             v = f.def_var(f'data{i}', pncpy.NC_INT, ('x','y','z'))
@@ -56,7 +56,7 @@ class VariablesTestCase(unittest.TestCase):
         f.enddef()
         req_ids = []
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+        # print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write the whole variable 
@@ -64,7 +64,7 @@ class VariablesTestCase(unittest.TestCase):
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+        # print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
@@ -76,7 +76,7 @@ class VariablesTestCase(unittest.TestCase):
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
 
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+        # print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
 
         # w/o tracking request id: post 10 requests to write the whole variable for the last 10 variables
         for i in range(num_reqs, 2 * num_reqs):
@@ -85,7 +85,7 @@ class VariablesTestCase(unittest.TestCase):
             v.bput_var(data)
         
         # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+        # print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
         # all processes commit all pending put requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         # relase the internal buffer

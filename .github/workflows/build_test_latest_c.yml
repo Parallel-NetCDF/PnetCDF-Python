@@ -4,13 +4,14 @@ jobs:
   build-linux:
     name: Python (${{ matrix.python-version }})
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
       PNETCDF_VERSION: 1.12.3
       PNETCDF_DIR: ${{ github.workspace }}/..
       CC: mpicc.mpich
     strategy:
       matrix:
-        python-version: ["3.11"]
+        python-version: ["3.10"]
     steps:
 
     - uses: actions/checkout@v3
