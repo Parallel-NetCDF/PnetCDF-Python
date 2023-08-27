@@ -1,4 +1,4 @@
-![](https://img.shields.io/badge/python-v3.9-blue) ![](https://img.shields.io/badge/tests%20passed-48-brightgreen)
+![](https://img.shields.io/badge/python-v3.9-blue) ![](https://img.shields.io/badge/tests%20passed-49-brightgreen)
 
 # PnetCDF-python
 ### Overview
@@ -19,13 +19,20 @@ At a granular level, PnetCDF-python is a library that consists of the following 
 * PnetCDF [C library](https://github.com/Parallel-netCDF/PnetCDF)
 * Python libraries [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html), [numpy](http://www.numpy.org/)
 * To work with the in-development version, you need to install [Cython](http://cython.org/)
+### Installation
+
+If you already have a working MPI and the mpicc compiler wrapper is on your search path, you can use pip:
+
+```sh
+env CC=mpicc pip install pncpy
+```
 
 ### Development installation
 * Clone GitHub repository 
 
 * Make sure [numpy](http://www.numpy.org/), [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html) and [Cython](http://cython.org/) are installed and you have [Python](https://www.python.org) 3.9 or newer.
 
-* Make sure [PnetCDF C](https://github.com/Parallel-netCDF/PnetCDF) is installed with shared libraries(`--enable-shared`), 
+* Make sure a working MPI implementation and [PnetCDF C](https://github.com/Parallel-netCDF/PnetCDF) is installed with shared libraries(`--enable-shared`), 
   and pnetcdf-config utility is in your Unix $PATH. (or specifiy `pnetcdf-config` filepath in `setup.cfg`)
 
 * (Optional) create python virtual environment and activate it
