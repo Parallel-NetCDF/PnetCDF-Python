@@ -8,6 +8,11 @@ foreach arg ( $argv )
   set OUT_DIR = $arg
 end
 
+if ( "$OUT_DIR" != "" ) then
+  # Create directories within OUT_DIR using make
+  mkdir -p $OUT_DIR
+  echo "Created output nc file directories in $OUT_DIR"
+endif
 
 # Run each example file with or without MPI, if any of them failed, exit
 foreach exp_file (`ls *.py`)
