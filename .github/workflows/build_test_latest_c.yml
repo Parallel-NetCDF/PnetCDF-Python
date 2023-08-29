@@ -1,5 +1,12 @@
 name: Build and Test Linux with latest pnetcdf-c
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - test-github-actions
+  pull_request:
+    branches:
+      - main
 jobs:
   build-linux:
     name: Python (${{ matrix.python-version }})
