@@ -758,7 +758,8 @@ cdef class File:
         :rtype: int
         
         """
-        cdef int _file_id, usage
+        cdef int _file_id
+        cdef long long usage
         _file_id = self._ncid
         with nogil:
             ierr = ncmpi_inq_buffer_usage(_file_id, <MPI_Offset *>&usage)
@@ -775,7 +776,8 @@ cdef class File:
         :rtype: int
         
         """
-        cdef int _file_id, buffsize
+        cdef int _file_id
+        cdef long long buffsize
         _file_id = self._ncid
         with nogil:
             ierr = ncmpi_inq_buffer_size(_file_id, <MPI_Offset *>&buffsize)
