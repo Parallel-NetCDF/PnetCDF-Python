@@ -889,7 +889,7 @@ cpdef inq_malloc_max_size():
     :rtype: int
     """
     cdef int ierr
-    cdef int size
+    cdef MPI_Offset size
     with nogil:
         ierr = ncmpi_inq_malloc_max_size(<MPI_Offset *>&size)
     _check_err(ierr)
@@ -903,7 +903,7 @@ cpdef inq_malloc_size():
     :rtype: int
     """
     cdef int ierr
-    cdef int size
+    cdef MPI_Offset size
     with nogil:
         ierr = ncmpi_inq_malloc_size(<MPI_Offset *>&size)
     _check_err(ierr)
