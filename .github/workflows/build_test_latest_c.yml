@@ -1,5 +1,12 @@
 name: Build and Test Linux with latest pnetcdf-c
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+      - test-github-actions
+  pull_request:
+    branches:
+      - main
 jobs:
   build-linux:
     name: Python (${{ matrix.python-version }})
@@ -57,7 +64,7 @@ jobs:
         # serial
         csh ./test_all.csh
 
-        cd ../examples
+        cd examples
         csh ./run_examples.csh /tmp
         if [ $? -ne 0 ] ; then
           echo "example program failed!"
