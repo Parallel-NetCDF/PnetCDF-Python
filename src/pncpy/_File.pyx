@@ -730,7 +730,8 @@ cdef class File:
         :type bufsize: int
         
         """
-        cdef int buffsize, _file_id
+        cdef MPI_Offset buffsize
+        cdef int _file_id
         buffsize = bufsize
         _file_id = self._ncid
         with nogil:
@@ -759,7 +760,7 @@ cdef class File:
         
         """
         cdef int _file_id
-        cdef long long usage
+        cdef MPI_Offset usage
         _file_id = self._ncid
         with nogil:
             ierr = ncmpi_inq_buffer_usage(_file_id, <MPI_Offset *>&usage)
@@ -777,7 +778,7 @@ cdef class File:
         
         """
         cdef int _file_id
-        cdef long long buffsize
+        cdef MPI_Offset buffsize
         _file_id = self._ncid
         with nogil:
             ierr = ncmpi_inq_buffer_size(_file_id, <MPI_Offset *>&buffsize)
@@ -899,7 +900,8 @@ cdef class File:
         :rtype: int
 
         """
-        cdef int ierr, recsize
+        cdef int ierr
+        cdef MPI_Offset recsize
         with nogil:
             ierr = ncmpi_inq_recsize(self._ncid, <MPI_Offset *>&recsize)
         _check_err(ierr)
@@ -946,7 +948,7 @@ cdef class File:
 
         """
         cdef int ierr
-        cdef int size
+        cdef MPI_Offset size
         with nogil:
             ierr = ncmpi_inq_header_size(self._ncid, <MPI_Offset *>&size)
         _check_err(ierr)
@@ -962,7 +964,7 @@ cdef class File:
         :rtype: int
         """
         cdef int ierr
-        cdef int size
+        cdef MPI_Offset size
         with nogil:
             ierr = ncmpi_inq_put_size(self._ncid, <MPI_Offset *>&size)
         _check_err(ierr)
@@ -978,7 +980,7 @@ cdef class File:
         :rtype: int
         """
         cdef int ierr
-        cdef int size
+        cdef MPI_Offset size
         with nogil:
             ierr = ncmpi_inq_get_size(self._ncid, <MPI_Offset *>&size)
         _check_err(ierr)
@@ -994,7 +996,7 @@ cdef class File:
         :rtype: int
         """
         cdef int ierr
-        cdef int extent
+        cdef MPI_Offset extent
         with nogil:
             ierr = ncmpi_inq_header_extent(self._ncid, <MPI_Offset *>&extent)
         _check_err(ierr)

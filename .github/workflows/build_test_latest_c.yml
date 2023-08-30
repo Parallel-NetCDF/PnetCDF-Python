@@ -64,7 +64,7 @@ jobs:
         # serial
         csh ./test_all.csh
 
-        cd ../examples
+        cd examples
         csh ./run_examples.csh /tmp
         if [ $? -ne 0 ] ; then
           echo "example program failed!"
