@@ -80,7 +80,8 @@ class VariablesTestCase(unittest.TestCase):
         f.end_indep()
         f.close()
         comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
     def tearDown(self):
         # Remove the temporary files

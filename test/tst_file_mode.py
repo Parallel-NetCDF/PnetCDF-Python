@@ -64,7 +64,8 @@ class FileTestCase(unittest.TestCase):
             f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
         comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
         # TEST MODE "r"
         with pncpy.File(filename=self.file_path, mode='r') as f:
@@ -88,7 +89,8 @@ class FileTestCase(unittest.TestCase):
             self.assertTrue('x' in f.dimensions.keys())
             self.assertTrue('y' in f.dimensions.keys())
         comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
 
         # TEST MODE "a"
@@ -101,7 +103,8 @@ class FileTestCase(unittest.TestCase):
             self.assertTrue('y' in f.dimensions.keys())
             self.assertTrue('z' in f.dimensions.keys())
         comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
         # TEST MODE "x"
         # Try create a new file with the same name using mode "x"

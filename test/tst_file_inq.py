@@ -69,7 +69,8 @@ class FileTestCase(unittest.TestCase):
         # inquiry MPI INFO object of the file
         self.file_info = f.inq_info()
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
         # reopen the netCDF file in read-only mode
         f = pncpy.File(filename=self.file_path, mode = 'r')
         # inquiry and store the number of vars 

@@ -51,20 +51,21 @@ class FileTestCase(unittest.TestCase):
         # create CDF-5 netCDF files using current default format
         f = pncpy.File(filename=self.file_paths[0], mode = 'w', comm=comm, info=None)
         f.close() 
-        assert validate_nc_file(self.file_paths[0]) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[0]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
         # inquiry current default (for testing)
         self.new_default = inq_default_format()
         # create CDF-2 netCDF files by overwriting default
         f = pncpy.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", comm=comm, info=None)
         f.close() 
-        assert validate_nc_file(self.file_paths[1]) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[1]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
         # change default file format back to "CLASSIC"
         old_format = set_default_format(pncpy.NC_FORMAT_CLASSIC)
         assert(old_format == pncpy.NC_FORMAT_64BIT_DATA)
         # create CDF-1 netCDF files using default
         f = pncpy.File(filename=self.file_paths[2], mode = 'w', comm=comm, info=None)
         f.close() 
-        assert validate_nc_file(self.file_paths[2]) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[2]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
 
     def runTest(self):

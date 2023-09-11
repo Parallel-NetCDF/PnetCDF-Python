@@ -58,7 +58,8 @@ class DimensionsTestCase(unittest.TestCase):
         fv4 = f.def_var(VAR_NAME4,VAR_TYPE,time_dim)
         fv5 = f.def_var(VAR_NAME5,VAR_TYPE,TIME_NAME)
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
  
     

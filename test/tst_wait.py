@@ -133,7 +133,8 @@ class FileTestCase(unittest.TestCase):
             for i in range(num_reqs):
                 assert(strerrno(req_errs[i]) == "NC_EINVAL_REQUEST")
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
     def runTest(self):
         """testing File wait method for CDF-5/CDF-2/CDF-1 file format"""

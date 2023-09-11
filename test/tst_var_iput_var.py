@@ -75,7 +75,8 @@ class VariablesTestCase(unittest.TestCase):
         # all processes commit all pending put requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
     
     def tearDown(self):
         # remove the temporary files
