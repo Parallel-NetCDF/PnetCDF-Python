@@ -1,6 +1,6 @@
 # init for pncpy. package
 # Docstring comes from extension module _PnetCDF.
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 from ._File import *
 from ._Dimension import *
 from ._Variable import *
