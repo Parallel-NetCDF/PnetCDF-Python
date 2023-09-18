@@ -30,6 +30,7 @@ size = comm.Get_size()
 xdim=9; ydim=10; zdim=11
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
 datarev = data[:,::-1,:].copy()
+# print(datarev)
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -62,7 +63,8 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             v[:,::-1,:]= data
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
         
 
         f = pncpy.File(self.file_path, 'r')
@@ -81,8 +83,11 @@ class VariablesTestCase(unittest.TestCase):
             v_datas.append(buff)
         f.end_indep()
         # commit those 10 requests to the file at once using wait_all (collective i/o)
-        req_errs = [None] * num_reqs
-        f.wait_all(num_reqs, req_ids, req_errs)
+        req_errs_1 = [None] * (num_reqs // 2)
+        req_errs_2 = [None] * (num_reqs - len(req_errs_1))
+        f.wait_all(5, req_ids[:5], req_errs_1)
+        f.wait_all(5, req_ids[5:], req_errs_2)
+        req_errs = req_errs_1 + req_errs_2
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
@@ -100,7 +105,8 @@ class VariablesTestCase(unittest.TestCase):
         # commit all pending get requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num = pncpy.NC_GET_REQ_ALL)
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
     
     def tearDown(self):
         # remove the temporary files

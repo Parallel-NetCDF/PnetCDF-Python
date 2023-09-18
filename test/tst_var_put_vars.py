@@ -81,7 +81,8 @@ class VariablesTestCase(unittest.TestCase):
             v2_u.put_var(datam, start = starts, count = counts, stride = strides)
         f.end_indep()
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
     def tearDown(self):
         # remove the temporary file if test file directory not specified

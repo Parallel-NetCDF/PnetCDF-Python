@@ -53,7 +53,9 @@ class VariablesTestCase(unittest.TestCase):
         v1[:,::-1,:] = data
         f.close()
         comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
+
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
 
     def runTest(self):

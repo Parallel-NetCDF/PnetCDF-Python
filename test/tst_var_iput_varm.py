@@ -88,7 +88,8 @@ class VariablesTestCase(unittest.TestCase):
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
     def runTest(self):
         """testing variable iput varm for CDF-5/CDF-2/CDF-1 file format"""

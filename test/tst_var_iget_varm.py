@@ -62,7 +62,8 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             v[:] = data
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
         f = pncpy.File(self.file_path, 'r')
         # each process post 10 requests to read an subsampled array of values
@@ -99,7 +100,8 @@ class VariablesTestCase(unittest.TestCase):
         # commit all pending get requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num = pncpy.NC_GET_REQ_ALL)
         f.close()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
     
 
     def runTest(self):

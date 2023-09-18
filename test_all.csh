@@ -18,7 +18,12 @@ end
 # Run each test file with or without MPI
 foreach test_file (`ls tst_*.py`)
   echo "Running unittest program with mpiexec (4 processes): $test_file"
-  mpiexec -n 4 python3 $test_file $OUT_DIR 
+  mpiexec -n 4 python3 $test_file $OUT_DIR
+  # if (issetenv PNETCDF_DIR) then
+  #   env PNETCDF_DIR=$PNETCDF_DIR mpiexec -n 4 python3 $test_file $OUT_DIR 
+  # else
+  #   mpiexec -n 4 python3 $test_file $OUT_DIR
+  # endif
   if ($status != 0) then
     exit 1
 endif

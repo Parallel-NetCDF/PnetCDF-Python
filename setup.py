@@ -80,8 +80,8 @@ print("pnc_includedir:", pnc_includedir)
 #Store pnetcdf bin directory to settings for tests
 pnc_bindir = os.path.join(get_str_from_pnc_config(pnc_config, "--prefix"), 'bin/')
 pnc_bin_dict = {"pnetcdf_bin_dir": pnc_bindir}
-with open("settings.json", "w") as setting_json:
-    json.dump(pnc_bin_dict, setting_json)
+# with open("settings.json", "w") as setting_json:
+#     json.dump(pnc_bin_dict, setting_json)
 
 src_root = os.path.join('src', 'pncpy')
 

@@ -2861,7 +2861,7 @@ cdef class Variable:
                                 bufftype, &request)
         _check_err(ierr)
         free(indexp)
-        return buff
+        return request
 
 
     def _iget_vara(self, ndarray data, start, count, bufcount, Datatype buftype):

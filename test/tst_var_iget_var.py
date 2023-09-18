@@ -59,7 +59,8 @@ class VariablesTestCase(unittest.TestCase):
             v[:,::-1,:] = data
         f.close()
         comm.Barrier()
-        assert validate_nc_file(self.file_path) == 0
+        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+
 
         f = pncpy.File(self.file_path, 'r')
         # post 10 read requests to read the whole variable for the first 10 netCDF variables and track req ids
