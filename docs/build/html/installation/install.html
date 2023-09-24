@@ -51,6 +51,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Install from Source</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#software-requirements">Software Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-pnetcdf-c-library">Building PnetCDF C library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#building-pnetcdf-python-from-source">Building PnetCDF-python from source</a></li>
 </ul>
 </li>
@@ -114,7 +115,7 @@ $<span class="w"> </span>tar<span class="w"> </span>-xf<span class="w"> </span>p
 $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>pnetcdf-1.12.3
 
 <span class="c1"># configure</span>
-$<span class="w"> </span>./configure<span class="w"> </span>--prefix<span class="o">=</span>/path/to/install-dir<span class="w"> </span>--enable-shared<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc
+$<span class="w"> </span>./configure<span class="w"> </span>--prefix<span class="o">=</span>/path/to/install-dir<span class="w"> </span>--enable-shared<span class="w"> </span>--disable-fortran<span class="w"> </span>--disable-cxx<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc
 
 <span class="c1"># build and install</span>
 $<span class="w"> </span>make
@@ -122,11 +123,18 @@ $<span class="w"> </span>make<span class="w"> </span>install
 </pre></div>
 </div>
 </section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>Currently our PyPI wheels don’t cover all systems. If you already have a working MPI with the mpicc compiler wrapper is on your search path and pnetcdf-C installation, you can use pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span><span class="nv">PNETCDF_DIR</span><span class="o">=</span>/path/to/pnetcdf/dir/<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">pncpy</span><span class="o">==</span><span class="m">0</span>.0.3
+</pre></div>
+</div>
+</section>
 <section id="building-pnetcdf-python-from-source">
 <h2>Building PnetCDF-python from source<a class="headerlink" href="#building-pnetcdf-python-from-source" title="Permalink to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># activate an virtual environment (optional)</span>
 <span class="c1"># use Python 3.9 or later</span>
-$<span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>env
+$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>env
 $<span class="w"> </span><span class="nb">source</span><span class="w"> </span>env/bin/activate
 $<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
 
@@ -139,8 +147,8 @@ $<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span
 $<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>pnetcdf-python
 
 <span class="c1"># install PnetCDF-python</span>
-env<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>build
-env<span class="w"> </span><span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>python3<span class="w"> </span>setup.py<span class="w"> </span>install
+<span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> </span>build
+<span class="nv">CC</span><span class="o">=</span>mpicc<span class="w"> </span>python<span class="w"> </span>setup.py<span class="w"> </span>install
 </pre></div>
 </div>
 </section>

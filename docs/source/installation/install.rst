@@ -22,11 +22,21 @@ Building PnetCDF C library
     $ cd pnetcdf-1.12.3
 
     # configure
-    $ ./configure --prefix=/path/to/install-dir --enable-shared CC=mpicc
+    $ ./configure --prefix=/path/to/install-dir --enable-shared --disable-fortran --disable-cxx CC=mpicc 
     
     # build and install
     $ make
     $ make install
+
+Installation 
+===================================
+
+Currently our PyPI wheels don't cover all systems. If you already have a working MPI with the mpicc compiler wrapper is on your search path and pnetcdf-C installation, you can use pip:
+
+.. code-block:: bash
+
+    $ CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy==0.0.3
+
 
 Building PnetCDF-python from source
 ===================================
@@ -35,7 +45,7 @@ Building PnetCDF-python from source
 
     # activate an virtual environment (optional)
     # use Python 3.9 or later
-    $ python3 -m venv env
+    $ python -m venv env
     $ source env/bin/activate
     $ pip install --upgrade pip
 
@@ -48,7 +58,7 @@ Building PnetCDF-python from source
     $ cd pnetcdf-python
 
     # install PnetCDF-python
-    env CC=mpicc python3 setup.py build
-    env CC=mpicc python3 setup.py install
+    CC=mpicc python setup.py build
+    CC=mpicc python setup.py install
 
 
