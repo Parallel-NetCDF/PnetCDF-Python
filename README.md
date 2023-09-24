@@ -21,10 +21,10 @@ At a granular level, PnetCDF-python is a library that consists of the following 
 * To work with the in-development version, you need to install [Cython](http://cython.org/)
 ### Installation
 
-If you already have a working MPI and the mpicc compiler wrapper is on your search path, you can use pip:
+Currently our PyPI wheels don't cover all systems. If you already have a working MPI with the mpicc compiler wrapper is on your search path and pnetcdf-C installation, you can use pip:
 
 ```sh
-env CC=mpicc pip install pncpy
+CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy==0.0.3
 ```
 
 ### Development installation
@@ -37,7 +37,7 @@ env CC=mpicc pip install pncpy
 
 * (Optional) create python virtual environment and activate it
 
-* Run `env CC=mpicc python3 setup.py build`, then `env CC=mpicc python3 setup.py install`
+* Run `CC=mpicc python3 setup.py build`, then `CC=mpicc python3 setup.py install`
 
 ### Current build status
 The project is under active development. Below is a summary of the current implementation status
