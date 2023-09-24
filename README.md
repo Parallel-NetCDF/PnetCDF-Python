@@ -73,7 +73,8 @@ mpiexec -n [num_process] python3 test/tst_program.py [test_file_output_dir]
 The optional `test_file_output_dir` argument enables the testing program to save out generated test files in the directory
 
 ### Resources
+* [User Guide](https://nu-cucis.github.io/pnetcdf-python/)
 * [PnetCDF Overview](https://parallel-netcdf.github.io/)
-* [Source code](https://github.com/Jonathanlyj/PnetCDF-Python)
+* [Source Code](https://github.com/NU-CUCIS/pnetcdf-python)
 
 ### License
