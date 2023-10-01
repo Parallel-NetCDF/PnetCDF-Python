@@ -1,5 +1,5 @@
 
 cd docs
 make clean
-make html
-cp -r ./build/html/* ../
+make singlehtml
+cp -r ./build/singlehtml/* ../
