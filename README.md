@@ -37,7 +37,7 @@ CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy==0.0.3
 
 * (Optional) create python virtual environment and activate it
 
-* Run `CC=mpicc python3 setup.py build`, then `CC=mpicc python3 setup.py install`
+* Run `CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install -v .`
 
 ### Current build status
 The project is under active development. Below is a summary of the current implementation status
