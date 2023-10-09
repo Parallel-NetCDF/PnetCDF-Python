@@ -270,7 +270,15 @@ cdef class File:
         """
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
-    
+
+    def createDimension(self, dimname, size=-1):
+        """
+        createDimension(self, dimname, size=-1)
+
+        Same as ``pncpy.File.def_dim``
+        """
+        return self.def_dim(dimname, size)
+
     def rename_var(self, oldname, newname):
         """
         rename_var(self, oldname, newname)
@@ -306,6 +314,14 @@ cdef class File:
         self.variables.pop(oldname)
         # add new key.
         self.variables[newname] = var
+    
+    def renameVariable(self, oldname, newname):
+        """
+        renameVariable(self, oldname, newname)
+
+        Same as ``pncpy.File.rename_var``
+        """
+        self.rename_var(oldname, newname)
 
     def rename_dim(self, oldname, newname):
         """
@@ -343,10 +359,17 @@ cdef class File:
         # add new key.
         self.dimensions[newname] = dim
 
+    def renameDimension(self, oldname, newname):
+        """
+        renameDimension(self, oldname, newname)
+
+        Same as ``pncpy.File.rename_dim``
+        """
+        self.rename_dim(oldname, newname)
 
     def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
         """
-        def_var(self, varname, nc_dtype, dimensions=(), fill_value=None, **kwargs)
+        def_var(self, varname, nc_dtype, dimensions=(), fill_value=None)
 
         Create a new variable with the given parameters.
 
@@ -423,6 +446,15 @@ cdef class File:
         self.variables[varname] = Variable(self, varname, nc_dtype,
         dimensions=dimensions, fill_value=fill_value)
         return self.variables[varname]
+    
+    def createVariable(self, varname, nc_dtype, dimensions=(), fill_value=None):
+        """
+        createVariable(self, varname, nc_dtype, dimensions=(), fill_value=None)
+
+        Same as ``pncpy.File.def_var``
+        """
+        return self.def_var(varname, nc_dtype, dimensions, fill_value)
+
 
     def ncattrs(self):
         """
@@ -563,6 +595,15 @@ cdef class File:
         with nogil:
             ierr = ncmpi_rename_att(_file_id, NC_GLOBAL, oldnamec, newnamec)
         _check_err(ierr)
+
+    def renameAttribute(self, oldname, newname):
+        """
+        renameAttribute(self, oldname, newname)
+
+        Same as ``pncpy.File.rename_att``
+        """
+        self.rename_att(oldname, newname)
+
 
     def _wait(self, num=None, requests=None, status=None, collective=False):
         cdef int _file_id, ierr
@@ -1086,3 +1127,6 @@ cdef _get_variables(file):
             variables[name] = Variable(file, name, xtype, dimensions, id=varid)
         free(varids) # free pointer holding variable ids.
     return variables
+
+cdef class Dataset(File):
+    pass

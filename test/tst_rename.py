@@ -8,7 +8,7 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
    The program defines some variables and dimensions and then rename them using the
-   method `rename_var/dim` of a `File` instance.
+   method `renameVariable/dim` of a `Dataset` instance.
 
     To run the test, execute the following
     `mpiexec -n [num_process] python3 tst_rename.py [test_file_output_dir](optional)`
@@ -44,23 +44,23 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pncpy.Dataset(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed
-        f.def_dim('x',xdim)
-        f.def_dim('y',ydim)
-        f.def_dim('z',zdim)
+        f.createDimension('x',xdim)
+        f.createDimension('y',ydim)
+        f.createDimension('z',zdim)
         # Define 3 variables with same nc datatype NC_INT
-        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
-        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y','z'))
-        v3 = f.def_var('data3', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.createVariable('data1', pncpy.NC_INT, ('x','y','z'))
+        v2 = f.createVariable('data2', pncpy.NC_INT, ('x','y','z'))
+        v3 = f.createVariable('data3', pncpy.NC_INT, ('x','y','z'))
 
         # Rename two dimensions
-        f.rename_dim('x', 'new_x')
-        f.rename_dim('z', 'new_z')
+        f.renameDimension('x', 'new_x')
+        f.renameDimension('z', 'new_z')
 
         # Rename two variables
-        f.rename_var('data1', 'new_data1')
-        f.rename_var('data2', 'new_data2')
+        f.renameVariable('data1', 'new_data1')
+        f.renameVariable('data2', 'new_data2')
         f.close()
         # Validate the created data file using ncvalidator tool
         comm.Barrier()
@@ -77,7 +77,7 @@ class VariablesTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing writing data of mismatched datatypes with CDF5/CDF2/CDF1 file format"""
-        f = pncpy.File(self.file_path, 'r')
+        f = pncpy.Dataset(self.file_path, 'r')
         # Check variable names and dimension names
         self.assertTrue('new_data1' in f.variables.keys())
         self.assertTrue('new_data2' in f.variables.keys())
