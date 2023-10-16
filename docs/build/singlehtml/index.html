@@ -898,11 +898,11 @@ attributes.</p>
 read or written.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is a compulsory call before data-mode operations. <code class="docutils literal notranslate"><span class="pre">NetCDF4-python</span></code> library automatically</p>
-</div>
-<p>switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally at the define-mode 
+<p>This is a compulsory call before data-mode operations. <code class="docutils literal notranslate"><span class="pre">NetCDF4-python</span></code> library automatically 
+switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally at the define-mode 
 operations. This feature is NOT implemented in <code class="docutils literal notranslate"><span class="pre">pnetcdf-python</span></code> due to additional switching overheads between consecutive
 define operations and potential hazards of hanging when performing independent I/O on multiple processes.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1123,11 +1123,11 @@ with the same name as one of the reserved python attributes.</p>
 renamed and attributes can be deleted</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This is a compulsory call before running define-mode operations. <code class="docutils literal notranslate"><span class="pre">NetCDF4-python</span></code> library automatically</p>
-</div>
-<p>switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally at the define-mode 
+<p>This is a compulsory call before running define-mode operations. <code class="docutils literal notranslate"><span class="pre">NetCDF4-python</span></code> library automatically 
+switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally at the define-mode 
 operations. This feature is NOT implemented in <code class="docutils literal notranslate"><span class="pre">pnetcdf-python</span></code> due to additional switching overheads between consecutive
 define operations and potential hazards of hanging when performing independent I/O on multiple processes.</p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -1391,14 +1391,10 @@ directly.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
-<li><p><strong>nc_dtype</strong> – The datatype of the new variable. Can be specified by providing a NC module constant,</p></li>
-</ul>
-</dd>
-</dl>
-<p>or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are:</p>
+<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Can be specified by providing a NC module constant,
+or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are:</p>
 <blockquote>
-<div><blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> or <code class="docutils literal notranslate"><span class="pre">S1</span></code> for 1-character string</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> or <code class="docutils literal notranslate"><span class="pre">i1</span></code> for 1-byte integer</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> or <code class="docutils literal notranslate"><span class="pre">i2</span></code> for 2-byte signed integer</p></li>
@@ -1409,7 +1405,7 @@ directly.</p>
 </div></blockquote>
 <p>The following datatypes are <cite>CDF-5</cite> format only</p>
 <blockquote>
-<div><ul class="simple">
+<div><ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> or <code class="docutils literal notranslate"><span class="pre">u1</span></code> for unsigned 1-byte integer</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> or <code class="docutils literal notranslate"><span class="pre">u2</span></code> for unsigned 2-byte integer</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> or <code class="docutils literal notranslate"><span class="pre">u4</span></code> for unsigned 4-byte intege</p></li>
@@ -1417,10 +1413,7 @@ directly.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> or <code class="docutils literal notranslate"><span class="pre">u8</span></code> for unsigned 8-byte integer</p></li>
 </ul>
 </div></blockquote>
-</div></blockquote>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
+</p></li>
 <li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="index.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – [Optional] The dimensions of the new variable. Can be either dimension names
 or dimension class instances. Default is an empty tuple which means the variable is 
 a scalar (and therefore has no dimensions).</p></li>

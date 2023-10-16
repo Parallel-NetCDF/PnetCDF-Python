@@ -45,7 +45,7 @@ cdef class Variable:
         :type varname: str
 
         :param nc_dtype: The datatype of the new variable. Can be specified by providing a NC module constant,
-        or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are: 
+         or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are: 
 
             - ``pncpy.NC_CHAR`` or ``S1`` for 1-character string 
             - ``pncpy.NC_BYTE`` or ``i1`` for 1-byte integer
