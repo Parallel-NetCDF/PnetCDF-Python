@@ -783,6 +783,18 @@ obtain the status messages.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.createDimension">
+<span class="sig-name descname"><span class="pre">createDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.createDimension" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">pncpy.File.def_dim</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.createVariable">
+<span class="sig-name descname"><span class="pre">createVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.createVariable" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">pncpy.File.def_var</span></code></p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.def_dim">
 <span class="sig-name descname"><span class="pre">def_dim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_dim" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a new dimension with the given <cite>dimname</cite> and <cite>size</cite>.
@@ -804,7 +816,7 @@ instance. To determine if a dimension is ‘unlimited’, use the
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pncpy.File.def_var">
-<span class="sig-name descname"><span class="pre">def_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_var" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">def_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">varname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc_dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dimensions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.def_var" title="Permalink to this definition"></a></dt>
 <dd><p>Create a new variable with the given parameters.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -1102,6 +1114,24 @@ with the same name as one of the reserved python attributes.</p>
 <span class="sig-name descname"><span class="pre">redef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.redef" title="Permalink to this definition"></a></dt>
 <dd><p>Enter define mode, so that dimensions, variables, and attributes can be added or 
 renamed and attributes can be deleted</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.renameAttribute">
+<span class="sig-name descname"><span class="pre">renameAttribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.renameAttribute" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">pncpy.File.rename_att</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.renameDimension">
+<span class="sig-name descname"><span class="pre">renameDimension</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.renameDimension" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">pncpy.File.rename_dim</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pncpy.File.renameVariable">
+<span class="sig-name descname"><span class="pre">renameVariable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oldname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.renameVariable" title="Permalink to this definition"></a></dt>
+<dd><p>Same as <code class="docutils literal notranslate"><span class="pre">pncpy.File.rename_var</span></code></p>
 </dd></dl>
 
 <dl class="py method">
@@ -2681,7 +2711,7 @@ call to some other PnetCDF function.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pncpy.strerrno">
-<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">strerrno</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.strerrno" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">strerrno</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">err_code</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.strerrno" title="Permalink to this definition"></a></dt>
 <dd><p>strerror(err_code)</p>
 <p>The function strerrno returns a character string containing the name of the NC error code. 
 For instance, ncmpi_strerrno(NC_EBADID) returns string “NC_EBADID”.</p>
