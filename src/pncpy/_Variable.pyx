@@ -44,22 +44,23 @@ cdef class Variable:
         :param varname: Name of the new variable.
         :type varname: str
 
-        :param nc_dtype: The datatype of the new variable. Supported specifiers are: 
+        :param nc_dtype: The datatype of the new variable. Can be specified by providing a NC module constant,
+        or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are: 
 
-            - ``pncpy.NC_CHAR`` for text data 
-            - ``pncpy.NC_BYTE`` for 1-byte integer
-            - ``pncpy.NC_SHORT`` for 2-byte signed integer 
-            - ``pncpy.NC_INT`` for 4-byte signed integer
-            - ``pncpy.NC_FLOAT`` for 4-byte floating point number
-            - ``pncpy.NC_DOUBLE`` for 8-byte real number in double precision
+            - ``pncpy.NC_CHAR`` or ``S1`` for 1-character string 
+            - ``pncpy.NC_BYTE`` or ``i1`` for 1-byte integer
+            - ``pncpy.NC_SHORT`` or ``i2`` for 2-byte signed integer 
+            - ``pncpy.NC_INT`` or ``i4`` for 4-byte signed integer
+            - ``pncpy.NC_FLOAT`` or ``f4`` for 4-byte floating point number
+            - ``pncpy.NC_DOUBLE`` or ``f8`` for 8-byte real number in double precision
          
          The following datatypes are `CDF-5` format only
 
-            - ``pncpy.NC_UBYTE`` for unsigned 1-byte integer
-            - ``pncpy.NC_USHORT`` for unsigned 2-byte integer
-            - ``pncpy.NC_UINT`` for unsigned 4-byte intege
-            - ``pncpy.NC_INT64`` for signed 8-byte integer
-            - ``pncpy.NC_UINT64`` for unsigned 8-byte integer
+            - ``pncpy.NC_UBYTE`` or ``u1`` for unsigned 1-byte integer
+            - ``pncpy.NC_USHORT`` or ``u2`` for unsigned 2-byte integer
+            - ``pncpy.NC_UINT`` or ``u4`` for unsigned 4-byte intege
+            - ``pncpy.NC_INT64`` or ``i8`` for signed 8-byte integer
+            - ``pncpy.NC_UINT64`` or ``u8`` for unsigned 8-byte integer
         
         :type nc_dtype: int
         :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
@@ -94,10 +95,17 @@ cdef class Variable:
         self._file = file
         _file_id = self._file_id
         #TODO: decide whether we need to check xtype at python-level
-        xtype = nc_dtype
+        if isinstance(nc_dtype, str): # conver to numpy datatype object
+            nc_dtype = np.dtype(nc_dtype)
+        if isinstance(nc_dtype, np.dtype):
+            if nc_dtype.str[1:] in _supportedtypes:
+                xtype = _nptonctype[nc_dtype.str[1:]]
+            else:
+                raise TypeError('illegal data type, must be one of %s, got %s' % (_supportedtypes, nc_dtype.str[1:]))
+        if isinstance(nc_dtype, int):
+            xtype = nc_dtype
         self.xtype = xtype
         self.dtype = np.dtype(_nctonptype[xtype])
-
 
         if 'id' in kwargs:
             self._varid = kwargs['id']

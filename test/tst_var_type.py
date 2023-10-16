@@ -60,8 +60,8 @@ class VariablesTestCase(unittest.TestCase):
         f.def_dim('z',zdim)
         # Define 3 variables with same nc datatype NC_INT
         v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
-        v2 = f.def_var('data2', pncpy.NC_INT, ('x','y','z'))
-        v3 = f.def_var('data3', pncpy.NC_INT, ('x','y','z'))
+        v2 = f.def_var('data2', 'i4', ('x','y','z'))
+        v3 = f.def_var('data3', np.dtype('int32'), ('x','y','z'))
 
         # Enter data mode
         f.enddef()
@@ -90,10 +90,13 @@ class VariablesTestCase(unittest.TestCase):
         # Compare returned variable data with reference data
         v1 = f.variables['data1']   
         assert_array_equal(v1[:] , dataref)
+        assert v1.datatype == np.dtype('int32')
         v2 = f.variables['data2']
         assert_array_equal(v2[:], dataref)
+        assert v2.dtype == np.dtype('int32')
         v3 = f.variables['data3']
         assert_array_equal(v3[:], dataref)
+        assert v3.datatype == np.dtype('int32')
         if self._file_format != "64BIT_DATA":
             f.redef()
         try:
