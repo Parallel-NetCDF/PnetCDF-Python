@@ -896,6 +896,13 @@ attributes.</p>
 <span class="sig-name descname"><span class="pre">enddef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.enddef" title="Permalink to this definition"></a></dt>
 <dd><p>Exit define mode. The netCDF file is then placed in data mode, so variable data can be
 read or written.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a compulsory call before data-mode operations. <code class="docutils literal notranslate"><span class="pre">NetCDF4-python</span></code> library automatically</p>
+</div>
+<p>switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally at the define-mode 
+operations. This feature is NOT implemented in <code class="docutils literal notranslate"><span class="pre">pnetcdf-python</span></code> due to additional switching overheads between consecutive
+define operations and potential hazards of hanging when performing independent I/O on multiple processes.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1114,6 +1121,13 @@ with the same name as one of the reserved python attributes.</p>
 <span class="sig-name descname"><span class="pre">redef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pncpy.File.redef" title="Permalink to this definition"></a></dt>
 <dd><p>Enter define mode, so that dimensions, variables, and attributes can be added or 
 renamed and attributes can be deleted</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is a compulsory call before running define-mode operations. <code class="docutils literal notranslate"><span class="pre">NetCDF4-python</span></code> library automatically</p>
+</div>
+<p>switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally at the define-mode 
+operations. This feature is NOT implemented in <code class="docutils literal notranslate"><span class="pre">pnetcdf-python</span></code> due to additional switching overheads between consecutive
+define operations and potential hazards of hanging when performing independent I/O on multiple processes.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1377,28 +1391,36 @@ directly.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>varname</strong> (<em>str</em>) – Name of the new variable.</p></li>
-<li><p><strong>nc_dtype</strong> (<em>int</em>) – <p>The datatype of the new variable. Supported specifiers are:</p>
+<li><p><strong>nc_dtype</strong> – The datatype of the new variable. Can be specified by providing a NC module constant,</p></li>
+</ul>
+</dd>
+</dl>
+<p>or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are:</p>
 <blockquote>
-<div><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> for text data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> for 1-byte integer</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> for 2-byte signed integer</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT</span></code> for 4-byte signed integer</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_FLOAT</span></code> for 4-byte floating point number</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> for 8-byte real number in double precision</p></li>
+<div><blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_CHAR</span></code> or <code class="docutils literal notranslate"><span class="pre">S1</span></code> for 1-character string</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_BYTE</span></code> or <code class="docutils literal notranslate"><span class="pre">i1</span></code> for 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_SHORT</span></code> or <code class="docutils literal notranslate"><span class="pre">i2</span></code> for 2-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT</span></code> or <code class="docutils literal notranslate"><span class="pre">i4</span></code> for 4-byte signed integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_FLOAT</span></code> or <code class="docutils literal notranslate"><span class="pre">f4</span></code> for 4-byte floating point number</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_DOUBLE</span></code> or <code class="docutils literal notranslate"><span class="pre">f8</span></code> for 8-byte real number in double precision</p></li>
 </ul>
 </div></blockquote>
 <p>The following datatypes are <cite>CDF-5</cite> format only</p>
 <blockquote>
-<div><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> for unsigned 1-byte integer</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> for unsigned 2-byte integer</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> for unsigned 4-byte intege</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT64</span></code> for signed 8-byte integer</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> for unsigned 8-byte integer</p></li>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UBYTE</span></code> or <code class="docutils literal notranslate"><span class="pre">u1</span></code> for unsigned 1-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_USHORT</span></code> or <code class="docutils literal notranslate"><span class="pre">u2</span></code> for unsigned 2-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT</span></code> or <code class="docutils literal notranslate"><span class="pre">u4</span></code> for unsigned 4-byte intege</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_INT64</span></code> or <code class="docutils literal notranslate"><span class="pre">i8</span></code> for signed 8-byte integer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pncpy.NC_UINT64</span></code> or <code class="docutils literal notranslate"><span class="pre">u8</span></code> for unsigned 8-byte integer</p></li>
 </ul>
 </div></blockquote>
-</p></li>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
 <li><p><strong>dimensions</strong> (tuple of str or <a class="reference internal" href="index.html#pncpy.Dimension" title="pncpy.Dimension"><code class="xref py py-class docutils literal notranslate"><span class="pre">pncpy.Dimension</span></code></a> instances) – [Optional] The dimensions of the new variable. Can be either dimension names
 or dimension class instances. Default is an empty tuple which means the variable is 
 a scalar (and therefore has no dimensions).</p></li>

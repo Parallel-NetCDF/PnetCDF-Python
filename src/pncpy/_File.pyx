@@ -185,6 +185,11 @@ cdef class File:
 
         Enter define mode, so that dimensions, variables, and attributes can be added or 
         renamed and attributes can be deleted
+
+        .. note:: This is a compulsory call before running define-mode operations. ``NetCDF4-python`` library automatically 
+        switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally at the define-mode 
+        operations. This feature is NOT implemented in ``pnetcdf-python`` due to additional switching overheads between consecutive
+        define operations and potential hazards of hanging when performing independent I/O on multiple processes.
         """
         self._redef()
 
@@ -200,6 +205,11 @@ cdef class File:
 
         Exit define mode. The netCDF file is then placed in data mode, so variable data can be
         read or written.
+
+        .. note:: This is a compulsory call before data-mode operations. ``NetCDF4-python`` library automatically 
+        switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally at the define-mode 
+        operations. This feature is NOT implemented in ``pnetcdf-python`` due to additional switching overheads between consecutive
+        define operations and potential hazards of hanging when performing independent I/O on multiple processes.
         """
         self._enddef()
 

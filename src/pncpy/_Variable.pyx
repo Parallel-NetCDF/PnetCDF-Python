@@ -494,7 +494,6 @@ cdef class Variable:
         :param rec_no: the index of the record to be filled
         :type rec_no: int
 
-        
         """
         cdef int recno, ierr
         recno = rec_no
