@@ -375,8 +375,7 @@ optional arguments.</p>
 <blockquote>
 <div><p>PnetCDF-python inherits many features from netCDF4-python, making the transition from the former to the latter a seamless process
 for most applications. However, there are some exceptions to this, particularly with following features in the API.</p>
-</div></blockquote>
-<dl class="simple">
+<dl>
 <dt>Supported File Formats</dt><dd><p>NetCDF4-python supports version NETCDF4 formats(HDF5) in addition to classic netCDF formats(NETCDF3_CLASSIC, NETCDF3_64BIT_OFFSET, NETCDF3_64BIT_DATA). However,
 PnetCDF-python library only supports netCDF classic file formats, which means all netCDF4-dependent features are <strong>not</strong> supported, including user-defined types,
 compression, hirarchical structure, etc.</p>
@@ -384,28 +383,30 @@ compression, hirarchical structure, etc.</p>
 <dt>Data/Define Mode</dt><dd><p>NetCDF4-python library automatically switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally within the define-mode
 operation functions, which is <strong>not</strong> implemented in Pnetcdf-python. A manual call to <code class="xref py py-func docutils literal notranslate"><span class="pre">File.redef()</span></code> is compulsory to activate define mode before swtiching
 to define mode opearations. Similarly, <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> is required before switching to data mode operations. This design is based on considerations of
-the following aspects:
-* Minimize overheads during consecutive define operations: Automatically wrapping all define functions with <code class="xref py py-func docutils literal notranslate"><span class="pre">File.redef()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> could introduce
-significant overhead between consecutive define operations. This approach results in unnecessary data/define mode switches, impacting performance.
-* Avoid potential hanging when performing independent I/O: if <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> is automatically embeded in all data mode operation functions, the program will hang when
-partial processes are performing independent I/O(while others don’t) because <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> is a collective call which requires all processes to participate.</p>
+the following aspects:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Minimize overheads during consecutive define operations: Automatically wrapping all define functions with <code class="xref py py-func docutils literal notranslate"><span class="pre">File.redef()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> could introduce
+significant overhead between consecutive define operations. This approach results in unnecessary data/define mode switches, impacting performance.</p></li>
+<li><p>Avoid potential hanging when performing independent I/O: if <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> is automatically embeded in all data mode operation functions, the program will hang when
+partial processes are performing independent I/O(while others don’t) because <code class="xref py py-func docutils literal notranslate"><span class="pre">File.enddef()</span></code> is a collective call which requires all processes to participate.</p></li>
+</ul>
+</div></blockquote>
 </dd>
 <dt>Independent/Collective I/O Mode</dt><dd><p>There are two types of parallel IO, independent (the default) and collective supported both in PnetCDF-python and netCDF4-python. NetCDF4-python toggles back and forth
 between the two types at variable-level. However, PnetCDF-python manages this at file-level through <code class="xref py py-func docutils literal notranslate"><span class="pre">File.begin_indep()</span></code> and <code class="xref py py-func docutils literal notranslate"><span class="pre">File.end_indep()</span></code>.</p>
 </dd>
 </dl>
+</div></blockquote>
 </section>
 <section id="new-features-exclusive-to-pnetcdf-python">
 <h3>New Features Exclusive to PnetCDF-python<a class="headerlink" href="#new-features-exclusive-to-pnetcdf-python" title="Permalink to this heading"></a></h3>
 <blockquote>
 <div><p>PnetCDF-python API is designed towards I/O performance. Towards this goal, the following exclusive features are implemented in this library.</p>
-</div></blockquote>
-<dl>
-<dt>Fine-grained Reads and Writes Methods</dt><dd><dl class="simple">
-<dt>For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> and</dt><dd><p><code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments,</p>
-</dd>
-</dl>
-<p>these methods can fulfill specific I/O needs to the target variable depending on the requirements of the applications: the entire variable, a single data value, an
+<dl class="simple">
+<dt>Fine-grained Reads and Writes Methods</dt><dd><p>For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> and
+<code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code> methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments,
+these methods can fulfill specific I/O needs to the target variable depending on the requirements of the applications: the entire variable, a single data value, an
 (subsampled) array of values, a mapped array or a list of subarrays.</p>
 </dd>
 <dt>Non-blocking I/O</dt><dd><p>In additional to blocking read/writes, PnetCDF offers nonblocking APIs that enable users to initiate multiple requests without actually doing I/O and subsequently
@@ -413,6 +414,7 @@ flush them altogether. This approach is designed to enhance performance by mergi
 preserved in PnetCDF-python API.</p>
 </dd>
 </dl>
+</div></blockquote>
 </section>
 </section>
 <span id="document-tutorial/datatypes"></span><section id="datatype">
