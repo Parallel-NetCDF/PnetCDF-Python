@@ -8,7 +8,7 @@ Non-blocking Reads and Writes
 
  
  
-Alternative to blocking read/writes, PnetCDF nonblocking APIs allow users to first post multiple requests and later flush them altogether 
+Alternative to blocking read/writes, PnetCDF-python nonblocking APIs allow users to first post multiple requests and later flush them altogether 
 in order to achieve a better performance. A common practice is writing (or reading) subarrays to (from) multiple variables, e.g. one or more
 subarrays for each variable defined in the NetCDF file.
 
