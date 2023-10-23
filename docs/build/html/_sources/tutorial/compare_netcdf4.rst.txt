@@ -5,8 +5,8 @@ Comparing with netCDF4-python API
 
    Under construction. 
 
-Difference in API: PnetCDF-python vs. NetCDF4-python
------------------------------------------------------
+Features Exclusive to NetCDF4-python
+-------------------------------------
  PnetCDF-python inherits many features from netCDF4-python, making the transition from the former to the latter a seamless process 
  for most applications. However, there are some exceptions to this, particularly with following features in the API.
 
@@ -32,7 +32,7 @@ Difference in API: PnetCDF-python vs. NetCDF4-python
  
 
 New Features Exclusive to PnetCDF-python
-----------------------------------------
+------------------------------------------
 
  PnetCDF-python API is designed towards I/O performance. Towards this goal, the following exclusive features are implemented in this library. 
 
