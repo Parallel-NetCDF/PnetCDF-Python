@@ -1,3 +1,4 @@
+.. currentmodule:: pncpy
 =========
 Variable
 =========
@@ -37,7 +38,7 @@ Variable Attributes
  .. attribute:: datatype
 
 
-   Same as ``Variable.dtype``.
+   Same as :meth:`Variable.dtype`.
    **Type:** ``numpy.dtype``
 
  .. attribute:: shape
@@ -70,16 +71,16 @@ Variable Attributes
    Only relevant when using indexer syntax to read from or write to netCDF variable. 
    If True, `scale_factor` and `add_offset` are applied, and signed integer data is 
    automatically converted to unsigned integer data if the `_Unsigned` attribute is set.
-   Default is `True`, can be reset using `Variable.set_auto_scale` and
-   `Variable.set_auto_maskandscale` methods.
+   Default is `True`, can be reset using :meth:`Variable.set_auto_scale` and
+   :meth:`Variable.set_auto_maskandscale` methods.
    **Type:** `bool`
 
  .. attribute:: mask
 
    Only relevant when using indexer syntax to read from netCDF variable. If `True`, 
    data is automatically converted to/from masked arrays when missing values or fill 
-   values are present. Default is `True`, can be reset using ``Variable.set_auto_mask`` 
-   and ``Variable.set_auto_maskandscale`` methods. 
+   values are present. Default is `True`, can be reset using :meth:`Variable.set_auto_mask`
+   and :meth:`Variable.set_auto_maskandscale` methods. 
    **Type:** `bool`
 
  .. attribute:: chartostring
@@ -87,6 +88,6 @@ Variable Attributes
 
    If `True`, data is automatically converted to/from character
    arrays to string arrays when the `_Encoding` variable attribute is set.
-   Default is `True`, can be reset using ``Variable.set_auto_chartostring`` method.
+   Default is `True`, can be reset using :meth:`Variable.set_auto_chartostring` method.
    **Type:** `bool`
 

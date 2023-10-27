@@ -1,3 +1,4 @@
+.. currentmodule:: pncpy
 ============================
 Parallel Read and Write
 ============================
@@ -36,14 +37,14 @@ NumPy Slicing Syntax
 Method Call of put/get_var() 
 --------------------------------------
 
- Using specific method calls to perform I/O is particularly useful in mult-processing programs. :meth:`pncpy.Variable.put_var()` requires `data` as a mandatory argument, 
- which serves as a write buffer that stores values to be written. :meth:`pncpy.Variable.get_var()` requires `buff` as a mandatory argument, 
- which serves as a read buffer that stores values to be read. The behavior of :meth:`pncpy.Variable.put_var()` and :meth:`pncpy.Variable.get_var()` varies depending on the pattern of provided
+ Using specific method calls to perform I/O is particularly useful in mult-processing programs. :meth:`Variable.put_var` requires `data` as a mandatory argument, 
+ which serves as a write buffer that stores values to be written. :meth:`Variable.get_var` requires `buff` as a mandatory argument, 
+ which serves as a read buffer that stores values to be read. The behavior of :meth:`Variable.put_var` and :meth:`Variable.get_var` varies depending on the pattern of provided
  optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. The suffix `_all` indicates this is collective I/O in contrast to 
  indepedent I/O (without `_all`).
 
 Read from netCDF variables
- For reading, the behavior of :meth:`pncpy.Variable.get_var()` depends on the following provided input parameter pattern:
+ For reading, the behavior of :meth:`Variable.get_var` depends on the following provided input parameter pattern:
 
  - `buff` - Read an entire variable
  - `buff`, `index` - Read a single data value
@@ -74,7 +75,7 @@ Read from netCDF variables
  For full example program, see ``examples/get_vara.py``.
 
 Write to netCDF variables
- For writing, the behavior of :meth:`pncpy.Variable.put_var()` depends on the following provided input parameter pattern:
+ For writing, the behavior of :meth:`Variable.put_var` depends on the following provided input parameter pattern:
 
  - `data` - Write an entire variable
  - `data`, `index` - Write a single data value (a single element)

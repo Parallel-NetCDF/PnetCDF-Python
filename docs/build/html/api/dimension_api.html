@@ -68,8 +68,8 @@
 <li class="toctree-l3"><a class="reference internal" href="#pncpy.Dimension.isunlimited"><code class="docutils literal notranslate"><span class="pre">Dimension.isunlimited()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pncpy.name"><code class="docutils literal notranslate"><span class="pre">name</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pncpy.size"><code class="docutils literal notranslate"><span class="pre">size</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="variable_api.html">Variable</a></li>
@@ -92,7 +92,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Dimension</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/sources/api/dimension_api.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/source/installationapi/dimension_api.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -108,8 +108,8 @@ which is also a key component of <code class="docutils literal notranslate"><spa
 to access dimensions.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instances should be created using the <code class="docutils literal notranslate"><span class="pre">File.def_dim</span></code> method of a <code class="docutils literal notranslate"><span class="pre">File</span></code> instance,
-not using <cite>Dimension.__init__</cite> directly.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Dimension</span></code> instances should be created using the <a class="reference internal" href="file_api.html#pncpy.File.def_dim" title="pncpy.File.def_dim"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.def_dim()</span></code></a> method of a <code class="docutils literal notranslate"><span class="pre">File</span></code> instance,
+not using <a class="reference internal" href="#pncpy.Dimension.__init__" title="pncpy.Dimension.__init__"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Dimension.__init__()</span></code></a> directly.</p>
 </div>
 <dl class="py class">
 <dt class="sig sig-object py" id="pncpy.Dimension">
@@ -147,15 +147,15 @@ not using <cite>Dimension.__init__</cite> directly.</p>
 <dl>
 <dt>Dimension Attributes</dt><dd><p>The following class members are read-only and should not be modified by the user.</p>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="name">
-<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#name" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="pncpy.name">
+<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pncpy.name" title="Permalink to this definition"></a></dt>
 <dd><p>String name of Dimension instance. This class member is read-only and
-should not be modified by the user. To rename a dimension, use <code class="docutils literal notranslate"><span class="pre">File.rename_dim</span></code> method.</p>
+should not be modified by the user. To rename a dimension, use <a class="reference internal" href="file_api.html#pncpy.File.rename_dim" title="pncpy.File.rename_dim"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.rename_dim()</span></code></a> method.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="size">
-<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#size" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="pncpy.size">
+<span class="sig-prename descclassname"><span class="pre">pncpy.</span></span><span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pncpy.size" title="Permalink to this definition"></a></dt>
 <dd><p>The current size of Dimension (calls <code class="docutils literal notranslate"><span class="pre">len</span></code> on Dimension instance).</p>
 </dd></dl>
 

@@ -86,7 +86,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Parallel Read and Write</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/sources/tutorial/read_write.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/source/installationtutorial/read_write.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -130,14 +130,14 @@ recognized:</p>
 <section id="method-call-of-put-get-var">
 <h2>Method Call of put/get_var()<a class="headerlink" href="#method-call-of-put-get-var" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><p>Using specific method calls to perform I/O is particularly useful in mult-processing programs. <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.put_var()</span></code></a> requires <cite>data</cite> as a mandatory argument,
-which serves as a write buffer that stores values to be written. <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a> requires <cite>buff</cite> as a mandatory argument,
-which serves as a read buffer that stores values to be read. The behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.put_var()</span></code></a> and <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a> varies depending on the pattern of provided
+<div><p>Using specific method calls to perform I/O is particularly useful in mult-processing programs. <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.put_var()</span></code></a> requires <cite>data</cite> as a mandatory argument,
+which serves as a write buffer that stores values to be written. <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a> requires <cite>buff</cite> as a mandatory argument,
+which serves as a read buffer that stores values to be read. The behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.put_var()</span></code></a> and <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a> varies depending on the pattern of provided
 optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>. The suffix <cite>_all</cite> indicates this is collective I/O in contrast to
 indepedent I/O (without <cite>_all</cite>).</p>
 </div></blockquote>
 <dl>
-<dt>Read from netCDF variables</dt><dd><p>For reading, the behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a> depends on the following provided input parameter pattern:</p>
+<dt>Read from netCDF variables</dt><dd><p>For reading, the behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a> depends on the following provided input parameter pattern:</p>
 <ul class="simple">
 <li><p><cite>buff</cite> - Read an entire variable</p></li>
 <li><p><cite>buff</cite>, <cite>index</cite> - Read a single data value</p></li>
@@ -161,7 +161,7 @@ section to read from in a netCDF variable as illustrated in the diagramm below. 
 </div>
 <p>For full example program, see <code class="docutils literal notranslate"><span class="pre">examples/get_vara.py</span></code>.</p>
 </dd>
-<dt>Write to netCDF variables</dt><dd><p>For writing, the behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.put_var()</span></code></a> depends on the following provided input parameter pattern:</p>
+<dt>Write to netCDF variables</dt><dd><p>For writing, the behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.put_var()</span></code></a> depends on the following provided input parameter pattern:</p>
 <ul class="simple">
 <li><p><cite>data</cite> - Write an entire variable</p></li>
 <li><p><cite>data</cite>, <cite>index</cite> - Write a single data value (a single element)</p></li>

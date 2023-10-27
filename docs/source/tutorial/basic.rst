@@ -1,3 +1,4 @@
+.. currentmodule:: pncpy
 =========
 Basics
 =========
@@ -26,7 +27,7 @@ Creating/Opening/Closing a netCDF file
  formats of CDF-1, 2, and 5. When creating a new file, the format may be specified using the 
  format keyword in the ``File`` constructor. The default format is CDF-1. To see how a given 
  file is formatted, you can examine the ``file_format`` attribute. Closing the netCDF file is 
- accomplished via the ``File.close`` method of the ``File`` instance.
+ accomplished via the :meth:`File.close` method of the ``File`` instance.
 
  Here's an example:
 
@@ -54,7 +55,7 @@ Dimensions
 -------------
 
  NetCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
- the dimensions they depend on must be established. To create a dimension, the ``File.def_dim`` method is called 
+ the dimensions they depend on must be established. To create a dimension, the :meth:`File.def_dim` method is called 
  on a File instance under define mode. The dimension's name is set using a Python string, while the size 
  is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded), 
  the size can be omitted or assigned as -1. A "Dimension" object will be returned as a handler for this 
@@ -235,7 +236,7 @@ Reading from variable
     print(var[:10, :10]) # Option1 Indexer: read the topleft 10*10 corner from variable var 
     print(var.get_var_all(start = [10, 0], count = [10, 50])) # Option2 Method Call: equivalent to var[10:20, 0:50]
     
- Similarly, :meth:`pncpy.Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
+ Similarly, :meth:`Variable.get_var` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments. 
  
  To learn more about reading and writing, see the :ref:`here<Parallel Read and Write>` page.

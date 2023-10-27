@@ -88,7 +88,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Comparing with netCDF4-python API</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/sources/tutorial/compare_netcdf4.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/source/installationtutorial/compare_netcdf4.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -137,8 +137,8 @@ between the two types at variable-level. However, PnetCDF-python manages this at
 <section id="alternative-reads-and-writes-methods">
 <h2>Alternative Reads and Writes Methods<a class="headerlink" href="#alternative-reads-and-writes-methods" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><p>For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a> and
-<a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.put_var()</span></code></a> methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments,
+<div><p>For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a> and
+<a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.put_var()</span></code></a> methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments,
 these methods can fulfill specific I/O needs to the target variable depending on the requirements of the applications: the entire variable, a single data value, an
 (subsampled) array of values, a mapped array or a list of subarrays. These methods require an array argument as read/write buffer, which is a prerequisite non-blocking
 I/O as introduced below.</p>

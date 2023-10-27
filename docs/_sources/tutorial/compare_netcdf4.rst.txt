@@ -39,8 +39,8 @@ Difference in Programming Model
 Alternative Reads and Writes Methods
 ------------------------------------------
 
- For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The :meth:`pncpy.Variable.get_var` and
- :meth:`pncpy.Variable.put_var` methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments, 
+ For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The :meth:`Variable.get_var` and
+ :meth:`Variable.put_var` methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments, 
  these methods can fulfill specific I/O needs to the target variable depending on the requirements of the applications: the entire variable, a single data value, an 
  (subsampled) array of values, a mapped array or a list of subarrays. These methods require an array argument as read/write buffer, which is a prerequisite non-blocking 
  I/O as introduced below.

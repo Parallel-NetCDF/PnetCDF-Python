@@ -1,3 +1,4 @@
+.. currentmodule:: pncpy
 ==============
 Dimension
 ==============
@@ -9,8 +10,8 @@ to access dimensions.
 
 .. note:: 
 
-   ``Dimension`` instances should be created using the ``File.def_dim`` method of a ``File`` instance,
-   not using `Dimension.__init__` directly.
+   ``Dimension`` instances should be created using the :meth:`File.def_dim` method of a ``File`` instance,
+   not using :meth:`Dimension.__init__` directly.
 
 .. autoclass:: pncpy::Dimension
    :members: getfile, isunlimited
@@ -22,7 +23,7 @@ Dimension Attributes
  .. attribute:: name
 
     String name of Dimension instance. This class member is read-only and
-    should not be modified by the user. To rename a dimension, use ``File.rename_dim`` method.
+    should not be modified by the user. To rename a dimension, use :meth:`File.rename_dim` method.
 
  .. attribute:: size
       

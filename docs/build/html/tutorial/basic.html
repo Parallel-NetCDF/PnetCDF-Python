@@ -91,7 +91,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Basics</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/sources/tutorial/basic.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/source/installationtutorial/basic.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -126,7 +126,7 @@ and attributes. Currently, netCDF files can be created in classic formats, speci
 formats of CDF-1, 2, and 5. When creating a new file, the format may be specified using the
 format keyword in the <code class="docutils literal notranslate"><span class="pre">File</span></code> constructor. The default format is CDF-1. To see how a given
 file is formatted, you can examine the <code class="docutils literal notranslate"><span class="pre">file_format</span></code> attribute. Closing the netCDF file is
-accomplished via the <code class="docutils literal notranslate"><span class="pre">File.close</span></code> method of the <code class="docutils literal notranslate"><span class="pre">File</span></code> instance.</p>
+accomplished via the <a class="reference internal" href="../api/file_api.html#pncpy.File.close" title="pncpy.File.close"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.close()</span></code></a> method of the <code class="docutils literal notranslate"><span class="pre">File</span></code> instance.</p>
 <p>Here’s an example:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pncpy</span>
 <span class="kn">from</span> <span class="nn">mpi4py</span> <span class="kn">import</span> <span class="n">MPI</span>
@@ -150,7 +150,7 @@ accomplished via the <code class="docutils literal notranslate"><span class="pre
 <h2>Dimensions<a class="headerlink" href="#dimensions" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>NetCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
-the dimensions they depend on must be established. To create a dimension, the <code class="docutils literal notranslate"><span class="pre">File.def_dim</span></code> method is called
+the dimensions they depend on must be established. To create a dimension, the <a class="reference internal" href="../api/file_api.html#pncpy.File.def_dim" title="pncpy.File.def_dim"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.def_dim()</span></code></a> method is called
 on a File instance under define mode. The dimension’s name is set using a Python string, while the size
 is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded),
 the size can be omitted or assigned as -1. A “Dimension” object will be returned as a handler for this
@@ -194,7 +194,7 @@ The dimension information can be retrieved using following functions.</p>
 <h2>Variables<a class="headerlink" href="#variables" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF
-variable, you can utilize the <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.def_var()</span></code> method within a File instance under define mode. The mandatory arguments for
+variable, you can utilize the <a class="reference internal" href="../api/file_api.html#pncpy.File.def_var" title="pncpy.File.def_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.def_var()</span></code></a> method within a File instance under define mode. The mandatory arguments for
 this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension
 instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
 The supported datatypes given each file format can be found <a class="reference internal" href="datatypes.html#datatype"><span class="std std-ref">here</span></a>.</p>
@@ -255,7 +255,7 @@ the form of strings, numbers, or sequences. Returning to our example,</p>
 <span class="n">var</span><span class="o">.</span><span class="n">seqatt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.ncattrs()</span></code> method of a File or Variable instance can be used to retrieve the names of all
+<p>The <a class="reference internal" href="../api/file_api.html#pncpy.File.ncattrs" title="pncpy.File.ncattrs"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.ncattrs()</span></code></a> method of a File or Variable instance can be used to retrieve the names of all
 the netCDF attributes. And the __dict__ attribute of a File or Variable instance provides all the netCDF
 attribute name/value pairs in a python dictionary:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">())</span>
@@ -303,7 +303,7 @@ The indexer syntax is the same as in <code class="docutils literal notranslate">
 <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]))</span> <span class="c1"># Option2 Method Call: equivalent to var[10:20, 0:50]</span>
 </pre></div>
 </div>
-<p>Similarly, <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a> takes the same set of optional arguments and behave differently depending on the pattern of provided
+<p>Similarly, <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code></a> takes the same set of optional arguments and behave differently depending on the pattern of provided
 optional arguments.</p>
 <p>To learn more about reading and writing, see the <a class="reference internal" href="read_write.html#parallel-read-and-write"><span class="std std-ref">here</span></a> page.</p>
 </div></blockquote>

@@ -1,3 +1,4 @@
+.. currentmodule:: pncpy
 ==============================
 Non-blocking Reads and Writes
 ==============================
@@ -15,7 +16,7 @@ subarrays for each variable defined in the NetCDF file.
 Nonblocking Write
 -------------------
 
- Write requests can be posted by the method call of :meth:`pncpy.Variable.iput_var`. Same as :meth:`pncpy.Variable.put_var`, the behavior of :meth:`pncpy.Variable.iput_var` varies 
+ Write requests can be posted by the method call of :meth:`Variable.iput_var`. Same as :meth:`Variable.put_var`, the behavior of :meth:`Variable.iput_var` varies 
  depending on the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap` as shown below. Note that the method only posts the 
  request, which is not commited until :meth:`File.wait`. The method call returns a request id that can be optionally passed to :meth:`File.wait` to select this request.
 
@@ -45,9 +46,9 @@ Nonblocking Write
 Nonblocking Read
 ------------------
 
- Read requests can be posted by the method call of :meth:`pncpy.Variable.iget_var`. Note that unlike :meth:`pncpy.Variable.get_var`, this method requires a 
+ Read requests can be posted by the method call of :meth:`Variable.iget_var`. Note that unlike :meth:`Variable.get_var`, this method requires a 
  mandatory argument - an empty numpy array reserved to be filled in the future. Again, the method call returns a request id that can be optionally passed to 
- :meth:`File.wait` to select this request. Similar to :meth:`pncpy.Variable.get_var`, the behavior of :meth:`pncpy.Variable.iget_var` varies depending on 
+ :meth:`File.wait` to select this request. Similar to :meth:`Variable.get_var`, the behavior of :meth:`Variable.iget_var` varies depending on 
  the pattern of provided optional arguments - `index`, `start`, `count`, `stride`, `num` and `imap`. 
 
  - `buff` - Request to read an entire variable
@@ -80,7 +81,7 @@ Commit Read/Write Requests
 
  Pending requests are eventually processed by :meth:`File.wait`. Requests to commited can be specified selectively specified by a request id list. 
  If so, optionally, user can pass in a empty list to collect error statuses of each request, which is useful in request-wise error tracking and debugging.
- Alternatively, user can flush all pending write and/or read requests using module-level NC constants (e.g. `pncpy.NC_REQ_ALL`) as input parameters. The suffix
+ Alternatively, user can flush all pending write and/or read requests using module-level NC constants (e.g. `NC_REQ_ALL`) as input parameters. The suffix
  `_all` indicates this is collective I/O in contrast to indepedent I/O (without `_all`).
 
  Here's a python example to commit selected requests:
@@ -92,15 +93,15 @@ Commit Read/Write Requests
     f.wait_all(num_reqs, req_ids, req_errs)
     # f.wait() # independent i/o
     # f.wait_all() # commit all requests
-    # f.wait_all(num = pncpy.NC_PUT_REQ_ALL) # commit all write requests
-    # f.wait_all(num = pncpy.NC_GET_REQ_ALL) # commit all read requests
+    # f.wait_all(num = NC_PUT_REQ_ALL) # commit all write requests
+    # f.wait_all(num = NC_GET_REQ_ALL) # commit all read requests
 
 Buffered Non-blocking Write
 -----------------------------
 
  One limitation of the above non-blocking write is that users should not alter the contents of the write buffer once the request is posted until the wait API is returned. 
  Any change to the buffer contents in between will result in unexpected error. To alleviate the this limitation, use can post buffered nonblocking write requests using 
- :meth:`pncpy.Variable.bput_var`. The input parameters and returned values are identical to :meth:`pncpy.Variable.iput_var`. However, user are free to alter/reuse/delete the write 
+ :meth:`Variable.bput_var`. The input parameters and returned values are identical to :meth:`Variable.iput_var`. However, user are free to alter/reuse/delete the write 
  buffer once the requests is postsed. As a prerequisite, the user need to tell PnetCDF the size of memory space required for all future reqests to this netCDF file. This step
  is achieved by :meth:`File.attach_buff`. 
 
