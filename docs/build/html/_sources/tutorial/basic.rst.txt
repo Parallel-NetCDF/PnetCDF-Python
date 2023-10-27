@@ -26,7 +26,7 @@ Creating/Opening/Closing a netCDF file
  formats of CDF-1, 2, and 5. When creating a new file, the format may be specified using the 
  format keyword in the ``File`` constructor. The default format is CDF-1. To see how a given 
  file is formatted, you can examine the ``file_format`` attribute. Closing the netCDF file is 
- accomplished via the ``File.close`` method of the ``File`` instance.
+ accomplished via the :meth:`pncpy.File.close` method of the ``File`` instance.
 
  Here's an example:
 
@@ -54,7 +54,7 @@ Dimensions
 -------------
 
  NetCDF specifies the sizes of variables based on dimensions. Therefore, before creating any variables,
- the dimensions they depend on must be established. To create a dimension, the ``File.def_dim`` method is called 
+ the dimensions they depend on must be established. To create a dimension, the :meth:`pncpy.File.def_dim` method is called 
  on a File instance under define mode. The dimension's name is set using a Python string, while the size 
  is defined using an integer value. To create an unlimited dimension (a dimension that can be expanded), 
  the size can be omitted or assigned as -1. A "Dimension" object will be returned as a handler for this 
@@ -106,7 +106,7 @@ Variables
 ------------
 
  NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF 
- variable, you can utilize the :func:`File.def_var` method within a File instance under define mode. The mandatory arguments for
+ variable, you can utilize the :meth:`pncpy.File.def_var` method within a File instance under define mode. The mandatory arguments for
  this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
  instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
  The supported datatypes given each file format can be found :ref:`here<Datatype>`.
@@ -179,7 +179,7 @@ Attributes
     var.setncattr("int_att", np.int32(1)) 
     var.seqatt = np.int32(np.arange(10))
 
- The :func:`File.ncattrs` method of a File or Variable instance can be used to retrieve the names of all 
+ The :meth:`pncpy.File.ncattrs` method of a File or Variable instance can be used to retrieve the names of all 
  the netCDF attributes. And the __dict__ attribute of a File or Variable instance provides all the netCDF 
  attribute name/value pairs in a python dictionary: 
 
@@ -211,7 +211,7 @@ Option1 Indexer (or slicing) syntax
  The indexer syntax is the same as in ``netcdf4-python`` library for writing to netCDF variable. 
 
 Option2 Method calls of put/get_var() 
- Alternatively you can also leverage Variable.put/get_var() method of a Variable instance
+ Alternatively you can also leverage :meth:`pncpy.Variable.put_var` or :meth:`pncpy.Variable.get_var` method of a Variable instance
  to perform i/o according to specfic access pattern needs.
 
  Here is an example to write an array to the netCDF variable. The part of the netCDF variable to write is specified by giving a corner (`start`)
@@ -235,7 +235,7 @@ Reading from variable
     print(var[:10, :10]) # Option1 Indexer: read the topleft 10*10 corner from variable var 
     print(var.get_var_all(start = [10, 0], count = [10, 50])) # Option2 Method Call: equivalent to var[10:20, 0:50]
     
- Similarly, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
+ Similarly, :meth:`pncpy.Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments. 
  
  To learn more about reading and writing, see the :ref:`here<Parallel Read and Write>` page.

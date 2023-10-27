@@ -106,7 +106,7 @@ Variables
 ------------
 
  NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF 
- variable, you can utilize the :func:`File.def_var` method within a File instance under define mode. The mandatory arguments for
+ variable, you can utilize the :meth:`File.def_var` method within a File instance under define mode. The mandatory arguments for
  this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
  instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
  The supported datatypes given each file format can be found :ref:`here<Datatype>`.
@@ -179,7 +179,7 @@ Attributes
     var.setncattr("int_att", np.int32(1)) 
     var.seqatt = np.int32(np.arange(10))
 
- The :func:`File.ncattrs` method of a File or Variable instance can be used to retrieve the names of all 
+ The :meth:`File.ncattrs` method of a File or Variable instance can be used to retrieve the names of all 
  the netCDF attributes. And the __dict__ attribute of a File or Variable instance provides all the netCDF 
  attribute name/value pairs in a python dictionary: 
 
@@ -235,7 +235,7 @@ Reading from variable
     print(var[:10, :10]) # Option1 Indexer: read the topleft 10*10 corner from variable var 
     print(var.get_var_all(start = [10, 0], count = [10, 50])) # Option2 Method Call: equivalent to var[10:20, 0:50]
     
- Similarly, :func:`Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
+ Similarly, :meth:`pncpy.Variable.get_var()` takes the same set of optional arguments and behave differently depending on the pattern of provided
  optional arguments. 
  
  To learn more about reading and writing, see the :ref:`here<Parallel Read and Write>` page.

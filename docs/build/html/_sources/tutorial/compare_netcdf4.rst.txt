@@ -21,25 +21,25 @@ Difference in Programming Model
 
  Data/Define Mode
   NetCDF4-python library automatically switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally within the define-mode 
-  operation functions, which is **not** implemented in Pnetcdf-python. A manual call to :func:`File.redef` is compulsory to activate define mode before swtiching 
-  to define mode opearations, following the C library convention. Similarly, :func:`File.enddef` is required before switching to data mode operations. This design is based on considerations of 
+  operation functions, which is **not** implemented in Pnetcdf-python. A manual call to :meth:`File.redef` is compulsory to activate define mode before swtiching 
+  to define mode opearations, following the C library convention. Similarly, :meth:`File.enddef` is required before switching to data mode operations. This design is based on considerations of 
   the following aspects:
 
-  - Minimize overheads during consecutive define operations: Automatically wrapping all define functions with :func:`File.redef` and :func:`File.enddef` could introduce 
+  - Minimize overheads during consecutive define operations: Automatically wrapping all define functions with :meth:`File.redef` and :meth:`File.enddef` could introduce 
     significant overhead between consecutive define operations. This approach results in unnecessary data/define mode switches, impacting performance.
-  - Avoid potential hanging when performing independent I/O: if :func:`File.enddef` is automatically embeded in all data mode operation functions, the program will hang when 
-    partial processes are performing independent I/O(while others don't) because :func:`File.enddef` is a collective call which requires all processes to participate.
+  - Avoid potential hanging when performing independent I/O: if :meth:`File.enddef` is automatically embeded in all data mode operation functions, the program will hang when 
+    partial processes are performing independent I/O(while others don't) because :meth:`File.enddef` is a collective call which requires all processes to participate.
 
  Independent/Collective I/O Mode
   There are two types of parallel IO, independent (the default) and collective supported both in PnetCDF-python and netCDF4-python. NetCDF4-python toggles back and forth
-  between the two types at variable-level. However, PnetCDF-python manages this at file-level through :func:`File.begin_indep` and :func:`File.end_indep`.
+  between the two types at variable-level. However, PnetCDF-python manages this at file-level through :meth:`File.begin_indep` and :meth:`File.end_indep`.
  
 
 Alternative Reads and Writes Methods
 ------------------------------------------
 
- For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The :func:`Variable.get_var` and
- :func:`Variable.put_var` methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments, 
+ For reading from and writing to netCDF4 variables, PnetCDF-python provides alternative methods in addition to numpy-like indexer syntax. The :meth:`pncpy.Variable.get_var` and
+ :meth:`pncpy.Variable.put_var` methods are faithfull python-implementations of the put/get_var families from the original PnetCDF-C library. By overloading the input arguments, 
  these methods can fulfill specific I/O needs to the target variable depending on the requirements of the applications: the entire variable, a single data value, an 
  (subsampled) array of values, a mapped array or a list of subarrays. These methods require an array argument as read/write buffer, which is a prerequisite non-blocking 
  I/O as introduced below.
