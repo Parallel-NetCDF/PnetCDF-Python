@@ -1,3 +1,4 @@
+.. currentmodule:: pncpy
 =================================
 Comparing with netCDF4-python API
 =================================
@@ -5,9 +6,9 @@ Comparing with netCDF4-python API
 
    Under construction. 
 
- PnetCDF-python inherits many features from netCDF4-python, making the transition from the former to the latter a seamless process 
- for most netCDF4-python applications. However, there are some exceptions to this as listed below. On the other hand, PnetCDF supported 
- some new features not available in netCDF4-python.  
+PnetCDF-python inherits many features from netCDF4-python, making the transition from the former to the latter a seamless process 
+for most netCDF4-python applications. However, there are some exceptions to this as listed below. On the other hand, PnetCDF supported 
+some new APIs not available in netCDF4-python.  
 
 Supported File Formats
 --------------------------

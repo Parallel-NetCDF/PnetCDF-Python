@@ -100,13 +100,11 @@
 <h1>Comparing with netCDF4-python API<a class="headerlink" href="#comparing-with-netcdf4-python-api" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<blockquote>
-<div><p>Under construction.</p>
-</div></blockquote>
+<p>Under construction.</p>
+</div>
 <p>PnetCDF-python inherits many features from netCDF4-python, making the transition from the former to the latter a seamless process
 for most netCDF4-python applications. However, there are some exceptions to this as listed below. On the other hand, PnetCDF supported
-some new features not available in netCDF4-python.</p>
-</div>
+some new APIs not available in netCDF4-python.</p>
 <section id="supported-file-formats">
 <h2>Supported File Formats<a class="headerlink" href="#supported-file-formats" title="Permalink to this heading"></a></h2>
 <blockquote>
@@ -120,18 +118,18 @@ compression, hirarchical structure, etc.</p>
 <blockquote>
 <div><dl class="simple">
 <dt>Data/Define Mode</dt><dd><p>NetCDF4-python library automatically switches between data and define mode for the user by calling <code class="docutils literal notranslate"><span class="pre">redef</span></code> and <code class="docutils literal notranslate"><span class="pre">enddef</span></code> internally within the define-mode
-operation functions, which is <strong>not</strong> implemented in Pnetcdf-python. A manual call to <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.redef()</span></code> is compulsory to activate define mode before swtiching
-to define mode opearations, following the C library convention. Similarly, <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code> is required before switching to data mode operations. This design is based on considerations of
+operation functions, which is <strong>not</strong> implemented in Pnetcdf-python. A manual call to <a class="reference internal" href="../api/file_api.html#pncpy.File.redef" title="pncpy.File.redef"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.redef()</span></code></a> is compulsory to activate define mode before swtiching
+to define mode opearations, following the C library convention. Similarly, <a class="reference internal" href="../api/file_api.html#pncpy.File.enddef" title="pncpy.File.enddef"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code></a> is required before switching to data mode operations. This design is based on considerations of
 the following aspects:</p>
 <ul class="simple">
-<li><p>Minimize overheads during consecutive define operations: Automatically wrapping all define functions with <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.redef()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code> could introduce
+<li><p>Minimize overheads during consecutive define operations: Automatically wrapping all define functions with <a class="reference internal" href="../api/file_api.html#pncpy.File.redef" title="pncpy.File.redef"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.redef()</span></code></a> and <a class="reference internal" href="../api/file_api.html#pncpy.File.enddef" title="pncpy.File.enddef"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code></a> could introduce
 significant overhead between consecutive define operations. This approach results in unnecessary data/define mode switches, impacting performance.</p></li>
-<li><p>Avoid potential hanging when performing independent I/O: if <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code> is automatically embeded in all data mode operation functions, the program will hang when
-partial processes are performing independent I/O(while others don’t) because <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code> is a collective call which requires all processes to participate.</p></li>
+<li><p>Avoid potential hanging when performing independent I/O: if <a class="reference internal" href="../api/file_api.html#pncpy.File.enddef" title="pncpy.File.enddef"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code></a> is automatically embeded in all data mode operation functions, the program will hang when
+partial processes are performing independent I/O(while others don’t) because <a class="reference internal" href="../api/file_api.html#pncpy.File.enddef" title="pncpy.File.enddef"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.enddef()</span></code></a> is a collective call which requires all processes to participate.</p></li>
 </ul>
 </dd>
 <dt>Independent/Collective I/O Mode</dt><dd><p>There are two types of parallel IO, independent (the default) and collective supported both in PnetCDF-python and netCDF4-python. NetCDF4-python toggles back and forth
-between the two types at variable-level. However, PnetCDF-python manages this at file-level through <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.begin_indep()</span></code> and <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.end_indep()</span></code>.</p>
+between the two types at variable-level. However, PnetCDF-python manages this at file-level through <a class="reference internal" href="../api/file_api.html#pncpy.File.begin_indep" title="pncpy.File.begin_indep"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.begin_indep()</span></code></a> and <a class="reference internal" href="../api/file_api.html#pncpy.File.end_indep" title="pncpy.File.end_indep"><code class="xref py py-meth docutils literal notranslate"><span class="pre">File.end_indep()</span></code></a>.</p>
 </dd>
 </dl>
 </div></blockquote>
