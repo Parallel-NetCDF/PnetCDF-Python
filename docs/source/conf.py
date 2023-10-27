@@ -39,7 +39,7 @@ html_context = {
     "github_user": "NU-CUCIS", # Username
     "github_repo": "pnetcdf-python", # Repo name
     "github_version": "main", # Version
-    "conf_py_path": "/docs/", # Path in the checkout to the docs root
+    "conf_py_path": "/docs/sources/", # Path in the checkout to the docs root
 }
 autodoc_default_options = {
     'members': True,
