@@ -13,7 +13,7 @@ some new APIs not available in netCDF4-python.
 Supported File Formats
 --------------------------
 
- NetCDF4-python supports version NETCDF4 formats(HDF5) in addition to classic netCDF formats(NETCDF3_CLASSIC, NETCDF3_64BIT_OFFSET, NETCDF3_64BIT_DATA). However,
+ NetCDF4-python supports NETCDF4 formats(HDF5) in addition to classic netCDF formats(NETCDF3_CLASSIC, NETCDF3_64BIT_OFFSET, NETCDF3_64BIT_DATA). However,
  PnetCDF-python library only supports netCDF classic file formats, which means all netCDF4-dependent features are **not** supported, including user-defined types, 
  compression, hirarchical structure, etc.
 
