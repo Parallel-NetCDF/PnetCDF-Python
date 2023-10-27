@@ -194,7 +194,7 @@ The dimension information can be retrieved using following functions.</p>
 <h2>Variables<a class="headerlink" href="#variables" title="Permalink to this heading"></a></h2>
 <blockquote>
 <div><p>NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF
-variable, you can utilize the <code class="xref py py-func docutils literal notranslate"><span class="pre">File.def_var()</span></code> method within a File instance under define mode. The mandatory arguments for
+variable, you can utilize the <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.def_var()</span></code> method within a File instance under define mode. The mandatory arguments for
 this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension
 instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
 The supported datatypes given each file format can be found <a class="reference internal" href="datatypes.html#datatype"><span class="std std-ref">here</span></a>.</p>
@@ -255,7 +255,7 @@ the form of strings, numbers, or sequences. Returning to our example,</p>
 <span class="n">var</span><span class="o">.</span><span class="n">seqatt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>The <code class="xref py py-func docutils literal notranslate"><span class="pre">File.ncattrs()</span></code> method of a File or Variable instance can be used to retrieve the names of all
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.ncattrs()</span></code> method of a File or Variable instance can be used to retrieve the names of all
 the netCDF attributes. And the __dict__ attribute of a File or Variable instance provides all the netCDF
 attribute name/value pairs in a python dictionary:</p>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">ncattrs</span><span class="p">())</span>
@@ -303,7 +303,7 @@ The indexer syntax is the same as in <code class="docutils literal notranslate">
 <span class="nb">print</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">get_var_all</span><span class="p">(</span><span class="n">start</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">count</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">]))</span> <span class="c1"># Option2 Method Call: equivalent to var[10:20, 0:50]</span>
 </pre></div>
 </div>
-<p>Similarly, <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.get_var()</span></code> takes the same set of optional arguments and behave differently depending on the pattern of provided
+<p>Similarly, <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a> takes the same set of optional arguments and behave differently depending on the pattern of provided
 optional arguments.</p>
 <p>To learn more about reading and writing, see the <a class="reference internal" href="read_write.html#parallel-read-and-write"><span class="std std-ref">here</span></a> page.</p>
 </div></blockquote>
