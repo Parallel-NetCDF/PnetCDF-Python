@@ -88,7 +88,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Non-blocking Reads and Writes</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/tutorial/non_blocking.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/sources/tutorial/non_blocking.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -108,7 +108,7 @@ subarrays for each variable defined in the NetCDF file.</p>
 <section id="nonblocking-write">
 <h2>Nonblocking Write<a class="headerlink" href="#nonblocking-write" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><p>Write requests can be posted by the method call of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
+<div><p>Write requests can be posted by the method call of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.iput_var" title="pncpy.Variable.iput_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.iput_var()</span></code></a>. Same as <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.put_var" title="pncpy.Variable.put_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.put_var()</span></code></a>, the behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.iput_var" title="pncpy.Variable.iput_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.iput_var()</span></code></a> varies
 depending on the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite> as shown below. Note that the method only posts the
 request, which is not commited until <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.wait()</span></code>. The method call returns a request id that can be optionally passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request.</p>
 <ul class="simple">
@@ -137,9 +137,9 @@ request, which is not commited until <code class="xref py py-meth docutils liter
 <section id="nonblocking-read">
 <h2>Nonblocking Read<a class="headerlink" href="#nonblocking-read" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><p>Read requests can be posted by the method call of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iget_var()</span></code>. Note that unlike <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code>, this method requires a
+<div><p>Read requests can be posted by the method call of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.iget_var" title="pncpy.Variable.iget_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.iget_var()</span></code></a>. Note that unlike <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a>, this method requires a
 mandatory argument - an empty numpy array reserved to be filled in the future. Again, the method call returns a request id that can be optionally passed to
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request. Similar to <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.get_var()</span></code>, the behavior of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iget_var()</span></code> varies depending on
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request. Similar to <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.get_var" title="pncpy.Variable.get_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.get_var()</span></code></a>, the behavior of <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.iget_var" title="pncpy.Variable.iget_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.iget_var()</span></code></a> varies depending on
 the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite>.</p>
 <ul class="simple">
 <li><p><cite>buff</cite> - Request to read an entire variable</p></li>
@@ -190,7 +190,7 @@ Alternatively, user can flush all pending write and/or read requests using modul
 <blockquote>
 <div><p>One limitation of the above non-blocking write is that users should not alter the contents of the write buffer once the request is posted until the wait API is returned.
 Any change to the buffer contents in between will result in unexpected error. To alleviate the this limitation, use can post buffered nonblocking write requests using
-<code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.bput_var()</span></code>. The input parameters and returned values are identical to <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. However, user are free to alter/reuse/delete the write
+<a class="reference internal" href="../api/variable_api.html#pncpy.Variable.bput_var" title="pncpy.Variable.bput_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.bput_var()</span></code></a>. The input parameters and returned values are identical to <a class="reference internal" href="../api/variable_api.html#pncpy.Variable.iput_var" title="pncpy.Variable.iput_var"><code class="xref py py-meth docutils literal notranslate"><span class="pre">pncpy.Variable.iput_var()</span></code></a>. However, user are free to alter/reuse/delete the write
 buffer once the requests is postsed. As a prerequisite, the user need to tell PnetCDF the size of memory space required for all future reqests to this netCDF file. This step
 is achieved by <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.attach_buff()</span></code>.</p>
 <p>Here’s a python example to post a number of write requests and commit them using buffered non-blocking API:</p>
