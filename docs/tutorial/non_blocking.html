@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Non-blocking Reads and Writes &mdash; PnetCDF Python 0.0.1 documentation</title>
+  <title>Non-blocking Reads and Writes &mdash; PnetCDF Python 0.0.3 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -88,7 +88,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Non-blocking Reads and Writes</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/tutorial/non_blocking.rst.txt" rel="nofollow"> View page source</a>
+              <a href="https://github.com/NU-CUCIS/pnetcdf-python/blob/main/docs/tutorial/non_blocking.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -108,9 +108,9 @@ subarrays for each variable defined in the NetCDF file.</p>
 <section id="nonblocking-write">
 <h2>Nonblocking Write<a class="headerlink" href="#nonblocking-write" title="Permalink to this heading"></a></h2>
 <blockquote>
-<div><p>Write requests can be posted by the method call of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-func docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
+<div><p>Write requests can be posted by the method call of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code>. Same as <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.put_var()</span></code>, the behavior of <code class="xref py py-meth docutils literal notranslate"><span class="pre">Variable.iput_var()</span></code> varies
 depending on the pattern of provided optional arguments - <cite>index</cite>, <cite>start</cite>, <cite>count</cite>, <cite>stride</cite>, <cite>num</cite> and <cite>imap</cite> as shown below. Note that the method only posts the
-request, which is not commited until <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code>. The method call returns a request id that can be optionally passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request.</p>
+request, which is not commited until <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.wait()</span></code>. The method call returns a request id that can be optionally passed to <code class="xref py py-meth docutils literal notranslate"><span class="pre">File.wait()</span></code> to select this request.</p>
 <ul class="simple">
 <li><p><cite>data</cite> - Reqeust to write an entire variable</p></li>
 <li><p><cite>data</cite>, <cite>index</cite> - Reqeust to write a single data value</p></li>
