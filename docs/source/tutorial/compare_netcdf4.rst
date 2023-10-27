@@ -45,8 +45,12 @@ Alternative Reads and Writes Methods
  (subsampled) array of values, a mapped array or a list of subarrays. These methods require an array argument as read/write buffer, which is a prerequisite non-blocking 
  I/O as introduced below.
 
+ For the example program, see ``examples/get_vara.py``.
+
 Non-blocking I/O
 ------------------------------------------
  In additional to blocking read/writes, PnetCDF also offers the nonblocking API that enables users to initiate multiple requests without actually doing I/O and subsequently 
  flush them altogether. This approach is designed to enhance performance by merging small I/O requests and maximizing I/O efficiency. This features is faithfully 
  preserved in PnetCDF-python API. 
+
+ For the example program, see ``examples/non_blocking_write.py``.
