@@ -125,9 +125,11 @@ class VariablesTestCase(unittest.TestCase):
         dy = f.def_dim('y',ydim)
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests
         buffsize = num_reqs * data.nbytes
-        f.attach_buff(buffsize)
+        if buffsize > 0:
+            f.attach_buff(buffsize)
         # check the size of attached buffer
-        assert(f.inq_buff_size() == buffsize)
+        if buffsize > 0:
+            assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.def_var(f'data{i}', pncpy.NC_FLOAT, (dx, dy))
@@ -142,7 +144,8 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # check if there is any space left in buffer
-            assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
+            if buffsize > 0:
+                assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
             # post the request to write an array of values
             req_id = v.bput_var(data, start = starts, count = counts, num = num_subarrays)
             # track the reqeust ID for each write reqeust 
@@ -165,7 +168,8 @@ class VariablesTestCase(unittest.TestCase):
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
         # relase the internal buffer
-        f.detach_buff()
+        if buffsize > 0:
+            f.detach_buff()
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 

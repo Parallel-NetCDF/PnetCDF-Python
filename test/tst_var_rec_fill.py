@@ -27,20 +27,21 @@ import numpy.ma as ma
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_def_fill.nc"
-xdim=9; ydim=10 
+
 # file value to be set for each variable
 fill_value = np.float32(-1)
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 # define write buffer
+xdim=2 * size + 1
 datam = np.array([rank, rank]).astype("f4")
 
 # Record variable values expected after writing, assuming 4 processes ("-" means fill values)
 #               0.  0.  1.  1.  2.  2.  3.  3.  -  
 #               0.  0.  1.  1.  2.  2.  3.  3.  -  
 # generate reference data array for testing
-dataref = np.empty(shape = (2, 9), dtype = "f4")
+dataref = np.empty(shape = (2, 2 * size + 1), dtype = "f4")
 dataref.fill(fill_value)
 for r in range(size):
     dataref[:, r * 2:(r+1) * 2] = np.array([[r, r], [r, r]])
