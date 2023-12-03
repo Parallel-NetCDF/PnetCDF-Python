@@ -60,9 +60,15 @@ jobs:
         python setup.py install
     - name: Test
       run: |
-        export PATH=${PNETCDF_DIR}/bin:${PATH} 
+        export PATH=${PNETCDF_DIR}/bin:${PATH}
         # serial
         csh ./test_all.csh
+
+        export NRPOC=3 && csh ./test_all.csh
+
+        export NRPOC=8 && csh ./test_all.csh
+
+        export NRPOC=10 && csh ./test_all.csh
 
         cd examples
         csh ./run_examples.csh /tmp
