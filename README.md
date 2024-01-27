@@ -24,7 +24,7 @@ At a granular level, PnetCDF-python is a library that consists of the following 
 Currently our PyPI wheels don't cover all systems. If you already have a working MPI with the mpicc compiler wrapper is on your search path and pnetcdf-C installation, you can use pip:
 
 ```sh
-CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy==0.0.3
+CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy
 ```
 
 ### Development installation
@@ -46,7 +46,7 @@ The project is under active development. Below is a summary of the current imple
 * **Planned:** variable non-blocking mode data operations -->
 | Component | Implemented | To be implemented next (w/ priority\*) |
 | ---- | --- | --- |
-|File API| ncmpi_strerror<br />ncmpi_strerrno<br />ncmpi_create<br />ncmpi_open/close<br />ncmpi_enddef/redef<br />ncmpi_sync<br />ncmpi_begin/end_indep_data<br />ncmpi_inq_path <br />ncmpi_inq<br />ncmpi_wait<br />ncmpi_wait_all<br />ncmpi_inq_nreqs <br />ncmpi_inq_buffer_usage/size <br />ncmpi_cancel <br />ncmpi_set_fill <br />ncmpi_set_default_format <br />ncmpi_inq_file_info<br />ncmpi_inq_put/get_size <br />|  ncmpi_inq_libvers 2<br /> ncmpi_delete 2<br /> ncmpi_sync_numrecs 2<br /> ncmpi__enddef 2<br />  ncmpi_abort 3<br />ncmpi_inq_files_opened 2<br /> ncmpi_inq 3<br />|
+|File API| ncmpi_strerror<br />ncmpi_strerrno<br />ncmpi_create<br />ncmpi_open/close<br />ncmpi_enddef/redef<br />ncmpi_sync<br />ncmpi_begin/end_indep_data<br />ncmpi_inq_path <br />ncmpi_inq<br />ncmpi_wait<br />ncmpi_wait_all<br />ncmpi_inq_nreqs <br />ncmpi_inq_buffer_usage/size <br />ncmpi_cancel <br />ncmpi_set_fill <br />ncmpi_set_default_format <br />ncmpi_inq_file_info<br />ncmpi_inq_put/get_size <br />ncmpi_inq_files_opened<br />|  ncmpi_inq_libvers 2<br /> ncmpi_delete 2<br /> ncmpi_sync_numrecs 2<br /> ncmpi__enddef 2<br />  ncmpi_abort 3<br />|
 |Dimension API|ncmpi_def_dim<br />ncmpi_inq_ndims<br />ncmpi_inq_dimlen<br />ncmpi_inq_dim<br />ncmpi_inq_dimname<br />ncmpi_rename_dim<br />| |
 |Attribute API| ncmpi_put/get_att_text<br />ncmpi_put/get_att<br />ncmpi_inq_att<br />ncmpi_inq_natts<br />ncmpi_inq_attname<br />ncmpi_rename_att<br />ncmpi_del_att|ncmpi_copy_att 2<br />|
 |Variable API| ncmpi_def_var<br />ncmpi_def_var_fill<br />ncmpi_inq_varndims<br />ncmpi_inq_varname<br />ncmpi_put/get_vara<br />ncmpi_put/get_vars<br />ncmpi_put/get_var1<br />ncmpi_put/get_var<br />ncmpi_put/get_varn<br />ncmpi_put/get_varm<br /> ncmpi_put/get_vara_all<br />ncmpi_put/get_vars_all<br />ncmpi_put/get_var1_all<br />ncmpi_put/get_var_all<br />ncmpi_put/get_varn_all<br />ncmpi_put/get_varm_all<br />ncmpi_iput/iget_var<br />ncmpi_iput/iget_vara<br />ncmpi_iput/iget_var1<br />ncmpi_iput/iget_vars<br />ncmpi_iput/iget_varm<br /> ncmpi_iput/iget_varn<br /> ncmpi_bput_var<br />ncmpi_bput_var1<br />ncmpi_bput_vara<br />ncmpi_bput_vars<br />ncmpi_bput_varm<br />ncmpi_bput_varn<br />ncmpi_fill_var_rec<br />|All type-specific put/get functions 3 <br /> (e.g. ncmpi_put_var1_double_all)<br /><br />All put/get_vard functions 3<br /><br />All mput/mget_var functions 3|
