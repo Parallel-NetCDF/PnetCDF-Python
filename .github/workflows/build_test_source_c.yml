@@ -1,0 +1,92 @@
+name: Build and Test Linux with pnetcdf-c built from source
+on:
+  push:
+    branches:
+      - main
+      - test-github-actions
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-linux:
+    name: Python (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PNETCDF_VERSION: repo
+      PNETCDF_DIR: ${GITHUB_WORKSPACE}/PnetCDF
+      CC: mpicc.mpich
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Ubuntu Dependencies
+      run: |
+        set -x
+        sudo apt-get update
+        sudo apt-get install csh
+        sudo apt-get install automake autoconf libtool libtool-bin m4
+        sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev 
+        # sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev libcurl4-openssl-dev bzip2 libsnappy-dev libblosc-dev libzstd-dev
+        echo "Build PnetCDF from source"
+        rm -rf PnetCDF; mkdir PnetCDF; pushd PnetCDF
+        git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
+        autoreconf -i
+        ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx 
+        make -j 2
+        make install
+        popd
+
+#   - name: The job has failed
+#     if: ${{ failure() }}
+#     run: |
+#       cd netcdf-c-${NETCDF_VERSION}
+#       cat config.log 
+
+    - name: Install python dependencies via pip
+      run: |
+        python -m pip install --upgrade pip
+        pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
+
+    - name: Install pncpy
+      run: |
+        export PATH=${PNETCDF_DIR}/bin:${PATH} 
+        python setup.py install
+    - name: Test
+      run: |
+        export PATH=${PNETCDF_DIR}/bin:${PATH}
+        # serial
+        csh ./test_all.csh
+
+        export NRPOC=3 && csh ./test_all.csh
+
+        export NRPOC=8 && csh ./test_all.csh
+
+        export NRPOC=10 && csh ./test_all.csh
+
+        cd examples
+        csh ./run_examples.csh /tmp
+        if [ $? -ne 0 ] ; then
+          echo "example program failed!"
+          exit 1
+        else
+          echo "example program passed!"
+        fi
+
+#   - name: Tarball
+#     run: |
+#       export PATH=${NETCDF_DIR}/bin:${PATH} 
+#       python setup.py --version  
+#       check-manifest --version
+#       check-manifest --verbose 
+#       pip wheel . -w dist --no-deps 
+#       twine check dist/* 
