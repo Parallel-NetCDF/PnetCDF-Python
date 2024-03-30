@@ -14,48 +14,63 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
+      MPICH_VERSION: 4.2.0
       PNETCDF_VERSION: repo
       PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
+      MPICH_DIR: ${{ github.workspace }}/mpich-install
       CC: mpicc.mpich
     strategy:
       matrix:
         python-version: ["3.10"]
     steps:
-
     - uses: actions/checkout@v3
-
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-
-    - name: Install Ubuntu Dependencies
+    - name: Build MPICH
+      run: |
+        cd ${GITHUB_WORKSPACE}
+        echo "Install MPICH ${MPICH_VERSION} in $MPICH_DIR"
+        rm -rf MPICH ; mkdir MPICH ; cd MPICH
+        wget -q https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
+        gzip -dc mpich-${MPICH_VERSION}.tar.gz | tar -xf -
+        cd mpich-${MPICH_VERSION}
+        ./configure --prefix=$MPICH_DIR \
+                    --silent \
+                    --enable-romio \
+                    --with-file-system=ufs \
+                    --with-device=ch3:sock \
+                    --enable-fortran \
+                    --enable-shared\
+                    CC=gcc FC=gfortran \
+                    FFLAGS=-fallow-argument-mismatch \
+                    FCFLAGS=-fallow-argument-mismatch
+        make -s LIBTOOLFLAGS=--silent V=1 -j 4 install > qout 2>&1
+        make -s -j 4 distclean >> qout 2>&1
+    - name: Install Other Ubuntu Dependencies
       run: |
         set -x
         sudo apt-get update
         sudo apt-get install csh
         sudo apt-get install automake autoconf libtool libtool-bin m4
-        sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev 
+        # sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev 
         # sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev libcurl4-openssl-dev bzip2 libsnappy-dev libblosc-dev libzstd-dev
         echo "Build PnetCDF from source"
         git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
         pushd PnetCDF
         autoreconf -i
-        ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx 
-        make -j 2
+        ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx --with-mpi=$MPICH_DIR
+        make -j 8
         make install
         popd
-
-#   - name: The job has failed
-#     if: ${{ failure() }}
-#     run: |
-#       cd netcdf-c-${NETCDF_VERSION}
-#       cat config.log 
 
     - name: Install python dependencies via pip
       run: |
         python -m pip install --upgrade pip
-        pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
+        pip install numpy cython cftime pytest twine wheel check-manifest 
+        export MPICC=$MPICH_DIR/bin
+        pip install mpi4py
 
     - name: Install pncpy
       run: |
