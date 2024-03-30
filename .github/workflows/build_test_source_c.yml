@@ -70,7 +70,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install numpy cython cftime pytest twine wheel check-manifest 
-        export MPICC=$MPICH_DIR/bin
+        export MPICC=$MPICH_DIR/bin/mpicc
         pip install mpi4py
 
     - name: Install pncpy
