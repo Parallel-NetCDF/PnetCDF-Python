@@ -18,7 +18,7 @@ jobs:
       PNETCDF_VERSION: repo
       PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
       MPICH_DIR: ${{ github.workspace }}/mpich-install
-      CC: mpicc.mpich
+
     strategy:
       matrix:
         python-version: ["3.10"]
@@ -74,7 +74,8 @@ jobs:
 
     - name: Install pncpy
       run: |
-        export PATH=${PNETCDF_DIR}/bin:${PATH} 
+        export PATH=${PNETCDF_DIR}/bin:${PATH}
+        export CC=$MPICH_DIR/bin/mpicc
         python setup.py install
     - name: Test
       run: |
