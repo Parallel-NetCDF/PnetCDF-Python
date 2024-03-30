@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 60
     env:
       PNETCDF_VERSION: repo
-      PNETCDF_DIR: ${GITHUB_WORKSPACE}/PnetCDF
+      PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
       CC: mpicc.mpich
     strategy:
       matrix:
@@ -38,9 +38,8 @@ jobs:
         sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev 
         # sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev libcurl4-openssl-dev bzip2 libsnappy-dev libblosc-dev libzstd-dev
         echo "Build PnetCDF from source"
-        rm -rf PnetCDF; mkdir PnetCDF; pushd PnetCDF
         git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
-        cd PnetCDF
+        pushd PnetCDF
         autoreconf -i
         ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx 
         make -j 2
