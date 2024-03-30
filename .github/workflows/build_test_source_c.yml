@@ -40,6 +40,7 @@ jobs:
         echo "Build PnetCDF from source"
         rm -rf PnetCDF; mkdir PnetCDF; pushd PnetCDF
         git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
+        cd PnetCDF
         autoreconf -i
         ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx 
         make -j 2
