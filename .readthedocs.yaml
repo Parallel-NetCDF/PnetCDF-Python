@@ -30,9 +30,6 @@ python:
     - requirements: docs/requirements.txt
     - method: pip
       path: .
-  env:
-    CC: mpicc.mpich
-    PATH: $READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH
     
 
 
