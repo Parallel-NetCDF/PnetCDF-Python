@@ -19,8 +19,8 @@ build:
       - wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
       - tar -xzf pnetcdf-1.12.3.tar.gz
       - cd ./pnetcdf-1.12.3; ./configure --prefix $READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8; make install
-      - export PATH=$$READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH 
-      - echo "$PATH"
+      # - export PATH=$READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH 
+      # - echo "$PATH"
       # - cd ..
       - python -m pip install --upgrade pip
       - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
@@ -30,6 +30,11 @@ python:
     - requirements: docs/requirements.txt
     - method: pip
       path: .
+  env:
+    CC: mpicc.mpich
+    PATH: $READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH
+    
+
 
 sphinx:
   configuration: docs/source/conf.py
