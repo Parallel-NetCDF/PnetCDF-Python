@@ -21,7 +21,7 @@ extensions = [
     'sphinx_autodoc_typehints',
     'autoapi.extension'
 ]
-autoapi_dirs = ['../src']
+autoapi_dirs = ['../../src']
 templates_path = ['_templates']
 exclude_patterns = []
 
