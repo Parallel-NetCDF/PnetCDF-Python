@@ -18,7 +18,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
-    'sphinx_autodoc_typehints'
+    'sphinx_autodoc_typehints',
     'autoapi.extension'
 ]
 autoapi_dirs = ['../src']
