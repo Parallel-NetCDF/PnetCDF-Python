@@ -26,6 +26,8 @@ exclude_patterns = []
 
 autodoc_typehints = 'signature'
 
+autodoc_mock_imports = ["mpich", "libmpich-dev", "libhdf5-mpich-dev"]
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 

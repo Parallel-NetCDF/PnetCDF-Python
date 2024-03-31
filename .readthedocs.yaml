@@ -4,23 +4,6 @@ build:
   os: "ubuntu-22.04"
   tools:
     python: "3.10"
-  jobs:
-    pre_install:
-      - export PNETCDF_VERSION="1.12.3"
-      - export PNETCDF_DIR=${READTHEDOCS_OUTPUT}/PnetCDF
-      - export CC=mpicc.mpich
-      - apt-get install mpich libmpich-dev libhdf5-mpich-dev 
-      - echo "Download and build PnetCDF version ${PNETCDF_VERSION}"
-      - wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
-      - tar -xzf pnetcdf-${PNETCDF_VERSION}.tar.gz
-      - pushd pnetcdf-${PNETCDF_VERSION}
-      - ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx 
-      - make -j 8
-      - make install
-      - export PATH=${PNETCDF_DIR}/bin:${PATH} 
-      - popd
-      - python -m pip install --upgrade pip
-      - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
 
 python:
   install:
