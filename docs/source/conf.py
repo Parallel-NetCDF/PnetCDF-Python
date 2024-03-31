@@ -19,14 +19,17 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autosectionlabel',
     'sphinx_autodoc_typehints'
+    'autoapi.extension'
 ]
-
+autoapi_dirs = ['../src']
 templates_path = ['_templates']
 exclude_patterns = []
 
 autodoc_typehints = 'signature'
 
-autodoc_mock_imports = ["mpich", "libmpich-dev", "libhdf5-mpich-dev", "numpy", "cython", "cftime" , "pytest", "twine", "wheel", "check-manifest", "mpi4py"]
+autoapi_generate_api_docs = False
+
+# autodoc_mock_imports = ["mpich", "libmpich-dev", "libhdf5-mpich-dev", "numpy", "cython", "cftime" , "pytest", "twine", "wheel", "check-manifest", "mpi4py"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
