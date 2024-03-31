@@ -27,7 +27,7 @@ exclude_patterns = []
 
 autodoc_typehints = 'signature'
 
-autoapi_generate_api_docs = False
+
 
 # autodoc_mock_imports = ["mpich", "libmpich-dev", "libhdf5-mpich-dev", "numpy", "cython", "cftime" , "pytest", "twine", "wheel", "check-manifest", "mpi4py"]
 
