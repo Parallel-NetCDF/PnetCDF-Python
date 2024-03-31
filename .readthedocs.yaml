@@ -18,13 +18,10 @@ build:
       - echo "Download and build PnetCDF version 1.12.3"
       - wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
       - tar -xzf pnetcdf-1.12.3.tar.gz
-      - cd ./pnetcdf-1.12.3; ls
-      - ./configure --prefix $$READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx 
-      - make -j 8
-      - make install
+      - cd ./pnetcdf-1.12.3; ./configure --prefix $$READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8; make install
       - export PATH=$$READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH 
       - echo "$PATH"
-      - cd ..
+      # - cd ..
       - python -m pip install --upgrade pip
       - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
 
