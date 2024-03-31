@@ -9,8 +9,8 @@ build:
       - export PNETCDF_VERSION="1.12.3"
       - export PNETCDF_DIR=${READTHEDOCS_OUTPUT}/PnetCDF
       - export CC=mpicc.mpich
-      - sudo apt-get update
-      - sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev 
+      - apt-get update
+      - apt-get install mpich libmpich-dev libhdf5-mpich-dev 
       - echo "Download and build PnetCDF version ${PNETCDF_VERSION}"
       - wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
       - tar -xzf pnetcdf-${PNETCDF_VERSION}.tar.gz
