@@ -16,7 +16,7 @@ build:
       # - export $READTHEDOCS_OUTPUT/PnetCDF=$READTHEDOCS_OUTPUT/PnetCDF
       # - export CC=mpicc.mpich
       - echo "Download and build PnetCDF version 1.12.3"
-      - echo "$$READTHEDOCS_OUTPUT"
+      - echo $READTHEDOCS_OUTPUT
       - wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
       - tar -xzf pnetcdf-1.12.3.tar.gz
       - cd ./pnetcdf-1.12.3; ./configure --prefix $READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8; make install
