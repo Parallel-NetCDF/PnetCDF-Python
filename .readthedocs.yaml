@@ -14,7 +14,7 @@ build:
       # - curl -u ${USERNAME}:${PASSWORD} https://httpbin.org/basic-auth/username/password
       # - export PNETCDF_VERSION="1.12.3"
       # - export $READTHEDOCS_OUTPUT/PnetCDF=$READTHEDOCS_OUTPUT/PnetCDF
-      - export CC=mpicc.mpich
+      # - export CC=mpicc.mpich
       - echo "Download and build PnetCDF version 1.12.3"
       - wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
       - tar -xzf pnetcdf-1.12.3.tar.gz
@@ -22,8 +22,9 @@ build:
       # - export PATH=$READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH 
       # - echo "$PATH"
       # - cd ..
-      - python -m pip install --upgrade pip
+      # - python -m pip install --upgrade pip
       - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
+      - echo "$PNETCDF_DIR"
 
 python:
   install:
