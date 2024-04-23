@@ -934,6 +934,9 @@ cdef class File:
         """
         inq_striping(self)
 
+        Return the file system striping size.
+
+        :rtype: int
         """
         cdef int ierr, striping_size, striping_count
         with nogil:
@@ -960,7 +963,6 @@ cdef class File:
 
     def inq_version(self):
         """
-        inq_version(self)
 
         """
         cdef int ierr, nc_mode
