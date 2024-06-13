@@ -3,10 +3,15 @@ on:
   push:
     branches:
       - main
-      - test-github-actions
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
   pull_request:
     branches:
       - main
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
 jobs:
   build-linux:
     name: Python (${{ matrix.python-version }})
