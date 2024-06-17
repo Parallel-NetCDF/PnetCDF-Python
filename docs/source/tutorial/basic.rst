@@ -73,7 +73,7 @@ Dimensions
     lat_dim = f.def_dim(LAT_NAME,LAT_LEN)
     time_dim = f.def_dim(TIME_NAME,-1)
 
-  Equivalent example codes in ``netCDF4-python``:
+ Equivalent example codes in ``netCDF4-python``:
  
  .. code-block:: Python
 
