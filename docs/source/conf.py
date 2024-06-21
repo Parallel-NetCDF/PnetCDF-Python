@@ -9,7 +9,7 @@
 project = 'PnetCDF Python'
 copyright = '2023, CUCIS'
 author = 'CUCIS'
-release = '0.0.3'
+release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
