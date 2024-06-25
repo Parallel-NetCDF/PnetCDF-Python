@@ -33,21 +33,21 @@ Creating/Opening/Closing a netCDF file
 
  .. code-block:: Python
 
-    import pncpy
+    from pncpy import File
     from mpi4py import MPI
     comm = MPI.COMM_WORLD
-    # create a new file using "w" mode
-    f = pncpy.File(filename="testfile.nc", mode = 'w', comm=comm, info=None)
-    # close the file
+    f = File(filename="testfile.nc", mode='w', comm=comm, info=None)
     f.close()
 
  Equivalent example codes in ``netCDF4-python``:
  
  .. code-block:: Python
 
+    from mpi4py import MPI
     from netCDF4 import Dataset
-    rootgrp = Dataset("test.nc", "w", format="NETCDF3_CLASSIC")
-    rootgrp.close()
+    comm = MPI.COMM_WORLD
+    f = Dataset(filename="testfile.nc", mode="w", comm=comm, parallel=True)
+    f.close()
 
  For the full example program, see ``examples/craete_open.py``.
 
@@ -65,13 +65,12 @@ Dimensions
 
  .. code-block:: Python
 
-    from netCDF4 import Dataset
+    from pncpy import File
     LAT_NAME="lat"
     LAT_LEN = 50
     TIME_NAME="time"
-    f = pncpy.File(filename="tmp.nc", mode = 'w', format="64BIT_DATA", comm=comm, info=None)
-    lat_dim = f.def_dim(LAT_NAME,LAT_LEN)
-    time_dim = f.def_dim(TIME_NAME,-1)
+    lat_dim = f.def_dim(LAT_NAME, LAT_LEN)
+    time_dim = f.def_dim(TIME_NAME, -1)
 
  Equivalent example codes in ``netCDF4-python``:
  
@@ -80,9 +79,8 @@ Dimensions
     LAT_NAME="lat"
     LAT_LEN = 50
     TIME_NAME="time"
-    rootgrp = Dataset("tmp.nc", "w", format="NETCDF3_64BIT_DATA")
-    time = rootgrp.createDimension(TIME_NAME, None)
-    lat = rootgrp.createDimension(LAT_NAME, LAT_LEN)
+    lat_dim = f.createDimension(LAT_NAME, LAT_LEN)
+    time_dim = f.createDimension(TIME_NAME, None)
 
 
  All of the Dimension instances are stored in a dictionary as an Python attribute of File. 
@@ -116,13 +114,13 @@ Variables
  
  .. code-block:: Python
 
-    var = f.def_var("var", pncpy.NC_INT, ("time", "lat"))
+    var = f.def_var(varname = "var", nc_dtype = pncpy.NC_INT, dimensions = ("time", "lat"))
 
  Equivalent example codes in ``netCDF4-python``:
  
  .. code-block:: Python
 
-    var = rootgrp.createVariable("time","i4",("time", "lat"))
+    var = f.createVariable(varname="time", datatype="i4", dimensions = ("time", "lat"))
 
  All of the variables in the file are stored in a Python dictionary, in the same way as the dimensions. To retrieve the previous defined
  netCDF variable instance from the file, you can directly index the dictionary using variable name as the key.
