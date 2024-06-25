@@ -36,10 +36,10 @@ html_theme_options = {
 }
 html_context = {
     "display_github": True, # Integrate GitHub
-    "github_user": "NU-CUCIS", # Username
+    "github_user": "Parallel-NetCDF", # Username
     "github_repo": "pnetcdf-python", # Repo name
     "github_version": "main", # Version
-    "conf_py_path": "/docs/source/installation", # Path in the checkout to the docs root
+    "conf_py_path": "/docs/source/", # Path in the checkout to the docs root
 }
 autodoc_default_options = {
     'members': True,
