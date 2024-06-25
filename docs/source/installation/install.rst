@@ -11,7 +11,7 @@ you can use pip:
 
 .. code-block:: bash
 
-    $ CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy
+    $ env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy
 
 
 Install from Source
@@ -50,11 +50,11 @@ Building PnetCDF-python from source
 
      # install Python libraries
      $ pip install numpy Cython setuptools
-     $ env CC=mpicc pip install --no-cache-dir mpi4py
+     $ env MPICC=/path/to/mpicc pip install mpi4py
 
      # download PnetCDF-python source code
-     $ git clone git@github.com:Jonathanlyj/pnetcdf-python.git
+     $ git clone git@github.com:Parallel-NetCDF/PnetCDF-Python.git
      $ cd pnetcdf-python
 
      # install PnetCDF-python
-     CC=mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install -v .
+     env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install -v .
