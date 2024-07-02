@@ -10,11 +10,11 @@
 |  # add a global attributes   | |
 | ${\textsf{\color{green}f.history = }}$"Wed Mar 27 14:35:25 CDT 2024"  | ${\textsf{\color{blue}f.history = }}$"Wed Mar 27 14:35:25 CDT 2024"   |
 |  # define dimensions   | |
-| ${\textsf{\color{green}lat\\_dim = f.createDimension}}$("lat", 360)  | ${\textsf{\color{blue}lat\\_dim = f.def\\_dim}}$("lat", 360)  |
-| ${\textsf{\color{green}lon\\_dim = f.createDimension}}$("lon", 720)  | ${\textsf{\color{blue}lon\\_dim = f.def\\_dim}}$("lon", 720)  |
-| ${\textsf{\color{green}time\\_dim = f.createDimension}}$("time", None)  | ${\textsf{\color{blue}time\\_dim = f.def\\_dim}}$("time", -1)  |
+| ${\textsf{\color{green}lat\\_dim = f.createDimension}}$("lat", 360)  | ${\textsf{\color{blue}lat\\_dim = f.createDimension}}$("lat", 360)  |
+| ${\textsf{\color{green}lon\\_dim = f.createDimension}}$("lon", 720)  | ${\textsf{\color{blue}lon\\_dim = f.createDimension}}$("lon", 720)  |
+| ${\textsf{\color{green}time\\_dim = f.createDimension}}$("time", None)  | ${\textsf{\color{blue}time\\_dim = f.createDimension}}$("time", -1)  |
 |  # define a 3D variable of float type   | |
-| ${\textsf{\color{green}var = f.createVariable}}$(varname="WIND", datatype="f8", dimensions = ("time", "lat", "lon"))  | ${\textsf{\color{green}var = f.def\\_var}}$(varname="WIND", nc\_type=pncpy.NC\_FLOAT, dimensions = ("time", "lat", "lon"))  |
+| ${\textsf{\color{green}var = f.createVariable}}$(varname="WIND", datatype="f8", dimensions = ("time", "lat", "lon"))  | ${\textsf{\color{blue}var = f.createVariable}}$(varname="WIND", nc\_type=pncpy.NC\_FLOAT, dimensions = ("time", "lat", "lon"))  |
 |  # add attributes to the variable   | |
 | ${\textsf{\color{green}var.long\\_name}}$="atmospheric wind velocity magnitude"  |${\textsf{\color{blue}var.long\\_name}}$="atmospheric wind velocity magnitude"  |
 | ${\textsf{\color{green}var.setncattr}}$("int_att", np.int32(1))|${\textsf{\color{blue}var.put\\_att}}$("int_att", np.int32(1))  |
