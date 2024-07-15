@@ -86,13 +86,13 @@ jobs:
       run: |
         export PATH=${MPICH_DIR}/bin:${PATH}
         # serial
-        csh ./test_all.csh
+        chmod 700 ./test_all.sh
 
-        export NRPOC=3 && csh ./test_all.csh
+        export NPROC=3 && ./test_all.sh
 
-        export NRPOC=8 && csh ./test_all.csh
+        export NPROC=8 && ./test_all.sh
 
-        export NRPOC=10 && csh ./test_all.csh
+        export NPROC=10 && ./test_all.sh
 
         cd examples
         csh ./run_examples.csh /tmp

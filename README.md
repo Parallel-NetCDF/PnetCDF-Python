@@ -54,9 +54,11 @@ a summary of the current implementation status.
 
 
 ### Testing
-* To run all the existing tests, use command below.
+* Run command below to test all the test programs available in folder `./test`,
+  which will run 4 MPI processes for each test. The number of processes can be
+  changed by setting the environment variable `NPROC` to a different number.
 ```sh
-./test_all.csh [test_file_output_dir]
+./test_all.sh [test_file_output_dir]
 ```
 
 * To run a specific individual test, run command below
