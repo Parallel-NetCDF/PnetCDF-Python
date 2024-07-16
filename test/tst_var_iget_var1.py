@@ -27,7 +27,7 @@ file_name = "tst_var_iget_var1.nc"
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
-xdim=9; ydim=10; zdim=11
+xdim= size + 9; ydim= size + 10; zdim= size + 11
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
 datarev = data[:,::-1,:].copy()
 # print(datarev)

@@ -30,7 +30,7 @@ file_name = "tst_var_bput_var1.nc"
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
-xdim=9; ydim=10; zdim=11
+xdim= size + 9; ydim= size + 10; zdim= size + 11
 # initial values for netCDF variable
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
 datarev = data[:,::-1,:].copy()

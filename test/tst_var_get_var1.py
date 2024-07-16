@@ -21,16 +21,16 @@ from utils import validate_nc_file
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_get_var1.nc"
-xdim=9; ydim=10; zdim=11
-# initial values for netCDF variable
-data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
-# generate reference numpy arrays for testing
-datarev = data[:,::-1,:].copy()
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
+xdim= size + 9; ydim= size + 10; zdim= size + 11
+# initial values for netCDF variable
+data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
+# generate reference numpy arrays for testing
+datarev = data[:,::-1,:].copy()
 
 
 class VariablesTestCase(unittest.TestCase):

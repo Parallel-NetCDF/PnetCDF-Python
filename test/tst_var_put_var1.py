@@ -23,14 +23,17 @@ seed(0)
 # file format selections: CDF-5(64BIT_DATA'), CDF-2('64BIT_OFFSET') and CDF-1 (None)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_var1.nc"
-xdim=9; ydim=10; zdim=11
-# initial values for netCDF variable
-data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
-datarev = data[:,::-1,:].copy()
+
 # reference array for comparison in the testing phase
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+
+xdim= size + 9; ydim= size + 10; zdim= size + 11
+# initial values for netCDF variable
+data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
+datarev = data[:,::-1,:].copy()
+
 for i in range(size):
     datarev[i][i][i] = i * 10 + 1
 
