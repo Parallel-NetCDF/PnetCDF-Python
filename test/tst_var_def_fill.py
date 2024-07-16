@@ -27,13 +27,13 @@ import numpy.ma as ma
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_def_fill.nc"
-xdim=9; ydim=10 
+
 # file value to be set for each variable
 fill_value = np.float32(-1)
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
-
+xdim = ydim = size + 10
 
 
 class VariablesTestCase(unittest.TestCase):

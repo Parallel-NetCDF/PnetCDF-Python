@@ -23,12 +23,13 @@ from utils import validate_nc_file
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_file_fill.nc"
-xdim=9; ydim=10 
+
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
+xdim = ydim = size + 10
 
 
 class FileTestCase(unittest.TestCase):
