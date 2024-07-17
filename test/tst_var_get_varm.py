@@ -17,6 +17,7 @@ import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
 from utils import validate_nc_file
+import io
 
 seed(0)
 # Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2)
@@ -94,6 +95,9 @@ if __name__ == '__main__':
     for i in range(len(file_formats)):
         suite.addTest(VariablesTestCase())
     runner = unittest.TextTestRunner()
+    output = io.StringIO()
+    runner = unittest.TextTestRunner(stream=output)
     result = runner.run(suite)
     if not result.wasSuccessful():
+        print(output.getvalue())
         sys.exit(1)

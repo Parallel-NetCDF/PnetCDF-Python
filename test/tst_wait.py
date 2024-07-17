@@ -19,6 +19,7 @@ import numpy as np
 from mpi4py import MPI
 from pncpy import strerror, strerrno
 from utils import validate_nc_file
+import io
 
 seed(0)
 # file format selections: CDF-5(64BIT_DATA'), CDF-2('64BIT_OFFSET') and CDF-1 (None)
@@ -165,6 +166,9 @@ if __name__ == '__main__':
     for i in range(len(file_formats)):
         suite.addTest(FileTestCase())
     runner = unittest.TextTestRunner()
+    output = io.StringIO()
+    runner = unittest.TextTestRunner(stream=output)
     result = runner.run(suite)
     if not result.wasSuccessful():
+        print(output.getvalue())
         sys.exit(1)

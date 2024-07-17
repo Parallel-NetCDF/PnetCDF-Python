@@ -11,6 +11,7 @@ import numpy as np
 from collections import OrderedDict
 from numpy.random.mtrand import uniform
 from utils import validate_nc_file
+import io
 from mpi4py import MPI
 import pncpy
 
@@ -132,7 +133,10 @@ if __name__ == '__main__':
         suite.addTest(AttrTestCase("test_attr_access"))
         suite.addTest(AttrTestCase("test_var_attr_dict_"))
     runner = unittest.TextTestRunner()
+    output = io.StringIO()
+    runner = unittest.TextTestRunner(stream=output)
     result = runner.run(suite)
     if not result.wasSuccessful():
+        print(output.getvalue())
         sys.exit(1)
 
