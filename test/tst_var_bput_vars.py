@@ -69,8 +69,7 @@ class VariablesTestCase(unittest.TestCase):
 
         # each process post 10 requests to write a subsampled array of values
         req_ids = []
-        # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 3, 5])
         strides = np.array([1, 2, 2])
@@ -80,8 +79,7 @@ class VariablesTestCase(unittest.TestCase):
             req_id = v.bput_var(datam, start = starts, count = counts, stride = strides)
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
-        # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
@@ -96,12 +94,10 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write a subsampled array of values
             v.bput_var(datam, start = starts, count = counts, stride = strides)
-        # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
-        # check the usage of write buffer in memory
-        print(f"Buffer check: internal buffer has {f.inq_buff_size() - f.inq_buff_usage()} bytes left")
+
         # relase the internal buffer
         f.detach_buff()
         f.close()
