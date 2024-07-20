@@ -24,6 +24,7 @@ import numpy as np
 import random, string
 from mpi4py import MPI
 from utils import validate_nc_file
+import io
 from pncpy import stringtochar, chartostring
 import copy
 
@@ -144,7 +145,10 @@ if __name__ == '__main__':
     for i in range(len(file_formats)):
         suite.addTest(VariablesTestCase())
     runner = unittest.TextTestRunner()
+    output = io.StringIO()
+    runner = unittest.TextTestRunner(stream=output)
     result = runner.run(suite)
     if not result.wasSuccessful():
+        print(output.getvalue())
         sys.exit(1)
 

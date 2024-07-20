@@ -6,6 +6,7 @@ from numpy.random.mtrand import uniform
 from mpi4py import MPI
 import pncpy
 from utils import validate_nc_file
+import io
 
 
 NUM_TESTS = 5
@@ -222,7 +223,10 @@ if __name__ == '__main__':
         suite.addTest(DimensionsTestCase("test_len_var"))
         suite.addTest(DimensionsTestCase("test_get_dims"))
     runner = unittest.TextTestRunner()
+    output = io.StringIO()
+    runner = unittest.TextTestRunner(stream=output)
     result = runner.run(suite)
     if not result.wasSuccessful():
+        print(output.getvalue())
         sys.exit(1)
 
