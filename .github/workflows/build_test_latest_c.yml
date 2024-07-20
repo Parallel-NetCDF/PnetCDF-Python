@@ -70,19 +70,13 @@ jobs:
         chmod 700 ./test_all.sh
 
         export NPROC=3 && ./test_all.sh
-
         export NPROC=8 && ./test_all.sh
-
         export NPROC=10 && ./test_all.sh
 
         cd examples
-        ./test_all.sh /tmp
-        if [ $? -ne 0 ] ; then
-          echo "example program failed!"
-          exit 1
-        else
-          echo "example program passed!"
-        fi
+        export NPROC=3 && ./test_all.sh
+        export NPROC=8 && ./test_all.sh
+        export NPROC=10 && ./test_all.sh
 
 #   - name: Tarball
 #     run: |
