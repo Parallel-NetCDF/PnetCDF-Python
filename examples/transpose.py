@@ -96,7 +96,7 @@ def pnetcdf_io(comm, filename, file_format, length):
 
     # calculate number of processes along each dimension
     psizes = MPI.Compute_dims(nprocs, NDIMS)
-    if rank == 0:
+    if rank == 0 and verbose:
         print("psizes =", psizes)
 
     # for each MPI rank, find its local rank IDs along each dimension in starts[]

@@ -120,7 +120,8 @@ def pnetcdf_io(comm, filename, file_format, length):
         str = "psizes= "
         for i in range(NDIMS):
             str += "%d " % psizes[i]
-        print(str)
+        if verbose:
+            print(str)
 
     lower_dims = 1
     for i in range(NDIMS - 1, -1, -1):

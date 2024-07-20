@@ -186,6 +186,8 @@ def main():
         #         -  -  -  -  -  -  -  3  3  3 
     else:
         num_reqs = 0
+        starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+        counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
 
     # allocate I/O buffer and initialize its contents
     w_len = np.sum(np.prod(counts, axis=1))
