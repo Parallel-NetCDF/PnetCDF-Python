@@ -25,7 +25,9 @@ else
    # output folder is not set at command line, use current folder
    OUT_DIR="."
 fi
-echo "OUT_DIR=$OUT_DIR"
+
+echo ""
+echo "---- Run programs wit $NPROC processes in folder 'examples' ---------------"
 
 TETS_PROGS="collective_write.py
             create_open.py
