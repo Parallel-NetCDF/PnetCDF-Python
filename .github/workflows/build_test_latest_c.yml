@@ -76,7 +76,7 @@ jobs:
         export NPROC=10 && ./test_all.sh
 
         cd examples
-        csh ./run_examples.csh /tmp
+        ./test_all.sh /tmp
         if [ $? -ne 0 ] ; then
           echo "example program failed!"
           exit 1
