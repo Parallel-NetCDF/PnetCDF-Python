@@ -9,7 +9,7 @@ This package allows Python users to access netCDF data using the rich ecosystem
 of Python's scientific computing libraries, making it a valuable tool for
 applications that require parallel access to netCDF files.
 
-### Data objects in PnetCDF-python
+### Data objects in PnetCDF-python programming
 
 At a granular level, PnetCDF-python is a library that consists of the following
 components:
@@ -40,7 +40,7 @@ components:
   ```
 
 ### Current status of API Development
-The project is under active development. [dev_status.md](./dev_status.md) shows
+The project is under active development. [dev_status.md](docs/dev_status.md) shows
 a summary of the current implementation status.
 
 
@@ -68,6 +68,7 @@ a summary of the current implementation status.
 
 ### Additional Resources
 * [PnetCDF-python User Guide](https://pnetcdf-python.readthedocs.io/en/latest/)
+* [Comparison between NetCDF4-python and PnetCDF-python](docs/nc4_vs_pnetcdf.md)
 * [PnetCDF](https://parallel-netcdf.github.io/)
 
 ### Acknowledgements
