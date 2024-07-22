@@ -83,7 +83,7 @@ pnc_bin_dict = {"pnetcdf_bin_dir": pnc_bindir}
 # with open("settings.json", "w") as setting_json:
 #     json.dump(pnc_bin_dict, setting_json)
 
-src_root = os.path.join('src', 'pncpy')
+src_root = os.path.join('src', 'pnetcdfpy')
 
 
 src_base_all = ["_File", "_Dimension", "_utils", "_Variable"]
@@ -119,7 +119,7 @@ DEFINE_MACROS = [("NPY_NO_DEPRECATED_API", "NPY_1_7_API_VERSION")]
 
 
 ext_modules = [
-    Extension("pncpy." + x,
+    Extension("pnetcdfpy." + x,
               [os.path.join(src_root, x + ".pyx")],
               define_macros=DEFINE_MACROS,
               libraries=libs,
@@ -149,9 +149,9 @@ def extract_version(file_name):
 
 
 setup(
-    name="pncpy",  # need by GitHub dependency graph
+    name="pnetcdfpy",  # need by GitHub dependency graph
     version=extract_version(os.path.join(src_root, "__init__.py")),
     ext_modules=ext_modules,
-    packages=['pncpy'],
-    package_dir = {'pncpy': 'src/pncpy'}
+    packages=['pnetcdfpy'],
+    package_dir = {'pnetcdfpy': 'src/pnetcdfpy'}
 )

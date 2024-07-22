@@ -35,8 +35,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdfpy
+from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -110,7 +110,7 @@ def main():
     # Run pnetcdf i/o
 
     # Create the file
-    f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdfpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
     
     if rank == 0:
         ltime = time.localtime()
@@ -130,7 +130,7 @@ def main():
     # Close the file
     f.close()
     # Read the file
-    f = pncpy.File(filename=filename, mode = 'r')
+    f = pnetcdfpy.File(filename=filename, mode = 'r')
     # get the number of attributes
     ngatts = len(f.ncattrs())
     if ngatts != 2:

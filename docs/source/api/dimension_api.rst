@@ -1,4 +1,4 @@
-.. currentmodule:: pncpy
+.. currentmodule:: pnetcdfpy
 ==============
 Dimension
 ==============
@@ -13,7 +13,7 @@ to access dimensions.
    ``Dimension`` instances should be created using the :meth:`File.def_dim` method of a ``File`` instance,
    not using :meth:`Dimension.__init__` directly.
 
-.. autoclass:: pncpy::Dimension
+.. autoclass:: pnetcdfpy::Dimension
    :members: getfile, isunlimited
    :exclude-members: name, size
 

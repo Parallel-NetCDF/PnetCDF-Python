@@ -36,8 +36,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdfpy
+from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 
@@ -107,7 +107,7 @@ def main():
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # create a new file using "w" mode
-    f = pncpy.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=None)
+    f = pnetcdfpy.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=None)
     # exit the define mode
     f.enddef()
     # get all the hints used

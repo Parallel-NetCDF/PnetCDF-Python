@@ -42,8 +42,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdfpy
+from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -121,13 +121,13 @@ def main():
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # Run pnetcdf i/o
-    f = pncpy.File(filename=filename, mode = 'w', format=file_format, comm=comm, info=None)
+    f = pnetcdfpy.File(filename=filename, mode = 'w', format=file_format, comm=comm, info=None)
     dimx = f.def_dim('x',NX)
     dimy = f.def_dim('y',NY)
-    v = f.def_var('var', pncpy.NC_INT, ('y', 'x'))
+    v = f.def_var('var', pnetcdfpy.NC_INT, ('y', 'x'))
     # need 4 processes to fill the variables
     if nprocs < 4:
-        f.set_fill(pncpy.NC_FILL)
+        f.set_fill(pnetcdfpy.NC_FILL)
     f.enddef()
     if rank == 0:
         num_reqs = 4

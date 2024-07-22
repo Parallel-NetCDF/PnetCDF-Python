@@ -33,7 +33,7 @@ env/
 *.pyc
 *.nc
 *.json
-*/pncpy/*.c
+*/pnetcdfpy/*.c
 core.*
 build/
 *.whl

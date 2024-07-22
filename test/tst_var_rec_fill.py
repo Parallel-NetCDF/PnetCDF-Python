@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -15,7 +15,7 @@
     To run the test, execute the following
     `mpiexec -n [num_process] python3  tst_var_rec_fill.py [test_file_output_dir](optional)`
 """
-import pncpy
+import pnetcdfpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -60,13 +60,13 @@ class VariablesTestCase(unittest.TestCase):
         counts = np.array([1, 2])
         # select next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define variables and dimensions for testing
         dim_xu = f.def_dim('xu', -1)
         dim_x = f.def_dim('x',xdim)
         # define record variables for testing 
-        v1 = f.def_var('data1', pncpy.NC_FLOAT, (dim_xu, dim_x))
-        v2 = f.def_var('data2', pncpy.NC_FLOAT, (dim_xu, dim_x))
+        v1 = f.def_var('data1', pnetcdfpy.NC_FLOAT, (dim_xu, dim_x))
+        v2 = f.def_var('data2', pnetcdfpy.NC_FLOAT, (dim_xu, dim_x))
         # set fill value using _FillValue attribute writes or def_fill
         v1.def_fill(no_fill = 0, fill_value = fill_value)
         v2.put_att("_FillValue", fill_value)
@@ -98,7 +98,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing var rec fill for CDF-5/CDF-2/CDF-1 file format"""
         # compare record variable values against reference array
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdfpy.File(self.file_path, 'r')
         v1 = f.variables['data1']
         v2 = f.variables['data2']
         assert_array_equal(v1[:], dataref)

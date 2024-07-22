@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -16,7 +16,7 @@
     `mpiexec -n [num_process] python3 tst_var_indexer.py [test_file_output_dir](optional)`
 
 """
-import pncpy
+import pnetcdfpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -25,7 +25,7 @@ import random, string
 from mpi4py import MPI
 from utils import validate_nc_file
 import io
-from pncpy import stringtochar, chartostring
+from pnetcdfpy import stringtochar, chartostring
 import copy
 
 
@@ -63,17 +63,17 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('n1',-1)
         f.def_dim('n2',n2)
         f.def_dim('nchar',nchar)
         # We are writing 3D data on a unlimited x 20 x 4 grid 
-        v1 = f.def_var('string1', pncpy.NC_CHAR, ('n1','n2','nchar'))
-        v2 = f.def_var('string2', pncpy.NC_CHAR, ('n1','n2','nchar'))
-        v3 = f.def_var('string3', pncpy.NC_CHAR, ('n1','n2','nchar'))
+        v1 = f.def_var('string1', pnetcdfpy.NC_CHAR, ('n1','n2','nchar'))
+        v2 = f.def_var('string2', pnetcdfpy.NC_CHAR, ('n1','n2','nchar'))
+        v3 = f.def_var('string3', pnetcdfpy.NC_CHAR, ('n1','n2','nchar'))
         # if _Encoding set, string array should automatically be converted to a char array
-        f.set_fill(pncpy.NC_FILL)
+        f.set_fill(pnetcdfpy.NC_FILL)
  
         v2._Encoding = 'ascii'
         v3._Encoding = 'ascii'
@@ -106,7 +106,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing functions for converting arrays of chars to fixed-len strings"""
 
-        f = pncpy.File(filename=self.file_path, mode = 'r')
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'r')
         assert f.dimensions['n1'].isunlimited() == True
         v = f.variables['string1']
         v2 = f.variables['string2']

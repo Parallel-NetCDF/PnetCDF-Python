@@ -31,8 +31,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdfpy
+from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -122,7 +122,7 @@ def pnetcdf_io(comm, filename, file_format, length):
                 index += 1
 
     # Create the file
-    f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdfpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
 
     # Define dimensions
     dim_z = f.def_dim("Z", gsizes[0])
@@ -130,22 +130,22 @@ def pnetcdf_io(comm, filename, file_format, length):
     dim_x = f.def_dim("X", gsizes[2])
 
     # Define variable with no transposed file layout: ZYX
-    var_zyx = f.def_var("ZYX_var", pncpy.NC_INT, (dim_z, dim_y, dim_x))
+    var_zyx = f.def_var("ZYX_var", pnetcdfpy.NC_INT, (dim_z, dim_y, dim_x))
 
     # Define variable with transposed file layout: ZXY
-    var_zxy = f.def_var("ZXY_var",  pncpy.NC_INT, (dim_z, dim_x, dim_y))
+    var_zxy = f.def_var("ZXY_var",  pnetcdfpy.NC_INT, (dim_z, dim_x, dim_y))
 
     # Define variable with transposed file layout: YZX
-    var_yzx = f.def_var("YZX_var",  pncpy.NC_INT, (dim_y, dim_z, dim_x))
+    var_yzx = f.def_var("YZX_var",  pnetcdfpy.NC_INT, (dim_y, dim_z, dim_x))
 
     # Define variable with transposed file layout: YXZ
-    var_yxz = f.def_var("YXZ_var",  pncpy.NC_INT, (dim_y, dim_x, dim_z))
+    var_yxz = f.def_var("YXZ_var",  pnetcdfpy.NC_INT, (dim_y, dim_x, dim_z))
 
     # Define variable with transposed file layout: XZY
-    var_xzy = f.def_var("XZY_var",  pncpy.NC_INT, (dim_x, dim_z, dim_y))
+    var_xzy = f.def_var("XZY_var",  pnetcdfpy.NC_INT, (dim_x, dim_z, dim_y))
 
     # Define variable with transposed file layout: XYZ
-    var_xyz = f.def_var("XYZ_var",  pncpy.NC_INT, (dim_x, dim_y, dim_z))
+    var_xyz = f.def_var("XYZ_var",  pnetcdfpy.NC_INT, (dim_x, dim_y, dim_z))
 
      # Exit the define mode
     f.enddef()

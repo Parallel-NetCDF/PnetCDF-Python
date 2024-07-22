@@ -1,4 +1,4 @@
-.. currentmodule:: pncpy
+.. currentmodule:: pnetcdfpy
 =========
 Basics
 =========
@@ -33,7 +33,7 @@ Creating/Opening/Closing a netCDF file
 
  .. code-block:: Python
 
-    from pncpy import File
+    from pnetcdfpy import File
     from mpi4py import MPI
     comm = MPI.COMM_WORLD
     f = File(filename="testfile.nc", mode='w', comm=comm, info=None)
@@ -65,7 +65,7 @@ Dimensions
 
  .. code-block:: Python
 
-    from pncpy import File
+    from pnetcdfpy import File
     LAT_NAME="lat"
     LAT_LEN = 50
     TIME_NAME="time"
@@ -88,7 +88,7 @@ Dimensions
  .. code-block:: Python
 
     >>> print(f.dimensions)
-    {'lat': <class 'pncpy._Dimension.Dimension'>: name = 'lat', size = 50, 'time': <class 'pncpy._Dimension.Dimension'> (unlimited): name = 'time', size = 0}
+    {'lat': <class 'pnetcdfpy._Dimension.Dimension'>: name = 'lat', size = 50, 'time': <class 'pnetcdfpy._Dimension.Dimension'> (unlimited): name = 'time', size = 0}
 
  To retrieve the previous defined dimension instance from the file, you can directly index the dictionary using variable name as the key.
  The dimension information can be retrieved using following functions. 
@@ -107,14 +107,14 @@ Variables
  NetCDF variables are similar to multidimensional array objects in Python provided by the numpy module. To define a netCDF 
  variable, you can utilize the :meth:`File.def_var` method within a File instance under define mode. The mandatory arguments for
  this methods include the variable name (a string in Python) and dimensions (either a tuple of dimension names or dimension 
- instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pncpy.NC_INT).
+ instances). In addition, the user need to specify the datatype of the variable using module-level NC constants (e.g. pnetcdfpy.NC_INT).
  The supported datatypes given each file format can be found :ref:`here<Datatype>`.
 
  Here's an example:
  
  .. code-block:: Python
 
-    var = f.def_var(varname = "var", nc_dtype = pncpy.NC_INT, dimensions = ("time", "lat"))
+    var = f.def_var(varname = "var", nc_dtype = pnetcdfpy.NC_INT, dimensions = ("time", "lat"))
 
  Equivalent example codes in ``netCDF4-python``:
  
@@ -128,7 +128,7 @@ Variables
  .. code-block:: Python
 
     >>> print(f.variables)
-    {'var': <class 'pncpy._Variable.Variable'>
+    {'var': <class 'pnetcdfpy._Variable.Variable'>
     int32 var(time, lat)
     int32 data type: int32
     unlimited dimensions: time

@@ -53,8 +53,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdfpy
+from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -101,7 +101,7 @@ def pnetcdf_io(comm, filename, file_format):
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
     # Open an existing file for reading
-    f = pncpy.File(filename=filename, mode = 'r', comm=comm, info=None)
+    f = pnetcdfpy.File(filename=filename, mode = 'r', comm=comm, info=None)
     # Get global attribute named "history"
     str_att = f.get_att("history")
     if rank == 0 and verbose:

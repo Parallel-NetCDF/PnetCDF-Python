@@ -35,12 +35,12 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdfpy
+from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
-from pncpy import strerror, strerrno
+from pnetcdfpy import strerror, strerrno
 
 verbose = True
 
@@ -121,7 +121,7 @@ def pnetcdf_io(comm, filename, file_format, length):
 
     # Create the file
     try:
-        f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
         comm.Abort()
@@ -136,7 +136,7 @@ def pnetcdf_io(comm, filename, file_format, length):
     # Define variables
     vars = []
     for i in range(NUM_VARS):
-        var = f.def_var("var{}".format(i), pncpy.NC_INT, dims)
+        var = f.def_var("var{}".format(i), pnetcdfpy.NC_INT, dims)
         vars.append(var)
     # Exit the define mode
     f.enddef()
@@ -232,7 +232,7 @@ def main():
 
     # Create the file
     try:
-        f = pncpy.File(filename=filename, mode = 'w', format = "64BIT_DATA", comm=comm, info=None)
+        f = pnetcdfpy.File(filename=filename, mode = 'w', format = "64BIT_DATA", comm=comm, info=None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
         comm.Abort()
@@ -247,7 +247,7 @@ def main():
     # Define variables
     vars = []
     for i in range(NUM_VARS):
-        var = f.def_var("var{}".format(i), pncpy.NC_INT, dims)
+        var = f.def_var("var{}".format(i), pnetcdfpy.NC_INT, dims)
         vars.append(var)
     # Exit the define mode
     f.enddef()

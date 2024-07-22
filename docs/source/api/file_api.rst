@@ -2,13 +2,13 @@
 File
 ================
 
-``pncpy.File`` is a high-level object representing an netCDF file,
+``pnetcdfpy.File`` is a high-level object representing an netCDF file,
 which provides a Pythonic interface to create, read and write within
 an netCDF file. A File object serves as the root container for dimensions,
 variables, and attributes. Together they describe the meaning of data and
 relations among data fields stored in a netCDF file.
 
-.. autoclass:: pncpy::File
+.. autoclass:: pnetcdfpy::File
    :members: __init__, close, filepath, redef, enddef, begin_indep, end_indep,
     sync, flush, def_dim, rename_var, rename_dim, def_var, ncattrs, put_att, get_att,
     del_att, rename_att, wait, wait_all, cancel, attach_buff, detach_buff, set_fill,
@@ -23,12 +23,12 @@ File Attributes
  .. attribute:: dimensions
 
     The dimensions dictionary maps the names of dimensions defined for the file 
-    to instances of the ``pncpy.Dimension`` class. 
+    to instances of the ``pnetcdfpy.Dimension`` class. 
 
  .. attribute:: variables
       
     The variables dictionary maps the names of variables defined for this file 
-    to instances of the ``pncpy.Variable`` class. 
+    to instances of the ``pnetcdfpy.Variable`` class. 
 
  .. attribute:: file_format
     

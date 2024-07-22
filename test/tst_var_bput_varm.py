@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -14,13 +14,13 @@
    requests using attach_buff method of `File` class. The library will internally 
    invoke ncmpi_bput_var and ncmpi_attach_buffer in C.  
 """
-import pncpy
+import pnetcdfpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
-from pncpy import strerror, strerrno
+from pnetcdfpy import strerror, strerrno
 from utils import validate_nc_file
 import io
 
@@ -54,7 +54,7 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests
@@ -64,7 +64,7 @@ class VariablesTestCase(unittest.TestCase):
         assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
-            v = f.def_var(f'data{i}', pncpy.NC_FLOAT, ('x','y'))
+            v = f.def_var(f'data{i}', pnetcdfpy.NC_FLOAT, ('x','y'))
         # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):
@@ -96,7 +96,7 @@ class VariablesTestCase(unittest.TestCase):
             v.bput_var(datam, start = starts, count = counts, stride = strides, imap = imap)
         
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
+        f.wait_all(num = pnetcdfpy.NC_PUT_REQ_ALL)
         # relase the internal buffer
         f.detach_buff()
         f.close()
@@ -106,7 +106,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing variable bput varm for CDF-5/CDF-2/CDF-1 file format"""
 
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdfpy.File(self.file_path, 'r')
         # test bput varm and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']

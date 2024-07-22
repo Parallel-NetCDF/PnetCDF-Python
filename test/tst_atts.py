@@ -13,7 +13,7 @@ from numpy.random.mtrand import uniform
 from utils import validate_nc_file
 import io
 from mpi4py import MPI
-import pncpy
+import pnetcdfpy
 
 # test attribute creation
 FILE_NAME = 'tst_atts.nc'
@@ -49,7 +49,7 @@ class AttrTestCase(unittest.TestCase):
         else:
             self.file_path = FILE_NAME
         self._file_format = file_formats.pop(0)
-        with pncpy.File(self.file_path,'w', format = self._file_format) as f:
+        with pnetcdfpy.File(self.file_path,'w', format = self._file_format) as f:
             # try to set a dataset attribute with one of the reserved names.
             f.put_att('file_format','netcdf5_format')
             # test attribute renaming
@@ -64,7 +64,7 @@ class AttrTestCase(unittest.TestCase):
             f.def_dim(DIM2_NAME, DIM2_LEN)
             f.def_dim(DIM3_NAME, DIM3_LEN)
 
-            v = f.def_var(VAR_NAME, pncpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
+            v = f.def_var(VAR_NAME, pnetcdfpy.NC_DOUBLE, (DIM1_NAME,DIM2_NAME,DIM3_NAME))
             # try to set a variable attribute with one of the reserved names.
             v.put_att('ndim','three')
             v.stratt_tmp = STRATT
@@ -88,7 +88,7 @@ class AttrTestCase(unittest.TestCase):
             os.remove(self.file_path)
     
     def test_file_attr_dict_(self):
-        with pncpy.File(self.file_path, 'r') as f:
+        with pnetcdfpy.File(self.file_path, 'r') as f:
             # check __dict__ method for accessing all netCDF attributes.
 
             for key,val in ATTDICT.items():
@@ -97,7 +97,7 @@ class AttrTestCase(unittest.TestCase):
                 else:
                     assert f.__dict__[key] == val
     def test_attr_access(self):
-        with pncpy.File(self.file_path, 'r') as f:
+        with pnetcdfpy.File(self.file_path, 'r') as f:
             v = f.variables[VAR_NAME]
             # check accessing individual attributes.
             assert f.intatt == INTATT
@@ -113,7 +113,7 @@ class AttrTestCase(unittest.TestCase):
             assert v._FillValue == -999.
 
     def test_var_attr_dict_(self):
-        with pncpy.File(self.file_path, 'r') as f:
+        with pnetcdfpy.File(self.file_path, 'r') as f:
             v = f.variables[VAR_NAME]
 
             # variable attributes.

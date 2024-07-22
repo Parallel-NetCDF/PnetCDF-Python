@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -15,7 +15,7 @@
     `mpiexec -n [num_process] python3  tst_var_def_fill.py [test_file_output_dir](optional)`
 
 """
-import pncpy
+import pnetcdfpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -46,16 +46,16 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         # select next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('xu', -1)
         f.def_dim('y',ydim)
         # define non-record variables with no fill for testing 
-        v1 = f.def_var('data1', pncpy.NC_FLOAT, ('x','y'))
-        v2 = f.def_var('data2', pncpy.NC_FLOAT, ('x','y'))
-        v3 = f.def_var('data3', pncpy.NC_FLOAT, ('x','y'))
-        v4 = f.def_var('data4', pncpy.NC_FLOAT, ('x','y'))
+        v1 = f.def_var('data1', pnetcdfpy.NC_FLOAT, ('x','y'))
+        v2 = f.def_var('data2', pnetcdfpy.NC_FLOAT, ('x','y'))
+        v3 = f.def_var('data3', pnetcdfpy.NC_FLOAT, ('x','y'))
+        v4 = f.def_var('data4', pnetcdfpy.NC_FLOAT, ('x','y'))
         
         # check current fill node
         for v in [v1, v2, v3, v4]:

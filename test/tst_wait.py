@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -11,13 +11,13 @@
    into a netCDF variable and commit them using wait/wait_all method of `File` class. The 
    library will internally invoke ncmpi_iput_vara in C. 
 """
-import pncpy
+import pnetcdfpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
-from pncpy import strerror, strerrno
+from pnetcdfpy import strerror, strerrno
 from utils import validate_nc_file
 import io
 
@@ -58,7 +58,7 @@ class FileTestCase(unittest.TestCase):
             self.file_path = file_name
         # select the next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
@@ -66,7 +66,7 @@ class FileTestCase(unittest.TestCase):
 
         # define 20 netCDF variables: 10 for testing wait_all(), 10 for testing wait()
         for i in range(3 * num_reqs):
-            v = f.def_var(f'data{i}', pncpy.NC_INT, ('xu','y','z'))
+            v = f.def_var(f'data{i}', pnetcdfpy.NC_INT, ('xu','y','z'))
         # initialize variable values
         f.enddef()
         for i in range(3 * num_reqs):
@@ -140,7 +140,7 @@ class FileTestCase(unittest.TestCase):
     def runTest(self):
         """testing File wait method for CDF-5/CDF-2/CDF-1 file format"""
 
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdfpy.File(self.file_path, 'r')
         # test collective i/o wait_all & independent i/o wait
         for i in range(2 * num_reqs):
             v = f.variables[f'data{i}']
@@ -148,9 +148,9 @@ class FileTestCase(unittest.TestCase):
             assert_array_equal(v[:], datares1)
             # check request ids - successful ids should be replaced with NC_REQ_NULL
             if i < 10:
-                self.assertTrue(req_ids_tst1[i] == pncpy.NC_REQ_NULL)
+                self.assertTrue(req_ids_tst1[i] == pnetcdfpy.NC_REQ_NULL)
             else:
-                self.assertTrue(req_ids_tst2[i - 10] == pncpy.NC_REQ_NULL)
+                self.assertTrue(req_ids_tst2[i - 10] == pnetcdfpy.NC_REQ_NULL)
         # test invalid request ids
         # invalid request id list should remain unchanged
         assert_array_equal(bad_req_ids, list(range(num_reqs)))

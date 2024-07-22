@@ -1,4 +1,4 @@
-.. currentmodule:: pncpy
+.. currentmodule:: pnetcdfpy
 ============================
 Parallel Read and Write
 ============================

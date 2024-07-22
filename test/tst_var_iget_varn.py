@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -11,13 +11,13 @@
    a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The 
    library will internally invoke ncmpi_iget_varn in C. 
 """
-import pncpy
+import pnetcdfpy
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
-from pncpy import strerror, strerrno
+from pnetcdfpy import strerror, strerrno
 from utils import validate_nc_file
 import io
 
@@ -112,13 +112,13 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         dx = f.def_dim('x',xdim)
         dy = f.def_dim('y',ydim)
 
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
-            v = f.def_var(f'data{i}', pncpy.NC_FLOAT, (dx, dy))
+            v = f.def_var(f'data{i}', pnetcdfpy.NC_FLOAT, (dx, dy))
         # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):
@@ -129,7 +129,7 @@ class VariablesTestCase(unittest.TestCase):
 
 
 
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdfpy.File(self.file_path, 'r')
         # each process post 10 requests to read a list of subarrays from the variable
         req_ids = []
         v_datas.clear()
@@ -161,7 +161,7 @@ class VariablesTestCase(unittest.TestCase):
             v_datas.append(buff)
         
         # commit all pending get requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num = pncpy.NC_GET_REQ_ALL)
+        req_errs = f.wait_all(num = pnetcdfpy.NC_GET_REQ_ALL)
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
