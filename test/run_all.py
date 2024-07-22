@@ -1,5 +1,5 @@
 import glob, os, sys, unittest, struct, tempfile
-from pnetcdfpy import __version__
+from pnetcdf import __version__
 import mpi4py
 
 # can also just run

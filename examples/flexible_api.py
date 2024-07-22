@@ -73,12 +73,12 @@
 import sys
 import os
 from mpi4py import MPI
-import pnetcdfpy
-from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
-from pnetcdfpy import strerror, strerrno
+from pnetcdf import strerror, strerrno
 
 verbose = True
 
@@ -152,16 +152,16 @@ def main():
         print("{}: example of file create and open".format(__file__))
 
     # Create the file
-    f = pnetcdfpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
     # Define dimensions
 
     dim_z = f.def_dim("Z", NZ*nprocs)
     dim_y = f.def_dim("Y", NY)
     dim_x = f.def_dim("X", NX*nprocs)
     # define a variable of size (NZ * nprocs) * NY
-    var_zy = f.def_var("var_zy", pnetcdfpy.NC_INT, (dim_z, dim_y))
+    var_zy = f.def_var("var_zy", pnetcdf.NC_INT, (dim_z, dim_y))
     # define a variable of size NY * (NX * nprocs)
-    var_yx = f.def_var("var_yx", pnetcdfpy.NC_FLOAT, (dim_y, dim_x))
+    var_yx = f.def_var("var_yx", pnetcdf.NC_FLOAT, (dim_y, dim_x))
     f.enddef()
 
     array_of_sizes = np.array([NZ + 2 * ghost_len, NY + 2 * ghost_len])

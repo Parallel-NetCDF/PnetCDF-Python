@@ -1,7 +1,7 @@
 from mpi4py import MPI
-import pnetcdfpy
+import pnetcdf
 import os
-import pnetcdfpy 
+import pnetcdf 
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -13,12 +13,12 @@ for file_name in file_names:
     if os.path.exists(file_name):
         os.remove(file_name)
 
-file = pnetcdfpy.File(filename=file_names[0], mode='w', comm=comm, info=None)
+file = pnetcdf.File(filename=file_names[0], mode='w', comm=comm, info=None)
 file.close()
 
 recive_os_error = False
 try:
-    file = pnetcdfpy.File(filename=file_names[0], format="64BIT_DATA",
+    file = pnetcdf.File(filename=file_names[0], format="64BIT_DATA",
                       mode='w', clobber=False, comm=comm, info=None)
 except OSError:
     recive_os_error = True
@@ -26,6 +26,6 @@ except OSError:
 assert recive_os_error
 
 
-file = pnetcdfpy.File(filename=file_names[1], format="64BIT_DATA",
+file = pnetcdf.File(filename=file_names[1], format="64BIT_DATA",
                   mode='w', clobber=False, comm=comm, info=None)
 file.close()

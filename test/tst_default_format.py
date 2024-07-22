@@ -1,4 +1,4 @@
-# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -15,8 +15,8 @@
     `mpiexec -n [num_process] python3  tst_default_format.py [test_file_output_dir](optional)`
 
 """
-import pnetcdfpy
-from pnetcdfpy import set_default_format, inq_default_format, inq_file_format
+import pnetcdf
+from pnetcdf import set_default_format, inq_default_format, inq_file_format
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -47,42 +47,42 @@ class FileTestCase(unittest.TestCase):
                 file_path = file_name
             self.file_paths.append(file_path)
         # change default file format to "64BIT_DATA"
-        old_format = set_default_format(pnetcdfpy.NC_FORMAT_64BIT_DATA)
-        assert(old_format == pnetcdfpy.NC_FORMAT_CLASSIC)
+        old_format = set_default_format(pnetcdf.NC_FORMAT_64BIT_DATA)
+        assert(old_format == pnetcdf.NC_FORMAT_CLASSIC)
         # create CDF-5 netCDF files using current default format
-        f = pnetcdfpy.File(filename=self.file_paths[0], mode = 'w', comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_paths[0], mode = 'w', comm=comm, info=None)
         f.close() 
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[0]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
         # inquiry current default (for testing)
         self.new_default = inq_default_format()
         # create CDF-2 netCDF files by overwriting default
-        f = pnetcdfpy.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", comm=comm, info=None)
         f.close() 
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[1]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
         # change default file format back to "CLASSIC"
-        old_format = set_default_format(pnetcdfpy.NC_FORMAT_CLASSIC)
-        assert(old_format == pnetcdfpy.NC_FORMAT_64BIT_DATA)
+        old_format = set_default_format(pnetcdf.NC_FORMAT_CLASSIC)
+        assert(old_format == pnetcdf.NC_FORMAT_64BIT_DATA)
         # create CDF-1 netCDF files using default
-        f = pnetcdfpy.File(filename=self.file_paths[2], mode = 'w', comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_paths[2], mode = 'w', comm=comm, info=None)
         f.close() 
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[2]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
 
     def runTest(self):
         """testing set default format for file formats"""
-        f = pnetcdfpy.File(self.file_paths[0], 'r')
+        f = pnetcdf.File(self.file_paths[0], 'r')
         self.assertTrue(f.file_format == "64BIT_DATA" or f.file_format == "CDF5")
         f.close()
-        f = pnetcdfpy.File(self.file_paths[1], 'r')
+        f = pnetcdf.File(self.file_paths[1], 'r')
         self.assertTrue(f.file_format == "64BIT_OFFSET" or f.file_format == "64BIT" or f.file_format == "CDF2")
         f.close()
-        f = pnetcdfpy.File(self.file_paths[2], 'r')
+        f = pnetcdf.File(self.file_paths[2], 'r')
         self.assertTrue(f.file_format == "CLASSIC")
         f.close()
-        self.assertTrue(inq_file_format(self.file_paths[0]) == pnetcdfpy.NC_FORMAT_64BIT_DATA)
-        self.assertTrue(inq_file_format(self.file_paths[1]) == pnetcdfpy.NC_FORMAT_64BIT_OFFSET)
-        self.assertTrue(inq_file_format(self.file_paths[2]) == pnetcdfpy.NC_FORMAT_CLASSIC)
+        self.assertTrue(inq_file_format(self.file_paths[0]) == pnetcdf.NC_FORMAT_64BIT_DATA)
+        self.assertTrue(inq_file_format(self.file_paths[1]) == pnetcdf.NC_FORMAT_64BIT_OFFSET)
+        self.assertTrue(inq_file_format(self.file_paths[2]) == pnetcdf.NC_FORMAT_CLASSIC)
 
 
     def tearDown(self):

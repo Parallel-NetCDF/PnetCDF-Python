@@ -1,4 +1,4 @@
-.. currentmodule:: pnetcdfpy
+.. currentmodule:: pnetcdf
 ==============================
 Non-blocking Reads and Writes
 ==============================

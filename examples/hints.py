@@ -28,8 +28,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pnetcdfpy
-from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 
@@ -143,14 +143,14 @@ def main():
     info1.Set("nc_var_align_size", "512")
     info1.Set("nc_header_read_chunk_size", "256")
     # create a new file for writing
-    f = pnetcdfpy.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=info1)
+    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=info1)
     # define the dimensions
     dim_z = f.def_dim('Z', NZ*nprocs)
     dim_y = f.def_dim('Y', NY*nprocs)
     dim_x = f.def_dim('x', NX*nprocs)
     # define a variable of size (NZ * nprocs) * (NY * nprocs) 
-    var_zy = f.def_var("var_zy", pnetcdfpy.NC_INT, (dim_z, dim_y))
-    var_yx =  f.def_var("var_yx", pnetcdfpy.NC_FLOAT, (dim_y, dim_x))
+    var_zy = f.def_var("var_zy", pnetcdf.NC_INT, (dim_z, dim_y))
+    var_yx =  f.def_var("var_yx", pnetcdf.NC_FLOAT, (dim_y, dim_x))
 
     # exit the define mode
     f.enddef()

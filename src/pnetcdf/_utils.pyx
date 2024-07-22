@@ -827,8 +827,8 @@ cpdef set_default_format(int new_format):
     calls to ncmpi_create without specifying the file format. It returns the existing default 
     format while setting a new default format. 
 
-    :param new_format: ``pnetcdfpy.NC_FORMAT_CLASSIC`` (the default setting), ``pnetcdfpy.NC_FORMAT_CDF2`` 
-    (``pnetcdfpy.NC_FORMAT_64BIT``), or ``pnetcdfpy.NC_FORMAT_CDF5`` (``pnetcdfpy.NC_FORMAT_64BIT_DATA``).
+    :param new_format: ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting), ``pnetcdf.NC_FORMAT_CDF2`` 
+    (``pnetcdf.NC_FORMAT_64BIT``), or ``pnetcdf.NC_FORMAT_CDF5`` (``pnetcdf.NC_FORMAT_64BIT_DATA``).
 
     :rtype: int
 

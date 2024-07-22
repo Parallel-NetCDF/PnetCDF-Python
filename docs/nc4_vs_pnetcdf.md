@@ -6,7 +6,7 @@
 | NetCDF4 | PnetCDF |
 |:-------|:--------|
 |  # create a new file   | |
-| ${\textsf{\color{green}f = netCDF4.Dataset}}$(filename="testfile.nc", mode="w", comm=comm, parallel=True)  | ${\textsf{\color{blue}f = pnetcdfpy.File}}$(filename="testfile.nc", mode='w', comm=comm) |
+| ${\textsf{\color{green}f = netCDF4.Dataset}}$(filename="testfile.nc", mode="w", comm=comm, parallel=True)  | ${\textsf{\color{blue}f = pnetcdf.File}}$(filename="testfile.nc", mode='w', comm=comm) |
 |  # add a global attributes   | |
 | ${\textsf{\color{green}f.history = }}$"Wed Mar 27 14:35:25 CDT 2024"  | ${\textsf{\color{blue}f.history = }}$"Wed Mar 27 14:35:25 CDT 2024"   |
 |  # define dimensions   | |
@@ -14,7 +14,7 @@
 | ${\textsf{\color{green}lon\\_dim = f.createDimension}}$("lon", 720)  | ${\textsf{\color{blue}lon\\_dim = f.createDimension}}$("lon", 720)  |
 | ${\textsf{\color{green}time\\_dim = f.createDimension}}$("time", None)  | ${\textsf{\color{blue}time\\_dim = f.createDimension}}$("time", -1)  |
 |  # define a 3D variable of float type   | |
-| ${\textsf{\color{green}var = f.createVariable}}$(varname="WIND", datatype="f8", dimensions = ("time", "lat", "lon"))  | ${\textsf{\color{blue}var = f.createVariable}}$(varname="WIND", nc\_type=pnetcdfpy.NC\_FLOAT, dimensions = ("time", "lat", "lon"))  |
+| ${\textsf{\color{green}var = f.createVariable}}$(varname="WIND", datatype="f8", dimensions = ("time", "lat", "lon"))  | ${\textsf{\color{blue}var = f.createVariable}}$(varname="WIND", nc\_type=pnetcdf.NC\_FLOAT, dimensions = ("time", "lat", "lon"))  |
 |  # add attributes to the variable   | |
 | ${\textsf{\color{green}var.long\\_name}}$="atmospheric wind velocity magnitude"  |${\textsf{\color{blue}var.long\\_name}}$="atmospheric wind velocity magnitude"  |
 | ${\textsf{\color{green}var.setncattr}}$("int_att", np.int32(1))|${\textsf{\color{blue}var.put\\_att}}$("int_att", np.int32(1))  |

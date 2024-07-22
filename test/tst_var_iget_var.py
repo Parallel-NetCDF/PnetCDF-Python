@@ -1,4 +1,4 @@
-# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -11,13 +11,13 @@
    of an opened netCDF file using iput_var method of `Variable` class. The 
    library will internally invoke ncmpi_iget_var in C. 
 """
-import pnetcdfpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
-from pnetcdfpy import strerror, strerrno
+from pnetcdf import strerror, strerrno
 from utils import validate_nc_file
 import io
 
@@ -45,13 +45,13 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
         for i in range(num_reqs * 2):
-            v = f.def_var(f'data{i}', pnetcdfpy.NC_INT, ('x','y','z'))
+            v = f.def_var(f'data{i}', pnetcdf.NC_INT, ('x','y','z'))
 
         #initialize variable values for 20 netCDF variables
         f.enddef()
@@ -63,7 +63,7 @@ class VariablesTestCase(unittest.TestCase):
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
 
-        f = pnetcdfpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         # post 10 read requests to read the whole variable for the first 10 netCDF variables and track req ids
         req_ids = []
         # reinialize the list of returned array references
@@ -93,7 +93,7 @@ class VariablesTestCase(unittest.TestCase):
             v_datas.append(buff)
 
         # commit all pending get requests to the file at once using wait_all (collective i/o)
-        req_errs = f.wait_all(num = pnetcdfpy.NC_GET_REQ_ALL)
+        req_errs = f.wait_all(num = pnetcdf.NC_GET_REQ_ALL)
         f.close()
 
 
