@@ -66,8 +66,8 @@ cells appear on both ends of each dimension. The contents of ghost cells are
 import sys
 import os
 from mpi4py import MPI
-import pnetcdfpy
-from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -148,13 +148,13 @@ def pnetcdf_io(comm, filename, file_format, length):
                 buf[i * (counts[1] + 2 * nghosts) + j] = -8  # all ghost cells have value -8
 
     # Create the file
-    f = pnetcdfpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
 
     # Define dimensions
     dim_y = f.def_dim("Y", gsizes[0])
     dim_x = f.def_dim("X",gsizes[1])
     # Define a 2D variable of integer type
-    var = f.def_var("var", pnetcdfpy.NC_INT, (dim_y, dim_x))
+    var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))
      # Exit the define mode
     f.enddef()
     imap = np.zeros(2, dtype=np.int64)

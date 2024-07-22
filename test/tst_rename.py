@@ -1,4 +1,4 @@
-# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -13,7 +13,7 @@
     To run the test, execute the following
     `mpiexec -n [num_process] python3 tst_rename.py [test_file_output_dir](optional)`
 """
-import pnetcdfpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -45,15 +45,15 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pnetcdfpy.Dataset(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.Dataset(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed
         f.createDimension('x',xdim)
         f.createDimension('y',ydim)
         f.createDimension('z',zdim)
         # Define 3 variables with same nc datatype NC_INT
-        v1 = f.createVariable('data1', pnetcdfpy.NC_INT, ('x','y','z'))
-        v2 = f.createVariable('data2', pnetcdfpy.NC_INT, ('x','y','z'))
-        v3 = f.createVariable('data3', pnetcdfpy.NC_INT, ('x','y','z'))
+        v1 = f.createVariable('data1', pnetcdf.NC_INT, ('x','y','z'))
+        v2 = f.createVariable('data2', pnetcdf.NC_INT, ('x','y','z'))
+        v3 = f.createVariable('data3', pnetcdf.NC_INT, ('x','y','z'))
 
         # Rename two dimensions
         f.renameDimension('x', 'new_x')
@@ -78,7 +78,7 @@ class VariablesTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing writing data of mismatched datatypes with CDF5/CDF2/CDF1 file format"""
-        f = pnetcdfpy.Dataset(self.file_path, 'r')
+        f = pnetcdf.Dataset(self.file_path, 'r')
         # Check variable names and dimension names
         self.assertTrue('new_data1' in f.variables.keys())
         self.assertTrue('new_data2' in f.variables.keys())

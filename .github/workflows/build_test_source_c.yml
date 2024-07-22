@@ -77,7 +77,7 @@ jobs:
         export MPICC=$MPICH_DIR/bin/mpicc
         pip install mpi4py
 
-    - name: Install pnetcdfpy
+    - name: Install pnetcdf
       run: |
         export PATH=${PNETCDF_DIR}/bin:${PATH}
         export CC=$MPICH_DIR/bin/mpicc

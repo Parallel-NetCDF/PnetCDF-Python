@@ -36,12 +36,12 @@
 import sys
 import os
 from mpi4py import MPI
-import pnetcdfpy
-from pnetcdfpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
-from pnetcdfpy import strerror, strerrno
+from pnetcdf import strerror, strerrno
 
 verbose = True
 
@@ -148,7 +148,7 @@ def main():
 
     # Create the file
     try:
-        f = pnetcdfpy.File(filename=filename, mode = 'w', format = "64BIT_DATA", comm=comm, info=None)
+        f = pnetcdf.File(filename=filename, mode = 'w', format = "64BIT_DATA", comm=comm, info=None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
         comm.Abort()
@@ -163,7 +163,7 @@ def main():
     # Define variables
     vars = []
     for i in range(NUM_VARS):
-        var = f.def_var("var{}".format(i), pnetcdfpy.NC_INT, dims)
+        var = f.def_var("var{}".format(i), pnetcdf.NC_INT, dims)
         vars.append(var)
 
 
@@ -172,7 +172,7 @@ def main():
         vars[i].iput_var(buf[i], start = starts, count = counts)
     # Enter data mode
     f.enddef()
-    f.wait_all(num = pnetcdfpy.NC_REQ_ALL)
+    f.wait_all(num = pnetcdf.NC_REQ_ALL)
     # Close the file
 
     bbufsize = bufsize * NUM_VARS * np.dtype(np.int32).itemsize

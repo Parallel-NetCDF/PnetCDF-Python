@@ -1,4 +1,4 @@
-# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -11,13 +11,13 @@
    section of values into a netCDF variables of an opened netCDF file using iput_var 
    method of `Variable` object. The library will internally invoke ncmpi_iput_varm in C. 
 """
-import pnetcdfpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
-from pnetcdfpy import strerror, strerrno
+from pnetcdf import strerror, strerrno
 from utils import validate_nc_file
 import io
 
@@ -51,13 +51,13 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
 
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
-            v = f.def_var(f'data{i}', pnetcdfpy.NC_FLOAT, ('x','y'))
+            v = f.def_var(f'data{i}', pnetcdf.NC_FLOAT, ('x','y'))
         # initialize variable values
         f.enddef()
         for i in range(num_reqs * 2):
@@ -87,7 +87,7 @@ class VariablesTestCase(unittest.TestCase):
             v.iput_var(datam, start = starts, count = counts, stride = strides, imap = imap)
         
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all(num = pnetcdfpy.NC_PUT_REQ_ALL)
+        f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
@@ -95,7 +95,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing variable iput varm for CDF-5/CDF-2/CDF-1 file format"""
 
-        f = pnetcdfpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         # test iput varm and collective i/o wait_all
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']

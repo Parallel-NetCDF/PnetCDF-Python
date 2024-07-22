@@ -1,4 +1,4 @@
-# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -12,7 +12,7 @@
    defined so far and change the default fill mode for new non-record variables defined following
    this call. The library will internally invoke ncmpi_set_fill in C. 
 """
-import pnetcdfpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -42,18 +42,18 @@ class FileTestCase(unittest.TestCase):
             self.file_path = file_name
         # select next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
         # define a netCDF variable before setting file filling mode 
-        v1 = f.def_var('data1', pnetcdfpy.NC_INT, ('x','y'))
+        v1 = f.def_var('data1', pnetcdf.NC_INT, ('x','y'))
         # enable fill mode at file-level which applies to all netCDF variables of the file
-        old_fillmode = f.set_fill(pnetcdfpy.NC_FILL)
+        old_fillmode = f.set_fill(pnetcdf.NC_FILL)
         # check old_fillmode
-        assert(old_fillmode == pnetcdfpy.NC_NOFILL)
+        assert(old_fillmode == pnetcdf.NC_NOFILL)
         # define a netCDF variable after setting file filling mode
-        v2 = f.def_var('data2', pnetcdfpy.NC_INT, ('x','y'))
+        v2 = f.def_var('data2', pnetcdf.NC_INT, ('x','y'))
         # enter data mode and write partially values to the variable
         f.enddef()
         v1 = f.variables['data1']
@@ -73,7 +73,7 @@ class FileTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing file set fill mode for CDF-5/CDF-2/CDF-1 file format"""
-        f = pnetcdfpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         for i in [1,2]:
             v = f.variables[f'data{i}']
             # check the fill mode settings of each variable
@@ -81,7 +81,7 @@ class FileTestCase(unittest.TestCase):
             # check if no_fill flag is set to 0 
             self.assertTrue(no_fill == 0)
             # check if fill_value equals default fill value
-            self.assertTrue(fill_value == pnetcdfpy.NC_FILL_INT)
+            self.assertTrue(fill_value == pnetcdf.NC_FILL_INT)
         f.close()
 
 if __name__ == '__main__':

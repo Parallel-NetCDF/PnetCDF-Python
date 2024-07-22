@@ -1,4 +1,4 @@
-.. currentmodule:: pnetcdfpy
+.. currentmodule:: pnetcdf
 =========
 Variable
 =========
@@ -11,7 +11,7 @@ within a netCDF file. Particularly, data mode operations have a flexible
 interface, where reads and writes can be done through either explicit
 function-call style methods or indexer-style (numpy-like) syntax.
 
-.. autoclass:: pnetcdfpy::Variable
+.. autoclass:: pnetcdf::Variable
    :members: ncattrs, put_att, get_att, del_att, rename_att, get_dims, def_fill,
     inq_fill, fill_rec, set_auto_chartostring, set_auto_scale, set_auto_mask, 
     set_auto_maskandscale, put_var, put_var_all, get_var, get_var_all, iput_var, bput_var

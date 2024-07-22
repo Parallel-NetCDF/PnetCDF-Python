@@ -1,4 +1,4 @@
-# This file is part of pnetcdfpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -10,7 +10,7 @@
    It is a program which simultaneously transposes, subsamples and reads a variable within a netCDF file using 
    get_var method of `Variable` class, the library internally will invoke ncmpi_get_varm in C. 
 """
-import pnetcdfpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -49,13 +49,13 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pnetcdfpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
 
         # For the variable dimensioned with limited dims, we are writing 2D data on a 4 X 6 grid 
-        v1 = f.def_var('data1', pnetcdfpy.NC_FLOAT, ('x','y'))
+        v1 = f.def_var('data1', pnetcdf.NC_FLOAT, ('x','y'))
 
         # Enter data mode
         f.enddef()
@@ -75,7 +75,7 @@ class VariablesTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing reading variables with CDF5/CDF2/CDF1 file format"""
-        f = pnetcdfpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
        
         f.end_indep()
         v1 = f.variables['data1']
