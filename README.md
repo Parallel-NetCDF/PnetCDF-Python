@@ -1,5 +1,7 @@
 # PnetCDF-python
-![](https://img.shields.io/badge/python-v3.9-blue) ![](https://img.shields.io/badge/tests%20passed-49-brightgreen)
+![](https://img.shields.io/badge/python-v3.9-blue)
+![](https://img.shields.io/badge/tests%20passed-49-brightgreen)
+![](https://readthedocs.org/projects/pnetcdf-python/badge/?version=latest)
 
 ### Overview
 PnetCDF-python is a Python interface to
