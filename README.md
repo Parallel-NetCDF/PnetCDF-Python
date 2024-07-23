@@ -67,7 +67,7 @@ a summary of the current implementation status.
 
 
 ### Additional Resources
-* [PnetCDF-python User Guide](https://pnetcdfthon.readthedocs.io/en/latest/)
+* [PnetCDF-python User Guide](https://pnetcdf-python.readthedocs.io/en/latest/)
 * [Comparison between NetCDF4-python and PnetCDF-python](docs/nc4_vs_pnetcdf.md)
 * [PnetCDF](https://parallel-netcdf.github.io/)
 

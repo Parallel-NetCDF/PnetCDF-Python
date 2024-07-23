@@ -188,7 +188,7 @@ cdef class File:
 
         .. note:: This is a compulsory call before running define-mode operations. ``NetCDF4-python`` library automatically 
          switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally at the define-mode 
-         operations. This feature is NOT implemented in ``pnetcdfthon`` due to additional switching overheads between consecutive
+         operations. This feature is NOT implemented in ``pnetcdf-python`` due to additional switching overheads between consecutive
          define operations and potential hazards of hanging when performing independent I/O on multiple processes.
         """
         self._redef()
@@ -208,7 +208,7 @@ cdef class File:
 
         .. note:: This is a compulsory call before data-mode operations. ``NetCDF4-python`` library automatically 
          switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally at the define-mode 
-         operations. This feature is NOT implemented in ``pnetcdfthon`` due to additional switching overheads between consecutive
+         operations. This feature is NOT implemented in ``pnetcdf-python`` due to additional switching overheads between consecutive
          define operations and potential hazards of hanging when performing independent I/O on multiple processes.
         """
         self._enddef()

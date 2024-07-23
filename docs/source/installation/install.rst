@@ -54,7 +54,7 @@ Building PnetCDF-python from source
 
      # download PnetCDF-python source code
      $ git clone git@github.com:Parallel-NetCDF/PnetCDF-Python.git
-     $ cd pnetcdfthon
+     $ cd pnetcdf-python
 
      # install PnetCDF-python
      env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install -v .
