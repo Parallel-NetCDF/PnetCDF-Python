@@ -1,4 +1,4 @@
-import pncpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -38,13 +38,13 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # define dimensions and variables
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
 
-        var1 = f.def_var('var1', pncpy.NC_FLOAT, ('x', 'y'))
-        var2 = f.def_var('var2', pncpy.NC_FLOAT, ('x', 'y'))
+        var1 = f.def_var('var1', pnetcdf.NC_FLOAT, ('x', 'y'))
+        var2 = f.def_var('var2', pnetcdf.NC_FLOAT, ('x', 'y'))
         f.enddef()
         var1[:] = np.full((xdim, ydim), -1, dtype=np.float32)
         var2[:] = np.full((xdim, ydim), -1, dtype=np.float32)
@@ -129,7 +129,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing variable put vara all"""
 
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         # test collective i/o put_var
         v1 = f.variables['var1']
         assert_array_equal(v1[:], dataref)

@@ -53,8 +53,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -149,15 +149,15 @@ def pnetcdf_io(comm, filename, file_format, length):
 
 
     # Create the file
-    f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
 
     # Define dimensions
     dim_y = f.def_dim("Y", gsizes[0])
     dim_x = f.def_dim("X", gsizes[1])
 
     # Define variable with no transposed file layout: ZYX
-    var_yx = f.def_var("YX_var", pncpy.NC_INT, (dim_y, dim_x))
-    var_xy = f.def_var("XY_var", pncpy.NC_INT, (dim_x, dim_y))
+    var_yx = f.def_var("YX_var", pnetcdf.NC_INT, (dim_y, dim_x))
+    var_xy = f.def_var("XY_var", pnetcdf.NC_INT, (dim_x, dim_y))
 
      # Exit the define mode
     f.enddef()

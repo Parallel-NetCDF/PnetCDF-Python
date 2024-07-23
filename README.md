@@ -1,5 +1,7 @@
 # PnetCDF-python
-![](https://img.shields.io/badge/python-v3.9-blue) ![](https://img.shields.io/badge/tests%20passed-49-brightgreen)
+![](https://img.shields.io/badge/python-v3.9-blue)
+![](https://img.shields.io/badge/tests%20passed-49-brightgreen)
+![](https://readthedocs.org/projects/pnetcdf-python/badge/?version=latest)
 
 ### Overview
 PnetCDF-python is a Python interface to
@@ -16,7 +18,7 @@ components:
 
 | Component | Description |
 | ---- | --- |
-| **File** |`pncpy.File` is a high-level object representing a netCDF file, which provides a Pythonic interface to create, read and write contents in an netCDF file. A File object serves as the root container for dimensions, variables, and attributes. Together they describe the structures of data objects and relations among them stored in a netCDF file. |
+| **File** |`pnetcdf.File` is a high-level object representing a netCDF file, which provides a Pythonic interface to create, read and write contents in an netCDF file. A File object serves as the root container for dimensions, variables, and attributes. Together they describe the structures of data objects and relations among them stored in a netCDF file. |
 | **Attribute** | NetCDF attributes can be created, accessed, and manipulated using python dictionary-like syntax. A Pythonic interface for metadata operations is provided both in the `File` class (for global attributes) and the `Variable` class (for variable's attributes). |
 | **Dimension** | Dimension defines the dimensional shape of variables. NetCDF variables are multidimensional arrays. The `Dimension` object, which is also a key component of `File` class, provides an interface to create, access and manipulate dimensions. |
 | **Variable** | Variable is a core component of a netCDF file representing an array of data values organized along one or more dimensions. In addition to data types and dimensions, variables can be associated with attributes. The `Variable` object in the library provides operations to read and write the data and metadata of a variable stored in a netCDF file. Programming of PnetCDF is divided into `define` and `data` modes. New data objects can be created in the `define` mode. Reading and writings data objects are done in the `data` mode, which can be done through either explicit function-call style methods or indexer-style (numpy-like) syntax. |

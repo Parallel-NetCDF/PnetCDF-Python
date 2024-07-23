@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -10,7 +10,7 @@
    The program runs read the whole value from a netCDF variable of an opened netCDF file using 
    get_var method of `Variable` class. The library will internally invoke ncmpi_put_var in C. 
 """
-import pncpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -41,13 +41,13 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
 
-        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.def_var('data1', pnetcdf.NC_INT, ('x','y','z'))
 
         # initialize variable values using indexer syntax
         f.enddef()
@@ -61,7 +61,7 @@ class VariablesTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing variable get_var method for CDF-5/CDF-2/CDF-1 file format"""
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         v1 = f.variables['data1']
         # test independent i/o get_var 
         f.begin_indep()

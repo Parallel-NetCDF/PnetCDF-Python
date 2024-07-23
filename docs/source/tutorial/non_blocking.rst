@@ -1,4 +1,4 @@
-.. currentmodule:: pncpy
+.. currentmodule:: pnetcdf
 ==============================
 Non-blocking Reads and Writes
 ==============================

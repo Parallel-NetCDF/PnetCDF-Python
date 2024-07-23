@@ -56,8 +56,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -117,7 +117,7 @@ def pnetcdf_io(comm, filename, file_format):
 
 
     # Create the file
-    f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
     # Add a global attribute: a time stamp at rank 0
     if rank == 0:
         str_att = "Sun May 14 15:47:48 2023"
@@ -130,7 +130,7 @@ def pnetcdf_io(comm, filename, file_format):
     dim_y = f.def_dim("Y", global_ny)
     dim_x = f.def_dim("X",global_nx)
     # Define a 2D variable of integer type
-    var = f.def_var("var", pncpy.NC_INT, (dim_y, dim_x))
+    var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))
     # Add attributes to the variable
     str_att = "example attribute of type text."
     var.put_att("str_att_name", str_att)

@@ -96,7 +96,7 @@ cdef class Dimension:
 
         Return the file that this ``Dimension`` is a member of.
 
-        :rtype: :class:`pncpy.File`
+        :rtype: :class:`pnetcdf.File`
         """
         return self._file
 

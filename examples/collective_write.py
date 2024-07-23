@@ -34,8 +34,8 @@ fashion.
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -122,7 +122,7 @@ def pnetcdf_io(comm, filename, file_format, length):
 
     # Create the file
     try:
-        f = pncpy.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
         comm.Abort()
@@ -137,7 +137,7 @@ def pnetcdf_io(comm, filename, file_format, length):
     # Define variables
     vars = []
     for i in range(NUM_VARS):
-        var = f.def_var("var{}".format(i), pncpy.NC_INT, dims)
+        var = f.def_var("var{}".format(i), pnetcdf.NC_INT, dims)
         vars.append(var)
     # Exit the define mode
     f.enddef()

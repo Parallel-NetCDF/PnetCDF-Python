@@ -21,8 +21,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 
 verbose = True
@@ -77,11 +77,11 @@ def main():
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # create a new file using "w" mode
-    f = pncpy.File(filename=filename, mode = 'w', comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
     # close the file
     f.close()
     # open the newly created file for read only
-    f = pncpy.File(filename=filename, mode = 'r', comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'r', comm=comm, info=None)
     # close the file
     f.close()
     pnetcdf_check_mem_usage(comm)

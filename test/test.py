@@ -2,16 +2,16 @@
 # should delete in future
 
 from mpi4py import MPI
-import pncpy
+import pnetcdf
 
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-file0 = pncpy.File(filename="test0.nc", comm=comm, info=None)
-file = pncpy.File(filename="test.nc", comm=comm, info=None)
-dim = pncpy.Dimension(file=file)
+file0 = pnetcdf.File(filename="test0.nc", comm=comm, info=None)
+file = pnetcdf.File(filename="test.nc", comm=comm, info=None)
+dim = pnetcdf.Dimension(file=file)
 
 file.dim = dim
 

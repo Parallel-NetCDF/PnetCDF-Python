@@ -1,4 +1,4 @@
-.. currentmodule:: pncpy
+.. currentmodule:: pnetcdf
 =================================
 Comparing with netCDF4-python API
 =================================

@@ -44,8 +44,8 @@
 import sys
 import os
 from mpi4py import MPI
-import pncpy
-from pncpy import inq_malloc_max_size, inq_malloc_size
+import pnetcdf
+from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 
@@ -109,7 +109,7 @@ def main():
     if verbose and rank == 0:
         print("{}: example of file create and open".format(__file__))
     # create a new file using "w" mode
-    f = pncpy.File(filename=filename, mode = 'w', comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
     # the global array is NY * (NX * nprocs)
     global_ny = NY
     global_nx = NX * nprocs
@@ -118,17 +118,17 @@ def main():
     dim_x = f.def_dim('X',global_nx)
     dim_y = f.def_dim('Y',global_ny)
     # define a 2D variable of integer type
-    fix_var = f.def_var("fix_var", pncpy.NC_INT, (dim_y, dim_x))
-    rec_var =  f.def_var("rec_var", pncpy.NC_INT, (dim_xu, dim_x))
+    fix_var = f.def_var("fix_var", pnetcdf.NC_INT, (dim_y, dim_x))
+    rec_var =  f.def_var("rec_var", pnetcdf.NC_INT, (dim_xu, dim_x))
     # set the fill mode to NC_FILL for the entire file
-    old_fillmode = f.set_fill(pncpy.NC_FILL)
+    old_fillmode = f.set_fill(pnetcdf.NC_FILL)
     if verbose:
-        if old_fillmode == pncpy.NC_FILL:
+        if old_fillmode == pnetcdf.NC_FILL:
             print("The old fill mode is NC_FILL\n")
         else:
             print("The old fill mode is NC_NOFILL\n")
     # set the fill mode to back to NC_NOFILL for the entire file
-    f.set_fill(pncpy.NC_NOFILL)
+    f.set_fill(pnetcdf.NC_NOFILL)
     # set the variable's fill mode to NC_FILL with default fill value
     fix_var.def_fill(no_fill = 0)
     # set a customized fill value -1
@@ -144,7 +144,7 @@ def main():
     fix_var.put_var_all(buf, start = starts, count = counts)
     no_fill, fill_value = fix_var.inq_fill()
     assert(no_fill == 0)
-    assert(fill_value == pncpy.NC_FILL_INT)
+    assert(fill_value == pnetcdf.NC_FILL_INT)
 
     # fill the 1st record of the record variable
     counts[0] = 1

@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -15,7 +15,7 @@
     `mpiexec -n [num_process] python3  tst_file_mode.py [test_file_output_dir](optional)`
 
 """
-import pncpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -60,7 +60,7 @@ class FileTestCase(unittest.TestCase):
     def runTest(self):
         """testing file access with different modes with CDF5/CDF2/CDF1 file format"""
         # TEST MODE "w"
-        with pncpy.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
+        with pnetcdf.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
         # Try writing to file by defining a dimension
             f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
@@ -69,7 +69,7 @@ class FileTestCase(unittest.TestCase):
 
 
         # TEST MODE "r"
-        with pncpy.File(filename=self.file_path, mode='r') as f:
+        with pnetcdf.File(filename=self.file_path, mode='r') as f:
         # Try writing to file by defining a dimension
             try:
                 f.redef()
@@ -82,7 +82,7 @@ class FileTestCase(unittest.TestCase):
             self.assertTrue('x' in f.dimensions.keys())
         
         # TEST MODE "r+"
-        with pncpy.File(filename=self.file_path, mode='r+') as f:
+        with pnetcdf.File(filename=self.file_path, mode='r+') as f:
             f.redef()
             # Try writing to file by defining a dimension
             f.def_dim('y',ydim)
@@ -95,7 +95,7 @@ class FileTestCase(unittest.TestCase):
 
 
         # TEST MODE "a"
-        with pncpy.File(filename=self.file_path, mode='a') as f:
+        with pnetcdf.File(filename=self.file_path, mode='a') as f:
             f.redef()
             # Try writing to file by defining a dimension
             f.def_dim('z',zdim)
@@ -110,7 +110,7 @@ class FileTestCase(unittest.TestCase):
         # TEST MODE "x"
         # Try create a new file with the same name using mode "x"
         try:
-            f = pncpy.File(filename=self.file_path, mode='x')
+            f = pnetcdf.File(filename=self.file_path, mode='x')
         except OSError:
             pass
         else:

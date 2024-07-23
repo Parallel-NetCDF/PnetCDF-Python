@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -11,7 +11,7 @@
    into a netCDF variable of an opened netCDF file using put_var method of `Variable` class. The 
    library will internally invoke ncmpi_put_var1 in C. 
 """
-import pncpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -48,14 +48,14 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         # select the next file format for testing
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
 
-        v1_u = f.def_var('data1u', pncpy.NC_INT, ('xu','y','z'))
-        v2_u = f.def_var('data2u', pncpy.NC_INT, ('xu','y','z'))
+        v1_u = f.def_var('data1u', pnetcdf.NC_INT, ('xu','y','z'))
+        v2_u = f.def_var('data2u', pnetcdf.NC_INT, ('xu','y','z'))
 
         #initialize variable values
         f.enddef()
@@ -64,7 +64,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
 
         
-        f = pncpy.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         v1_u = f.variables['data1u']
         # equivalent code to the following using indexer syntax: v1_u[rank][rank][rank] = value
         index = (rank, rank, rank)
@@ -91,7 +91,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing variable put var1 for CDF-5/CDF-2/CDF-1 file format"""
 
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         # test collective i/o put var1
         v1 = f.variables['data1u']
         # compare returned array with the reference array

@@ -11,7 +11,7 @@ you can use pip:
 
 .. code-block:: bash
 
-    $ env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pncpy
+    $ env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pnetcdf
 
 
 Install from Source

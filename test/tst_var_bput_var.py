@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -13,13 +13,13 @@
    using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_var and 
    ncmpi_attach_buffer in C. 
 """
-import pncpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
-from pncpy import strerror, strerrno
+from pnetcdf import strerror, strerrno
 from utils import validate_nc_file
 import io
 
@@ -41,7 +41,7 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
@@ -51,7 +51,7 @@ class VariablesTestCase(unittest.TestCase):
         # assert(f.inq_buff_size() == buffsize)
         # define 20 netCDF variables
         for i in range(2 * num_reqs):
-            v = f.def_var(f'data{i}', pncpy.NC_INT, ('x','y','z'))
+            v = f.def_var(f'data{i}', pnetcdf.NC_INT, ('x','y','z'))
 
         # post 10 requests to write the whole variable for the first 10 variables
         f.enddef()
@@ -84,7 +84,7 @@ class VariablesTestCase(unittest.TestCase):
         
 
         # all processes commit all pending put requests to the file at once using wait_all (collective i/o)
-        f.wait_all(num = pncpy.NC_PUT_REQ_ALL)
+        f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         # relase the internal buffer
         f.detach_buff()
         f.close()
@@ -100,7 +100,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing variable bput var all for CDF-5/CDF-2/CDF-1 file format"""
 
-        f = pncpy.File(self.file_path, 'r')
+        f = pnetcdf.File(self.file_path, 'r')
         # test bput_var and collective i/o wait_all
         for i in range(2 * num_reqs):
             v = f.variables[f'data{i}']

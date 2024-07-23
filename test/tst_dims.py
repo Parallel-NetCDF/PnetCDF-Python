@@ -4,7 +4,7 @@ import os
 import tempfile
 from numpy.random.mtrand import uniform
 from mpi4py import MPI
-import pncpy
+import pnetcdf
 from utils import validate_nc_file
 import io
 
@@ -29,7 +29,7 @@ VAR_NAME2='temp2'
 VAR_NAME3='temp3'
 VAR_NAME4='temp4'
 VAR_NAME5='temp5'
-VAR_TYPE= pncpy.NC_DOUBLE
+VAR_TYPE= pnetcdf.NC_DOUBLE
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -43,7 +43,7 @@ class DimensionsTestCase(unittest.TestCase):
         else:
             self.file_path = FILE_NAME
         self._file_format = file_formats.pop(0)
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         lat_dim=f.def_dim(LAT_NAME,LAT_LEN)
         lon_dim=f.def_dim(LON_NAME,LON_LEN)
         lev_dim=f.def_dim(LEVEL_NAME,LEVEL_LEN)
@@ -70,7 +70,7 @@ class DimensionsTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
     def test_dim_name(self):
-        f  = pncpy.File(self.file_path, 'r+')
+        f  = pnetcdf.File(self.file_path, 'r+')
         v1 = f.variables[VAR_NAME1]
         v2 = f.variables[VAR_NAME2]
         v3 = f.variables[VAR_NAME3]
@@ -101,7 +101,7 @@ class DimensionsTestCase(unittest.TestCase):
         f.close()
 
     def test_dim_len(self):
-        f  = pncpy.File(self.file_path, 'r+')
+        f  = pnetcdf.File(self.file_path, 'r+')
 
         v1 = f.variables[VAR_NAME1]
         v2 = f.variables[VAR_NAME2]
@@ -125,7 +125,7 @@ class DimensionsTestCase(unittest.TestCase):
         f.close()
 
     def test_isunlimited(self):
-        f  = pncpy.File(self.file_path, 'r+')
+        f  = pnetcdf.File(self.file_path, 'r+')
 
         v1 = f.variables[VAR_NAME1]
         v2 = f.variables[VAR_NAME2]
@@ -155,7 +155,7 @@ class DimensionsTestCase(unittest.TestCase):
     def test_len_var(self):
         # add some data to variable along unlimited dims,
         # make sure length of dimensions change correctly.
-        f  = pncpy.File(self.file_path, 'r+')
+        f  = pnetcdf.File(self.file_path, 'r+')
 
         v1 = f.variables[VAR_NAME1]
         v2 = f.variables[VAR_NAME2]
@@ -188,7 +188,7 @@ class DimensionsTestCase(unittest.TestCase):
     def test_get_dims(self):
 
         # check get_dims variable method
-        f  = pncpy.File(self.file_path, 'r+')
+        f  = pnetcdf.File(self.file_path, 'r+')
         
         v1 = f.variables[VAR_NAME1]
         v2 = f.variables[VAR_NAME2]

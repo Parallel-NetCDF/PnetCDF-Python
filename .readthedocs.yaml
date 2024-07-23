@@ -5,35 +5,26 @@ build:
   apt_packages:
     - mpich
     - libmpich-dev
-    - libhdf5-mpich-dev 
 
   tools:
     python: "3.10"
   jobs:
     pre_install:
-      # - curl -u ${USERNAME}:${PASSWORD} https://httpbin.org/basic-auth/username/password
-      # - export PNETCDF_VERSION="1.12.3"
-      # - export $READTHEDOCS_OUTPUT/PnetCDF=$READTHEDOCS_OUTPUT/PnetCDF
-      # - export CC=mpicc.mpich
-      - echo "Download and build PnetCDF version 1.12.3"
-      - echo $READTHEDOCS_OUTPUT
-      - wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
-      - tar -xzf pnetcdf-1.12.3.tar.gz
-      - cd ./pnetcdf-1.12.3; ./configure --prefix $READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8; make install
-      # - export PATH=$READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH 
-      # - echo "$PATH"
-      # - cd ..
-      # - python -m pip install --upgrade pip
+      - echo "CC=$CC"
+      - echo "PNETCDF_VER=$PNETCDF_VER"
+      - echo "Download and build PnetCDF version $PNETCDF_VER"
+      - wget https://parallel-netcdf.github.io/Release/pnetcdf-$PNETCDF_VER.tar.gz
+      - tar -xzf pnetcdf-$PNETCDF_VER.tar.gz
+      - echo "Installing PnetCDF-C in PNETCDF_DIR=$PNETCDF_DIR"
+      - cd ./pnetcdf-$PNETCDF_VER ; ./configure --prefix=${PNETCDF_DIR} --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8 install
       - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
-      
 
 python:
   install:
     - requirements: docs/requirements.txt
     - method: pip
       path: .
-    
-
 
 sphinx:
   configuration: docs/source/conf.py
+

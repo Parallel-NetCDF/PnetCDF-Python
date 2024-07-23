@@ -1,4 +1,4 @@
-# This file is part of pncpy, a Python interface to the PnetCDF library.
+# This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
 # Copyright (C) 2023, Northwestern University
@@ -13,7 +13,7 @@
     To run the test, execute the following
     `mpiexec -n [num_process] python3 tst_var_type.py [test_file_output_dir](optional)`
 """
-import pncpy
+import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
 import tempfile, unittest, os, random, sys
@@ -54,13 +54,13 @@ class VariablesTestCase(unittest.TestCase):
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
         # Create the test data file 
-        f = pncpy.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
         # Define 3 variables with same nc datatype NC_INT
-        v1 = f.def_var('data1', pncpy.NC_INT, ('x','y','z'))
+        v1 = f.def_var('data1', pnetcdf.NC_INT, ('x','y','z'))
         v2 = f.def_var('data2', 'i4', ('x','y','z'))
         v3 = f.def_var('data3', np.dtype('int32'), ('x','y','z'))
 
@@ -86,7 +86,7 @@ class VariablesTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing writing data of mismatched datatypes with CDF5/CDF2/CDF1 file format"""
-        f = pncpy.File(self.file_path, 'r+')
+        f = pnetcdf.File(self.file_path, 'r+')
         f.end_indep()
         # Compare returned variable data with reference data
         v1 = f.variables['data1']   
@@ -101,7 +101,7 @@ class VariablesTestCase(unittest.TestCase):
         if self._file_format != "64BIT_DATA":
             f.redef()
         try:
-            f.def_var('data3', pncpy.NC_UINT64, ('x','y','z'))
+            f.def_var('data3', pnetcdf.NC_UINT64, ('x','y','z'))
         except RuntimeError:
             pass
         else:

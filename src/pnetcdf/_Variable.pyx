@@ -39,7 +39,7 @@ cdef class Variable:
         """
         __init__(self, file, name, nc_dtype, dimensions=(), **kwargs)
 
-        The constructor for :class:`pncpy.Variable`.
+        The constructor for :class:`pnetcdf.Variable`.
 
         :param varname: Name of the new variable.
         :type varname: str
@@ -47,27 +47,27 @@ cdef class Variable:
         :param nc_dtype: The datatype of the new variable. Can be specified by providing a NC module constant,
          or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are: 
 
-            - ``pncpy.NC_CHAR`` or ``S1`` for 1-character string 
-            - ``pncpy.NC_BYTE`` or ``i1`` for 1-byte integer
-            - ``pncpy.NC_SHORT`` or ``i2`` for 2-byte signed integer 
-            - ``pncpy.NC_INT`` or ``i4`` for 4-byte signed integer
-            - ``pncpy.NC_FLOAT`` or ``f4`` for 4-byte floating point number
-            - ``pncpy.NC_DOUBLE`` or ``f8`` for 8-byte real number in double precision
+            - ``pnetcdf.NC_CHAR`` or ``S1`` for 1-character string 
+            - ``pnetcdf.NC_BYTE`` or ``i1`` for 1-byte integer
+            - ``pnetcdf.NC_SHORT`` or ``i2`` for 2-byte signed integer 
+            - ``pnetcdf.NC_INT`` or ``i4`` for 4-byte signed integer
+            - ``pnetcdf.NC_FLOAT`` or ``f4`` for 4-byte floating point number
+            - ``pnetcdf.NC_DOUBLE`` or ``f8`` for 8-byte real number in double precision
          
          The following datatypes are `CDF-5` format only
 
-            - ``pncpy.NC_UBYTE`` or ``u1`` for unsigned 1-byte integer
-            - ``pncpy.NC_USHORT`` or ``u2`` for unsigned 2-byte integer
-            - ``pncpy.NC_UINT`` or ``u4`` for unsigned 4-byte intege
-            - ``pncpy.NC_INT64`` or ``i8`` for signed 8-byte integer
-            - ``pncpy.NC_UINT64`` or ``u8`` for unsigned 8-byte integer
+            - ``pnetcdf.NC_UBYTE`` or ``u1`` for unsigned 1-byte integer
+            - ``pnetcdf.NC_USHORT`` or ``u2`` for unsigned 2-byte integer
+            - ``pnetcdf.NC_UINT`` or ``u4`` for unsigned 4-byte intege
+            - ``pnetcdf.NC_INT64`` or ``i8`` for signed 8-byte integer
+            - ``pnetcdf.NC_UINT64`` or ``u8`` for unsigned 8-byte integer
         
         :type nc_dtype: int
         :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
          or dimension class instances. Default is an empty tuple which means the variable is 
          a scalar (and therefore has no dimensions).
 
-        :type dimensions: tuple of str or :class:`pncpy.Dimension` instances
+        :type dimensions: tuple of str or :class:`pnetcdf.Dimension` instances
         
         :param fill_value: The fill value of the new variable. Accepted values are:
 
@@ -78,7 +78,7 @@ cdef class Variable:
          is replaced with this value.
 
         :return: The created variable
-        :rtype: :class:`pncpy.Variable`
+        :rtype: :class:`pnetcdf.Variable`
 
         """
 
@@ -273,7 +273,7 @@ cdef class Variable:
 
         Return the netCDF file instance that the variable is contained in.
 
-        :rtype: :class:`pncpy.File`
+        :rtype: :class:`pnetcdf.File`
         """
         return self._file
     def ncattrs(self):
