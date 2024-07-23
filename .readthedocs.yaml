@@ -11,19 +11,15 @@ build:
     python: "3.10"
   jobs:
     pre_install:
-      # - curl -u ${USERNAME}:${PASSWORD} https://httpbin.org/basic-auth/username/password
+
       # - export PNETCDF_VERSION="1.12.3"
       # - export $READTHEDOCS_OUTPUT/PnetCDF=$READTHEDOCS_OUTPUT/PnetCDF
       # - export CC=mpicc.mpich
-      - echo "Download and build PnetCDF version 1.12.3"
+      - echo "Download and build PnetCDF version $PNETCDF_VER"
       - echo $READTHEDOCS_OUTPUT
-      - wget https://parallel-netcdf.github.io/Release/pnetcdf-1.12.3.tar.gz
-      - tar -xzf pnetcdf-1.12.3.tar.gz
-      - cd ./pnetcdf-1.12.3; ./configure --prefix $READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8; make install
-      # - export PATH=$READTHEDOCS_OUTPUT/PnetCDF/bin:$PATH 
-      - echo $PNETCDF_DIR_TEST
-      # - cd ..
-      # - python -m pip install --upgrade pip
+      - wget https://parallel-netcdf.github.io/Release/pnetcdf-$PNETCDF_VER.tar.gz
+      - tar -xzf pnetcdf-$PNETCDF_VER.tar.gz
+      - cd ./pnetcdf-$PNETCDF_VER; ./configure --prefix $READTHEDOCS_OUTPUT/PnetCDF --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8; make install
       - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
       
 
