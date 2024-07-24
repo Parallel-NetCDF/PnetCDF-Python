@@ -1,3 +1,10 @@
+###############################################################################
+# 
+#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+#  See COPYRIGHT notice in top-level directory.
+# 
+###############################################################################
+
 from ._File cimport File
 from ._utils cimport _strencode, _check_err
 cimport mpi4py.MPI as MPI

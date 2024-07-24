@@ -1,3 +1,10 @@
+###############################################################################
+# 
+#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+#  See COPYRIGHT notice in top-level directory.
+# 
+###############################################################################
+
 include "PnetCDF.pxi"
 from ._File cimport File
 from cpython.mem cimport PyMem_Malloc, PyMem_Free

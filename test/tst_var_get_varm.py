@@ -1,7 +1,7 @@
 # This file is part of pnetcdf, a Python interface to the PnetCDF library.
 #
 #
-# Copyright (C) 2023, Northwestern University
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
 # See COPYRIGHT notice in top-level directory
 # License:  
 

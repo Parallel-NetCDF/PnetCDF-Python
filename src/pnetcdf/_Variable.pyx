@@ -1,3 +1,10 @@
+###############################################################################
+# 
+#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+#  See COPYRIGHT notice in top-level directory.
+# 
+###############################################################################
+
 import sys
 import os
 import subprocess

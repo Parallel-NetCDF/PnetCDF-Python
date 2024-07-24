@@ -1,3 +1,10 @@
+###############################################################################
+# 
+#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+#  See COPYRIGHT notice in top-level directory.
+# 
+###############################################################################
+
 include "PnetCDF.pxi"
 cdef _check_err(ierr, err_cls=*, filename=*)
 cdef _strencode(pystr, encoding=*)
