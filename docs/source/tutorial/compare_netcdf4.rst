@@ -32,8 +32,9 @@ Difference in Programming Model
     partial processes are performing independent I/O(while others don't) because :meth:`File.enddef` is a collective call which requires all processes to participate.
 
  Independent/Collective I/O Mode
-  There are two types of parallel IO, independent (the default) and collective supported both in PnetCDF-python and netCDF4-python. NetCDF4-python toggles back and forth
-  between the two types at variable-level. However, PnetCDF-python manages this at file-level through :meth:`File.begin_indep` and :meth:`File.end_indep`.
+  There are two types of parallel I/O, independent I/O and collective I/O supported both in PnetCDF-python and netCDF4-python. NetCDF4-python toggles back and forth
+  between the two types at variable-level. However, PnetCDF-python manages this at file-level through :meth:`File.begin_indep` and :meth:`File.end_indep`. The default I/O mode 
+  is collective I/O in PnetCDF-python.
  
 
 Alternative Reads and Writes Methods
