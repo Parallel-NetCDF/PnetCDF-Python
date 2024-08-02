@@ -36,7 +36,6 @@ import sys
 import os
 from mpi4py import MPI
 import pnetcdf
-from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -70,24 +69,6 @@ def print_info(info_used):
     print("MPI hint: cb_buffer_size  =", info_used.Get("cb_buffer_size"))
     print("MPI hint: striping_factor =", info_used.Get("striping_factor"))
     print("MPI hint: striping_unit   =", info_used.Get("striping_unit"))
-
-def pnetcdf_check_mem_usage(comm):
-    rank = comm.Get_rank()
-    malloc_size, sum_size = 0, 0
-    # print info about PnetCDF internal malloc usage
-    try:
-        malloc_size = inq_malloc_max_size()
-    except:
-        return 
-    else:
-        sum_size = comm.reduce(malloc_size, MPI.SUM, root=0)
-        if rank == 0 and verbose:
-            print("Maximum heap memory allocated by PnetCDF internally is {} bytes".format(sum_size))
-        # check if there is any PnetCDF internal malloc residue
-        malloc_size = inq_malloc_size()
-        sum_size = comm.reduce(malloc_size, MPI.SUM, root=0)
-        if rank == 0 and sum_size > 0:
-            print("Heap memory allocated by PnetCDF internally has {} bytes yet to be freed".format(sum_size))
 
 def pnetcdf_io(comm, filename, file_format, length):
     rank = comm.Get_rank()
@@ -315,8 +296,6 @@ def main():
         print("-------  ------------------  ---------  -----------")
         print(" {:4d}    {:4d} x {:4d} x {:4d} {:8.2f}  {:10.2f}\n".format(nprocs, gsizes[0], gsizes[1], gsizes[2], max_write_timing, write_bw))
 
-
-    pnetcdf_check_mem_usage(comm)
     MPI.Finalize()
 
 if __name__ == "__main__":
