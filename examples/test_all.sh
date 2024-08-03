@@ -19,7 +19,7 @@ if test "x$PNETCDF_DIR" != x ; then
    V_MINOR=`echo ${PNETCDF_C_VERSION} | cut -d. -f2`
    V_SUB=`echo ${PNETCDF_C_VERSION} | cut -d. -f3`
    VER_NUM=$((V_MAJOR*1000000 + V_MINOR*1000 + V_SUB))
-   if test $VER_NUM > 1013000 ; then
+   if test $VER_NUM -gt 1013000 ; then
       TEST_FLEXIBLE_API=yes
    fi
 fi
