@@ -1,4 +1,4 @@
-name: Build and Test Linux with pnetcdf-c built from source
+name: Test PnetCDF-C latest official release
 on:
   push:
     branches:
@@ -20,15 +20,16 @@ jobs:
     timeout-minutes: 60
     env:
       MPICH_VERSION: 4.2.0
-      PNETCDF_VERSION: repo
-      PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
       MPICH_DIR: ${{ github.workspace }}/mpich-install
-
+      PNETCDF_VERSION: 1.13.0
+      PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
     strategy:
       matrix:
         python-version: ["3.10"]
     steps:
+
     - uses: actions/checkout@v4
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -36,12 +37,8 @@ jobs:
 
     - name: Install Ubuntu Dependencies
       run: |
-        set -x
         sudo apt-get update
-        sudo apt-get install csh
-        sudo apt-get install automake autoconf libtool libtool-bin m4
-        # sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev 
-        # sudo apt-get install mpich libmpich-dev libhdf5-mpich-dev libcurl4-openssl-dev bzip2 libsnappy-dev libblosc-dev libzstd-dev
+        sudo apt-get install m4
 
     - name: Build MPICH
       run: |
@@ -56,43 +53,51 @@ jobs:
                     --with-file-system=ufs \
                     --with-device=ch3:sock \
                     --enable-shared\
-                    CC=gcc 
+                    --disable-fortran \
+                    CC=gcc
         make -s LIBTOOLFLAGS=--silent V=1 -j 4 install > qout 2>&1
         make -s -j 4 distclean >> qout 2>&1
-    - name: Build PnetCDF
+
+    - name: Build PnetCDF-C official release
       run: |
-        echo "Build PnetCDF from source"
-        cd ${GITHUB_WORKSPACE}
-        git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
-        pushd PnetCDF
-        autoreconf -i
-        ./configure --prefix $PNETCDF_DIR --enable-shared --enable-debug --disable-fortran --disable-cxx --with-mpi=$MPICH_DIR
-        make -j 8
-        make install
+        echo "Download and build PnetCDF-C release version ${PNETCDF_VERSION}"
+        wget -q https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
+        tar -xzf pnetcdf-${PNETCDF_VERSION}.tar.gz
+        pushd pnetcdf-${PNETCDF_VERSION}
+        ./configure --prefix=$PNETCDF_DIR \
+                    --silent \
+                    --enable-shared \
+                    --enable-debug \
+                    --disable-fortran \
+                    --disable-cxx \
+                    --with-mpi=$MPICH_DIR
+        make -s LIBTOOLFLAGS=--silent V=1 -j 4 install > qout 2>&1
+        make -s -j 4 distclean >> qout 2>&1
         popd
+
     - name: Install python dependencies via pip
       run: |
         python -m pip install --upgrade pip
-        pip install numpy cython cftime pytest twine wheel check-manifest 
+        pip install numpy cython cftime pytest twine wheel check-manifest
         export MPICC=$MPICH_DIR/bin/mpicc
         pip install mpi4py
 
-    - name: Install pnetcdf
+    - name: Install PnetCDF-Python
       run: |
-        export PATH=${PNETCDF_DIR}/bin:${PATH}
         export CC=$MPICH_DIR/bin/mpicc
         python setup.py install
-    - name: Test
+
+    - name: Test PnetCDF-Python
       run: |
         export PATH=${MPICH_DIR}/bin:${PATH}
-        # serial
-        chmod 700 ./test_all.sh
 
+        chmod 700 ./test_all.sh
         export NPROC=3 && ./test_all.sh
         export NPROC=8 && ./test_all.sh
         export NPROC=10 && ./test_all.sh
 
         cd examples
+        chmod 700 ./test_all.sh
         export NPROC=3 && ./test_all.sh
         export NPROC=8 && ./test_all.sh
         export NPROC=10 && ./test_all.sh
