@@ -49,12 +49,12 @@ Building PnetCDF-python from source
      $ pip install --upgrade pip
 
      # install Python libraries
-     $ pip install numpy Cython setuptools
-     $ env MPICC=/path/to/mpicc pip install mpi4py
+     $ pip install numpy Cython setuptools wheel packaging
+     $ env CC=/path/to/mpicc pip install mpi4py
 
      # download PnetCDF-python source code
      $ git clone git@github.com:Parallel-NetCDF/PnetCDF-Python.git
      $ cd PnetCDF-Python
 
      # install PnetCDF-python
-     env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install -v .
+     env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install --no-build-isolation -v .

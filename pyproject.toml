@@ -3,8 +3,9 @@ requires = [
     "Cython>=0.29",
     "numpy",
     "setuptools>=65",
-    "mpi4py<4.0.0",
-    "packaging>=23.1"
+    "mpi4py>=3.1.4",
+    "packaging>=23.1",
+    "wheel"
 ]
 build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
@@ -36,7 +37,7 @@ classifiers = [
 dependencies = [
     "Cython",
     "numpy",
-    "mpi4py<4.0.0"
+    "mpi4py"
 ]
 dynamic = [
     "version"
