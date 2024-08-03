@@ -43,7 +43,6 @@ import sys
 import os
 from mpi4py import MPI
 import pnetcdf
-from pnetcdf import inq_malloc_max_size, inq_malloc_size
 import argparse
 import numpy as np
 import inspect
@@ -69,25 +68,6 @@ def parse_help(comm):
             print(help_text)
 
     return help_flag
-
-def pnetcdf_check_mem_usage(comm):
-    rank = comm.Get_rank()
-    malloc_size, sum_size = 0, 0
-    # print info about PnetCDF internal malloc usage
-    try:
-        malloc_size = inq_malloc_max_size()
-    except:
-        return 
-    else:
-        sum_size = comm.reduce(malloc_size, MPI.SUM, root=0)
-        if rank == 0 and verbose:
-            print("Maximum heap memory allocated by PnetCDF internally is {} bytes".format(sum_size))
-        # check if there is any PnetCDF internal malloc residue
-        malloc_size = inq_malloc_size()
-        sum_size = comm.reduce(malloc_size, MPI.SUM, root=0)
-        if rank == 0 and sum_size > 0:
-            print("Heap memory allocated by PnetCDF internally has {} bytes yet to be freed".format(sum_size))
-
 
 def main():
     comm = MPI.COMM_WORLD
@@ -119,7 +99,8 @@ def main():
         file_format = kind_dict[args.k]
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of writing multiple variables in a call".format(os.path.basename(__file__)))
+
     # Run pnetcdf i/o
     f = pnetcdf.File(filename=filename, mode = 'w', format=file_format, comm=comm, info=None)
     dimx = f.def_dim('x',NX)
@@ -196,7 +177,6 @@ def main():
     v.put_var_all(buffer, start = starts, count = counts, num = num_reqs)
     f.close()
 
-    pnetcdf_check_mem_usage(comm)
     MPI.Finalize()
 
 if __name__ == "__main__":
