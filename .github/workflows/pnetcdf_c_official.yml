@@ -61,10 +61,11 @@ jobs:
     - name: Build PnetCDF-C official release
       run: |
         echo "Download and build PnetCDF-C release version ${PNETCDF_VERSION}"
-        wget https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
+        wget -q https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
         tar -xzf pnetcdf-${PNETCDF_VERSION}.tar.gz
         pushd pnetcdf-${PNETCDF_VERSION}
         ./configure --prefix=$PNETCDF_DIR \
+                    --silent \
                     --enable-shared \
                     --enable-debug \
                     --disable-fortran \
