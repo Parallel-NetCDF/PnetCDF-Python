@@ -87,7 +87,8 @@ def main():
         verbose = False
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of setting fill mode".format(os.path.basename(__file__)))
+
     # create a new file using "w" mode
     f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
     # the global array is NY * (NX * nprocs)

@@ -99,7 +99,8 @@ def main():
         file_format = kind_dict[args.k]
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of writing multiple variables in a call".format(os.path.basename(__file__)))
+
     # Run pnetcdf i/o
     f = pnetcdf.File(filename=filename, mode = 'w', format=file_format, comm=comm, info=None)
     dimx = f.def_dim('x',NX)

@@ -153,7 +153,8 @@ def main():
         file_format = kind_dict[args.k]
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of writing subarrays".format(os.path.basename(__file__)))
+
     # Run pnetcdf i/o
     pnetcdf_io(comm, filename, file_format)
 
