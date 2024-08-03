@@ -25,7 +25,7 @@ applications that require parallel access to netCDF files.
 * Make sure utility program `pnetcdf-config` is available in `$PNETCDF_DIR/bin`.
 * Run command below to install.
   ```
-  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install --no-build-isolation .
+  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install --no-build-isolation -e .
   ```
 * Testing
   + Run command below to test all the test programs available in folder

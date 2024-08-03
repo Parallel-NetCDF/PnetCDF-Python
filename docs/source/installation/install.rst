@@ -57,4 +57,4 @@ Building PnetCDF-python from source
      $ cd PnetCDF-Python
 
      # install PnetCDF-python
-     env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install --no-build-isolation -v .
+     env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install --no-build-isolation -e .
