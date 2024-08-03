@@ -231,7 +231,7 @@ cdef class File:
         """
         begin_indep(self)
 
-        The file leaves from collective data mode and enters into independent data mode.
+        The file leaves from collective data mode and enters into independent data mode. The default mode is collective data mode.
 
         """
         cdef int ierr
@@ -245,7 +245,7 @@ cdef class File:
         """
         end_indep(self)
 
-        This file leaves from independent data mode and enters into collective data mode.
+        This file leaves from independent data mode and enters into collective data mode. The default mode is collective data mode.
         """
         cdef int ierr
         cdef int fileid = self._ncid
