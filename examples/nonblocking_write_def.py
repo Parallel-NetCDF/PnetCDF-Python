@@ -99,7 +99,8 @@ def main():
             length = int(args.l)
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of nonblocking APIs in define mode".format(os.path.basename(__file__)))
+
 
     starts = np.zeros(NDIMS, dtype=np.int32)
     counts = np.zeros(NDIMS, dtype=np.int32)

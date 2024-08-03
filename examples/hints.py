@@ -118,7 +118,8 @@ def main():
         verbose = False
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of set/get PnetCDF hints".format(os.path.basename(__file__)))
+
     # create MPI info 
     info1 = MPI.Info.Create()
     info1.Set("nc_header_align_size", "1024")

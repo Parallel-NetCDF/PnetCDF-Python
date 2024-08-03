@@ -130,7 +130,8 @@ def main():
         file_format = kind_dict[args.k]
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of using flexible APIs".format(os.path.basename(__file__)))
+
 
     # Create the file
     f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)

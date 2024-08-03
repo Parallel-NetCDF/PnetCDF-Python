@@ -87,7 +87,8 @@ def main():
         verbose = False
     filename = args.dir
     if verbose and rank == 0:
-        print("{}: example of file create and open".format(__file__))
+        print("{}: example of getting MPI-IO hints".format(os.path.basename(__file__)))
+
     # create a new file using "w" mode
     f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=None)
     # exit the define mode
