@@ -29,26 +29,17 @@ applications that require parallel access to netCDF files.
   CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install .
   ```
 * Testing
-  + Run command below to test all the test programs available in folder
-    `./test`, which will run 4 MPI processes for each test. The number of
-    processes can be changed by setting the environment variable `NPROC` to a
-    different number.
+  + Run command `make check` to test all the programs available in folders
+    `test` and `examples` in parallel on 4 MPI processes.
+  + In addition, command `make ptests` runs the same tests but using 3, 4, and
+    8 MPI processes.
+  + To run any individual programs in folders `test` and `examples`, use
+    command below. For example,
     ```sh
-    ./test_all.sh [test_file_output_dir]
+    mpiexec -n [num_process] python examples/create_open.py [output_dir]
     ```
-  + To run a specific individual test, run command below
-    ```sh
-    mpiexec -n [num_process] python test/tst_program.py [test_file_output_dir]
-    ```
-    * The optional `test_file_output_dir` argument enables the testing program
-      to save out generated test files in the directory. The default is the
-      current folder.
-  + Similarly, one can test all example programs in the folder `examples` by
-    running commands below.
-    ```sh
-    cd examples
-    ./test_all.sh [test_file_output_dir]
-    ```
+    * The optional `output_dir` argument is the folder for storing the output
+      files created by the programs The default is the current folder.
 
 ### Additional Resources
 * [PnetCDF-python User Guide](https://pnetcdf-python.readthedocs.io/en/latest/)
