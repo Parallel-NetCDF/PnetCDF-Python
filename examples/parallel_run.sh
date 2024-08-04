@@ -7,6 +7,26 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Get the directory containing this script
+if test "x$NPROC" = x ; then
+    NPROC=4
+fi
+
+# get output folder from command line
+if test "$#" -gt 0 ; then
+   args=("$@")
+   OUT_DIR="${args[0]}"
+   # check if output folder exists
+   if ! test -d $OUT_DIR ; then
+      echo "Error: output folder \"$OUT_DIR\" does not exist."
+      exit 1
+   fi
+else
+   # output folder is not set at command line, use current folder
+   OUT_DIR="."
+fi
+# echo "OUT_DIR=$OUT_DIR"
+
 MPI4PY_VERSION=`python -c "import mpi4py; print(mpi4py.__version__)"`
 MPI4PY_VERSION_MAJOR=`echo ${MPI4PY_VERSION} | cut -d. -f1`
 # echo "MPI4PY_VERSION=$MPI4PY_VERSION"
@@ -29,52 +49,16 @@ if test $MPI4PY_VERSION_MAJOR -lt 4 ; then
    TEST_FLEXIBLE_API=yes
 fi
 
-# Get the directory containing this script
-if test "x$NPROC" = x ; then
-    NPROC=4
-fi
-
-# get output folder from command line
-if test "$#" -gt 0 ; then
-   args=("$@")
-   OUT_DIR="${args[0]}"
-   # check if output folder exists
-   if ! test -d $OUT_DIR ; then
-      echo "Error: output folder \"$OUT_DIR\" does not exist."
-      exit 1
+for prog in $check_PROGRAMS; do
+   if test "x$TEST_FLEXIBLE_API" = xno &&
+      test "x$prog" = "xflexible_api.py" ; then
+      TETS_PROGS+=" flexible_api.py"
+      printf '%-60s' "Testing $prog"
+      echo " ---- SKIP"
+      continue
    fi
-else
-   # output folder is not set at command line, use current folder
-   OUT_DIR="."
-fi
 
-echo ""
-echo "---- Run programs with $NPROC processes in folder 'examples' --------------"
-
-TETS_PROGS="collective_write.py
-            create_open.py
-            fill_mode.py
-            get_info.py
-            ghost_cell.py
-            global_attribute.py
-            hints.py
-            nonblocking_write_def.py
-            nonblocking_write.py
-            put_varn_int.py
-            transpose2D.py
-            transpose.py
-            put_vara.py
-            get_vara.py"
-
-if test "x$TEST_FLEXIBLE_API" = xyes ; then
-   TETS_PROGS+=" flexible_api.py"
-fi
-# echo "TETS_PROGS=$TETS_PROGS"
-
-for prog in $TETS_PROGS
-do
-   # echo -n "---- Testing $prog with $NPROC MPI processes"
-   printf '%-60s' "Testing $prog with $NPROC MPI processes"
+   printf '%-60s' "Testing $prog"
 
    if test $prog = "get_vara.py" ; then
       CMD="mpiexec -n $NPROC python $prog -q $OUT_DIR/put_vara.nc"
