@@ -4,7 +4,8 @@ requires = [
     "numpy",
     "setuptools>=65",
     "mpi4py>=3.1.4",
-    "packaging>=23.1"
+    "packaging>=23.1",
+    "wheel"
 ]
 build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]

@@ -20,13 +20,12 @@ applications that require parallel access to netCDF files.
 ### Developer Installation
 * Clone this GitHub repository
 * Make sure the above dependent software are installed.
-* In addition, [Cython](http://cython.org/) is required for developer
-  installation.
+* In addition, [Cython](http://cython.org/), [packaging](https://pypi.org/project/packaging/) and ['wheel'](https://pypi.org/project/wheel/) are required for developer installation.
 * Set the environment variable `PNETCDF_DIR` to PnetCDF's installation path.
 * Make sure utility program `pnetcdf-config` is available in `$PNETCDF_DIR/bin`.
 * Run command below to install.
   ```
-  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install .
+  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install --no-build-isolation -e .
   ```
 * Testing
   + Run command `make check` to test all the programs available in folders
