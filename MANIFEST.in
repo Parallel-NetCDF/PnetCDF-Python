@@ -16,5 +16,4 @@ include include/PnetCDF.pxi
 include include/mpi-compat.h
 include README.md
 include docs/*.md
-include docs/build/html/index.html
 
