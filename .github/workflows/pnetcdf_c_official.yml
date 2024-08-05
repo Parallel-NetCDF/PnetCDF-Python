@@ -85,7 +85,7 @@ jobs:
     - name: Install PnetCDF-Python
       run: |
         export CC=$MPICH_DIR/bin/mpicc
-        python setup.py install
+        pip install --no-build-isolation -e .
 
     - name: Test PnetCDF-Python
       run: |
