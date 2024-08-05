@@ -1,9 +1,8 @@
-####################################################################
-# 
-#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
-#  See COPYRIGHT notice in top-level directory.
-# 
-####################################################################
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 """
     This example is similar to collective_write.py but using nonblocking APIs.
      It creates a netcdf file in CDF-5 format and writes a number of

@@ -1,9 +1,8 @@
-####################################################################
-# 
-#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
-#  See COPYRIGHT notice in top-level directory.
-# 
-####################################################################
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 """
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   This example is the read counterpart of example put_vara.py. It shows how to
