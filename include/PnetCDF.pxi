@@ -1,3 +1,8 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 # # size_t, ptrdiff_t are defined in stdlib.h
 # cdef extern from "stdlib.h":
 #    ctypedef long size_t

@@ -1,3 +1,8 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 import sys
 import unittest
 import os

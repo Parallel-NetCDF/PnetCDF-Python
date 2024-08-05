@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
 
 check_PROGRAMS = collective_write.py \
                  create_open.py \

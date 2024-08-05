@@ -1,9 +1,8 @@
-####################################################################
-# 
-#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
-#  See COPYRIGHT notice in top-level directory.
-# 
-####################################################################
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 """
  This example mimics the coll_perf.c from ROMIO. It creates a netcdf file and 
  writes a number of 3D integer non-record variables. The measured write bandwidth

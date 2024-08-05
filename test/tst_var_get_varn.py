@@ -1,3 +1,8 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 import pnetcdf
 from numpy.random import seed, randint
 from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal

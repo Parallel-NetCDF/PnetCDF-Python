@@ -1,3 +1,7 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+
 # This is a skeleton program to show how to run Pytorch distributed environment
 # with MPI
 

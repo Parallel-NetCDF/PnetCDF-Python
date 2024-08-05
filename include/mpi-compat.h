@@ -1,5 +1,7 @@
-/* Author:  Lisandro Dalcin   */
-/* Contact: dalcinl@gmail.com */
+/*
+ * Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+ * See COPYRIGHT notice in top-level directory.
+*/
 
 #ifndef MPI_COMPAT_H
 #define MPI_COMPAT_H
@@ -16,4 +18,4 @@ typedef void *PyMPI_MPI_Session;
 #define MPI_Session PyMPI_MPI_Session
 #endif
 
-#endif/*MPI_COMPAT_H*/
+#endif /*MPI_COMPAT_H*/

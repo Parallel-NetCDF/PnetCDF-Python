@@ -1,9 +1,8 @@
-####################################################################
-# 
-#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
-#  See COPYRIGHT notice in top-level directory.
-# 
-####################################################################
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 """
 
  Example commands for MPI run and outputs from running ncmpidump on the

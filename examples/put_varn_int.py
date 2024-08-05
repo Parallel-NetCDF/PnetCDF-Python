@@ -1,9 +1,8 @@
-####################################################################
-# 
-#  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
-#  See COPYRIGHT notice in top-level directory.
-# 
-####################################################################
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 """
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   This example shows how to use a single call of `Variable` method put_var() to 
