@@ -1,8 +1,8 @@
-include docs/build/html/index.html
 include MANIFEST.in
+include COPYRIGHT
+include pyproject.toml
 include setup.cfg
-include examples/*py
-include test/*py
+include setup.py
 include src/pnetcdf/__init__.py
 include src/pnetcdf/_Dimension.pyx
 include src/pnetcdf/_Dimension.pxd
@@ -14,7 +14,6 @@ include src/pnetcdf/_Variable.pyx
 include src/pnetcdf/_Variable.pxd
 include include/PnetCDF.pxi
 include include/mpi-compat.h
-include *.md
-include *.py
-include *.csh
-include LICENSE
+include README.md
+include docs/*.md
+
