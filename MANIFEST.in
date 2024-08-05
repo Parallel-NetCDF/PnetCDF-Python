@@ -14,3 +14,7 @@ include src/pnetcdf/_Variable.pyx
 include src/pnetcdf/_Variable.pxd
 include include/PnetCDF.pxi
 include include/mpi-compat.h
+include README.md
+include docs/*.md
+include docs/build/html/index.html
+
