@@ -25,19 +25,18 @@ else
    # output folder is not set at command line, use current folder
    OUT_DIR="."
 fi
-echo "OUT_DIR=$OUT_DIR"
+# echo "OUT_DIR=$OUT_DIR"
 
-TETS_PROGS=`ls test/tst_*.py`
-for prog in $TETS_PROGS
-do
-  echo -n "---- Testing $prog with $NPROC MPI processes"
-  CMD="mpiexec -n $NPROC python $prog $OUT_DIR"
-  $CMD
-  status=$?
+for prog in ${check_PROGRAMS} ; do
+   printf '%-60s' "Testing $prog "
+
+   CMD="mpiexec -n $NPROC python $prog $OUT_DIR"
+   $CMD
+   status=$?
    if [ $status -ne 0 ]; then
-      echo ": FAIL ----"
+      echo " ---- FAIL"
    else
-      echo ": PASS ----"
+      echo " ---- PASS"
    fi
 done
 

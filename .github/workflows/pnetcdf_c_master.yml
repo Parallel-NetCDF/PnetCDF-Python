@@ -92,17 +92,7 @@ jobs:
     - name: Test PnetCDF-Python
       run: |
         export PATH=${MPICH_DIR}/bin:${PATH}
-
-        chmod 700 ./test_all.sh
-        export NPROC=3 && ./test_all.sh
-        export NPROC=8 && ./test_all.sh
-        export NPROC=10 && ./test_all.sh
-
-        cd examples
-        chmod 700 ./test_all.sh
-        export NPROC=3 && ./test_all.sh
-        export NPROC=8 && ./test_all.sh
-        export NPROC=10 && ./test_all.sh
+        make ptests
 
 #   - name: Tarball
 #     run: |
