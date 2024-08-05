@@ -3,6 +3,21 @@
 ### Note on python library packaging
  * Quick install
    * Currently, quick install via `pip install pnetcdf` is disabled. Main challenge is that build distribution (using wheels) is platform-specific and multiple wheels need to be generated to cover all mainstream platforms. A working source distribution for `pip install` is easier and has been tested on PyPI (works for all platforms but still needs MPI and PnetCDF-C installation) 
+   * `MANIFEST.in` controls files to be included in source distribution (sdist), which will be eventually uploaded to PyPI if we enables quick install in the future. After modifications to `MANIFEST.IN` file, here are steps to check if the files included are valid to build the library.
+     1. Make sure pnetcdf.egg-info folder is deleted. Otherwise it will first cache previous versions of `MANIFEST.IN` requirement.
+     2. Build the source distribution
+     ```
+     CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python setup.py sdist
+     ```
+     3. Check source distribution content if the list matches `MANIFEST.IN`
+     ```
+     tar -tzf dist/package-<version>.tar.gz
+     ```
+     4. Install the library from sdist
+     ```
+     CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install dist/package-<version>.tar.gz
+     ```
+     5. Check installation by test and example programs
   * Developer install
     * Developer installation is mainly managed by `setup.py` and `pyproject.toml`. The former one is the core file to build the package and the latter manages dependencies required by `pip install` command.
     * `python setup.py install` builds and installs the python library based on the current python environment and will error out if dependency (e.g. mpi4py) not met. This command is going to be deprecated and is not recommended for modern python library installation.
