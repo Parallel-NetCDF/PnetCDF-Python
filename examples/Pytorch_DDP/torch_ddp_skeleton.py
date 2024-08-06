@@ -5,10 +5,12 @@
 # This is a skeleton program to show how to run Pytorch distributed environment
 # with MPI
 
-import os
+import os, argparse
 import torch
 import torch.distributed as dist
 from mpi4py import MPI
+
+verbose = True
 
 class distributed():
     def get_size(self):
@@ -217,13 +219,23 @@ def init_parallel():
 
 #----< main() >----------------------------------------------------------------
 def main():
+    global verbose
+
     # initialize parallel environment
     comm, device = init_parallel()
 
     rank = comm.get_rank()
     nprocs = comm.get_size()
 
-    print("nprocs = ", nprocs, " rank = ",rank," device = ", device)
+    # Get command-line arguments
+    args = None
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
+    args = parser.parse_args()
+    if args.q: verbose = False
+
+    if verbose:
+        print("nprocs = ", nprocs, " rank = ",rank," device = ", device)
 
     comm.finalize()
 

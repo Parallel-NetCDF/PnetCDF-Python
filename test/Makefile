@@ -58,25 +58,25 @@ ptests: ptest3 ptest4 ptest8
 
 ptest3:
 	@mkdir -p ${OUTPUT_DIR}
-	@echo "==========================================================="
+	@echo "======================================================================"
 	@echo "    test: Parallel testing on 3 MPI processes"
-	@echo "==========================================================="
+	@echo "======================================================================"
 	@${TESTS_ENVIRONMENT} export NPROC=3; ./parallel_run.sh ${OUTPUT_DIR} || exit 1
 	@echo ""
 
 ptest4:
 	@mkdir -p ${OUTPUT_DIR}
-	@echo "==========================================================="
+	@echo "======================================================================"
 	@echo "    test: Parallel testing on 4 MPI processes"
-	@echo "==========================================================="
+	@echo "======================================================================"
 	@${TESTS_ENVIRONMENT} export NPROC=4; ./parallel_run.sh ${OUTPUT_DIR} || exit 1
 	@echo ""
 
 ptest8:
 	@mkdir -p ${OUTPUT_DIR}
-	@echo "==========================================================="
+	@echo "======================================================================"
 	@echo "    test: Parallel testing on 8 MPI processes"
-	@echo "==========================================================="
+	@echo "======================================================================"
 	@${TESTS_ENVIRONMENT} export NPROC=8; ./parallel_run.sh ${OUTPUT_DIR} || exit 1
 	@echo ""
 
