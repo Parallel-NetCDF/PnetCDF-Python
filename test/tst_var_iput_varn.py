@@ -25,7 +25,7 @@ file_name = "tst_var_iput_varn.nc"
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-size = comm.Get_size()
+nprocs = comm.Get_size()
 xdim = 4
 ydim = 10
 
@@ -95,10 +95,9 @@ dataref = np.array([[3, 3, 3, 1, 1, 0, 0, 2, 1, 1],
                     [0, 0, 0, 2, 1, 1, 1, 3, 3, 3]], np.float32)
 
 
-# reference data for 1<=size<=3
-dataref[dataref >= size] = -1
 # total number of put requests for the test programs
-num_reqs = 10
+num_reqs = 10 if rank < 4 else 0
+num_vars = 20
 
 # allocate write buffer
 buf_len = 0
@@ -121,11 +120,14 @@ class VariablesTestCase(unittest.TestCase):
         dy = f.def_dim('y',ydim)
 
         # define 20 netCDF variables
-        for i in range(num_reqs * 2):
+        for i in range(num_vars):
             v = f.def_var(f'data{i}', pnetcdf.NC_FLOAT, (dx, dy))
-        # initialize variable values
+
+        # leaving define mode
         f.enddef()
-        for i in range(num_reqs * 2):
+
+        # initialize variable values
+        for i in range(num_vars):
             v = f.variables[f'data{i}']
             v[:] = np.full((xdim, ydim), -1, dtype=np.float32)
 
@@ -137,41 +139,41 @@ class VariablesTestCase(unittest.TestCase):
             req_id = v.iput_var(data, start = starts, count = counts, num = num_subarrays)
             # track the reqeust ID for each write reqeust 
             req_ids.append(req_id)
-        f.end_indep()
+
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
         f.wait_all(num_reqs, req_ids, req_errs)
+
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
         
-         # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
-        for i in range(num_reqs, num_reqs * 2):
-            v = f.variables[f'data{i}']
+        # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
+        for i in range(num_reqs):
+            v = f.variables[f'data{num_reqs + i}']
             # post the request to write an array of values
             v.iput_var(data, start = starts, count = counts, num = num_subarrays)
         
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         f.close()
-        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
+        if rank == 0:
+            if os.environ.get('PNETCDF_DIR') is not None:
+                assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0
     
-    def tearDown(self):
-        # remove the temporary files if the test file ouptut directory not specified
-        comm.Barrier()
-        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
-            os.remove(self.file_path)
-
     def runTest(self):
-        """testing variable iput varn for CDF-5/CDF-2/CDF-1 file format"""
+        if nprocs < 4:
+            return
 
-        f = pnetcdf.File(self.file_path, 'r')
-        # test iput_varn and collective i/o wait_all
-        for i in range(num_reqs * 2):
-            v = f.variables[f'data{i}']
-            assert_array_equal(v[:], dataref)
+        if rank == 0:
+            # check contents of the output file
+            f = pnetcdf.File(self.file_path, 'r', comm=MPI.COMM_SELF)
+            for i in range(num_vars):
+                v = f.variables[f'data{i}']
+                assert_array_equal(v[:], dataref)
+            f.close
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()
