@@ -4,198 +4,217 @@
 #
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API. The program
-   runs in non-blocking mode and makes a request to write a list of subarray of values to a variable 
-   into a netCDF variable of an opened netCDF file using bput_var method of `Variable` class. This 
-   method is a buffered version of bput_var and requires the user to attach an internal buffer of 
-   size equal to the sum of all requests using attach_buff method of `File` class. The library will 
-   internally invoke ncmpi_bput_vara and ncmpi_attach_buffer in C.  
+This example program is intended to illustrate the use of the pnetCDF python
+API. The program runs in non-blocking mode and makes a request to write a list
+of subarray of values to a variable into a netCDF variable of an opened netCDF
+file using bput_var method of `Variable` class. This method is a buffered
+version of bput_var and requires the user to attach an internal buffer of size
+equal to the sum of all requests using attach_buff method of `File` class. The
+library will internally invoke ncmpi_bput_vara and ncmpi_attach_buffer in C.
 """
-import pnetcdf
-from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
-import tempfile, unittest, os, random, sys
+
 import numpy as np
 from mpi4py import MPI
-from pnetcdf import strerror, strerrno
+import os, sys
+
+import pnetcdf
 from utils import validate_nc_file
-import io
 
-seed(0)
-file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
-file_name = "tst_var_bput_varn.nc"
+def run_test(format):
 
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
-xdim = 4
-ydim = 10
+    verbose = False
 
-# max number of subarrays requested among all bput requests from all ranks
-max_num_subarray = 6
-ndims = 2
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    nprocs = comm.Get_size()
 
-starts = np.zeros((max_num_subarray, ndims), dtype=np.int64)
-counts = np.zeros((max_num_subarray, ndims), dtype=np.int64)
+    # dimension sizes
+    ndims = 2
+    ydim = 4
+    xdim = 10
 
-# initialize variable values
-if rank == 0:
-    # number of subarrays to request for each process
-    num_subarrays = 4
-    starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
-    starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
-    starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
-    starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
-    # rank 0 is writing the following locations: ("-" means skip)
-    #               -  -  -  -  -  0  0  -  -  - 
-    #               0  -  -  -  -  -  -  -  -  - 
-    #               -  -  -  -  -  -  0  0  -  - 
-    #               0  0  0  -  -  -  -  -  -  - 
-elif rank == 1:
-    num_subarrays = 6
-    starts[0][0] = 0; starts[0][1] = 3; counts[0][0] = 1; counts[0][1] = 2
-    starts[1][0] = 0; starts[1][1] = 8; counts[1][0] = 1; counts[1][1] = 2
-    starts[2][0] = 1; starts[2][1] = 5; counts[2][0] = 1; counts[2][1] = 2
-    starts[3][0] = 2; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 2
-    starts[4][0] = 2; starts[4][1] = 8; counts[4][0] = 1; counts[4][1] = 2
-    starts[5][0] = 3; starts[5][1] = 4; counts[5][0] = 1; counts[5][1] = 3
-    # rank 1 is writing the following locations: ("-" means skip)
-    #               -  -  -  1  1  -  -  -  1  1 
-    #               -  -  -  -  -  1  1  -  -  - 
-    #               1  1  -  -  -  -  -  -  1  1 
-    #               -  -  -  -  1  1  1  -  -  - 
-elif rank == 2:
-    num_subarrays = 5
-    starts[0][0] = 0; starts[0][1] = 7; counts[0][0] = 1; counts[0][1] = 1
-    starts[1][0] = 1; starts[1][1] = 1; counts[1][0] = 1; counts[1][1] = 3
-    starts[2][0] = 1; starts[2][1] = 7; counts[2][0] = 1; counts[2][1] = 3
-    starts[3][0] = 2; starts[3][1] = 2; counts[3][0] = 1; counts[3][1] = 1
-    starts[4][0] = 3; starts[4][1] = 3; counts[4][0] = 1; counts[4][1] = 1
-    # rank 2 is writing the following locations: ("-" means skip)
-    #         -  -  -  -  -  -  -  2  -  - 
-    #         -  2  2  2  -  -  -  2  2  2 
-    #         -  -  2  -  -  -  -  -  -  - 
-    #         -  -  -  2  -  -  -  -  -  - 
-elif rank == 3:
-    num_subarrays = 4
-    starts[0][0] = 0; starts[0][1] = 0; counts[0][0] = 1; counts[0][1] = 3
-    starts[1][0] = 1; starts[1][1] = 4; counts[1][0] = 1; counts[1][1] = 1
-    starts[2][0] = 2; starts[2][1] = 3; counts[2][0] = 1; counts[2][1] = 3
-    starts[3][0] = 3; starts[3][1] = 7; counts[3][0] = 1; counts[3][1] = 3
-    # rank 3 is writing the following locations: ("-" means skip)
-    #         3  3  3  -  -  -  -  -  -  - 
-    #         -  -  -  -  3  -  -  -  -  - 
-    #         -  -  -  3  3  3  -  -  -  - 
-    #         -  -  -  -  -  -  -  3  3  3 
-else:
-    num_subarrays = 0
+    # allocate and initialize access patterns
+    max_num_subarray = 6
+    starts = np.zeros((max_num_subarray, ndims), dtype=np.int64)
+    counts = np.zeros((max_num_subarray, ndims), dtype=np.int64)
 
-# reference data for size >=4 (rank 0 - 3 all participated)
-dataref = np.array([[3, 3, 3, 1, 1, 0, 0, 2, 1, 1],
-                    [0, 2, 2, 2, 3, 1, 1, 2, 2, 2],
-                    [1, 1, 2, 3, 3, 3, 0, 0, 1, 1],
-                    [0, 0, 0, 2, 1, 1, 1, 3, 3, 3]], np.float32)
+    # only the first 4 ranks have non-zero access amount
+    if rank == 0:
+        # number of subarrays to request for each process
+        num_subarrays = 4
+        starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
+        starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
+        starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
+        starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+        # rank 0 is writing the following locations: ("-" means skip)
+        #               -  -  -  -  -  0  0  -  -  -
+        #               0  -  -  -  -  -  -  -  -  -
+        #               -  -  -  -  -  -  0  0  -  -
+        #               0  0  0  -  -  -  -  -  -  -
+    elif rank == 1:
+        num_subarrays = 6
+        starts[0][0] = 0; starts[0][1] = 3; counts[0][0] = 1; counts[0][1] = 2
+        starts[1][0] = 0; starts[1][1] = 8; counts[1][0] = 1; counts[1][1] = 2
+        starts[2][0] = 1; starts[2][1] = 5; counts[2][0] = 1; counts[2][1] = 2
+        starts[3][0] = 2; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 2
+        starts[4][0] = 2; starts[4][1] = 8; counts[4][0] = 1; counts[4][1] = 2
+        starts[5][0] = 3; starts[5][1] = 4; counts[5][0] = 1; counts[5][1] = 3
+        # rank 1 is writing the following locations: ("-" means skip)
+        #               -  -  -  1  1  -  -  -  1  1
+        #               -  -  -  -  -  1  1  -  -  -
+        #               1  1  -  -  -  -  -  -  1  1
+        #               -  -  -  -  1  1  1  -  -  -
+    elif rank == 2:
+        num_subarrays = 5
+        starts[0][0] = 0; starts[0][1] = 7; counts[0][0] = 1; counts[0][1] = 1
+        starts[1][0] = 1; starts[1][1] = 1; counts[1][0] = 1; counts[1][1] = 3
+        starts[2][0] = 1; starts[2][1] = 7; counts[2][0] = 1; counts[2][1] = 3
+        starts[3][0] = 2; starts[3][1] = 2; counts[3][0] = 1; counts[3][1] = 1
+        starts[4][0] = 3; starts[4][1] = 3; counts[4][0] = 1; counts[4][1] = 1
+        # rank 2 is writing the following locations: ("-" means skip)
+        #         -  -  -  -  -  -  -  2  -  -
+        #         -  2  2  2  -  -  -  2  2  2
+        #         -  -  2  -  -  -  -  -  -  -
+        #         -  -  -  2  -  -  -  -  -  -
+    elif rank == 3:
+        num_subarrays = 4
+        starts[0][0] = 0; starts[0][1] = 0; counts[0][0] = 1; counts[0][1] = 3
+        starts[1][0] = 1; starts[1][1] = 4; counts[1][0] = 1; counts[1][1] = 1
+        starts[2][0] = 2; starts[2][1] = 3; counts[2][0] = 1; counts[2][1] = 3
+        starts[3][0] = 3; starts[3][1] = 7; counts[3][0] = 1; counts[3][1] = 3
+        # rank 3 is writing the following locations: ("-" means skip)
+        #         3  3  3  -  -  -  -  -  -  -
+        #         -  -  -  -  3  -  -  -  -  -
+        #         -  -  -  3  3  3  -  -  -  -
+        #         -  -  -  -  -  -  -  3  3  3
+    else:
+        num_subarrays = 0
 
+    # expected contents of variables created in the file
+    dataref = np.array([[3, 3, 3, 1, 1, 0, 0, 2, 1, 1],
+                        [0, 2, 2, 2, 3, 1, 1, 2, 2, 2],
+                        [1, 1, 2, 3, 3, 3, 0, 0, 1, 1],
+                        [0, 0, 0, 2, 1, 1, 1, 3, 3, 3]], np.float32)
 
-# reference data for 1<=size<=3
-dataref[dataref >= size] = -1
-# total number of put requests for the test programs
-num_reqs = 10
+    # total number of variables to be defined
+    num_vars = 20
 
-# allocate write buffer
-buf_len = 0
-for i in range(num_subarrays):
-    w_req_len = np.prod(counts[i,:])
-    buf_len += w_req_len
-data = np.empty(buf_len, dtype=np.float32)
-data.fill(rank)
+    # number of bput requests
+    num_reqs = num_vars // 2 if rank < 4 else 0
 
-class VariablesTestCase(unittest.TestCase):
+    # allocate write buffer
+    buf_len = 0
+    for i in range(num_subarrays):
+        w_req_len = np.prod(counts[i,:])
+        buf_len += w_req_len
+    data = np.empty(buf_len, dtype=np.float32)
+    data.fill(rank)
 
-    def setUp(self):
-        if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
-            self.file_path = os.path.join(sys.argv[1], file_name)
-        else:
-            self.file_path = file_name
-        # select next file format for testing
-        self._file_format = file_formats.pop(0)
-        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
-        dx = f.def_dim('x',xdim)
-        dy = f.def_dim('y',ydim)
-        # estimate the memory buffer size of all requests and attach buffer for buffered put requests
-        buffsize = num_reqs * data.nbytes
-        if buffsize > 0:
-            f.attach_buff(buffsize)
+    # construct output file name
+    file_name = "tst_var_bput_varn"
+    if format == '64BIT_DATA':
+        file_ext = ".nc5"
+    elif format == '64BIT_OFFSET':
+        file_ext = ".nc2"
+    else:
+        file_ext = ".nc"
+
+    if (len(sys.argv) == 2) and os.path.isdir(sys.argv[1]):
+        name = os.path.join(sys.argv[1], file_name)
+        file_path = name + file_ext
+    else:
+        file_path = file_name + file_ext
+
+    if verbose and rank == 0:
+        print("output file name: ", file_path)
+
+    # create a new file with selected file format
+    f = pnetcdf.File(filename=file_path, mode = 'w', format=format, comm=comm, info=None)
+
+    # define dimensions
+    dy = f.def_dim('y',ydim)
+    dx = f.def_dim('x',xdim)
+
+    if verbose and rank == 0:
+        print("define dimensions Y and X of sizes: ", ydim, ", ", xdim)
+
+    # estimate the buffer size to be used in buffered put requests
+    buffsize = num_reqs * data.nbytes
+    if buffsize > 0:
+        f.attach_buff(buffsize)
         # check the size of attached buffer
-        if buffsize > 0:
-            assert(f.inq_buff_size() == buffsize)
-        # define 20 netCDF variables
-        for i in range(num_reqs * 2):
-            v = f.def_var(f'data{i}', pnetcdf.NC_FLOAT, (dx, dy))
-        # initialize variable values
-        f.enddef()
-        for i in range(num_reqs * 2):
-            v = f.variables[f'data{i}']
-            v[:] = np.full((xdim, ydim), -1, dtype=np.float32)
+        assert(f.inq_buff_size() == buffsize)
 
-        # each process post 10 requests to write an array of values
-        req_ids = []
-        for i in range(num_reqs):
-            v = f.variables[f'data{i}']
-            # check if there is any space left in buffer
-            if buffsize > 0:
-                assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
-            # post the request to write an array of values
-            req_id = v.bput_var(data, start = starts, count = counts, num = num_subarrays)
-            # track the reqeust ID for each write reqeust 
-            req_ids.append(req_id)
-        f.end_indep()
-        # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
-        req_errs = [None] * num_reqs
-        f.wait_all(num_reqs, req_ids, req_errs)
-        # check request error msg for each unsuccessful requests
-        for i in range(num_reqs):
-            if strerrno(req_errs[i]) != "NC_NOERR":
-                print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
-         # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
-        for i in range(num_reqs, num_reqs * 2):
-            v = f.variables[f'data{i}']
-            # post the request to write an array of values
-            v.bput_var(data, start = starts, count = counts, num = num_subarrays)
-        
-        # all processes commit all pending requests to the file at once using wait_all (collective i/o)
-        f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
-        # relase the internal buffer
-        if buffsize > 0:
-            f.detach_buff()
-        f.close()
-        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+    # define netCDF variables
+    for i in range(num_vars):
+        v = f.def_var(f'data{i}', pnetcdf.NC_FLOAT, (dy, dx))
 
-    
-    def tearDown(self):
-        # remove the temporary files if the test file ouptut directory not specified
-        comm.Barrier()
-        if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
-            os.remove(self.file_path)
+    if verbose and rank == 0:
+        print("define ", num_vars, " variables of type NC_FLOAT")
 
-    def runTest(self):
-        """testing variable bput varn for CDF-5/CDF-2/CDF-1 file format"""
+    # leave define mode
+    f.enddef()
 
-        f = pnetcdf.File(self.file_path, 'r')
-        # test bput_varn and collective i/o wait_all
-        for i in range(num_reqs * 2):
-            v = f.variables[f'data{i}']
-            assert_array_equal(v[:], dataref)
+    # initialize contents of write buffers
+    for i in range(num_vars):
+        v = f.variables[f'data{i}']
+        v[:] = np.full((ydim, xdim), -1, dtype=np.float32)
+
+    # each process post num_reqs requests to write
+    req_ids = []
+    for i in range(num_reqs):
+        v = f.variables[f'data{i}']
+        assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
+        # post the request to write an array of values
+        req_id = v.bput_var(data, start = starts, count = counts, num = num_subarrays)
+        # track the request ID for each write request
+        req_ids.append(req_id)
+
+    # commit the posted requests all at once using wait_all (collective i/o)
+    req_errs = [None] * num_reqs
+    f.wait_all(num_reqs, req_ids, req_errs)
+
+    # check request error msg for each unsuccessful requests
+    for i in range(num_reqs):
+        if pnetcdf.strerrno(req_errs[i]) != "NC_NOERR":
+            print(f"Error on request {i}:",  pnetcdf.strerror(req_errs[i]))
+
+    # post requests to write the 2nd half of variables w/o tracking req ids
+    for i in range(num_reqs):
+        v = f.variables[f'data{num_reqs + i}']
+        v.bput_var(data, start = starts, count = counts, num = num_subarrays)
+
+    # commit the posted requests all at once using wait_all (collective i/o)
+    f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
+
+    # release the internal buffer
+    if buffsize > 0:
+        f.detach_buff()
+
+    # close the file
+    f.close()
+
+    if rank == 0:
+        if verbose:
+            print("check if the newly created file is a valid NetCDF file")
+        if os.environ.get('PNETCDF_DIR') is not None:
+            assert validate_nc_file(os.environ.get('PNETCDF_DIR'), file_path) == 0
+
+        if nprocs >= 4:
+            if verbose:
+                print("check if the file contents are expected")
+            f = pnetcdf.File(file_path, 'r', comm=MPI.COMM_SELF)
+            for i in range(num_vars):
+                v = f.variables[f'data{i}']
+                np.testing.assert_array_equal(v[:], dataref)
+            f.close()
 
 if __name__ == '__main__':
-    suite = unittest.TestSuite()
+    # test CDF-1, CDF-2, CDF-5 classic NetCDF file formats
+    file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
     for i in range(len(file_formats)):
-        suite.addTest(VariablesTestCase())
-    runner = unittest.TextTestRunner()
-    output = io.StringIO()
-    runner = unittest.TextTestRunner(stream=output)
-    result = runner.run(suite)
-    if not result.wasSuccessful():
-        print(output.getvalue())
-        sys.exit(1)
+        try:
+            run_test(file_formats[i])
+        except BaseException as err:
+            print("Error: type:", type(err), str(err))
+            raise
