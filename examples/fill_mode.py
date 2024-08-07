@@ -40,40 +40,110 @@ netCDF file produced by this example program:
 
 """
 
-import sys
-import os
+import sys, os, argparse
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-
-verbose = True
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
 
 def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [filename] (Optional) output netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
-def main():
+def pnetcdf_io(filename):
+
     NY = 3
     NX = 4
-    nprocs = size
-    global verbose
+
+    if verbose and rank == 0:
+        print("{}: example of setting fill mode".format(os.path.basename(__file__)))
+
+    # create a new file using clobber "w" mode
+    f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
+
+    # the global array is NY * (NX * nprocs)
+    global_ny = NY
+    global_nx = NX * nprocs
+
+    # define dimensions
+    dim_xu = f.def_dim('REC_DIM', -1)
+    dim_x = f.def_dim('X',global_nx)
+    dim_y = f.def_dim('Y',global_ny)
+
+    # define 2D variables of integer type
+    fix_var = f.def_var("fix_var", pnetcdf.NC_INT, (dim_y, dim_x))
+    rec_var = f.def_var("rec_var", pnetcdf.NC_INT, (dim_xu, dim_x))
+
+    # set the fill mode to NC_FILL for the entire file
+    old_fillmode = f.set_fill(pnetcdf.NC_FILL)
+    if verbose:
+        if old_fillmode == pnetcdf.NC_FILL:
+            print("The old fill mode is NC_FILL\n")
+        else:
+            print("The old fill mode is NC_NOFILL\n")
+
+    # set the fill mode to back to NC_NOFILL for the entire file
+    f.set_fill(pnetcdf.NC_NOFILL)
+
+    # set the variable's fill mode to NC_FILL with default fill value
+    fix_var.def_fill(no_fill = 0)
+
+    # set a customized fill value -1
+    fill_value = np.int32(-1)
+    rec_var._FillValue = fill_value
+
+    # exit define mode
+    f.enddef()
+
+    # set subarray access pattern
+    starts = np.array([0, NX * rank])
+    counts = np.array([NY, NX])
+
+    # allocate user buffer
+    buf = np.array([[rank] * NX] * NY).astype('i4')
+
+    # do not write the variable in full
+    counts[1] -= 1
+    fix_var.put_var_all(buf, start = starts, count = counts)
+
+    # check fill value
+    no_fill, fill_value = fix_var.inq_fill()
+    assert(no_fill == 0)
+    assert(fill_value == pnetcdf.NC_FILL_INT)
+
+    # fill the 1st record of the record variable
+    counts[0] = 1
+    rec_var.fill_rec(starts[0])
+
+    # write to the 1st record
+    rec_var.put_var_all(buf, start = starts, count = counts)
+
+    # fill the 2nd record of the record variable
+    starts[0] = 1
+    rec_var.fill_rec(starts[0])
+
+    # write to the 2nd record
+    rec_var.put_var_all(buf, start = starts, count = counts)
+    f.close()
+
+if __name__ == "__main__":
+    verbose = True
+
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    nprocs = comm.Get_size()
+
     if parse_help():
         MPI.Finalize()
-        return 1
+        sys.exit(1)
+
     # get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
@@ -82,63 +152,15 @@ def main():
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
 
     args = parser.parse_args()
-    if args.q:
-        verbose = False
+    if args.q: verbose = False
+
     filename = args.dir
-    if verbose and rank == 0:
-        print("{}: example of setting fill mode".format(os.path.basename(__file__)))
 
-    # create a new file using "w" mode
-    f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
-    # the global array is NY * (NX * nprocs)
-    global_ny = NY
-    global_nx = NX * nprocs
-    # define the dimensions
-    dim_xu = f.def_dim('REC_DIM', -1)
-    dim_x = f.def_dim('X',global_nx)
-    dim_y = f.def_dim('Y',global_ny)
-    # define a 2D variable of integer type
-    fix_var = f.def_var("fix_var", pnetcdf.NC_INT, (dim_y, dim_x))
-    rec_var =  f.def_var("rec_var", pnetcdf.NC_INT, (dim_xu, dim_x))
-    # set the fill mode to NC_FILL for the entire file
-    old_fillmode = f.set_fill(pnetcdf.NC_FILL)
-    if verbose:
-        if old_fillmode == pnetcdf.NC_FILL:
-            print("The old fill mode is NC_FILL\n")
-        else:
-            print("The old fill mode is NC_NOFILL\n")
-    # set the fill mode to back to NC_NOFILL for the entire file
-    f.set_fill(pnetcdf.NC_NOFILL)
-    # set the variable's fill mode to NC_FILL with default fill value
-    fix_var.def_fill(no_fill = 0)
-    # set a customized fill value -1
-    fill_value = np.int32(-1)
-    rec_var._FillValue = fill_value
-    # exit define mode
-    f.enddef()
-    starts = np.array([0, NX * rank])
-    counts = np.array([NY, NX])
-    buf = np.array([[rank] * NX] * NY).astype('i4')
-    # do not write the variable in full
-    counts[1] -= 1
-    fix_var.put_var_all(buf, start = starts, count = counts)
-    no_fill, fill_value = fix_var.inq_fill()
-    assert(no_fill == 0)
-    assert(fill_value == pnetcdf.NC_FILL_INT)
-
-    # fill the 1st record of the record variable
-    counts[0] = 1
-    rec_var.fill_rec(starts[0])
-    # write to the 1st record
-    rec_var.put_var_all(buf, start = starts, count = counts)
-    # fill the 2nd record of the record variable
-    starts[0] = 1
-    rec_var.fill_rec(starts[0])
-    # write to the 2nd record
-    rec_var.put_var_all(buf, start = starts, count = counts)
-    f.close()
+    try:
+        pnetcdf_io(filename)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()

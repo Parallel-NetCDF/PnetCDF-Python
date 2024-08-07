@@ -24,41 +24,31 @@ To run:
 
 """
 
-import sys
-import os
+import sys, os, argparse
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-import inspect
 
-verbose = True
-
-NDIMS = 3
-
-
-
-def parse_help(comm):
-    rank = comm.Get_rank()
+def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-                "       [-l len] size of each dimension of the local array\n"
-                "       [filename] (Optional) output netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [-l len] size of each dimension of the local array\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
-def pnetcdf_io(comm, filename, file_format, length):
+def pnetcdf_io(filename, file_format, length):
 
+    if verbose and rank == 0:
+        print("{}: example of put/get 3D transposed arrays".format(os.path.basename(__file__)))
 
-
+    NDIMS = 3
 
     gsizes = np.zeros(NDIMS, dtype=np.int64)
     starts = np.zeros(NDIMS, dtype=np.int64)
@@ -66,10 +56,6 @@ def pnetcdf_io(comm, filename, file_format, length):
     imap = np.zeros(NDIMS, dtype=np.int64)
     startsT = np.zeros(NDIMS, dtype=np.int64)
     countsT = np.zeros(NDIMS, dtype=np.int64)
-
-    rank = comm.Get_rank()
-    nprocs = comm.Get_size()
-
 
     # calculate number of processes along each dimension
     psizes = MPI.Compute_dims(nprocs, NDIMS)
@@ -83,12 +69,15 @@ def pnetcdf_io(comm, filename, file_format, length):
         lower_dims *= psizes[i]
     if verbose:
         print("proc {}: dim rank = {}".format(rank, starts))
+
+    # set up subarray access pattern
     bufsize = 1
     for i in range(NDIMS):
         gsizes[i] = (length + i) * psizes[i]  # global array size
         starts[i] *= (length + i)  # start indices
         counts[i] = (length + i)  # array elements
         bufsize *= (length + i)
+
     # allocate buffer and initialize with contiguous numbers
     buf = np.empty(bufsize, dtype=int)
     index = 0
@@ -166,18 +155,18 @@ def pnetcdf_io(comm, filename, file_format, length):
     # Close the file
     f.close()
 
-def main():
+
+if __name__ == "__main__":
+    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    size = comm.Get_size()
+    nprocs = comm.Get_size()
 
-    nprocs = size
-
-    global verbose
-    if parse_help(comm):
+    if parse_help():
         MPI.Finalize()
-        return 1
-    # Get command-line arguments
+        sys.exit(1)
+
+    # get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
     parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
@@ -185,24 +174,26 @@ def main():
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     parser.add_argument("-l", help="size of each dimension of the local array")
+
     args = parser.parse_args()
+
+    if args.q: verbose = False
+
     file_format = None
-    length = 10
-    if args.q:
-        verbose = False
     if args.k:
         kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
         file_format = kind_dict[args.k]
-    if args.l:
-        length = int(args.l)
-    filename = args.dir
-    if verbose and rank == 0:
-        print("{}: example of put/get 3D transposed arrays".format(os.path.basename(__file__)))
 
-    # Run pnetcdf i/o
-    pnetcdf_io(comm, filename, file_format, length)
+    length = 10
+    if args.l and int(args.l) > 0: length = int(args.l)
+
+    filename = args.dir
+
+    try:
+        pnetcdf_io(filename, file_format, length)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()

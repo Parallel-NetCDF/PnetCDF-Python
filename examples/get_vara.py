@@ -46,98 +46,102 @@ from running ncmpidump.
      }
 """
 
-import sys
-import os
+import sys, os, argparse
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-import inspect
 
-verbose = True
-
-
-def parse_help(comm):
-    rank = comm.Get_rank()
+def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-                "       [-l len] size of each dimension of the local array\n"
-                "       [filename] input netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [-l len] size of each dimension of the local array\n"
+            "       [filename] input netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
-def pnetcdf_io(comm, filename, file_format):
-    rank = comm.Get_rank()
-    nprocs = comm.Get_size()
+
+def pnetcdf_io(filename, file_format):
+
+    if verbose and rank == 0:
+        print("{}: reading file ".format(os.path.basename(__file__)), filename)
+
     # Open an existing file for reading
     f = pnetcdf.File(filename=filename, mode = 'r', comm=comm, info=None)
+
     # Get global attribute named "history"
     str_att = f.get_att("history")
     if rank == 0 and verbose:
         print("global attribute \"history\" of text:", str_att)
+
     # Get dimension lengths for dimensions Y and X
     global_ny = len(f.dimensions['Y'])
     global_nx = len(f.dimensions['X'])
+
     # get the variable of a 2D variable of integer type
     v = f.variables['var']
+
     # Get the variable's attribute named "str_att_name"
     str_att = v.get_att("str_att_name")
     if rank == 0 and verbose:
         print("variable attribute \"str_att_name\" of type text =", str_att)
+
     # Get the length of the variable's attribute named "float_att_name"
     float_att =  v.get_att("float_att_name")
-    # Prepare reading subarray
+
+    # set access pattern for reading subarray
     local_ny = global_ny
     local_nx = global_nx // nprocs
     starts = [0,  local_nx * rank]
     counts = [local_ny, local_nx]
+
     # Read a subarray in collective mode
     buff = np.empty(tuple(counts), v.dtype)
     v.get_var_all(buff, start = starts, count = counts)
+
+    # close the file
     f.close()
 
-def main():
+if __name__ == "__main__":
+    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    size = comm.Get_size()
+    nprocs = comm.Get_size()
 
-    nprocs = size
-
-    global verbose
-    if parse_help(comm):
+    if parse_help():
         MPI.Finalize()
-        return 1
-    # Get command-line arguments
+        sys.exit(1)
+
+    # get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
-    parser.add_argument("dir", nargs="?", type=str, help="Input netCDF file name",\
+    parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
                          default = "testfile.nc")
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     args = parser.parse_args()
+
     file_format = None
     length = 10
-    if args.q:
-        verbose = False
+
+    if args.q: verbose = False
+
     if args.k:
         kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
         file_format = kind_dict[args.k]
-    filename = args.dir
-    if verbose and rank == 0:
-        print("{}: example of reading subarray".format(os.path.basename(__file__)))
 
-    # Run pnetcdf i/o
-    pnetcdf_io(comm, filename, file_format)
+    filename = args.dir
+
+    try:
+        pnetcdf_io(filename, file_format)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()

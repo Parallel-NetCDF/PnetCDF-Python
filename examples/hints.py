@@ -25,30 +25,21 @@ netCDF file produced by this example program:
 
 """
 
-import sys
-import os
+import sys, os, argparse
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-
-verbose = True
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
 
 def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [filename] (Optional) output netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
 def print_hints(nc_file, nc_var1, nc_var2):
@@ -97,16 +88,78 @@ def print_hints(nc_file, nc_var1, nc_var2):
     print(f"var_zy start file offset         = {var_zy_start:d}")
     print(f"var_yx start file offset         = {var_yx_start:d}")
 
-def main():
+def pnetcdf_io(filename):
     NY = 5
     NX = 5
     NZ = 5
-    nprocs = size
 
-    global verbose
+    if verbose and rank == 0:
+        print("{}: example of set/get PnetCDF hints".format(os.path.basename(__file__)))
+
+    # create MPI info object and set a few hints
+    info1 = MPI.Info.Create()
+    info1.Set("nc_header_align_size", "1024")
+    info1.Set("nc_var_align_size", "512")
+    info1.Set("nc_header_read_chunk_size", "256")
+
+    # create a new file for writing
+    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=info1)
+
+    # define dimensions
+    dim_z = f.def_dim('Z', NZ*nprocs)
+    dim_y = f.def_dim('Y', NY*nprocs)
+    dim_x = f.def_dim('x', NX*nprocs)
+
+    # define a variable of size (NZ * nprocs) * (NY * nprocs)
+    var_zy = f.def_var("var_zy", pnetcdf.NC_INT, (dim_z, dim_y))
+    # define a variable of size (NY * nprocs) * (NX * nprocs)
+    var_yx =  f.def_var("var_yx", pnetcdf.NC_FLOAT, (dim_y, dim_x))
+
+    # exit the define mode
+    f.enddef()
+
+    # var_zy is partitioned along Z dimension
+    buf_zy = np.empty(shape = (NZ * NY * nprocs, ), dtype = "i4")
+    for i in range(NZ*NY*nprocs):
+        buf_zy[i] = i
+
+    # set subarray access pattern
+    start = [NZ * rank, 0]
+    count =[NZ, NY * nprocs]
+
+    # write to variable
+    var_zy.put_var_all(buf_zy, start = start, count = count)
+
+    # var_yx is partitioned along X dimension
+    buf_yx = np.empty(shape = (NX * NY * nprocs, ), dtype = "f4")
+    for i in range(NX*NY*nprocs):
+        buf_yx[i] = i
+
+    # set subarray access pattern
+    start = [0, NX*rank]
+    count =[NY * nprocs, NX]
+
+    # write to variable
+    var_yx.put_var_all(buf_yx, start = start, count = count)
+
+    if verbose and rank == 0:
+        print_hints(f, var_zy, var_yx)
+    info1.Free()
+
+    # close the file
+    f.close()
+
+
+if __name__ == "__main__":
+    verbose = True
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    nprocs = comm.Get_size()
+
     if parse_help():
         MPI.Finalize()
-        return 1
+        sys.exit(1)
+
     # get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
@@ -114,50 +167,16 @@ def main():
                          default = "testfile.nc")
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
     args = parser.parse_args()
-    if args.q:
-        verbose = False
+
+    if args.q: verbose = False
+
     filename = args.dir
-    if verbose and rank == 0:
-        print("{}: example of set/get PnetCDF hints".format(os.path.basename(__file__)))
 
-    # create MPI info
-    info1 = MPI.Info.Create()
-    info1.Set("nc_header_align_size", "1024")
-    info1.Set("nc_var_align_size", "512")
-    info1.Set("nc_header_read_chunk_size", "256")
-    # create a new file for writing
-    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=info1)
-    # define the dimensions
-    dim_z = f.def_dim('Z', NZ*nprocs)
-    dim_y = f.def_dim('Y', NY*nprocs)
-    dim_x = f.def_dim('x', NX*nprocs)
-    # define a variable of size (NZ * nprocs) * (NY * nprocs)
-    var_zy = f.def_var("var_zy", pnetcdf.NC_INT, (dim_z, dim_y))
-    var_yx =  f.def_var("var_yx", pnetcdf.NC_FLOAT, (dim_y, dim_x))
-
-    # exit the define mode
-    f.enddef()
-    # var_zy is partitioned along Z dimension
-    buf_zy = np.empty(shape = (NZ * NY * nprocs, ), dtype = "i4")
-    for i in range(NZ*NY*nprocs):
-        buf_zy[i] = i
-    start = [NZ * rank, 0]
-    count =[NZ, NY * nprocs]
-    var_zy.put_var_all(buf_zy, start = start, count = count)
-    # var_yx is partitioned along X dimension
-    buf_yx = np.empty(shape = (NX * NY * nprocs, ), dtype = "f4")
-    for i in range(NX*NY*nprocs):
-        buf_yx[i] = i
-    start = [0, NX*rank]
-    count =[NY * nprocs, NX]
-    var_yx.put_var_all(buf_yx, start = start, count = count)
-
-    if verbose and rank == 0:
-        print_hints(f, var_zy, var_yx)
-    info1.Free()
-    f.close()
+    try:
+        pnetcdf_io(filename)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()

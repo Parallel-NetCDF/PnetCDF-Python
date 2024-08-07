@@ -26,60 +26,28 @@ netCDF file produced by this example program:
 
 """
 
-import sys
-import os
+import sys, os, argparse, time
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-import inspect
-import time
 
 
-verbose = True
-
-def parse_help(comm):
-    rank = comm.Get_rank()
+def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-                "       [filename] (Optional) output netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
-def main():
-    global verbose
-    comm = MPI.COMM_WORLD
-    rank = comm.Get_rank()
-    size = comm.Get_size()
+def pnetcdf_io(filename, file_format):
     digit = np.int16([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-    nprocs = size
 
-    if parse_help(comm):
-        MPI.Finalize()
-        return 1
-    # Get command-line arguments
-    args = None
-    parser = argparse.ArgumentParser()
-    parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
-                         default = "testfile.nc")
-    parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
-    parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
-    args = parser.parse_args()
-    file_format = None
-    if args.q:
-        verbose = False
-    if args.k:
-        kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
-        file_format = kind_dict[args.k]
-    filename = args.dir
     if verbose and rank == 0:
         print("{}: example of put/get global attributes".format(os.path.basename(__file__)))
 
@@ -96,36 +64,81 @@ def main():
 
     # Make sure the time string is consistent among all processes
     str_att = comm.bcast(str_att, root=0)
+
+    # write a global attribute
     f.put_att('history',str_att)
     if rank == 0 and verbose:
         print(f'writing global attribute "history" of text {str_att}')
+
     # add another global attribute named "digits": an array of short type
     f.put_att('digits', digit)
     if rank == 0 and verbose:
         print("writing global attribute \"digits\" of 10 short integers")
+
     # Close the file
     f.close()
+
     # Read the file
     f = pnetcdf.File(filename=filename, mode = 'r')
+
     # get the number of attributes
     ngatts = len(f.ncattrs())
     if ngatts != 2:
         print(f"Error at line {sys._getframe().f_lineno} in {__file__}: expected number of global attributes is 2, but got {ngatts}")
+
     # Find the name of the first global attribute
     att_name = f.ncattrs()[0]
     if att_name != "history":
         print(f"Error: Expected attribute name 'history', but got {att_name}")
+
     # Read attribute value
     str_att = f.get_att(att_name)
+
     # Find the name of the second global attribute
     att_name = f.ncattrs()[1]
     if att_name != "digits":
         print(f"Error: Expected attribute name 'digits', but got {att_name}")
+
     # Read attribute value
     short_att = f.get_att(att_name)
+
+    # close the file
     f.close()
+
+
+if __name__ == "__main__":
+    verbose = True
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    nprocs = comm.Get_size()
+
+    if parse_help():
+        MPI.Finalize()
+        sys.exit(1)
+
+    # get command-line arguments
+    args = None
+    parser = argparse.ArgumentParser()
+    parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
+                         default = "testfile.nc")
+    parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
+    parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
+    args = parser.parse_args()
+
+    if args.q: verbose = False
+
+    filename = args.dir
+
+    file_format = None
+    if args.k:
+        kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
+        file_format = kind_dict[args.k]
+
+    try:
+        pnetcdf_io(filename, file_format)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()
