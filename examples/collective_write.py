@@ -4,20 +4,21 @@
 #
 
 """
- This example mimics the coll_perf.c from ROMIO. It creates a netcdf file and 
- writes a number of 3D integer non-record variables. The measured write bandwidth
- is reported at the end. 
- To run:
-    % mpiexec -n num_process python3 collective_write.py [test_file_name] [-l len]
+This example mimics the coll_perf.c from ROMIO. It creates a netcdf file and
+writes a number of 3D integer non-record variables. The measured write
+bandwidth is reported at the end.
+To run:
+  % mpiexec -n num_process python3 collective_write.py [test_file_name] [-l len]
 where len decides the size of each local array, which is len x len x len.
 So, each non-record variable is of size len*len*len * nprocs * sizeof(int)
-All variables are partitioned among all processes in a 3D block-block-block 
+All variables are partitioned among all processes in a 3D block-block-block
 fashion.
- Example commands for MPI run and outputs from running ncmpidump on the
- netCDF file produced by this example program:
+
+Example commands for MPI run and outputs from running ncmpidump on the
+netCDF file produced by this example program:
     % mpiexec -n 32 python3 collective_write.py tmp/test1.nc -l 100
     % ncmpidump tmp/test1.nc
-    
+
     Example standard output:
     MPI hint: cb_nodes        = 2
     MPI hint: cb_buffer_size  = 16777216

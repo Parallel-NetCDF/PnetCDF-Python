@@ -4,22 +4,21 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-This example shows how to use `Variable` method to write a 2D array buffer with 
-ghost cells to a variables. The size of ghost cells is nghosts and the ghost cells
-cells appear on both ends of each dimension. The contents of ghost cells are
--8s and non-ghost cells are the process rank IDs.
- 
-    To run:
-        % mpiexec -n num_process python3 ghost_cell.py [test_file_name]
- 
-  Example commands for MPI run and outputs from running ncmpidump on the
-  output netCDF file produced by this example program:
- 
-     % mpiexec -n 4 python3 ghost_cell.py /tmp/test1.nc
- 
+This example shows how to use `Variable` method to write a 2D array user buffer
+with ghost cells. The size of ghost cells is nghosts and the ghost cells cells
+appear on both ends of each dimension. The contents of ghost cells are -8s and
+non-ghost cells are the process rank IDs.
+
+To run:
+  % mpiexec -n num_process python3 ghost_cell.py [test_file_name]
+
+Example commands for MPI run and outputs from running ncmpidump on the output
+netCDF file produced by this example program:
+
+  % mpiexec -n 4 python3 ghost_cell.py /tmp/test1.nc
+
   % ncmpidump /tmp/test1.nc
-      netcdf testfile {
+  netcdf testfile {
       // file format: CDF-5 (big variables)
       dimensions:
           Y = 8 ;
@@ -27,7 +26,7 @@ cells appear on both ends of each dimension. The contents of ghost cells are
       variables:
           int var(Y, X) ;
           data:
- 
+
       var =
           0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
           0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
@@ -39,7 +38,7 @@ cells appear on both ends of each dimension. The contents of ghost cells are
           2, 2, 2, 2, 2, 3, 3, 3, 3, 3 ;
       }
   In this case, the contents of local buffers are shown below.
- 
+
   rank 0:                                rank 1:
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
@@ -49,7 +48,7 @@ cells appear on both ends of each dimension. The contents of ghost cells are
      -8, -8,  0,  0,  0,  0,  0, -8, -8     -8, -8,  1,  1,  1,  1,  1, -8, -8
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
- 
+
   rank 2:                                rank 3:
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
@@ -59,7 +58,6 @@ cells appear on both ends of each dimension. The contents of ghost cells are
      -8, -8,  2,  2,  2,  2,  2, -8, -8     -8, -8,  3,  3,  3,  3,  3, -8, -8
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
      -8, -8, -8, -8, -8, -8, -8, -8, -8     -8, -8, -8, -8, -8, -8, -8, -8, -8
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 """
 
 import sys
@@ -152,7 +150,7 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
+
     global verbose
     if parse_help(comm):
         MPI.Finalize()

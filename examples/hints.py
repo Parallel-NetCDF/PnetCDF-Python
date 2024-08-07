@@ -4,15 +4,16 @@
 #
 
 """
- * This example sets two PnetCDF hints: nc_header_align_size and nc_var_align_size 
- and prints the hint values as well as the header size, header extent, and two variables' 
- starting file offsets.
+This example sets two PnetCDF hints: `nc_header_align_size` and
+`nc_var_align_size` and prints the hint values as well as the header size,
+header extent, and two variables' starting file offsets.
 
- Example commands for MPI run and outputs from running ncmpidump on the
- netCDF file produced by this example program:
-    % mpiexec -n 4 python3 hints.py tmp/test1.nc
-    % ncmpidump tmp/test1.nc
-    
+Example commands for MPI run and outputs from running ncmpidump on the
+netCDF file produced by this example program:
+
+  % mpiexec -n 4 python3 hints.py tmp/test1.nc
+  % ncmpidump tmp/test1.nc
+
     Example standard output:
     nc_header_align_size      set to = 1024
     nc_var_align_size         set to = 512
@@ -21,7 +22,7 @@
     header extent                    = 1024
     var_zy start file offset         = 1024
     var_yx start file offset         = 1536
- 
+
 """
 
 import sys
@@ -101,7 +102,7 @@ def main():
     NX = 5
     NZ = 5
     nprocs = size
-    
+
     global verbose
     if parse_help():
         MPI.Finalize()
@@ -119,7 +120,7 @@ def main():
     if verbose and rank == 0:
         print("{}: example of set/get PnetCDF hints".format(os.path.basename(__file__)))
 
-    # create MPI info 
+    # create MPI info
     info1 = MPI.Info.Create()
     info1.Set("nc_header_align_size", "1024")
     info1.Set("nc_var_align_size", "512")
@@ -130,7 +131,7 @@ def main():
     dim_z = f.def_dim('Z', NZ*nprocs)
     dim_y = f.def_dim('Y', NY*nprocs)
     dim_x = f.def_dim('x', NX*nprocs)
-    # define a variable of size (NZ * nprocs) * (NY * nprocs) 
+    # define a variable of size (NZ * nprocs) * (NY * nprocs)
     var_zy = f.def_var("var_zy", pnetcdf.NC_INT, (dim_z, dim_y))
     var_yx =  f.def_var("var_yx", pnetcdf.NC_FLOAT, (dim_y, dim_x))
 

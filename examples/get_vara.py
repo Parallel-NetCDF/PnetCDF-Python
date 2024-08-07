@@ -4,20 +4,18 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example is the read counterpart of example put_vara.py. It shows how to
-  use to `Variable` method get_var() read a 2D 4-byte integer array in parallel.
-  It also reads a global attribute and two attribute of variable named "var".
-  The data partitioning pattern is a column-wise partitioning across all
-  processes. Each process reads a subarray of size local_ny * local_nx.
- 
-    To run:
-        % mpiexec -n num_process python3 get_vara.py [put_vara_output_filename]
- 
-  Input file is the output file produced by put_vara.c. Here is the CDL dumped
-  from running ncmpidump.
- 
- 
+This example is the read counterpart of example put_vara.py. It shows how to
+use to `Variable` method get_var() read a 2D 4-byte integer array in parallel.
+It also reads a global attribute and two attribute of variable named "var".
+The data partitioning pattern is a column-wise partitioning across all
+processes. Each process reads a subarray of size local_ny * local_nx.
+
+To run:
+     % mpiexec -n num_process python3 get_vara.py [put_vara_output_filename]
+
+Input file is the output file produced by put_vara.c. Here is the CDL dumped
+from running ncmpidump.
+
      % ncmpidump /tmp/test1.nc
      netcdf testfile {
      // file format: CDF-5 (big variables)
@@ -33,7 +31,7 @@
                  :history = "Mon Aug 13 21:27:48 2018" ;
         "" ;
      data:
- 
+
       var =
           0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
           0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
@@ -46,7 +44,6 @@
           0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
           0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 ;
      }
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 """
 
 import sys
@@ -113,7 +110,7 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
+
     global verbose
     if parse_help(comm):
         MPI.Finalize()

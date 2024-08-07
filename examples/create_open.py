@@ -4,17 +4,17 @@
 #
 
 """
- This example shows how to use `File` class constructor to create a netCDF file and to 
- open the file for read only.
+This example shows how to use `File` class constructor to create a netCDF file
+and to open the file for read only.
 
- Example commands for MPI run and outputs from running ncmpidump on the
- netCDF file produced by this example program:
-    % mpiexec -n 4 python3  create_open.py /tmp/test1.nc
-    % ncmpidump /tmp/test1.nc
-        netcdf test1 {
-        // file format: CDF-1
-        }
+Example commands for MPI run and outputs from running ncmpidump on the
+netCDF file produced by this example program:
 
+  % mpiexec -n 4 python3  create_open.py /tmp/test1.nc
+  % ncmpidump /tmp/test1.nc
+  netcdf test1 {
+  // file format: CDF-1
+  }
 """
 
 import sys

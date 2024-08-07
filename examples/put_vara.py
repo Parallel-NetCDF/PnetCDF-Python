@@ -4,24 +4,23 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example shows how to use `Variable` method put_var() to write a 2D 4-byte
-  integer array in parallel. It first defines a netCDF variable of size
-  global_ny * global_nx where
+This example shows how to use `Variable` method put_var() to write a 2D 4-byte
+integer array in parallel. It first defines a netCDF variable of size
+global_ny * global_nx where
      global_ny == NY and
      global_nx == (NX * number of MPI processes).
-  The data partitioning pattern is a column-wise partitioning across all
-  processes. Each process writes a subarray of size ny * nx.
- 
-    To run:
-        % mpiexec -n num_process python3 put_vara.py [test_file_name]
- 
+The data partitioning pattern is a column-wise partitioning across all
+processes. Each process writes a subarray of size ny * nx.
+
+To run:
+  % mpiexec -n num_process python3 put_vara.py [test_file_name]
+
   Example commands for MPI run and outputs from running ncmpidump on the
   output netCDF file produced by this example program:
- 
-     % mpiexec -n num_process python3 put_vara.py /tmp/test1.nc
- 
-     % ncmpidump /tmp/test1.nc
+
+  % mpiexec -n num_process python3 put_vara.py /tmp/test1.nc
+
+  % ncmpidump /tmp/test1.nc
     netcdf test1 {
     // file format: CDF-1
     dimensions:
@@ -49,7 +48,6 @@
     0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3,
     0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3 ;
     }
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 """
 
 import sys
@@ -130,7 +128,7 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
+
     global verbose
     if parse_help(comm):
         MPI.Finalize()

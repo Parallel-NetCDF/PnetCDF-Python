@@ -4,31 +4,31 @@
 #
 
 """
-    This example is similar to collective_write.py but using nonblocking APIs.
-     It creates a netcdf file in CDF-5 format and writes a number of
-     3D integer non-record variables. The measured write bandwidth is reported
-     at the end. Usage: (for example)
+This example is similar to collective_write.py but using nonblocking APIs.
+It creates a netcdf file in CDF-5 format and writes a number of
+3D integer non-record variables. The measured write bandwidth is reported
+at the end. Usage: (for example)
 
-     To run:
-         mpiexec -n num_processes nonblocking_write.py [filename] [len]
-         
-     where len decides the size of each local array, which is len x len x len.
-     So, each non-record variable is of size len*len*len * nprocs * sizeof(int)
-     All variables are partitioned among all processes in a 3D
-     block-block-block fashion. Below is an example standard output from
-     command:
-         mpiexec -n 32 python3 nonblocking_write_.py tmp/test1.nc 100
- 
-     MPI hint: cb_nodes        = 2
-     MPI hint: cb_buffer_size  = 16777216
-     MPI hint: striping_factor = 32
-     MPI hint: striping_unit   = 1048576
-     Local array size 100 x 100 x 100 integers, size = 3.81 MB
-     Global array size 400 x 400 x 200 integers, write size = 0.30 GB
-      procs    Global array size  exec(sec)  write(MB/s)
-      -------  ------------------  ---------  -----------
-         32     400 x  400 x  200     6.67       45.72
+To run:
+  mpiexec -n num_processes nonblocking_write.py [filename] [len]
 
+  where len decides the size of each local array, which is len x len x len.
+  So, each non-record variable is of size len*len*len * nprocs * sizeof(int)
+  All variables are partitioned among all processes in a 3D
+  block-block-block fashion. Below is an example standard output from
+  command:
+
+  mpiexec -n 32 python3 nonblocking_write_.py tmp/test1.nc 100
+
+  MPI hint: cb_nodes        = 2
+  MPI hint: cb_buffer_size  = 16777216
+  MPI hint: striping_factor = 32
+  MPI hint: striping_unit   = 1048576
+  Local array size 100 x 100 x 100 integers, size = 3.81 MB
+  Global array size 400 x 400 x 200 integers, write size = 0.30 GB
+  procs    Global array size  exec(sec)  write(MB/s)
+  -------  ------------------  ---------  -----------
+    32     400 x  400 x  200     6.67       45.72
 """
 
 import sys
@@ -160,7 +160,7 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
+
     global verbose
     if parse_help(comm):
         MPI.Finalize()
@@ -255,7 +255,7 @@ def main():
         req_id = vars[i].bput_var(buf[i], start = starts, count = counts)
         reqs.append(req_id)
         # can safely change contents or free up the buf[i] here
-    
+
     # wait for the nonblocking I/O to complete
     req_errs = [None] * NUM_VARS
     f.wait_all(NUM_VARS, reqs, req_errs)
