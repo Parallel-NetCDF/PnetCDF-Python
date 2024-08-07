@@ -33,30 +33,21 @@ netCDF file produced by this example program:
 
 """
 
-import sys
-import os
+import sys, os, argparse
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-
-verbose = True
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
 
 def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [filename] (Optional) output netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
 def print_info(info_used):
@@ -68,39 +59,55 @@ def print_info(info_used):
         print("MPI File Info: [{:2d}] key = {:25s}, value = {}".format(i, key, value))
 
 
-def main():
-    nprocs = size
+def pnetcdf_io(filename):
+    if verbose and rank == 0:
+        print("{}: example of getting MPI-IO hints".format(os.path.basename(__file__)))
 
-    global verbose
+    # create a new file using clobber "w" mode
+    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=None)
+
+    # exit the define mode
+    f.enddef()
+
+    # get all the hints used
+    info_used = f.inq_info()
+    if verbose and rank == 0:
+        print_info(info_used)
+
+    # free info object
+    info_used.Free()
+
+    # close the file
+    f.close()
+
+
+if __name__ == "__main__":
+    verbose = True
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    nprocs = comm.Get_size()
+
     if parse_help():
         MPI.Finalize()
-        return 1
+        sys.exit(1)
+
     # get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
     parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
                          default = "testfile.nc")
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
-
     args = parser.parse_args()
-    if args.q:
-        verbose = False
-    filename = args.dir
-    if verbose and rank == 0:
-        print("{}: example of getting MPI-IO hints".format(os.path.basename(__file__)))
 
-    # create a new file using "w" mode
-    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=None)
-    # exit the define mode
-    f.enddef()
-    # get all the hints used
-    info_used = f.inq_info()
-    if verbose and rank == 0:
-        print_info(info_used)
-    info_used.Free()
-    f.close()
+    if args.q: verbose = False
+
+    filename = args.dir
+
+    try:
+        pnetcdf_io(filename)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()

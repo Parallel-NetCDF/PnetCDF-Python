@@ -31,46 +31,36 @@ netCDF file produced by this example program:
         32     400 x  400 x  200     6.67       45.72
 """
 
-import sys
-import os
+import sys, os, argparse, inspect
+import numpy as np
 from mpi4py import MPI
 import pnetcdf
-import argparse
-import numpy as np
-import inspect
-
-verbose = True
 
 NDIMS = 3
 NUM_VARS = 10
 
-
 def parse_help(comm):
     rank = comm.Get_rank()
     help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag:
-        if rank == 0:
-            help_text = (
-                "Usage: {} [-h] | [-q] [file_name]\n"
-                "       [-h] Print help\n"
-                "       [-q] Quiet mode (reports when fail)\n"
-                "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-                "       [-l len] size of each dimension of the local array\n"
-                "       [filename] (Optional) output netCDF file name\n"
-            ).format(sys.argv[0])
-            print(help_text)
-
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [-l len] size of each dimension of the local array\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
     return help_flag
 
 def print_info(info_used):
-
     print("MPI hint: cb_nodes        =", info_used.Get("cb_nodes"))
     print("MPI hint: cb_buffer_size  =", info_used.Get("cb_buffer_size"))
     print("MPI hint: striping_factor =", info_used.Get("striping_factor"))
     print("MPI hint: striping_unit   =", info_used.Get("striping_unit"))
 
 def pnetcdf_io(comm, filename, file_format, length):
-    global verbose
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
 
@@ -100,9 +90,13 @@ def pnetcdf_io(comm, filename, file_format, length):
     comm.Barrier()
     write_timing = MPI.Wtime()
 
-    # Create the file
+    # Create the file using file clobber mode
     try:
-        f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename = filename,  \
+                         mode = 'w',           \
+                         format = file_format, \
+                         comm = comm,          \
+                         info = None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
         comm.Abort()
@@ -119,13 +113,14 @@ def pnetcdf_io(comm, filename, file_format, length):
     for i in range(NUM_VARS):
         var = f.def_var("var{}".format(i), pnetcdf.NC_INT, dims)
         vars.append(var)
+
     # Exit the define mode
     f.enddef()
 
-    # Get all the hints used
+    # Get the MPI-IO hint objects, which containing all hints used
     info_used = f.inq_info()
 
-    # Write one variable at a time
+    # Collectively write one variable at a time
     for i in range(NUM_VARS):
         vars[i].put_var_all(buf[i], start = starts, count = counts)
 
@@ -134,11 +129,8 @@ def pnetcdf_io(comm, filename, file_format, length):
 
     write_timing = MPI.Wtime() - write_timing
 
+    # calculate write amount across all processes in total
     write_size = bufsize * NUM_VARS * np.dtype(np.int32).itemsize
-
-    for i in range(NUM_VARS):
-        buf[i] = None
-
     sum_write_size = comm.reduce(write_size, MPI.SUM, root=0)
     max_write_timing = comm.reduce(write_timing, MPI.MAX, root=0)
 
@@ -155,17 +147,17 @@ def pnetcdf_io(comm, filename, file_format, length):
         print(" {:4d}    {:4d} x {:4d} x {:4d} {:8.2f}  {:10.2f}\n".format(nprocs, gsizes[0], gsizes[1], gsizes[2], max_write_timing, write_bw))
 
 
-def main():
+if __name__ == "__main__":
+
+    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
-    size = comm.Get_size()
-
-    nprocs = size
-    global verbose
+    nprocs = comm.Get_size()
 
     if parse_help(comm):
         MPI.Finalize()
-        return 1
+        sys.exit(1)
+
     # Get command-line arguments
     args = None
     parser = argparse.ArgumentParser()
@@ -175,24 +167,29 @@ def main():
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     parser.add_argument("-l", help="Size of each dimension of the local array\n")
     args = parser.parse_args()
+
     file_format = None
     length = 10
-    if args.q:
-        verbose = False
+
+    if args.q: verbose = False
+
     if args.k:
         kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
         file_format = kind_dict[args.k]
-    if args.l:
-        if int(args.l) > 0:
-            length = int(args.l)
+
+    if args.l and int(args.l) > 0:
+        length = int(args.l)
+
     filename = args.dir
     if verbose and rank == 0:
         print("{}: example of collective writes".format(os.path.basename(__file__)))
 
-    # Run pnetcdf i/o
-    pnetcdf_io(comm, filename, file_format, length)
+    # Run I/O
+    try:
+        pnetcdf_io(comm, filename, file_format, length)
+    except BaseException as err:
+        print("Error: type:", type(err), str(err))
+        raise
 
     MPI.Finalize()
 
-if __name__ == "__main__":
-    main()
