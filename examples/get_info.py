@@ -4,9 +4,10 @@
 #
 
 """
+This example prints all MPI-IO hints used.
 
- Example commands for MPI run and outputs from running ncmpidump on the
- netCDF file produced by this example program:
+Example commands for MPI run and outputs from running ncmpidump on the
+netCDF file produced by this example program:
     % mpiexec -n 4 python3 get_info.py tmp/test1.nc
     % ncmpidump tmp/test1.nc
         Example standard output:
@@ -29,7 +30,7 @@
     MPI File Info: [15] key =      nc_header_align_size, value = 512
     MPI File Info: [16] key =         nc_var_align_size, value = 512
     MPI File Info: [17] key = nc_header_read_chunk_size, value = 0
- 
+
 """
 
 import sys
@@ -66,10 +67,10 @@ def print_info(info_used):
         value = info_used.Get(key)
         print("MPI File Info: [{:2d}] key = {:25s}, value = {}".format(i, key, value))
 
-    
+
 def main():
     nprocs = size
-    
+
     global verbose
     if parse_help():
         MPI.Finalize()
@@ -80,7 +81,7 @@ def main():
     parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
                          default = "testfile.nc")
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
-    
+
     args = parser.parse_args()
     if args.q:
         verbose = False

@@ -4,22 +4,17 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example shows how to use `File` API to write a 2D 4-byte
-  integer array in parallel. It first defines a netCDF variable of size
-  global_ny * global_nx where
-     global_ny == NY and
-     global_nx == (NX * number of MPI processes).
-  The data partitioning pattern is a column-wise partitioning across all
-  processes. Each process writes a subarray of size ny * nx.
- 
-    To run:
-        % mpiexec -n num_process python3 global_attribute.py [test_file_name]
- 
-  Example commands for MPI run and outputs from running ncmpidump on the
-  netCDF file produced by this example program:
-    % mpiexec -n 4 python3 global_attribute.py ./tmp/test2.nc
-     % ncmpidump ./tmp/test2.nc
+This example shows how to use `File` method `put_att()` to write a global
+attribute to a file.
+
+To run:
+  % mpiexec -n num_process python3 global_attribute.py [test_file_name]
+
+Example commands for MPI run and outputs from running ncmpidump on the
+netCDF file produced by this example program:
+
+  % mpiexec -n 4 python3 global_attribute.py ./tmp/test2.nc
+  % ncmpidump ./tmp/test2.nc
      netcdf testfile {
      // file format: CDF-1
 
@@ -28,7 +23,7 @@
          "" ;
                      :digits = 0s, 1s, 2s, 3s, 4s, 5s, 6s, 7s, 8s, 9s ;
      }
- 
+
 """
 
 import sys
@@ -92,7 +87,7 @@ def main():
 
     # Create the file
     f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
-    
+
     if rank == 0:
         ltime = time.localtime()
         str_att = time.asctime(ltime)

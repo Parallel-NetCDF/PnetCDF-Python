@@ -4,49 +4,46 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example shows how to use `Variable` method put_var() write a 2D integer array
-  variable into a file. The variable in the file is a dimensional
-  transposed array from the one stored in memory. In memory, a 2D array is
-  partitioned among all processes in a block-block fashion in YX (i.e.
-  row-major) order. The dimension structure of the transposed array is
-  arrays are
-        int YX_var(Y, X) ;
-        int XY_var(X, Y) ;
- 
-    To run:
-        % mpiexec -n num_process python3 transpose2D.py [filename] [-l len]
- 
- where len decides the size of local array, which is len x (len+1).
- So, each variable is of size len*(len+1) * nprocs * sizeof(int)
+This example shows how to use `Variable` method `put_var()` to write a 2D
+integer array variable into a file. The variable in the file is a dimensional
+transposed array from the one stored in memory. In memory, a 2D array is
+partitioned among all processes in a block-block fashion in YX (i.e.
+row-major) order. The dimension structure of the transposed array is arrays are
+    int YX_var(Y, X) ;
+    int XY_var(X, Y) ;
 
- *    % mpiexec -n 4 python3 transpose2D.py testfile.nc
- *    % ncdump testfile.nc
- *    netcdf testfile {
- *    dimensions:
- *             Y = 4 ;
- *             X = 6 ;
- *    variables:
- *            int YX_var(Y, X) ;
- *            int XY_var(X, Y) ;
- *    data:
- *
- *     YX_var =
- *      0, 1, 2, 3, 4, 5,
- *      6, 7, 8, 9, 10, 11,
- *      12, 13, 14, 15, 16, 17,
- *      18, 19, 20, 21, 22, 23 ;
- *
- *     XY_var =
- *      0, 6, 12, 18,
- *      1, 7, 13, 19,
- *      2, 8, 14, 20,
- *      3, 9, 15, 21,
- *      4, 10, 16, 22,
- *      5, 11, 17, 23 ;
- *    }
- */
- 
+To run:
+  % mpiexec -n num_process python3 transpose2D.py [filename] [-l len]
+
+  where len decides the size of local array, which is len x (len+1).
+  So, each variable is of size len*(len+1) * nprocs * sizeof(int)
+
+   % mpiexec -n 4 python3 transpose2D.py testfile.nc
+   % ncdump testfile.nc
+     netcdf testfile {
+     dimensions:
+              Y = 4 ;
+              X = 6 ;
+     variables:
+             int YX_var(Y, X) ;
+             int XY_var(X, Y) ;
+     data:
+
+     YX_var =
+       0, 1, 2, 3, 4, 5,
+       6, 7, 8, 9, 10, 11,
+       12, 13, 14, 15, 16, 17,
+       18, 19, 20, 21, 22, 23 ;
+
+     XY_var =
+       0, 6, 12, 18,
+       1, 7, 13, 19,
+       2, 8, 14, 20,
+       3, 9, 15, 21,
+       4, 10, 16, 22,
+       5, 11, 17, 23 ;
+     }
+
 """
 
 import sys
@@ -160,7 +157,7 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
+
     global verbose
     if parse_help(comm):
         MPI.Finalize()

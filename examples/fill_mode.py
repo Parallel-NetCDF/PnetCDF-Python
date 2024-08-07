@@ -4,18 +4,18 @@
 #
 
 """
- This example shows how to use `Variable` class methods and `File` class methods 
- to set the fill mode of variables and fill values.
+This example shows how to use `Variable` class methods and `File` class methods
+to set the fill mode of variables and fill values.
  * 1. set_fill() to enable fill mode of the file
  * 2. def_fill() to enable fill mode and define the variable's fill value
  * 3. inq_var_fill() to inquire the variable's fill mode information
  * 4. put_vara_all() to write two 2D 4-byte integer array in parallel.
 
+Example commands for MPI run and outputs from running ncmpidump on the
+netCDF file produced by this example program:
 
- Example commands for MPI run and outputs from running ncmpidump on the
- netCDF file produced by this example program:
-    % mpiexec -n 4 python3 fill_mode.py tmp/test1.nc
-    % ncmpidump tmp/test1.nc
+  % mpiexec -n 4 python3 fill_mode.py tmp/test1.nc
+  % ncmpidump tmp/test1.nc
     netcdf test1 {
     // file format: CDF-1
     dimensions:
@@ -80,7 +80,7 @@ def main():
     parser.add_argument("dir", nargs="?", type=str, help="(Optional) output netCDF file name",\
                          default = "testfile.nc")
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
-    
+
     args = parser.parse_args()
     if args.q:
         verbose = False

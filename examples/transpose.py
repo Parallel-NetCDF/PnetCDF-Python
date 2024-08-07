@@ -4,27 +4,24 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example shows how to use `Variable` method put_var() to write six 3D integer array
-  variables into a file. Each variable in the file is a dimensional
-  transposed array from the one stored in memory. In memory, a 3D array is
-  partitioned among all processes in a block-block-block fashion and in
-  ZYX (i.e. C) order. The dimension structures of the transposed six
-  arrays are
+This example shows how to use `Variable` method `put_var()` to write six 3D
+integer array variables into a file. Each variable in the file is a dimensional
+transposed array from the one stored in memory. In memory, a 3D array is
+partitioned among all processes in a block-block-block fashion and in ZYX (i.e.
+C) order. The dimension structures of the transposed six arrays are
         int ZYX_var(Z, Y, X) ;     ZYX -> ZYX
         int ZXY_var(Z, X, Y) ;     ZYX -> ZXY
         int YZX_var(Y, Z, X) ;     ZYX -> YZX
         int YXZ_var(Y, X, Z) ;     ZYX -> YXZ
         int XZY_var(X, Z, Y) ;     ZYX -> XZY
         int XYZ_var(X, Y, Z) ;     ZYX -> XYZ
- 
-    To run:
-        % mpiexec -n num_process python3 transpose.py [filename] [-l len]
- 
- where len decides the size of local array, which is len x (len+1) x (len+2).
- So, each variable is of size len*(len+1)*(len+2) * nprocs * sizeof(int)
 
- 
+To run:
+  % mpiexec -n num_process python3 transpose.py [filename] [-l len]
+
+  where len decides the size of local array, which is len x (len+1) x (len+2).
+  So, each variable is of size len*(len+1)*(len+2) * nprocs * sizeof(int)
+
 """
 
 import sys
@@ -175,7 +172,7 @@ def main():
     size = comm.Get_size()
 
     nprocs = size
-    
+
     global verbose
     if parse_help(comm):
         MPI.Finalize()

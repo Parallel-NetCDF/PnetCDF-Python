@@ -4,22 +4,21 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example shows how to use a single call of `Variable` method put_var() to 
-  to write a sequence of requests with arbitrary array indices and lengths.
- 
-    To run:
-        % mpiexec -n num_process python3 put_varn_int.py [test_file_name]
- 
-  Note that by specifying num_reqs, users can write more than one element 
-  starting at each selected location.
+This example shows how to use a single call of `Variable` method `put_var()` to
+to write a sequence of requests with arbitrary array indices and lengths.
 
-  Example commands for MPI run and outputs from running ncmpidump on the
-  output netCDF file produced by this example program:
- 
-     % mpiexec -n 4 python3 put_varn_int.py /tmp/test1.nc
- 
-     % ncmpidump /tmp/test1.nc
+To run:
+  % mpiexec -n num_process python3 put_varn_int.py [test_file_name]
+
+Note that by specifying num_reqs, users can write more than one element
+starting at each selected location.
+
+Example commands for MPI run and outputs from running ncmpidump on the
+output netCDF file produced by this example program:
+
+  % mpiexec -n 4 python3 put_varn_int.py /tmp/test1.nc
+
+  % ncmpidump /tmp/test1.nc
      netcdf test1 {
      // file format: CDF-5 (big variables)
      dimensions:
@@ -28,14 +27,13 @@
      variables:
               int var(Y, X) ;
      data:
- 
+
       var =
         3, 3, 3, 1, 1, 0, 0, 2, 1, 1,
         0, 2, 2, 2, 3, 1, 1, 2, 2, 2,
         1, 1, 2, 3, 3, 3, 0, 0, 1, 1,
         0, 0, 0, 2, 1, 1, 1, 3, 3, 3 ;
      }
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 """
 
 import sys
@@ -118,10 +116,10 @@ def main():
         starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
         starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
         # rank 0 is writing the following locations: ("-" means skip)
-        #               -  -  -  -  -  0  0  -  -  - 
-        #               0  -  -  -  -  -  -  -  -  - 
-        #               -  -  -  -  -  -  0  0  -  - 
-        #               0  0  0  -  -  -  -  -  -  - 
+        #               -  -  -  -  -  0  0  -  -  -
+        #               0  -  -  -  -  -  -  -  -  -
+        #               -  -  -  -  -  -  0  0  -  -
+        #               0  0  0  -  -  -  -  -  -  -
     elif rank == 1:
         num_reqs = 6
         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
@@ -133,10 +131,10 @@ def main():
         starts[4][0] = 2; starts[4][1] = 8; counts[4][0] = 1; counts[4][1] = 2
         starts[5][0] = 3; starts[5][1] = 4; counts[5][0] = 1; counts[5][1] = 3
         # rank 1 is writing the following locations: ("-" means skip)
-        #               -  -  -  1  1  -  -  -  1  1 
-        #               -  -  -  -  -  1  1  -  -  - 
-        #               1  1  -  -  -  -  -  -  1  1 
-        #               -  -  -  -  1  1  1  -  -  - 
+        #               -  -  -  1  1  -  -  -  1  1
+        #               -  -  -  -  -  1  1  -  -  -
+        #               1  1  -  -  -  -  -  -  1  1
+        #               -  -  -  -  1  1  1  -  -  -
     elif rank == 2:
         num_reqs = 5
         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
@@ -147,10 +145,10 @@ def main():
         starts[3][0] = 2; starts[3][1] = 2; counts[3][0] = 1; counts[3][1] = 1
         starts[4][0] = 3; starts[4][1] = 3; counts[4][0] = 1; counts[4][1] = 1
         # rank 2 is writing the following locations: ("-" means skip)
-        #         -  -  -  -  -  -  -  2  -  - 
-        #         -  2  2  2  -  -  -  2  2  2 
-        #         -  -  2  -  -  -  -  -  -  - 
-        #         -  -  -  2  -  -  -  -  -  - 
+        #         -  -  -  -  -  -  -  2  -  -
+        #         -  2  2  2  -  -  -  2  2  2
+        #         -  -  2  -  -  -  -  -  -  -
+        #         -  -  -  2  -  -  -  -  -  -
     elif rank == 3:
         num_reqs = 4
         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
@@ -160,10 +158,10 @@ def main():
         starts[2][0] = 2; starts[2][1] = 3; counts[2][0] = 1; counts[2][1] = 3
         starts[3][0] = 3; starts[3][1] = 7; counts[3][0] = 1; counts[3][1] = 3
         # rank 3 is writing the following locations: ("-" means skip)
-        #         3  3  3  -  -  -  -  -  -  - 
-        #         -  -  -  -  3  -  -  -  -  - 
-        #         -  -  -  3  3  3  -  -  -  - 
-        #         -  -  -  -  -  -  -  3  3  3 
+        #         3  3  3  -  -  -  -  -  -  -
+        #         -  -  -  -  3  -  -  -  -  -
+        #         -  -  -  3  3  3  -  -  -  -
+        #         -  -  -  -  -  -  -  3  3  3
     else:
         num_reqs = 0
         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)

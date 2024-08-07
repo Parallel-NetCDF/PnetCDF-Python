@@ -4,28 +4,27 @@
 #
 
 """
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-  This example shows how to use `Variable` method put_var() and iput_var() to write a 2D 4-byte
-  integer array in parallel (one is of 4-byte
-  integer byte and the other float type) in parallel. It first defines 2 netCDF
-  variables of sizes
+This example shows how to use `Variable` flexible API methods put_var() and
+iput_var() to write a 2D 4-byte integer array in parallel (one is of 4-byte
+integer byte and the other float type). It first defines 2 netCDF variables of
+sizes
      var_zy: NZ*nprocs x NY
      var_yx: NY x NX*nprocs
- 
-  The data partitioning patterns on the 2 variables are row-wise and
-  column-wise, respectively. Each process writes a subarray of size
-  NZ x NY and NY x NX to var_zy and var_yx, respectively.
-  Both local buffers have a ghost cell of length 3 surrounded along each
-  dimension.
-    To run:
-        % mpiexec -n num_process python3 flexible_api.py [test_file_name]
- 
-  Example commands for MPI run and outputs from running ncmpidump on the
-  output netCDF file produced by this example program:
- 
-     % mpiexec -n 4 python3 flexible_api.py /tmp/test1.nc
- 
-     % ncmpidump /tmp/test1.nc
+
+The data partitioning patterns on the 2 variables are row-wise and column-wise,
+respectively. Each process writes a subarray of size NZ x NY and NY x NX to
+var_zy and var_yx, respectively.  Both local buffers have a ghost cell of
+length 3 surrounded along each dimension.
+
+To run:
+  % mpiexec -n num_process python3 flexible_api.py [test_file_name]
+
+Example commands for MPI run and outputs from running ncmpidump on the
+output netCDF file produced by this example program:
+
+  % mpiexec -n 4 python3 flexible_api.py /tmp/test1.nc
+
+  % ncmpidump /tmp/test1.nc
      netcdf testfile {
      // file format: CDF-5 (big variables)
      dimensions:
@@ -36,7 +35,7 @@
              int var_zy(Z, Y) ;
              float var_yx(Y, X) ;
      data:
- 
+
       var_zy =
        0, 0, 0, 0, 0,
        0, 0, 0, 0, 0,
@@ -58,7 +57,7 @@
        3, 3, 3, 3, 3,
        3, 3, 3, 3, 3,
        3, 3, 3, 3, 3 ;
- 
+
       var_yx =
        0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3,
        0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3,
@@ -66,7 +65,6 @@
        0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3,
        0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3 ;
      }
- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 """
 
 import sys
@@ -167,7 +165,7 @@ def main():
     buf_zy.fill(-1)
     var_zy.get_var_all(buf_zy, start = starts, count = counts, bufcount = 1, buftype = subarray)
     # print(buf_zy.reshape(array_of_sizes))
-    
+
     # check contents of the get buffer
     for i in range(array_of_sizes[0]):
         for j in range(array_of_sizes[1]):
