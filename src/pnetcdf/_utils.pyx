@@ -1,8 +1,8 @@
 ###############################################################################
-# 
+#
 #  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
 #  See COPYRIGHT notice in top-level directory.
-# 
+#
 ###############################################################################
 
 include "PnetCDF.pxi"
@@ -428,7 +428,7 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
     index arrays be 1-d boolean or integer. If integer arrays are used,
     the index values must be sorted and contain no duplicates.
 
-    In summary, slicing netcdf variable objects with 1-d integer or boolean arrays 
+    In summary, slicing netcdf variable objects with 1-d integer or boolean arrays
     is allowed, but may give a different result than slicing a numpy array.
 
     Numpy also supports slicing an array with a boolean array of the same
@@ -790,11 +790,11 @@ cpdef strerror(err_code):
     """
     strerror(err_code)
 
-    The function strerror returns a static reference to an error message string corresponding 
+    The function strerror returns a static reference to an error message string corresponding
     to an integer netCDF error status or to a system error number, presumably returned by a previous
-    call to some other PnetCDF function. 
+    call to some other PnetCDF function.
 
-    :param err_code: An error status that might have been returned from a previous call 
+    :param err_code: An error status that might have been returned from a previous call
     to some PnetCDF function.
     :type err_code: int.
 
@@ -811,10 +811,10 @@ cpdef strerrno(err_code):
     """
     strerror(err_code)
 
-    The function strerrno returns a character string containing the name of the NC error code. 
-    For instance, ncmpi_strerrno(NC_EBADID) returns string "NC_EBADID". 
+    The function strerrno returns a character string containing the name of the NC error code.
+    For instance, ncmpi_strerrno(NC_EBADID) returns string "NC_EBADID".
 
-    :param err_code: An error status that might have been returned from a previous call 
+    :param err_code: An error status that might have been returned from a previous call
     to some PnetCDF function.
     :type err_code: int.
 
@@ -830,11 +830,11 @@ cpdef set_default_format(int new_format):
     """
     set_default_format(int new_format)
 
-    The function  allows the user to change the format of the netCDF file to be created by future 
-    calls to ncmpi_create without specifying the file format. It returns the existing default 
-    format while setting a new default format. 
+    The function  allows the user to change the format of the netCDF file to be created by future
+    calls to ncmpi_create without specifying the file format. It returns the existing default
+    format while setting a new default format.
 
-    :param new_format: ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting), ``pnetcdf.NC_FORMAT_CDF2`` 
+    :param new_format: ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting), ``pnetcdf.NC_FORMAT_CDF2``
     (``pnetcdf.NC_FORMAT_64BIT``), or ``pnetcdf.NC_FORMAT_CDF5`` (``pnetcdf.NC_FORMAT_64BIT_DATA``).
 
     :rtype: int
@@ -857,7 +857,7 @@ cpdef inq_default_format():
 
     The function returns the current setting for default file format.
 
-    :rtype: int 
+    :rtype: int
 
     Operational mode: This function is an independent subroutine.
 
@@ -874,7 +874,7 @@ cpdef inq_file_format(str file_name):
 
     The function returns the current setting for default file format.
 
-    :rtype: int 
+    :rtype: int
 
     Operational mode: This function is an independent subroutine.
 
@@ -919,7 +919,7 @@ cpdef inq_malloc_size():
 cpdef inq_files_opened(ncids=None):
     cdef int ierr, num
     cdef int *ncidp
-    
+
     with nogil:
         ierr = ncmpi_inq_files_opened(&num, NULL)
     _check_err(ierr)

@@ -4,10 +4,10 @@
 #
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.The 
-   program runs in non-blocking mode and makes a request to read an subsampled array of values 
-   from a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iget_vars in C. 
+   This example program is intended to illustrate the use of the pnetCDF python API.The
+   program runs in non-blocking mode and makes a request to read an subsampled array of values
+   from a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The
+   library will internally invoke ncmpi_iget_vars in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -34,7 +34,7 @@ dataref = []
 for i in range(size):
     dataref.append(data[3:4:1,0:6:2,i*10:(i+1)*10:2])
 num_reqs = 10
-# initialize a list to store references of variable values 
+# initialize a list to store references of variable values
 v_datas = []
 
 class VariablesTestCase(unittest.TestCase):
@@ -77,7 +77,7 @@ class VariablesTestCase(unittest.TestCase):
             buff = np.empty(shape = counts, dtype = v.datatype)
             # post the request to read one part of the variable
             req_id = v.iget_var(buff, start = starts, count = counts, stride = strides)
-            # track the reqeust ID for each read reqeust 
+            # track the reqeust ID for each read reqeust
             req_ids.append(req_id)
             # store the reference of variable values
             v_datas.append(buff)
@@ -89,7 +89,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to read a subsampled array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
@@ -98,13 +98,13 @@ class VariablesTestCase(unittest.TestCase):
             v.iget_var(buff, start = starts, count = counts, stride = strides)
             # store the reference of variable values
             v_datas.append(buff)
-        
+
         # commit all pending get requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num = pnetcdf.NC_GET_REQ_ALL)
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files if test file directory not specified
         comm.Barrier()

@@ -5,12 +5,12 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to write a mapped array 
-   section of values into a netCDF variables of an opened netCDF file using bput_var 
-   method of `Variable` class. This method is a buffered version of bput_var and 
+   The program runs in non-blocking mode and makes a request to write a mapped array
+   section of values into a netCDF variables of an opened netCDF file using bput_var
+   method of `Variable` class. This method is a buffered version of bput_var and
    requires the user to attach an internal buffer of size equal to the sum of all
-   requests using attach_buff method of `File` class. The library will internally 
-   invoke ncmpi_bput_var and ncmpi_attach_buffer in C.  
+   requests using attach_buff method of `File` class. The library will internally
+   invoke ncmpi_bput_var and ncmpi_attach_buffer in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -30,11 +30,11 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 xdim=6; ydim=4
-# initial numpy array data to be written to nc variable 
+# initial numpy array data to be written to nc variable
 data = np.zeros((xdim,ydim)).astype('f4')
 # internal numpy array data to be written to nc variable using put_varm
 datam = randint(0,10,size=(2,3)).astype('f4')
-# reference numpy array for testing 
+# reference numpy array for testing
 dataref = data.copy()
 dataref[::2, ::2] = datam.transpose()
 starts = np.array([0,0])
@@ -76,7 +76,7 @@ class VariablesTestCase(unittest.TestCase):
             assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
             # post the request to write a mapped array section of values
             req_id = v.bput_var(datam, start = starts, count = counts, stride = strides, imap = imap)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
@@ -86,13 +86,13 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to write a subsampled arrays of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write a mapped array section of values
             v.bput_var(datam, start = starts, count = counts, stride = strides, imap = imap)
-        
+
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         # relase the internal buffer

@@ -6,10 +6,10 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The program runs
    in non-blocking mode and makes a request to write a single element to a variable into a netCDF variable
-   of an opened netCDF file using bput_var method of `Variable` class. This method is a buffered version 
-   of bput_var and requires the user to attach an internal buffer of size equal to the sum of all requests 
-   using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_var1 and 
-   ncmpi_attach_buffer in C. The library will internally invoke ncmpi_bput_var1 in C. 
+   of an opened netCDF file using bput_var method of `Variable` class. This method is a buffered version
+   of bput_var and requires the user to attach an internal buffer of size equal to the sum of all requests
+   using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_var1 and
+   ncmpi_attach_buffer in C. The library will internally invoke ncmpi_bput_var1 in C.
 """
 import sys
 import pnetcdf
@@ -73,7 +73,7 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write a single element
             req_id = v.bput_var(value, index = index)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
 
         f.end_indep()
@@ -97,7 +97,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files if the test file directory not specified
         comm.Barrier()

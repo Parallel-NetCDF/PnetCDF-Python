@@ -5,9 +5,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to read the whole variable 
-   of an opened netCDF file using iput_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iget_var in C. 
+   The program runs in non-blocking mode and makes a request to read the whole variable
+   of an opened netCDF file using iput_var method of `Variable` class. The
+   library will internally invoke ncmpi_iget_var in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -27,7 +27,7 @@ xdim=9; ydim=10; zdim=11
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
 # reference array for comparison in the testing phase
 datarev = data[:,::-1,:].copy()
-# initialize a list to store references of variable values 
+# initialize a list to store references of variable values
 v_datas = []
 
 comm = MPI.COMM_WORLD
@@ -66,11 +66,11 @@ class VariablesTestCase(unittest.TestCase):
         req_ids = []
         # reinialize the list of returned array references
         v_datas.clear()
-        for i in range(num_reqs):        
+        for i in range(num_reqs):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = v.shape, dtype = v.datatype)# empty numpy array to hold returned variable values
             req_id = v.iget_var(buff)
-            # track the reqeust ID for each read reqeust 
+            # track the reqeust ID for each read reqeust
             req_ids.append(req_id)
             # store the reference of variable values
             v_datas.append(buff)
@@ -81,9 +81,9 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to read for the last 10 variables w/o tracking req ids
-        for i in range(num_reqs, num_reqs * 2):        
+        for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = v.shape, dtype = v.datatype)
             v.iget_var(buff)
@@ -104,11 +104,11 @@ class VariablesTestCase(unittest.TestCase):
 
     def runTest(self):
         """testing variable iget var and wait_all for CDF-5 """
-        
-        # test all returned variable values 
+
+        # test all returned variable values
         for i in range(num_reqs * 2):
             assert_array_equal(v_datas[i], datarev)
-    
+
 if __name__ == '__main__':
     suite = unittest.TestSuite()
     for i in range(len(file_formats)):

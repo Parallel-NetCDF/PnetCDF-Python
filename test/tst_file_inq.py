@@ -6,9 +6,9 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program write a number of attributes and variables to a netCDF file using `File` class
-   methods. Then the program will inquiry the file info in terms of the defined dimensions, 
-   variables, attributes, file formats, etc. The python library will internally invoke 
-   ncmpi_inq Family functions in C. 
+   methods. Then the program will inquiry the file info in terms of the defined dimensions,
+   variables, attributes, file formats, etc. The python library will internally invoke
+   ncmpi_inq Family functions in C.
 
    To run the test, execute the following
     `mpiexec -n [num_process] python3  tst_file_inq.py [test_file_output_dir](optional)`
@@ -72,9 +72,9 @@ class FileTestCase(unittest.TestCase):
 
         # reopen the netCDF file in read-only mode
         f = pnetcdf.File(filename=self.file_path, mode = 'r')
-        # inquiry and store the number of vars 
+        # inquiry and store the number of vars
         self.nvars = len(f.variables)
-        # inquiry and store the number of dims 
+        # inquiry and store the number of dims
         self.ndims = len(f.dimensions)
         # inquiry and store the number of global attributes
         self.nattrs = len(f.ncattrs())
@@ -141,5 +141,5 @@ if __name__ == '__main__':
 
 
 
-    
-    
+
+

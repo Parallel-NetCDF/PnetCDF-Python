@@ -5,9 +5,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in blocking mode and writes the whole value into a netCDF variable 
+   The program runs in blocking mode and writes the whole value into a netCDF variable
    of an opened netCDF file using put_var method of `Variable` class. The library will
-   internally invoke ncmpi_put_var in C. 
+   internally invoke ncmpi_put_var in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -22,7 +22,7 @@ import io
 seed(0)
 file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
 file_name = "tst_var_put_var.nc"
-xdim=9; ydim=10; zdim=11 
+xdim=9; ydim=10; zdim=11
 # generate numpy array to write to the whole netCDF variable
 data = randint(0,10, size=(xdim,ydim,zdim)).astype('i4')
 datarev = data[:,::-1,:].copy()
@@ -66,7 +66,7 @@ class VariablesTestCase(unittest.TestCase):
         comm.Barrier()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files
         comm.Barrier()

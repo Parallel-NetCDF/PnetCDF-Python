@@ -5,9 +5,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes some requests to write to a variable 
-   into a netCDF variable and commit them using wait/wait_all method of `File` class. The 
-   library will internally invoke ncmpi_iput_vara in C. 
+   The program runs in non-blocking mode and makes some requests to write to a variable
+   into a netCDF variable and commit them using wait/wait_all method of `File` class. The
+   library will internally invoke ncmpi_iput_vara in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -40,7 +40,7 @@ for i in range(size):
     datares1[3:4,:5,i*10:(i+1)*10] = datam
 
 num_reqs = 10
-# initialize the list to store request ids 
+# initialize the list to store request ids
 req_ids_tst1 = []
 req_ids_tst2 = []
 bad_req_ids = list(range(num_reqs))
@@ -80,7 +80,7 @@ class FileTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
             req_id = v.iput_var(datam, start = starts, count = counts)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids_tst1.append(req_id) if i < 10 else req_ids_tst2.append(req_id)
         # TEST 1 - wait_all (collective i/o)
         # check number of pending requests
@@ -103,7 +103,7 @@ class FileTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
             req_id = v.iput_var(datam, start = starts, count = counts)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids_tst2.append(req_id)
         # check number of pending requests
         assert(f.inq_nreqs() == num_reqs)
@@ -120,7 +120,7 @@ class FileTestCase(unittest.TestCase):
 
         # TEST 3 - wait on invalid req ids
         req_errs = [None] * num_reqs
-        try: 
+        try:
             # try commit all requests without terminating the program
             f.wait(num_reqs, bad_req_ids, req_errs)
         except RuntimeError:

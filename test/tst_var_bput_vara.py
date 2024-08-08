@@ -4,12 +4,12 @@
 #
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.The program runs in 
+   This example program is intended to illustrate the use of the pnetCDF python API.The program runs in
    non-blocking mode and makes a request to write an array of values to a variable into a netCDF variable
-   of an opened netCDF file using bput_var method of `Variable` class. This method is a buffered version 
-   of bput_var and requires the user to attach an internal buffer of size equal to the sum of all requests 
-   using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_vara and 
-   ncmpi_attach_buffer in C. 
+   of an opened netCDF file using bput_var method of `Variable` class. This method is a buffered version
+   of bput_var and requires the user to attach an internal buffer of size equal to the sum of all requests
+   using attach_buff method of `File` class. The library will internally invoke ncmpi_bput_vara and
+   ncmpi_attach_buffer in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -76,7 +76,7 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
             req_id = v.bput_var(datam, start = starts, count = counts)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
 
         f.end_indep()
@@ -88,14 +88,14 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
             v.bput_var(datam, start = starts, count = counts)
 
-       
+
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         # relase the internal buffer
@@ -103,7 +103,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files
         comm.Barrier()

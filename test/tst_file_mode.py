@@ -46,7 +46,7 @@ class FileTestCase(unittest.TestCase):
             self.file_path = file_name
         self.file_format = file_formats.pop(0)
 
-        
+
 
     def tearDown(self):
         # Wait for all processes to finish testing (in multiprocessing mode)
@@ -78,7 +78,7 @@ class FileTestCase(unittest.TestCase):
                 raise RuntimeError("Attempting to write data with 'r' access mode should failed")
             #Reading should be allowed. Check if 'x' dimension existed in file
             self.assertTrue('x' in f.dimensions.keys())
-        
+
         # TEST MODE "r+"
         with pnetcdf.File(filename=self.file_path, mode='r+') as f:
             f.redef()

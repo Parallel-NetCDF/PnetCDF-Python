@@ -42,7 +42,7 @@ if not HAS_PNCCONFIG:
         pnc_config = config.get("options", "pnetcdf_config")
         HAS_PNCCONFIG = subprocess.call([pnc_config, '--libs'],
                                         stdout=subprocess.PIPE) == 0
-    except: # TODO:Specify what type of error 
+    except: # TODO:Specify what type of error
         HAS_PNCCONFIG = False
 
 

@@ -30,11 +30,11 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 xdim=6; ydim=4
-# Initial numpy array data to be written to nc variable 
+# Initial numpy array data to be written to nc variable
 data = np.zeros((xdim,ydim)).astype('f4')
 # Internal numpy array data to be written to nc variable using put_varm
 datam = randint(0,10,size=(2,3)).astype('f4')
-# Reference numpy array for testing 
+# Reference numpy array for testing
 dataref = data.copy()
 dataref[::2, ::2] = datam.transpose()
 starts = np.array([0,0])
@@ -76,7 +76,7 @@ class VariablesTestCase(unittest.TestCase):
         f.begin_indep()
         if rank < 2:
             v2.put_var(datam, start = starts, count = counts, stride = strides, imap = imap)
-            
+
         f.end_indep()
         f.close()
         comm.Barrier()

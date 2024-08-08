@@ -6,8 +6,8 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
    It is a program which writes and reads string arrays to/from netCDF variables using indexer
-   operators (numpy array style). When writing with indexer syntax, the library internally will 
-   invoke ncmpi_put_vara/vars. Similarly when reading with indexer syntax the library internally 
+   operators (numpy array style). When writing with indexer syntax, the library internally will
+   invoke ncmpi_put_vara/vars. Similarly when reading with indexer syntax the library internally
    will invoke ncmpi_get_vara/vars
 
    To run the test, execute the following
@@ -60,22 +60,22 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        # Create the test data file 
+        # Create the test data file
         f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('n1',-1)
         f.def_dim('n2',n2)
         f.def_dim('nchar',nchar)
-        # We are writing 3D data on a unlimited x 20 x 4 grid 
+        # We are writing 3D data on a unlimited x 20 x 4 grid
         v1 = f.def_var('string1', pnetcdf.NC_CHAR, ('n1','n2','nchar'))
         v2 = f.def_var('string2', pnetcdf.NC_CHAR, ('n1','n2','nchar'))
         v3 = f.def_var('string3', pnetcdf.NC_CHAR, ('n1','n2','nchar'))
         # if _Encoding set, string array should automatically be converted to a char array
         f.set_fill(pnetcdf.NC_FILL)
- 
+
         v2._Encoding = 'ascii'
         v3._Encoding = 'ascii'
-   
+
         f.enddef()
         for nrec in range(nrecs):
             datac = stringtochar(data,encoding='ascii')
@@ -92,7 +92,7 @@ class VariablesTestCase(unittest.TestCase):
         # Validate the created data file using ncvalidator tool
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-        
+
 
     def tearDown(self):
         # Wait for all processes to finish testing (in multiprocessing mode)

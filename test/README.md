@@ -57,7 +57,7 @@ installation information.
       (numpy-style) syntax
 
   + **tst_var_type**
-    * Writing data of heterogeneous data types to the defined variable 
+    * Writing data of heterogeneous data types to the defined variable
 
   + **tst_var_put**
     * This series of tests look into the process of writing data to a netCDF
@@ -81,7 +81,7 @@ installation information.
     * This series of tests is focused on the buffered non-blocking mode of
       variable operations mentioned above. The program usually attaches a write
       buffer to the netCDF file, posts read(iget) or write(iput) requests to
-      access a netCDF variable and then calls the wait function to commit. 
+      access a netCDF variable and then calls the wait function to commit.
 
 * **tst_default_format.py**
   + Test `set_default_format` function for creating a number of netCDF files

@@ -6,8 +6,8 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
    The program runs in blocking mode and writes an subsampled array of values
-   to a variable into a netCDF variable of an opened netCDF file using put_vars method of `Variable` 
-   class. The library will internally invoke ncmpi_put_vars in C. 
+   to a variable into a netCDF variable of an opened netCDF file using put_vars method of `Variable`
+   class. The library will internally invoke ncmpi_put_vars in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -64,7 +64,7 @@ class VariablesTestCase(unittest.TestCase):
         v2_u[:] = data
         f.close()
 
-        
+
         f = pnetcdf.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         v1_u = f.variables['data1u']
          # equivalent code to the following using indexer syntax: v1_u[3:4,0:6:2,10*rank:10*(rank+1):2] = datam

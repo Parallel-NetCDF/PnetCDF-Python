@@ -7,7 +7,7 @@
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program sets the fill mode and/or customized fill value for an individual netCDF variable
    using `Variable` class method def_fill(). The library will internally invoke ncmpi_def_var_fill
-   in C. 
+   in C.
 
    To run the test, execute the following
     `mpiexec -n [num_process] python3  tst_var_def_fill.py [test_file_output_dir](optional)`
@@ -49,12 +49,12 @@ class VariablesTestCase(unittest.TestCase):
         f.def_dim('x',xdim)
         f.def_dim('xu', -1)
         f.def_dim('y',ydim)
-        # define non-record variables with no fill for testing 
+        # define non-record variables with no fill for testing
         v1 = f.def_var('data1', pnetcdf.NC_FLOAT, ('x','y'))
         v2 = f.def_var('data2', pnetcdf.NC_FLOAT, ('x','y'))
         v3 = f.def_var('data3', pnetcdf.NC_FLOAT, ('x','y'))
         v4 = f.def_var('data4', pnetcdf.NC_FLOAT, ('x','y'))
-        
+
         # check current fill node
         for v in [v1, v2, v3, v4]:
             old_no_fill, old_fill_value = v.inq_fill()
@@ -78,7 +78,7 @@ class VariablesTestCase(unittest.TestCase):
         self.v3_nofill, self.v3_fillvalue = v3.inq_fill()
         self.v4_nofill, self.v4_fillvalue = v4.inq_fill()
         a = v1[:]
-        f.close() 
+        f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
     def tearDown(self):
@@ -91,7 +91,7 @@ class VariablesTestCase(unittest.TestCase):
     def runTest(self):
         """testing var def fill for CDF-5/CDF-2/CDF-1 file format"""
         # check the fill mode settings of each variable
-        # check no_fill flag 
+        # check no_fill flag
         self.assertTrue(self.v1_nofill == 0)
         self.assertTrue(self.v2_nofill == 0)
         self.assertTrue(self.v3_nofill == 1)

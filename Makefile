@@ -14,7 +14,7 @@ ptests:
 clean:
 	cd test && make clean
 	cd examples && make clean
-	
+
 build-clean: clean
 	rm -rf build
 	rm -rf src/pnetcdf.egg-info/

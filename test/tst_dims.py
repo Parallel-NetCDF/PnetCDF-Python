@@ -67,8 +67,8 @@ class DimensionsTestCase(unittest.TestCase):
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
 
- 
-    
+
+
     def tearDown(self):
         # Remove the temporary file
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
@@ -194,7 +194,7 @@ class DimensionsTestCase(unittest.TestCase):
 
         # check get_dims variable method
         f  = pnetcdf.File(self.file_path, 'r+')
-        
+
         v1 = f.variables[VAR_NAME1]
         v2 = f.variables[VAR_NAME2]
         v3 = f.variables[VAR_NAME3]
@@ -217,7 +217,7 @@ class DimensionsTestCase(unittest.TestCase):
         dim_tup2 = v1.get_dims()
         assert(dim_tup1 == dim_tup2)
         f.close()
-        
+
 
 if __name__ == '__main__':
     suite = unittest.TestSuite()

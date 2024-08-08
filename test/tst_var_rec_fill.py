@@ -5,10 +5,10 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
-   program sets the fill mode and fill values for an individual netCDF record variable using 
-   `Variable` class method def_fill() and fill_rec(). This call will change the fill mode 
-   which enables filling values for the netCDF variable. The library will internally invoke 
-   ncmpi_fill_var_rec in C. 
+   program sets the fill mode and fill values for an individual netCDF record variable using
+   `Variable` class method def_fill() and fill_rec(). This call will change the fill mode
+   which enables filling values for the netCDF variable. The library will internally invoke
+   ncmpi_fill_var_rec in C.
 
     To run the test, execute the following
     `mpiexec -n [num_process] python3  tst_var_rec_fill.py [test_file_output_dir](optional)`
@@ -37,8 +37,8 @@ xdim=2 * size + 1
 datam = np.array([rank, rank]).astype("f4")
 
 # Record variable values expected after writing, assuming 4 processes ("-" means fill values)
-#               0.  0.  1.  1.  2.  2.  3.  3.  -  
-#               0.  0.  1.  1.  2.  2.  3.  3.  -  
+#               0.  0.  1.  1.  2.  2.  3.  3.  -
+#               0.  0.  1.  1.  2.  2.  3.  3.  -
 # generate reference data array for testing
 dataref = np.empty(shape = (2, 2 * size + 1), dtype = "f4")
 dataref.fill(fill_value)
@@ -62,7 +62,7 @@ class VariablesTestCase(unittest.TestCase):
         # define variables and dimensions for testing
         dim_xu = f.def_dim('xu', -1)
         dim_x = f.def_dim('x',xdim)
-        # define record variables for testing 
+        # define record variables for testing
         v1 = f.def_var('data1', pnetcdf.NC_FLOAT, (dim_xu, dim_x))
         v2 = f.def_var('data2', pnetcdf.NC_FLOAT, (dim_xu, dim_x))
         # set fill value using _FillValue attribute writes or def_fill
@@ -83,7 +83,7 @@ class VariablesTestCase(unittest.TestCase):
             v.fill_rec(starts[0])
             # # write to the 2nd record
             v.put_var_all(datam, start = starts, count = counts)
-        f.close() 
+        f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
     def tearDown(self):

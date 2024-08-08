@@ -5,8 +5,8 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program writes the data of a different type than the one that was initially defined 
-   for the NC variable. The write uses indexer operators (numpy array style). 
+   The program writes the data of a different type than the one that was initially defined
+   for the NC variable. The write uses indexer operators (numpy array style).
 
     To run the test, execute the following
     `mpiexec -n [num_process] python3 tst_var_type.py [test_file_output_dir](optional)`
@@ -38,7 +38,7 @@ datas = data.astype('i2')
 dataf = data.astype('f8')
 # Numpy array data to be written to nc variable (datatype only supported by CDF-5)
 dataull = data.astype('u8')
-# Reference numpy array for testing 
+# Reference numpy array for testing
 dataref = data[:,::-1,:].copy()
 
 
@@ -51,7 +51,7 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        # Create the test data file 
+        # Create the test data file
         f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
@@ -73,7 +73,7 @@ class VariablesTestCase(unittest.TestCase):
         comm.Barrier()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-        
+
 
     def tearDown(self):
         # Wait for all processes to finish testing (in multiprocessing mode)
@@ -87,7 +87,7 @@ class VariablesTestCase(unittest.TestCase):
         f = pnetcdf.File(self.file_path, 'r+')
         f.end_indep()
         # Compare returned variable data with reference data
-        v1 = f.variables['data1']   
+        v1 = f.variables['data1']
         assert_array_equal(v1[:] , dataref)
         assert v1.datatype == np.dtype('int32')
         v2 = f.variables['data2']

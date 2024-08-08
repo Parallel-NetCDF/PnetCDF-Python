@@ -5,7 +5,7 @@
 
 """
    This test program is intended to illustrate the use of the pnetCDF python API.
-   The program sets the default file format by using set_default_format function and 
+   The program sets the default file format by using set_default_format function and
     then create a number of netCDF files with default format for testing. Internally,
    the library will invoke ncmpi_set_default_format and ncmpi_create in C.
 
@@ -49,21 +49,21 @@ class FileTestCase(unittest.TestCase):
         assert(old_format == pnetcdf.NC_FORMAT_CLASSIC)
         # create CDF-5 netCDF files using current default format
         f = pnetcdf.File(filename=self.file_paths[0], mode = 'w', comm=comm, info=None)
-        f.close() 
+        f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[0]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
         # inquiry current default (for testing)
         self.new_default = inq_default_format()
         # create CDF-2 netCDF files by overwriting default
         f = pnetcdf.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", comm=comm, info=None)
-        f.close() 
+        f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[1]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
         # change default file format back to "CLASSIC"
         old_format = set_default_format(pnetcdf.NC_FORMAT_CLASSIC)
         assert(old_format == pnetcdf.NC_FORMAT_64BIT_DATA)
         # create CDF-1 netCDF files using default
         f = pnetcdf.File(filename=self.file_paths[2], mode = 'w', comm=comm, info=None)
-        f.close() 
+        f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[2]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
 

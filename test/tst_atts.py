@@ -78,20 +78,20 @@ class AttrTestCase(unittest.TestCase):
             v.intatt = INTATT
             v.floatatt = FLOATATT
             v.seqatt = SEQATT
-            # try set the attribute "_FillValue" to set the fill value of netCDF fill value 
+            # try set the attribute "_FillValue" to set the fill value of netCDF fill value
             v._FillValue = -999.
             f.foo = np.array('bar','S')
             f.foo = np.array('bar','U')
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-        
+
 
 
     def tearDown(self):
         # Remove the temporary files
         if (rank == 0) and not((len(sys.argv) == 2) and os.path.isdir(sys.argv[1])):
             os.remove(self.file_path)
-    
+
     def test_file_attr_dict_(self):
         with pnetcdf.File(self.file_path, 'r') as f:
             # check __dict__ method for accessing all netCDF attributes.
