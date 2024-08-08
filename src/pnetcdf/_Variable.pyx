@@ -111,8 +111,10 @@ cdef class Variable:
                 xtype = _nptonctype[nc_dtype.str[1:]]
             else:
                 raise TypeError('illegal data type, must be one of %s, got %s' % (_supportedtypes, nc_dtype.str[1:]))
-        if isinstance(nc_dtype, int):
+        elif isinstance(nc_dtype, int):
             xtype = nc_dtype
+        else:
+            raise TypeError('illegal data type, must be an int, got %s' % (nc_dtype.str[1:]))
         self.xtype = xtype
         self.dtype = np.dtype(_nctonptype[xtype])
 
