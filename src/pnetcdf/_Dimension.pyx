@@ -9,12 +9,8 @@ from ._File cimport File
 from ._utils cimport _strencode, _check_err
 cimport mpi4py.MPI as MPI
 
-ctypedef MPI.Offset Offset
-
-
 from libc.string cimport memcpy, memset
 from libc.stdlib cimport malloc, free
-from mpi4py.libmpi cimport MPI_Offset
 
 include "PnetCDF.pxi"
 

@@ -5,13 +5,11 @@
 #
 ###############################################################################
 
-include "PnetCDF.pxi"
 from ._File cimport File
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
 from libc.stdlib cimport malloc, free
-from mpi4py.libmpi cimport MPI_Offset
 from mpi4py import MPI
 
 
