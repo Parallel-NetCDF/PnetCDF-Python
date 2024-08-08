@@ -410,7 +410,7 @@ cdef class File:
             - ``pnetcdf.NC_INT64`` for signed 8-byte integer
             - ``pnetcdf.NC_UINT64`` for unsigned 8-byte integer
 
-        :type datatype: int
+        :type datatype: int, str, or numpy.dtype
         :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
          or dimension class instances. Default is an empty tuple which means the variable is a scalar
          (and therefore has no dimensions).
