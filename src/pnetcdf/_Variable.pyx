@@ -23,7 +23,9 @@ from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names,
 from ._utils import chartostring
 from ._utils cimport _nptonctype, _notcdf2dtypes, _nctonptype, _nptompitype, _supportedtypes, _supportedtypescdf2, \
                      default_fillvals, _StartCountStride, _out_array_shape, _private_atts
-import_array()
+
+cimport numpy
+numpy.import_array()
 
 
 ctypedef MPI.Datatype Datatype
@@ -109,8 +111,10 @@ cdef class Variable:
                 xtype = _nptonctype[nc_dtype.str[1:]]
             else:
                 raise TypeError('illegal data type, must be one of %s, got %s' % (_supportedtypes, nc_dtype.str[1:]))
-        if isinstance(nc_dtype, int):
+        elif isinstance(nc_dtype, int):
             xtype = nc_dtype
+        else:
+            raise TypeError('illegal data type, must be an int, got %s' % (nc_dtype.str[1:]))
         self.xtype = xtype
         self.dtype = np.dtype(_nctonptype[xtype])
 
