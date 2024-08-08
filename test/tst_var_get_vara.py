@@ -5,8 +5,8 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs read an array of values from a netCDF variable of an opened netCDF file 
-   using get_var method of `Variable` class. The library will internally invoke ncmpi_get_vara in C. 
+   The program runs read an array of values from a netCDF variable of an opened netCDF file
+   using get_var method of `Variable` class. The library will internally invoke ncmpi_get_vara in C.
 """
 import pnetcdf
 from numpy.random import seed, randint

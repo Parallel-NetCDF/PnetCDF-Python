@@ -3,13 +3,13 @@
 #
 # Copyright (C) 2024, Northwestern University and Argonne National Laboratory
 # See COPYRIGHT notice in top-level directory
-# License:  
+# License:
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in blocking mode and writes a single element to a variable 
-   into a netCDF variable of an opened netCDF file using put_var method of `Variable` class. The 
-   library will internally invoke ncmpi_put_var1 in C. 
+   The program runs in blocking mode and writes a single element to a variable
+   into a netCDF variable of an opened netCDF file using put_var method of `Variable` class. The
+   library will internally invoke ncmpi_put_var1 in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -63,7 +63,7 @@ class VariablesTestCase(unittest.TestCase):
         v2_u[:,::-1,:] = data
         f.close()
 
-        
+
         f = pnetcdf.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         v1_u = f.variables['data1u']
         # equivalent code to the following using indexer syntax: v1_u[rank][rank][rank] = value
@@ -71,7 +71,7 @@ class VariablesTestCase(unittest.TestCase):
         value = np.int32(rank * 10 + 1)
         # each process change a designated element of the variable with collective i/o
         v1_u.put_var_all(value, index)
-        
+
         f.begin_indep()
         v1_u = f.variables['data2u']
         # each process change a designated element of the variable with independent i/o
@@ -81,7 +81,7 @@ class VariablesTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary file if test file directory not specified
         comm.Barrier()

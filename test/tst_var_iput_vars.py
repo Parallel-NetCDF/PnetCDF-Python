@@ -6,8 +6,8 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
    The program runs in non-blocking mode and makes a request to write an subsampled array of values
-   to a variable into a netCDF variable of an opened netCDF file using iput_var method of `Variable` 
-   class. The library will internally invoke ncmpi_iput_vars in C. 
+   to a variable into a netCDF variable of an opened netCDF file using iput_var method of `Variable`
+   class. The library will internally invoke ncmpi_iput_vars in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -70,7 +70,7 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write a subsampled array of values
             req_id = v.iput_var(datam, start = starts, count = counts, stride = strides)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
@@ -80,13 +80,13 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to write a subsampled arrays of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write a subsampled array of values
             v.iput_var(datam, start = starts, count = counts, stride = strides)
-        
+
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         f.close()

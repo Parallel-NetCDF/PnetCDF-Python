@@ -5,8 +5,8 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs read the whole value from a netCDF variable of an opened netCDF file using 
-   get_var method of `Variable` class. The library will internally invoke ncmpi_put_var in C. 
+   The program runs read the whole value from a netCDF variable of an opened netCDF file using
+   get_var method of `Variable` class. The library will internally invoke ncmpi_put_var in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -61,7 +61,7 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get_var method for CDF-5/CDF-2/CDF-1 file format"""
         f = pnetcdf.File(self.file_path, 'r')
         v1 = f.variables['data1']
-        # test independent i/o get_var 
+        # test independent i/o get_var
         f.begin_indep()
         # mpi process rank 0 and 1 read the whole variable
         if rank < 2:

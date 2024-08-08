@@ -5,9 +5,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The program
-   runs in non-blocking mode and makes a request to write a list of subarray of values to a variable 
-   into a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iput_varn in C. 
+   runs in non-blocking mode and makes a request to write a list of subarray of values to a variable
+   into a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The
+   library will internally invoke ncmpi_iput_varn in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -45,10 +45,10 @@ if rank == 0:
     starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
     starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
     # rank 0 is writing the following locations: ("-" means skip)
-    #               -  -  -  -  -  0  0  -  -  - 
-    #               0  -  -  -  -  -  -  -  -  - 
-    #               -  -  -  -  -  -  0  0  -  - 
-    #               0  0  0  -  -  -  -  -  -  - 
+    #               -  -  -  -  -  0  0  -  -  -
+    #               0  -  -  -  -  -  -  -  -  -
+    #               -  -  -  -  -  -  0  0  -  -
+    #               0  0  0  -  -  -  -  -  -  -
 elif rank == 1:
     num_subarrays = 6
     starts[0][0] = 0; starts[0][1] = 3; counts[0][0] = 1; counts[0][1] = 2
@@ -58,10 +58,10 @@ elif rank == 1:
     starts[4][0] = 2; starts[4][1] = 8; counts[4][0] = 1; counts[4][1] = 2
     starts[5][0] = 3; starts[5][1] = 4; counts[5][0] = 1; counts[5][1] = 3
     # rank 1 is writing the following locations: ("-" means skip)
-    #               -  -  -  1  1  -  -  -  1  1 
-    #               -  -  -  -  -  1  1  -  -  - 
-    #               1  1  -  -  -  -  -  -  1  1 
-    #               -  -  -  -  1  1  1  -  -  - 
+    #               -  -  -  1  1  -  -  -  1  1
+    #               -  -  -  -  -  1  1  -  -  -
+    #               1  1  -  -  -  -  -  -  1  1
+    #               -  -  -  -  1  1  1  -  -  -
 elif rank == 2:
     num_subarrays = 5
     starts[0][0] = 0; starts[0][1] = 7; counts[0][0] = 1; counts[0][1] = 1
@@ -70,10 +70,10 @@ elif rank == 2:
     starts[3][0] = 2; starts[3][1] = 2; counts[3][0] = 1; counts[3][1] = 1
     starts[4][0] = 3; starts[4][1] = 3; counts[4][0] = 1; counts[4][1] = 1
     # rank 2 is writing the following locations: ("-" means skip)
-    #         -  -  -  -  -  -  -  2  -  - 
-    #         -  2  2  2  -  -  -  2  2  2 
-    #         -  -  2  -  -  -  -  -  -  - 
-    #         -  -  -  2  -  -  -  -  -  - 
+    #         -  -  -  -  -  -  -  2  -  -
+    #         -  2  2  2  -  -  -  2  2  2
+    #         -  -  2  -  -  -  -  -  -  -
+    #         -  -  -  2  -  -  -  -  -  -
 elif rank == 3:
     num_subarrays = 4
     starts[0][0] = 0; starts[0][1] = 0; counts[0][0] = 1; counts[0][1] = 3
@@ -81,10 +81,10 @@ elif rank == 3:
     starts[2][0] = 2; starts[2][1] = 3; counts[2][0] = 1; counts[2][1] = 3
     starts[3][0] = 3; starts[3][1] = 7; counts[3][0] = 1; counts[3][1] = 3
     # rank 3 is writing the following locations: ("-" means skip)
-    #         3  3  3  -  -  -  -  -  -  - 
-    #         -  -  -  -  3  -  -  -  -  - 
-    #         -  -  -  3  3  3  -  -  -  - 
-    #         -  -  -  -  -  -  -  3  3  3 
+    #         3  3  3  -  -  -  -  -  -  -
+    #         -  -  -  -  3  -  -  -  -  -
+    #         -  -  -  3  3  3  -  -  -  -
+    #         -  -  -  -  -  -  -  3  3  3
 else:
     num_subarrays = 0
 
@@ -137,7 +137,7 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
             req_id = v.iput_var(data, start = starts, count = counts, num = num_subarrays)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
 
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
@@ -148,13 +148,13 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
         # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs):
             v = f.variables[f'data{num_reqs + i}']
             # post the request to write an array of values
             v.iput_var(data, start = starts, count = counts, num = num_subarrays)
-        
+
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         f.close()
@@ -162,7 +162,7 @@ class VariablesTestCase(unittest.TestCase):
         if rank == 0:
             if os.environ.get('PNETCDF_DIR') is not None:
                 assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0
-    
+
     def runTest(self):
         if nprocs < 4:
             return

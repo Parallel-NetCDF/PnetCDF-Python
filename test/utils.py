@@ -13,4 +13,4 @@ def validate_nc_file(pnc_dir: str, filename: str):
     rc = subprocess.call([ncvalidator, '-q', filename],
                             stdout=subprocess.PIPE)
     return rc
-    
+

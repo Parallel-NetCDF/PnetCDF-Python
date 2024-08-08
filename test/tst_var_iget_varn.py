@@ -5,9 +5,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to read a list of subarray of 
-   a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iget_varn in C. 
+   The program runs in non-blocking mode and makes a request to read a list of subarray of
+   a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The
+   library will internally invoke ncmpi_iget_varn in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -48,10 +48,10 @@ if rank == 0:
     starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
     starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
     # rank 0 is reading the following locations: ("-" means skip)
-    #               -  -  -  -  -  0  0  -  -  - 
-    #               0  -  -  -  -  -  -  -  -  - 
-    #               -  -  -  -  -  -  0  0  -  - 
-    #               0  0  0  -  -  -  -  -  -  - 
+    #               -  -  -  -  -  0  0  -  -  -
+    #               0  -  -  -  -  -  -  -  -  -
+    #               -  -  -  -  -  -  0  0  -  -
+    #               0  0  0  -  -  -  -  -  -  -
 elif rank == 1:
     num_subarray_reqs = 6
     starts[0][0] = 0; starts[0][1] = 3; counts[0][0] = 1; counts[0][1] = 2
@@ -61,10 +61,10 @@ elif rank == 1:
     starts[4][0] = 2; starts[4][1] = 8; counts[4][0] = 1; counts[4][1] = 2
     starts[5][0] = 3; starts[5][1] = 4; counts[5][0] = 1; counts[5][1] = 3
     # rank 1 is reading the following locations: ("-" means skip)
-    #               -  -  -  1  1  -  -  -  1  1 
-    #               -  -  -  -  -  1  1  -  -  - 
-    #               1  1  -  -  -  -  -  -  1  1 
-    #               -  -  -  -  1  1  1  -  -  - 
+    #               -  -  -  1  1  -  -  -  1  1
+    #               -  -  -  -  -  1  1  -  -  -
+    #               1  1  -  -  -  -  -  -  1  1
+    #               -  -  -  -  1  1  1  -  -  -
 elif rank == 2:
     num_subarray_reqs = 5
     starts[0][0] = 0; starts[0][1] = 7; counts[0][0] = 1; counts[0][1] = 1
@@ -73,10 +73,10 @@ elif rank == 2:
     starts[3][0] = 2; starts[3][1] = 2; counts[3][0] = 1; counts[3][1] = 1
     starts[4][0] = 3; starts[4][1] = 3; counts[4][0] = 1; counts[4][1] = 1
     # rank 2 is reading the following locations: ("-" means skip)
-    #         -  -  -  -  -  -  -  2  -  - 
-    #         -  2  2  2  -  -  -  2  2  2 
-    #         -  -  2  -  -  -  -  -  -  - 
-    #         -  -  -  2  -  -  -  -  -  - 
+    #         -  -  -  -  -  -  -  2  -  -
+    #         -  2  2  2  -  -  -  2  2  2
+    #         -  -  2  -  -  -  -  -  -  -
+    #         -  -  -  2  -  -  -  -  -  -
 elif rank == 3:
     num_subarray_reqs = 4
     starts[0][0] = 0; starts[0][1] = 0; counts[0][0] = 1; counts[0][1] = 3
@@ -84,10 +84,10 @@ elif rank == 3:
     starts[2][0] = 2; starts[2][1] = 3; counts[2][0] = 1; counts[2][1] = 3
     starts[3][0] = 3; starts[3][1] = 7; counts[3][0] = 1; counts[3][1] = 3
     # rank 3 is reading the following locations: ("-" means skip)
-    #         3  3  3  -  -  -  -  -  -  - 
-    #         -  -  -  -  3  -  -  -  -  - 
-    #         -  -  -  3  3  3  -  -  -  - 
-    #         -  -  -  -  -  -  -  3  3  3 
+    #         3  3  3  -  -  -  -  -  -  -
+    #         -  -  -  -  3  -  -  -  -  -
+    #         -  -  -  3  3  3  -  -  -  -
+    #         -  -  -  -  -  -  -  3  3  3
 else:
     num_subarray_reqs = 0
 # obtain the buffer size of returned array
@@ -99,7 +99,7 @@ for i in range(num_subarray_reqs):
 dataref = np.full((buf_len,), rank, np.float32)
 # total number of iget_var requests for this test program
 num_reqs = 10
-# initialize a list to store references of variable values 
+# initialize a list to store references of variable values
 v_datas = []
 
 class VariablesTestCase(unittest.TestCase):
@@ -136,7 +136,7 @@ class VariablesTestCase(unittest.TestCase):
             buff = np.empty(shape = buf_len, dtype = v.datatype)
             # post the request to read multiple slices (subarrays) of the variable
             req_id = v.iget_var(buff, start = starts, count = counts, num = num_subarray_reqs)
-            # track the reqeust ID for each read reqeust 
+            # track the reqeust ID for each read reqeust
             req_ids.append(req_id)
             # store the reference of variable values
             v_datas.append(buff)
@@ -148,7 +148,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to read an array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
@@ -157,13 +157,13 @@ class VariablesTestCase(unittest.TestCase):
             v.iget_var(buff, start = starts, count = counts, num = num_subarray_reqs)
             # store the reference of variable values
             v_datas.append(buff)
-        
+
         # commit all pending get requests to the file at once using wait_all (collective i/o)
         req_errs = f.wait_all(num = pnetcdf.NC_GET_REQ_ALL)
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files if the test file directory is not specified
         comm.Barrier()

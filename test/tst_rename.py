@@ -42,7 +42,7 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        # Create the test data file 
+        # Create the test data file
         f = pnetcdf.Dataset(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed
         f.createDimension('x',xdim)
@@ -65,7 +65,7 @@ class VariablesTestCase(unittest.TestCase):
         comm.Barrier()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-        
+
 
     def tearDown(self):
         # Wait for all processes to finish testing (in multiprocessing mode)

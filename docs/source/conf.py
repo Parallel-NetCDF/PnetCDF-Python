@@ -54,6 +54,6 @@ def autodoc_skip_member(app, what, name, obj, skip, options):
     exclude = name in exclusions
     # return True if (skip or exclude) else None  # Can interfere with subsequent skip functions.
     return True if exclude else None
- 
+
 def setup(app):
     app.connect('autodoc-skip-member', autodoc_skip_member)

@@ -43,10 +43,10 @@ if rank == 0:
     starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
     starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
     # rank 0 is reading the following locations: ("-" means skip)
-    #               -  -  -  -  -  0  0  -  -  - 
-    #               0  -  -  -  -  -  -  -  -  - 
-    #               -  -  -  -  -  -  0  0  -  - 
-    #               0  0  0  -  -  -  -  -  -  - 
+    #               -  -  -  -  -  0  0  -  -  -
+    #               0  -  -  -  -  -  -  -  -  -
+    #               -  -  -  -  -  -  0  0  -  -
+    #               0  0  0  -  -  -  -  -  -  -
 elif rank == 1:
     num_reqs = 6
     starts[0][0] = 0; starts[0][1] = 3; counts[0][0] = 1; counts[0][1] = 2
@@ -56,10 +56,10 @@ elif rank == 1:
     starts[4][0] = 2; starts[4][1] = 8; counts[4][0] = 1; counts[4][1] = 2
     starts[5][0] = 3; starts[5][1] = 4; counts[5][0] = 1; counts[5][1] = 3
     # rank 1 is reading the following locations: ("-" means skip)
-    #               -  -  -  1  1  -  -  -  1  1 
-    #               -  -  -  -  -  1  1  -  -  - 
-    #               1  1  -  -  -  -  -  -  1  1 
-    #               -  -  -  -  1  1  1  -  -  - 
+    #               -  -  -  1  1  -  -  -  1  1
+    #               -  -  -  -  -  1  1  -  -  -
+    #               1  1  -  -  -  -  -  -  1  1
+    #               -  -  -  -  1  1  1  -  -  -
 elif rank == 2:
     num_reqs = 5
     starts[0][0] = 0; starts[0][1] = 7; counts[0][0] = 1; counts[0][1] = 1
@@ -68,10 +68,10 @@ elif rank == 2:
     starts[3][0] = 2; starts[3][1] = 2; counts[3][0] = 1; counts[3][1] = 1
     starts[4][0] = 3; starts[4][1] = 3; counts[4][0] = 1; counts[4][1] = 1
     # rank 2 is reading the following locations: ("-" means skip)
-    #         -  -  -  -  -  -  -  2  -  - 
-    #         -  2  2  2  -  -  -  2  2  2 
-    #         -  -  2  -  -  -  -  -  -  - 
-    #         -  -  -  2  -  -  -  -  -  - 
+    #         -  -  -  -  -  -  -  2  -  -
+    #         -  2  2  2  -  -  -  2  2  2
+    #         -  -  2  -  -  -  -  -  -  -
+    #         -  -  -  2  -  -  -  -  -  -
 elif rank == 3:
     num_reqs = 4
     starts[0][0] = 0; starts[0][1] = 0; counts[0][0] = 1; counts[0][1] = 3
@@ -79,10 +79,10 @@ elif rank == 3:
     starts[2][0] = 2; starts[2][1] = 3; counts[2][0] = 1; counts[2][1] = 3
     starts[3][0] = 3; starts[3][1] = 7; counts[3][0] = 1; counts[3][1] = 3
     # rank 3 is reading the following locations: ("-" means skip)
-    #         3  3  3  -  -  -  -  -  -  - 
-    #         -  -  -  -  3  -  -  -  -  - 
-    #         -  -  -  3  3  3  -  -  -  - 
-    #         -  -  -  -  -  -  -  3  3  3 
+    #         3  3  3  -  -  -  -  -  -  -
+    #         -  -  -  -  3  -  -  -  -  -
+    #         -  -  -  3  3  3  -  -  -  -
+    #         -  -  -  -  -  -  -  3  3  3
 else:
     num_reqs = 0
 #Obtain the size of returned array, needed for generating reference array

@@ -1,8 +1,8 @@
 ###############################################################################
-# 
+#
 #  Copyright (C) 2024, Northwestern University and Argonne National Laboratory
 #  See COPYRIGHT notice in top-level directory.
-# 
+#
 ###############################################################################
 
 from ._File cimport File
@@ -112,7 +112,7 @@ cdef class Dimension:
         isunlimited(self)
 
         Returns `True` if the ``Dimension`` instance is unlimited, ``False`` otherwise.
-        
+
         :rtype: bool
         """
         cdef int ierr, n, numunlimdims, ndims, nvars, ngatts, xdimid

@@ -5,8 +5,8 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs read a single element from a netCDF variable of an opened netCDF file 
-   using get_var method of `Variable` class. The library will internally invoke ncmpi_get_var1 in C. 
+   The program runs read a single element from a netCDF variable of an opened netCDF file
+   using get_var method of `Variable` class. The library will internally invoke ncmpi_get_var1 in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -60,7 +60,7 @@ class VariablesTestCase(unittest.TestCase):
         f = pnetcdf.File(self.file_path, 'r')
         v1 = f.variables['data1u']
         # test collective i/o put var1
-         # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank] 
+         # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank]
         index = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o

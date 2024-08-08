@@ -5,9 +5,9 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to write a single element to a variable 
-   into a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The 
-   library will internally invoke ncmpi_iput_var1 in C. 
+   The program runs in non-blocking mode and makes a request to write a single element to a variable
+   into a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The
+   library will internally invoke ncmpi_iput_var1 in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -68,7 +68,7 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # post the request to write a single element
             req_id = v.iput_var(value, index = index)
-            # track the reqeust ID for each write reqeust 
+            # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
         f.end_indep()
         # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
@@ -78,19 +78,19 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
-        
+
          # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write a single element
             v.iput_var(value, index = index)
-        
+
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files if the test file directory not specified
         comm.Barrier()

@@ -5,8 +5,8 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   The program write an array of values into a netCDF variable of an opened netCDF file using 
-   put_var method of `Variable` class. The library will internally invoke ncmpi_iput_vara in C. 
+   The program write an array of values into a netCDF variable of an opened netCDF file using
+   put_var method of `Variable` class. The library will internally invoke ncmpi_iput_vara in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -63,11 +63,11 @@ class VariablesTestCase(unittest.TestCase):
         v2_u[:] = data
         f.close()
 
-        
+
         f = pnetcdf.File(filename=self.file_path, mode = 'r+', format=self._file_format, comm=comm, info=None)
         # define variables and dimensions for testing
         v1_u = f.variables['data1u']
-        # equivalent code to the following using indexer syntax: v1_u[3:4,:5,10*rank:10*(rank+1)] = datam 
+        # equivalent code to the following using indexer syntax: v1_u[3:4,:5,10*rank:10*(rank+1)] = datam
         starts = np.array([3, 0, 10 * rank])
         counts = np.array([1, 5, 10])
         # test collective i/o put_var_all
@@ -82,7 +82,7 @@ class VariablesTestCase(unittest.TestCase):
         if rank < 2:
             # mpi process rank 0 and 1 write an array of values to their assigned coordinates
             v2_u.put_var(datam, start = starts, count = counts)
-            
+
         f.end_indep()
         f.close()
         comm.Barrier()

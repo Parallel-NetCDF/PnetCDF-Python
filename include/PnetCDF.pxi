@@ -289,7 +289,7 @@ cdef extern from "pnetcdf.h":
     int ncmpi_iget_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
     const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_iget_varm(int ncid, int varid, const MPI_Offset start[], const MPI_Offset count[], const MPI_Offset stride[], \
-    const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil 
+    const MPI_Offset imap[], void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
     int ncmpi_iget_varn(int ncid, int varid, int num, MPI_Offset* const starts[], MPI_Offset* const counts[],\
     void *buf, MPI_Offset bufcount, MPI_Datatype buftype, int *request) nogil
 
@@ -309,7 +309,7 @@ cdef extern from "pnetcdf.h":
     int ncmpi_inq_var_fill(int ncid, int varid, int *no_fill, void *fill_value) nogil
 # taken from numpy.pxi in numpy 1.0rc2.
 cdef extern from "numpy/arrayobject.h":
-    ctypedef int npy_intp 
+    ctypedef int npy_intp
     ctypedef extern class numpy.ndarray [object PyArrayObject]:
         pass
     npy_intp PyArray_SIZE(ndarray arr) nogil

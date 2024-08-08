@@ -5,8 +5,8 @@
 
 """
    This example program is intended to illustrate the use of the pnetCDF python API.
-   It is a program which writes and reads variables to netCDF file using indexer operators 
-   (numpy array style). When writing with indexer syntax, the library internally will invoke 
+   It is a program which writes and reads variables to netCDF file using indexer operators
+   (numpy array style). When writing with indexer syntax, the library internally will invoke
    ncmpi_put_vara/vars. Similarly when reading with indexer syntax the library internally will
    invoke ncmpi_get_vara/vars
 
@@ -34,9 +34,9 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 xdim=9; ydim=10; zdim=11
-# Numpy array data to be written to nc variable 
+# Numpy array data to be written to nc variable
 data = randint(0,10,size=(xdim,ydim,zdim)).astype('i4')
-# Reference numpy array for testing 
+# Reference numpy array for testing
 dataref = data[:,::-1,:].copy()
 
 
@@ -49,14 +49,14 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        # Create the test data file 
+        # Create the test data file
         f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
         # Define dimensions needed, one of the dims is unlimited
         f.def_dim('x',xdim)
         f.def_dim('xu',-1)
         f.def_dim('y',ydim)
         f.def_dim('z',zdim)
-        # For the variable dimensioned with limited dims, we are writing 3D data on a 9 x 10 x 11 grid 
+        # For the variable dimensioned with limited dims, we are writing 3D data on a 9 x 10 x 11 grid
         v1 = f.def_var('data1', pnetcdf.NC_INT, ('x','y','z'))
         # For the record variable, we are writing 3D data on unlimited x 10 x 11 grid
         v1_u = f.def_var('data1u', pnetcdf.NC_INT, ('xu','y','z'))
@@ -82,7 +82,7 @@ class VariablesTestCase(unittest.TestCase):
         comm.Barrier()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-        
+
 
     def tearDown(self):
         # Wait for all processes to finish testing (in multiprocessing mode)

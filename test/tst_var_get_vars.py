@@ -4,10 +4,10 @@
 #
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.The 
-   program runs in blocking mode and read an subsampled array of values from a netCDF 
-   variable of an opened netCDF file using iget_var method of `Variable` class. The 
-   library will internally invoke ncmpi_get_vars in C. 
+   This example program is intended to illustrate the use of the pnetCDF python API.The
+   program runs in blocking mode and read an subsampled array of values from a netCDF
+   variable of an opened netCDF file using iget_var method of `Variable` class. The
+   library will internally invoke ncmpi_get_vars in C.
 """
 import pnetcdf
 from numpy.random import seed, randint

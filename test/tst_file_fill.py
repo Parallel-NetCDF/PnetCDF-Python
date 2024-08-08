@@ -6,9 +6,9 @@
 """
    This example program is intended to illustrate the use of the pnetCDF python API. The
    program sets the default fill mode for a netCDF file open for writing using `File` class
-   method set_fill(). This call will change the fill mode for all non-record variables 
+   method set_fill(). This call will change the fill mode for all non-record variables
    defined so far and change the default fill mode for new non-record variables defined following
-   this call. The library will internally invoke ncmpi_set_fill in C. 
+   this call. The library will internally invoke ncmpi_set_fill in C.
 """
 import pnetcdf
 from numpy.random import seed, randint
@@ -44,7 +44,7 @@ class FileTestCase(unittest.TestCase):
         # define variables and dimensions for testing
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
-        # define a netCDF variable before setting file filling mode 
+        # define a netCDF variable before setting file filling mode
         v1 = f.def_var('data1', pnetcdf.NC_INT, ('x','y'))
         # enable fill mode at file-level which applies to all netCDF variables of the file
         old_fillmode = f.set_fill(pnetcdf.NC_FILL)
@@ -61,7 +61,7 @@ class FileTestCase(unittest.TestCase):
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
-    
+
     def tearDown(self):
         # remove the temporary files
         comm.Barrier()
@@ -76,7 +76,7 @@ class FileTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             # check the fill mode settings of each variable
             no_fill, fill_value = v.inq_fill()
-            # check if no_fill flag is set to 0 
+            # check if no_fill flag is set to 0
             self.assertTrue(no_fill == 0)
             # check if fill_value equals default fill value
             self.assertTrue(fill_value == pnetcdf.NC_FILL_INT)
