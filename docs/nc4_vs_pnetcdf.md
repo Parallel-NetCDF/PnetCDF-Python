@@ -1,28 +1,29 @@
-## Programming difference between NetCDF4-python and PnetCDF-python
-* Table below shows examples of source code.
-  + Both example codes write to a variable named `WIND` in the collective mode.
-  + The differences are marked in colors, green for NetCDF and blue for PnetCDF.
+# Difference between NetCDF4-python and PnetCDF-python
+
+---
+## Programming differences
+* Table below shows two python example codes.
+  + Both example codes create a new file, define dimensions, define a variable
+    named `WIND` of type `NC_DOUBLE` and then write to it in the collective I/O
+    mode.
+  + The differences are marked in colors, ${\textsf{\color{green}green}}$ for
+    NetCDF4 and ${\textsf{\color{blue}blue}}$ for PnetCDF.
 
 | NetCDF4 | PnetCDF |
 |:-------|:--------|
-|  # create a new file   | |
-| ${\textsf{\color{green}f = netCDF4.Dataset}}$(filename="testfile.nc", mode="w", comm=comm, parallel=True)  | ${\textsf{\color{blue}f = pnetcdf.File}}$(filename="testfile.nc", mode='w', comm=comm) |
-|  # add a global attributes   | |
-| ${\textsf{\color{green}f.history = }}$"Wed Mar 27 14:35:25 CDT 2024"  | ${\textsf{\color{blue}f.history = }}$"Wed Mar 27 14:35:25 CDT 2024"   |
-|  # define dimensions   | |
-| ${\textsf{\color{green}lat\\_dim = f.createDimension}}$("lat", 360)  | ${\textsf{\color{blue}lat\\_dim = f.createDimension}}$("lat", 360)  |
-| ${\textsf{\color{green}lon\\_dim = f.createDimension}}$("lon", 720)  | ${\textsf{\color{blue}lon\\_dim = f.createDimension}}$("lon", 720)  |
-| ${\textsf{\color{green}time\\_dim = f.createDimension}}$("time", None)  | ${\textsf{\color{blue}time\\_dim = f.createDimension}}$("time", -1)  |
-|  # define a 3D variable of float type   | |
-| ${\textsf{\color{green}var = f.createVariable}}$(varname="WIND", datatype="f8", dimensions = ("time", "lat", "lon"))  | ${\textsf{\color{blue}var = f.createVariable}}$(varname="WIND", nc\_type=pnetcdf.NC\_FLOAT, dimensions = ("time", "lat", "lon"))  |
-|  # add attributes to the variable   | |
-| ${\textsf{\color{green}var.long\\_name}}$="atmospheric wind velocity magnitude"  |${\textsf{\color{blue}var.long\\_name}}$="atmospheric wind velocity magnitude"  |
-| ${\textsf{\color{green}var.setncattr}}$("int_att", np.int32(1))|${\textsf{\color{blue}var.put\\_att}}$("int_att", np.int32(1))  |
-|  # exit define mode   | |
-| # No code needed. netCDF4-python automatically switches data and define mode | ${\textsf{\color{blue}f.enddef()}}$ | |
-|  # collectively write to variable WIND   | |
-| buff = np.zeros(shape = (5, 10), dtype = "f8") | |
-| ${\textsf{\color{green}var[0, 5:10, 0:10]}}$ = buff  | ${\textsf{\color{blue}var[0, 5:10, 0:10]}}$ = buff  |
-| | # alternatively <br> ${\textsf{\color{blue}var.put\\_var\\_all}}$(buff, start = [0, 5, 0], count = [1, 5, 10]) |
-|  # close file   | |
-| ${\textsf{\color{green}f.close()}}$ | ${\textsf{\color{blue}f.close()}}$  |
+| # import python module<br>import ${\textsf{\color{green}netCDF4}}$ | # import python module<br>import ${\textsf{\color{blue}pnetcdf}}$ |
+| ... ||
+| # create a new file<br>${\textsf{\color{green}f = netCDF4.Dataset}}$(filename="testfile.nc", mode="w", comm=comm, ${\textsf{\color{green}parallel=True}}$) | # create a new file<br>${\textsf{\color{blue}f = pnetcdf.File}}$(filename="testfile.nc", mode='w', comm=comm) |
+| # add a global attributes<br>f.history = "Wed Mar 27 14:35:25 CDT 2024" | ditto NetCDF4 |
+| # define dimensions<br>lat_dim = f.createDimension("lat", 360)<br>lon_dim = f.createDimension("lon", 720)<br>time_dim = f.createDimension("time", None) | ditto NetCDF4 |
+| # define a 3D variable of NC_DOUBLE type<br>var = f.createVariable(varname="WIND", datatype="f8", dimensions = ("time", "lat", "lon")) | ditto NetCDF4 |
+| # add attributes to the variable<br>var.long_name="atmospheric wind velocity magnitude"<br>var.units = "m/s" | ditto NetCDF4 |
+| ... ||
+| ${\textsf{\color{green}\\# NetCDF4-python requires no explicit define/data mode switching}}$ | ${\textsf{\color{blue}\\# exit define mode and enter data mode}}$<br>${\textsf{\color{blue}f.enddef()}}$ | |
+| # allocate and initialize the write buffer<br>buff = np.zeros(shape = (5, 10), dtype = "f8") | ditto NetCDF4 |
+| ... ||
+| ${\textsf{\color{green}\\# switch to collective I/O mode, default is independent in NetCDF4}}$<br>${\textsf{\color{green}var.set\\_collective(True)}}$ | ${\textsf{\color{blue}\\# collective I/O mode is default in PnetCDF}}$ |
+| # write to variable WIND in the file<br>var[0, 5:10, 0:10] = buff | ditto NetCDF4 |
+| ... ||
+| # close file<br>f.close() | ditto NetCDF4 |
+
