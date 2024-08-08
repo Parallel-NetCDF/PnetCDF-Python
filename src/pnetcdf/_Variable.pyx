@@ -23,7 +23,9 @@ from ._utils cimport _strencode, _check_err, _set_att, _get_att, _get_att_names,
 from ._utils import chartostring
 from ._utils cimport _nptonctype, _notcdf2dtypes, _nctonptype, _nptompitype, _supportedtypes, _supportedtypescdf2, \
                      default_fillvals, _StartCountStride, _out_array_shape, _private_atts
-import_array()
+
+cimport numpy
+numpy.import_array()
 
 
 ctypedef MPI.Datatype Datatype
