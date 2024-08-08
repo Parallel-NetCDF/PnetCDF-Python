@@ -91,7 +91,7 @@ def pnetcdf_io(filename, length):
 
     # Create the file
     try:
-        f = pnetcdf.File(filename=filename, mode = 'w', format = "64BIT_DATA", comm=comm, info=None)
+        f = pnetcdf.File(filename=filename, mode = 'w', format = "NETCDF3_64BIT_DATA", comm=comm, info=None)
     except OSError as e:
         print("Error at {}:{} ncmpi_create() file {} ({})".format(__file__,inspect.currentframe().f_back.f_lineno, filename, e))
         comm.Abort()

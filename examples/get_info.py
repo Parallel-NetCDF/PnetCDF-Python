@@ -64,7 +64,7 @@ def pnetcdf_io(filename):
         print("{}: example of getting MPI-IO hints".format(os.path.basename(__file__)))
 
     # create a new file using clobber "w" mode
-    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "NETCDF3_64BIT_DATA", comm=comm, info=None)
 
     # exit the define mode
     f.enddef()

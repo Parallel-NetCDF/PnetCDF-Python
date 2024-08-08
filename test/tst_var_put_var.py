@@ -20,7 +20,7 @@ import io
 
 
 seed(0)
-file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['NETCDF3_64BIT_DATA', 'NETCDF3_64BIT_OFFSET', None]
 file_name = "tst_var_put_var.nc"
 xdim=9; ydim=10; zdim=11
 # generate numpy array to write to the whole netCDF variable
