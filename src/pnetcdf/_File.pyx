@@ -384,16 +384,16 @@ cdef class File:
         """
         self.rename_dim(oldname, newname)
 
-    def def_var(self, varname, nc_dtype, dimensions=(), fill_value=None):
+    def def_var(self, varname, datatype, dimensions=(), fill_value=None):
         """
-        def_var(self, varname, nc_dtype, dimensions=(), fill_value=None)
+        def_var(self, varname, datatype, dimensions=(), fill_value=None)
 
         Create a new variable with the given parameters.
 
         :param varname: Name of the new variable.
         :type varname: str
 
-        :param nc_dtype: The datatype of the new variable. Supported specifiers are:
+        :param datatype: The datatype of the new variable. Supported specifiers are:
 
             - ``pnetcdf.NC_CHAR`` for text data
             - ``pnetcdf.NC_BYTE`` for 1-byte integer
@@ -410,7 +410,7 @@ cdef class File:
             - ``pnetcdf.NC_INT64`` for signed 8-byte integer
             - ``pnetcdf.NC_UINT64`` for unsigned 8-byte integer
 
-        :type nc_dtype: int
+        :type datatype: int
         :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
          or dimension class instances. Default is an empty tuple which means the variable is a scalar
          (and therefore has no dimensions).
@@ -460,17 +460,17 @@ cdef class File:
         dimensions =\
         tuple(self.dimensions[d] if isinstance(d,(str,bytes)) else d for d in dimensions)
         # create variable.
-        self.variables[varname] = Variable(self, varname, nc_dtype,
+        self.variables[varname] = Variable(self, varname, datatype,
         dimensions=dimensions, fill_value=fill_value)
         return self.variables[varname]
 
-    def createVariable(self, varname, nc_dtype, dimensions=(), fill_value=None):
+    def createVariable(self, varname, datatype, dimensions=(), fill_value=None):
         """
-        createVariable(self, varname, nc_dtype, dimensions=(), fill_value=None)
+        createVariable(self, varname, datatype, dimensions=(), fill_value=None)
 
         Same as ``pnetcdf.File.def_var``
         """
-        return self.def_var(varname, nc_dtype, dimensions, fill_value)
+        return self.def_var(varname, datatype, dimensions, fill_value)
 
 
     def ncattrs(self):
