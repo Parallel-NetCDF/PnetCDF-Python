@@ -15,7 +15,7 @@ import io
 
 
 NUM_TESTS = 5
-file_formats = [fmt for fmt in ['64BIT_DATA', '64BIT_OFFSET', None] for i in range(NUM_TESTS)]
+file_formats = [fmt for fmt in ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None] for i in range(NUM_TESTS)]
 FILE_NAME = "tst_dims.nc"
 
 LAT_NAME="lat"

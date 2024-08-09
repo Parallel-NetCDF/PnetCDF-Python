@@ -211,7 +211,7 @@ def run_test(format):
 
 if __name__ == '__main__':
     # test CDF-1, CDF-2, CDF-5 classic NetCDF file formats
-    file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
+    file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
     for i in range(len(file_formats)):
         try:
             run_test(file_formats[i])

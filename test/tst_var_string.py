@@ -34,7 +34,7 @@ def generateString(length, alphabet=string.ascii_letters + string.digits + strin
 
 
 # Format of the data file we will create (64BIT_DATA for CDF-5 and 64BIT_OFFSET for CDF-2 and None for CDF-1)
-file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 
 # Name of the test data file
 file_name = "tst_var_string.nc"

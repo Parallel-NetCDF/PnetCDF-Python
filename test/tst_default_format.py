@@ -55,7 +55,7 @@ class FileTestCase(unittest.TestCase):
         # inquiry current default (for testing)
         self.new_default = inq_default_format()
         # create CDF-2 netCDF files by overwriting default
-        f = pnetcdf.File(filename=self.file_paths[1], mode = 'w', format = "64BIT_OFFSET", comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_paths[1], mode = 'w', format = "NC_64BIT_OFFSET", comm=comm, info=None)
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_paths[1]) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
         # change default file format back to "CLASSIC"

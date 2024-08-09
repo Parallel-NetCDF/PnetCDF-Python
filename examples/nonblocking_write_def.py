@@ -92,7 +92,7 @@ def pnetcdf_io(file_name, length):
     write_timing = MPI.Wtime()
 
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = "64BIT_DATA", comm=comm, info=None)
+    f = pnetcdf.File(filename=filename, mode = 'w', format = "NETCDF3_64BIT_DATA", comm=comm, info=None)
 
     # Define dimensions
     dims = []

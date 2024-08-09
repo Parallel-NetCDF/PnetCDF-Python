@@ -103,7 +103,7 @@ def pnetcdf_io(filename):
     info1.Set("nc_header_read_chunk_size", "256")
 
     # create a new file for writing
-    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "64BIT_DATA", comm=comm, info=info1)
+    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "NETCDF3_64BIT_DATA", comm=comm, info=info1)
 
     # define dimensions
     dim_z = f.def_dim('Z', NZ*nprocs)

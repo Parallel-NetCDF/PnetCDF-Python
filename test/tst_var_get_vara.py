@@ -18,7 +18,7 @@ from utils import validate_nc_file
 import io
 
 seed(0)
-file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_var_get_vara.nc"
 
 

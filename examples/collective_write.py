@@ -174,7 +174,7 @@ if __name__ == "__main__":
     if args.q: verbose = False
 
     if args.k:
-        kind_dict = {'1':None, '2':"64BIT_OFFSET", '5':"64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     if args.l and int(args.l) > 0:

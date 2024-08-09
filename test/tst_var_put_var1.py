@@ -22,7 +22,7 @@ import io
 
 seed(0)
 # file format selections: CDF-5(64BIT_DATA'), CDF-2('64BIT_OFFSET') and CDF-1 (None)
-file_formats = ['64BIT_DATA', '64BIT_OFFSET', None]
+file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_var_put_var1.nc"
 
 # reference array for comparison in the testing phase
