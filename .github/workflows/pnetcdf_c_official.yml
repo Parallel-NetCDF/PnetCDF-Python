@@ -95,7 +95,7 @@ jobs:
 
     - name: Re-install PnetCDF-Python from source distribution
       run: |
-        pip uninstall pnetcdf
+        pip uninstall -y pnetcdf
         make install-clean
         export CC=$MPICH_DIR/bin/mpicc
         python setup.py sdist
