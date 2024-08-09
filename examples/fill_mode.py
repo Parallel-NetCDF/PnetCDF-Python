@@ -63,10 +63,14 @@ def pnetcdf_io(filename):
     NX = 4
 
     if verbose and rank == 0:
-        print("{}: example of setting fill mode".format(os.path.basename(__file__)))
+        print("Y dimension size = ", NY)
+        print("X dimension size = ", NX)
 
     # create a new file using clobber "w" mode
-    f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     comm = comm,
+                     info = None)
 
     # the global array is NY * (NX * nprocs)
     global_ny = NY
@@ -131,7 +135,10 @@ def pnetcdf_io(filename):
 
     # write to the 2nd record
     rec_var.put_var_all(buf, start = starts, count = counts)
+
+    # close file
     f.close()
+
 
 if __name__ == "__main__":
     verbose = True
@@ -152,9 +159,13 @@ if __name__ == "__main__":
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
 
     args = parser.parse_args()
-    if args.q: verbose = False
+
+    verbose = False if args.q else True
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of setting fill mode".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename)

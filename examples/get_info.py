@@ -50,6 +50,7 @@ def parse_help():
         print(help_text)
     return help_flag
 
+
 def print_info(info_used):
     nkeys = info_used.Get_nkeys()
     print("MPI File Info: nkeys =", nkeys)
@@ -60,11 +61,13 @@ def print_info(info_used):
 
 
 def pnetcdf_io(filename):
-    if verbose and rank == 0:
-        print("{}: example of getting MPI-IO hints".format(os.path.basename(__file__)))
 
     # create a new file using clobber "w" mode
-    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "NETCDF3_64BIT_DATA", comm=comm, info=None)
+    f = pnetcdf.File(filename=filename,
+                     mode = 'w',
+                     file_format = "NC_64BIT_DATA",
+                     comm=comm,
+                     info=None)
 
     # exit the define mode
     f.enddef()
@@ -82,7 +85,6 @@ def pnetcdf_io(filename):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -99,9 +101,12 @@ if __name__ == "__main__":
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of getting MPI-IO hints".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename)

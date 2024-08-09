@@ -94,16 +94,22 @@ def pnetcdf_io(filename):
     NZ = 5
 
     if verbose and rank == 0:
-        print("{}: example of set/get PnetCDF hints".format(os.path.basename(__file__)))
+        print("Z dimension size = ", NZ)
+        print("Y dimension size = ", NY)
+        print("X dimension size = ", NX)
 
     # create MPI info object and set a few hints
-    info1 = MPI.Info.Create()
-    info1.Set("nc_header_align_size", "1024")
-    info1.Set("nc_var_align_size", "512")
-    info1.Set("nc_header_read_chunk_size", "256")
+    info = MPI.Info.Create()
+    info.Set("nc_header_align_size", "1024")
+    info.Set("nc_var_align_size", "512")
+    info.Set("nc_header_read_chunk_size", "256")
 
     # create a new file for writing
-    f = pnetcdf.File(filename=filename, mode = 'w', file_format = "NETCDF3_64BIT_DATA", comm=comm, info=info1)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = "NC_64BIT_DATA",
+                     comm = comm,
+                     info = info)
 
     # define dimensions
     dim_z = f.def_dim('Z', NZ*nprocs)
@@ -144,14 +150,13 @@ def pnetcdf_io(filename):
 
     if verbose and rank == 0:
         print_hints(f, var_zy, var_yx)
-    info1.Free()
+    info.Free()
 
     # close the file
     f.close()
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -168,9 +173,12 @@ if __name__ == "__main__":
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of set/get PnetCDF hints".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename)

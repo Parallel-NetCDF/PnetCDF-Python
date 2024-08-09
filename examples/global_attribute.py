@@ -48,13 +48,14 @@ def parse_help():
 def pnetcdf_io(filename, file_format):
     digit = np.int16([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
-    if verbose and rank == 0:
-        print("{}: example of put/get global attributes".format(os.path.basename(__file__)))
-
     # Run pnetcdf i/o
 
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     if rank == 0:
         ltime = time.localtime()
@@ -107,7 +108,6 @@ def pnetcdf_io(filename, file_format):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -125,14 +125,17 @@ if __name__ == "__main__":
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     args = parser.parse_args()
 
-    if args.q: verbose = False
-
-    filename = args.dir
+    verbose = False if args.q else True
 
     file_format = None
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
+
+    filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of put/get global attributes".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format)

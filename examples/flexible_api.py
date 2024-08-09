@@ -89,14 +89,21 @@ def pnetcdf_io(filename, file_format):
     NY = 5
     NX = 5
     NZ = 5
-    ghost_len = 3
 
     if verbose and rank == 0:
-        print("{}: example of using flexible APIs".format(os.path.basename(__file__)))
+        print("Z dimension size = ", NZ)
+        print("Y dimension size = ", NY)
+        print("X dimension size = ", NX)
 
+    # number of cells at both end of each dimension
+    ghost_len = 3
 
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     # Define dimensions
     dim_z = f.def_dim("Z", NZ*nprocs)
@@ -146,9 +153,9 @@ def pnetcdf_io(filename, file_format):
     buf_zy.fill(-1)
 
     # read using flexible API
-    var_zy.get_var_all(buf_zy, start = starts, \
-                               count = counts, \
-                               bufcount = 1, \
+    var_zy.get_var_all(buf_zy, start = starts,
+                               count = counts,
+                               bufcount = 1,
                                buftype = subarray)
 
     # check contents of the get buffer
@@ -171,7 +178,10 @@ def pnetcdf_io(filename, file_format):
     array_of_sizes = np.array([NY + 2 * ghost_len, NX + 2 * ghost_len])
     array_of_subsizes = np.array([NY, NX])
     array_of_starts = np.array([ghost_len, ghost_len])
-    subarray = MPI.DOUBLE.Create_subarray(array_of_sizes, array_of_subsizes, array_of_starts, order=MPI.ORDER_C)
+    subarray = MPI.DOUBLE.Create_subarray(array_of_sizes,
+                                          array_of_subsizes,
+                                          array_of_starts,
+                                          order=MPI.ORDER_C)
     subarray.Commit()
 
     # initialize write user buffer
@@ -181,9 +191,9 @@ def pnetcdf_io(filename, file_format):
     counts = np.array([NY, NX])
 
     # calling a blocking flexible write API
-    req_id = var_yx.iput_var(buf_yx, start = starts, \
-                                     count = counts, \
-                                     bufcount = 1, \
+    req_id = var_yx.iput_var(buf_yx, start = starts,
+                                     count = counts,
+                                     bufcount = 1,
                                      buftype = subarray)
 
     # commit posted pending nonblocking requests
@@ -198,9 +208,9 @@ def pnetcdf_io(filename, file_format):
     buf_yx.fill(-1)
 
     # calling a blocking flexible read API
-    req_id = var_yx.iget_var(buf_yx, start = starts, \
-                                     count = counts, \
-                                     bufcount = 1, \
+    req_id = var_yx.iget_var(buf_yx, start = starts,
+                                     count = counts,
+                                     bufcount = 1,
                                      buftype=subarray)
 
     # commit posted pending nonblocking requests
@@ -227,7 +237,6 @@ def pnetcdf_io(filename, file_format):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -245,15 +254,17 @@ if __name__ == "__main__":
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     args = parser.parse_args()
 
+    verbose = False if args.q else True
+
     file_format = None
-
-    if args.q: verbose = False
-
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of using flexible APIs".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format)
