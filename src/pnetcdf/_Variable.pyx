@@ -44,16 +44,16 @@ cdef class Variable:
 
     """
 
-    def __init__(self, file, name, nc_dtype, dimensions=(), **kwargs):
+    def __init__(self, file, name, datatype, dimensions=(), **kwargs):
         """
-        __init__(self, file, name, nc_dtype, dimensions=(), **kwargs)
+        __init__(self, file, name, datatype, dimensions=(), **kwargs)
 
         The constructor for :class:`pnetcdf.Variable`.
 
         :param varname: Name of the new variable.
         :type varname: str
 
-        :param nc_dtype: The datatype of the new variable. Can be specified by providing a NC module constant,
+        :param datatype: The datatype of the new variable. Can be specified by providing a NC module constant,
          or numpy dtype object, or a string that describes a numpy dtype object. Supported specifiers are:
 
             - ``pnetcdf.NC_CHAR`` or ``S1`` for 1-character string
@@ -71,7 +71,7 @@ cdef class Variable:
             - ``pnetcdf.NC_INT64`` or ``i8`` for signed 8-byte integer
             - ``pnetcdf.NC_UINT64`` or ``u8`` for unsigned 8-byte integer
 
-        :type nc_dtype: int
+        :type datatype: int
         :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
          or dimension class instances. Default is an empty tuple which means the variable is
          a scalar (and therefore has no dimensions).
@@ -104,17 +104,17 @@ cdef class Variable:
         self._file = file
         _file_id = self._file_id
         #TODO: decide whether we need to check xtype at python-level
-        if isinstance(nc_dtype, str): # conver to numpy datatype object
-            nc_dtype = np.dtype(nc_dtype)
-        if isinstance(nc_dtype, np.dtype):
-            if nc_dtype.str[1:] in _supportedtypes:
-                xtype = _nptonctype[nc_dtype.str[1:]]
+        if isinstance(datatype, str): # conver to numpy datatype object
+            datatype = np.dtype(datatype)
+        if isinstance(datatype, np.dtype):
+            if datatype.str[1:] in _supportedtypes:
+                xtype = _nptonctype[datatype.str[1:]]
             else:
-                raise TypeError('illegal data type, must be one of %s, got %s' % (_supportedtypes, nc_dtype.str[1:]))
-        elif isinstance(nc_dtype, int):
-            xtype = nc_dtype
+                raise TypeError('illegal data type, must be one of %s, got %s' % (_supportedtypes, datatype.str[1:]))
+        elif isinstance(datatype, int):
+            xtype = datatype
         else:
-            raise TypeError('illegal data type, must be an int, got %s' % (nc_dtype.str[1:]))
+            raise TypeError('illegal data type, must be an int, got %s' % (datatype.str[1:]))
         self.xtype = xtype
         self.dtype = np.dtype(_nctonptype[xtype])
 

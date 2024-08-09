@@ -114,7 +114,7 @@ Variables
  
  .. code-block:: Python
 
-    var = f.def_var(varname = "var", nc_dtype = pnetcdf.NC_INT, dimensions = ("time", "lat"))
+    var = f.def_var(varname = "var", datatype = pnetcdf.NC_INT, dimensions = ("time", "lat"))
 
  Equivalent example codes in ``netCDF4-python``:
  
