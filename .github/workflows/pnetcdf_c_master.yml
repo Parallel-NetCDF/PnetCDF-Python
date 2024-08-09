@@ -94,7 +94,19 @@ jobs:
       run: |
         export PATH=${MPICH_DIR}/bin:${PATH}
         make ptests
+  
+    - name: Re-install PnetCDF-Python from source distribution
+      run: |
+        pip uninstall pnetcdf
+        make install-clean
+        export CC=$MPICH_DIR/bin/mpicc
+        python setup.py sdist
+        pip install dist/pnetcdf-*.tar.gz
 
+    - name: Test PnetCDF-Python
+      run: |
+        export PATH=${MPICH_DIR}/bin:${PATH}
+        make ptests
 #   - name: Tarball
 #     run: |
 #       export PATH=${NETCDF_DIR}/bin:${PATH} 
