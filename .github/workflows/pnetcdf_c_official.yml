@@ -108,9 +108,9 @@ jobs:
 
 #   - name: Tarball
 #     run: |
-#       export PATH=${NETCDF_DIR}/bin:${PATH} 
-#       python setup.py --version  
+#       export PATH=${NETCDF_DIR}/bin:${PATH}
+#       python setup.py --version
 #       check-manifest --version
-#       check-manifest --verbose 
-#       pip wheel . -w dist --no-deps 
-#       twine check dist/* 
+#       check-manifest --verbose
+#       pip wheel . -w dist --no-deps
+#       twine check dist/*
