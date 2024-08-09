@@ -83,9 +83,6 @@ def parse_help():
 
 def pnetcdf_io(filename, file_format, length):
 
-    if verbose and rank == 0:
-        print("{}: example of using buffers with ghost cells".format(os.path.basename(__file__)))
-
     counts = [length, length + 1]
     psizes = MPI.Compute_dims(nprocs, 2)
 
@@ -108,7 +105,8 @@ def pnetcdf_io(filename, file_format, length):
 
     # set subarray access pattern
     counts = np.array([length, length + 1], dtype=np.int64)
-    starts = np.array([local_rank[0] * counts[0], local_rank[1] * counts[1]], dtype=np.int64)
+    starts = np.array([local_rank[0] * counts[0], local_rank[1] * counts[1]],
+                      dtype=np.int64)
     if verbose:
         print("starts= {} {} counts= {} {}".format(starts[0], starts[1], counts[0], counts[1]))
 
@@ -118,13 +116,19 @@ def pnetcdf_io(filename, file_format, length):
     buf = np.empty(bufsize, dtype=np.int32)
     for i in range(counts[0] + 2 * nghosts):
         for j in range(counts[1] + 2 * nghosts):
-            if nghosts <= i < counts[0] + nghosts and nghosts <= j < counts[1] + nghosts:
+            if nghosts <= i < counts[0] + nghosts and \
+               nghosts <= j < counts[1] + nghosts:
                 buf[i * (counts[1] + 2 * nghosts) + j] = rank
             else:
-                buf[i * (counts[1] + 2 * nghosts) + j] = -8  # all ghost cells have value -8
+                # set values of all ghost cells to -8
+                buf[i * (counts[1] + 2 * nghosts) + j] = -8
 
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     # Define dimensions
     dim_y = f.def_dim("Y", gsizes[0])
@@ -150,7 +154,6 @@ def pnetcdf_io(filename, file_format, length):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -169,19 +172,21 @@ if __name__ == "__main__":
     parser.add_argument("-l", help="Size of each dimension of the local array\n")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     file_format = None
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     length = 4
-    if args.l: length = int(args.l)
+    if args.l and int(args.l) > 0:
+        length = int(args.l)
 
     filename = args.dir
 
-    length = 4 if length <= 0 else length
+    if verbose and rank == 0:
+        print("{}: example of using buffers with ghost cells".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format, length)

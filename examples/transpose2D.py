@@ -66,10 +66,10 @@ def parse_help():
     return help_flag
 
 def pnetcdf_io(filename, file_format, length):
-    if verbose and rank == 0:
-        print("{}: example of put/get 2D transposed arrays".format(os.path.basename(__file__)))
-
     NDIMS = 2
+
+    if verbose and rank == 0:
+        print("Number of dimensions = ", NDIMS)
 
     gsizes = np.zeros(NDIMS, dtype=np.int64)
     starts = np.zeros(NDIMS, dtype=np.int64)
@@ -114,7 +114,11 @@ def pnetcdf_io(filename, file_format, length):
 
 
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     # Define dimensions
     dim_y = f.def_dim("Y", gsizes[0])
@@ -144,7 +148,6 @@ def pnetcdf_io(filename, file_format, length):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -163,17 +166,20 @@ if __name__ == "__main__":
     parser.add_argument("-l", help="size of each dimension of the local array")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     file_format = None
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     length = 2
     if args.l and int(args.l) > 0: length = int(args.l)
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of put/get 2D transposed arrays".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format, length)

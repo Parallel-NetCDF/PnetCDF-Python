@@ -71,9 +71,6 @@ def parse_help():
 
 
 def pnetcdf_io(filename, file_format):
-    if verbose and rank == 0:
-        print("{}: example of writing subarrays".format(os.path.basename(__file__)))
-
     NY = 10
     NX = 4
     global_ny = NY
@@ -81,8 +78,16 @@ def pnetcdf_io(filename, file_format):
     starts = [0, NX * rank]
     counts = [NY, NX]
 
+    if verbose and rank == 0:
+        print("Y dimension size = ", NY)
+        print("X dimension size = ", NX)
+
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     # Add a global attribute: a time stamp at rank 0
     if rank == 0:
@@ -113,7 +118,7 @@ def pnetcdf_io(filename, file_format):
     short_att = np.int16(1000)
     var.put_att("short_att_name", short_att)
 
-     # Exit the define mode
+    # Exit the define mode
     f.enddef()
 
     # initialize write buffer
@@ -127,7 +132,6 @@ def pnetcdf_io(filename, file_format):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -145,14 +149,17 @@ if __name__ == "__main__":
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     file_format = None
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of writing subarrays".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format)
