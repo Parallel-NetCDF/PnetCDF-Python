@@ -34,11 +34,12 @@ def parse_help():
     return help_flag
 
 def pnetcdf_io(filename):
-    if verbose and rank == 0:
-        print("{}: example of file create and open".format(os.path.basename(__file__)))
 
     # create a new file using file clobber mode, i.e. flag "-w"
-    f = pnetcdf.File(filename=filename, mode = 'w', comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     comm = comm,
+                     info = None)
 
     # close the file
     f.close()
@@ -51,7 +52,6 @@ def pnetcdf_io(filename):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -68,9 +68,12 @@ if __name__ == "__main__":
     parser.add_argument("-q", help="Quiet mode (reports when fail)", action="store_true")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of file create and open".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename)

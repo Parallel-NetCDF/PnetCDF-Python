@@ -68,11 +68,11 @@ def parse_help():
 
 def pnetcdf_io(filename, file_format):
 
-    if verbose and rank == 0:
-        print("{}: reading file ".format(os.path.basename(__file__)), filename)
-
     # Open an existing file for reading
-    f = pnetcdf.File(filename=filename, mode = 'r', comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'r',
+                     comm = comm,
+                     info = None)
 
     # Get global attribute named "history"
     str_att = f.get_att("history")
@@ -82,6 +82,10 @@ def pnetcdf_io(filename, file_format):
     # Get dimension lengths for dimensions Y and X
     global_ny = len(f.dimensions['Y'])
     global_nx = len(f.dimensions['X'])
+
+    if verbose and rank == 0:
+        print("Y dimension size = ", global_ny)
+        print("X dimension size = ", global_nx)
 
     # get the variable of a 2D variable of integer type
     v = f.variables['var']
@@ -101,14 +105,14 @@ def pnetcdf_io(filename, file_format):
     counts = [local_ny, local_nx]
 
     # Read a subarray in collective mode
-    buff = np.empty(tuple(counts), v.dtype)
-    v.get_var_all(buff, start = starts, count = counts)
+    r_buf = np.empty(tuple(counts), v.dtype)
+    v.get_var_all(r_buf, start = starts, count = counts)
 
     # close the file
     f.close()
 
+
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -129,13 +133,16 @@ if __name__ == "__main__":
     file_format = None
     length = 10
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: reading file ".format(os.path.basename(__file__)), filename)
 
     try:
         pnetcdf_io(filename, file_format)

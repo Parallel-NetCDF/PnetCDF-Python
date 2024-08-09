@@ -55,16 +55,23 @@ def parse_help():
         print(help_text)
     return help_flag
 
+
 def pnetcdf_io(file_name, file_format):
     NY = 4
     NX = 10
     NDIMS = 2
 
     if verbose and rank == 0:
-        print("{}: example of writing multiple variables in a call".format(os.path.basename(__file__)))
+        print("Number of dimensions = ", NDIMS)
+        print("Y dimension size = ", NY)
+        print("X dimension size = ", NX)
 
     # create a new file
-    f = pnetcdf.File(filename=filename, mode = 'w', format=file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     # define dimensions
     dimx = f.def_dim('x',NX)
@@ -143,17 +150,16 @@ def pnetcdf_io(file_name, file_format):
 
     # allocate I/O buffer and initialize its contents
     w_len = np.sum(np.prod(counts, axis=1))
-    buffer = np.full(w_len, rank, dtype=np.int32)
+    w_buf = np.full(w_len, rank, dtype=np.int32)
 
     # set the buffer pointers to different offsets to the I/O buffe
-    v.put_var_all(buffer, start = starts, count = counts, num = num_reqs)
+    v.put_var_all(w_buf, start = starts, count = counts, num = num_reqs)
 
     # close the file
     f.close()
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -171,14 +177,17 @@ if __name__ == "__main__":
     parser.add_argument("-k", help="File format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5")
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     file_format = None
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of writing multiple variables in a call".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format)

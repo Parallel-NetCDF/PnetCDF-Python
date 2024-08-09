@@ -43,17 +43,17 @@ def parse_help():
         print(help_text)
     return help_flag
 
+
 def pnetcdf_io(filename, file_format, length):
 
-    if verbose and rank == 0:
-        print("{}: example of put/get 3D transposed arrays".format(os.path.basename(__file__)))
-
     NDIMS = 3
+    if verbose and rank == 0:
+        print("Number of dimensions = ", NDIMS)
 
-    gsizes = np.zeros(NDIMS, dtype=np.int64)
-    starts = np.zeros(NDIMS, dtype=np.int64)
-    counts = np.zeros(NDIMS, dtype=np.int64)
-    imap = np.zeros(NDIMS, dtype=np.int64)
+    gsizes  = np.zeros(NDIMS, dtype=np.int64)
+    starts  = np.zeros(NDIMS, dtype=np.int64)
+    counts  = np.zeros(NDIMS, dtype=np.int64)
+    imap    = np.zeros(NDIMS, dtype=np.int64)
     startsT = np.zeros(NDIMS, dtype=np.int64)
     countsT = np.zeros(NDIMS, dtype=np.int64)
 
@@ -73,10 +73,10 @@ def pnetcdf_io(filename, file_format, length):
     # set up subarray access pattern
     bufsize = 1
     for i in range(NDIMS):
-        gsizes[i] = (length + i) * psizes[i]  # global array size
+        gsizes[i]  = (length + i) * psizes[i]  # global array size
         starts[i] *= (length + i)  # start indices
-        counts[i] = (length + i)  # array elements
-        bufsize *= (length + i)
+        counts[i]  = (length + i)  # array elements
+        bufsize   *= (length + i)
 
     # allocate buffer and initialize with contiguous numbers
     buf = np.empty(bufsize, dtype=int)
@@ -84,11 +84,17 @@ def pnetcdf_io(filename, file_format, length):
     for k in range(counts[0]):
         for j in range(counts[1]):
             for i in range(counts[2]):
-                buf[index] = (starts[0]+k)*gsizes[1]*gsizes[2] + (starts[1]+j)*gsizes[2] + (starts[2]+i)
+                buf[index] = (starts[0]+k)*gsizes[1]*gsizes[2] + \
+                             (starts[1]+j)*gsizes[2] + \
+                             (starts[2]+i)
                 index += 1
 
     # Create the file
-    f = pnetcdf.File(filename=filename, mode = 'w', format = file_format, comm=comm, info=None)
+    f = pnetcdf.File(filename = filename,
+                     mode = 'w',
+                     format = file_format,
+                     comm = comm,
+                     info = None)
 
     # Define dimensions
     dim_z = f.def_dim("Z", gsizes[0])
@@ -99,29 +105,31 @@ def pnetcdf_io(filename, file_format, length):
     var_zyx = f.def_var("ZYX_var", pnetcdf.NC_INT, (dim_z, dim_y, dim_x))
 
     # Define variable with transposed file layout: ZXY
-    var_zxy = f.def_var("ZXY_var",  pnetcdf.NC_INT, (dim_z, dim_x, dim_y))
+    var_zxy = f.def_var("ZXY_var", pnetcdf.NC_INT, (dim_z, dim_x, dim_y))
 
     # Define variable with transposed file layout: YZX
-    var_yzx = f.def_var("YZX_var",  pnetcdf.NC_INT, (dim_y, dim_z, dim_x))
+    var_yzx = f.def_var("YZX_var", pnetcdf.NC_INT, (dim_y, dim_z, dim_x))
 
     # Define variable with transposed file layout: YXZ
-    var_yxz = f.def_var("YXZ_var",  pnetcdf.NC_INT, (dim_y, dim_x, dim_z))
+    var_yxz = f.def_var("YXZ_var", pnetcdf.NC_INT, (dim_y, dim_x, dim_z))
 
     # Define variable with transposed file layout: XZY
-    var_xzy = f.def_var("XZY_var",  pnetcdf.NC_INT, (dim_x, dim_z, dim_y))
+    var_xzy = f.def_var("XZY_var", pnetcdf.NC_INT, (dim_x, dim_z, dim_y))
 
     # Define variable with transposed file layout: XYZ
-    var_xyz = f.def_var("XYZ_var",  pnetcdf.NC_INT, (dim_x, dim_y, dim_z))
+    var_xyz = f.def_var("XYZ_var", pnetcdf.NC_INT, (dim_x, dim_y, dim_z))
 
      # Exit the define mode
     f.enddef()
     # Write the whole variable in file: ZYX
     var_zyx.put_var_all(buf, start=starts, count=counts)
+
     # ZYX -> ZXY:
-    imap[1] = 1; imap[2] = counts[2]; imap[0] = counts[1]*counts[2]
+    imap[1] = 1;  imap[2] = counts[2]; imap[0] = counts[1]*counts[2]
     startsT[0] = starts[0]; startsT[1] = starts[2]; startsT[2] = starts[1]
     countsT[0] = counts[0]; countsT[1] = counts[2]; countsT[2] = counts[1]
     var_zxy.put_var_all(buf, start = startsT, count = countsT, imap = imap)
+
     # ZYX -> ZXY:
     imap[1] = 1; imap[2] = counts[2]; imap[0] = counts[1]*counts[2]
     startsT[0] = starts[0]; startsT[1] = starts[2]; startsT[2] = starts[1]
@@ -157,7 +165,6 @@ def pnetcdf_io(filename, file_format, length):
 
 
 if __name__ == "__main__":
-    verbose = True
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     nprocs = comm.Get_size()
@@ -177,17 +184,20 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.q: verbose = False
+    verbose = False if args.q else True
 
     file_format = None
     if args.k:
-        kind_dict = {'1':None, '2':"NETCDF3_64BIT_OFFSET", '5':"NETCDF3_64BIT_DATA"}
+        kind_dict = {'1':None, '2':"NC_64BIT_OFFSET", '5':"NC_64BIT_DATA"}
         file_format = kind_dict[args.k]
 
     length = 10
     if args.l and int(args.l) > 0: length = int(args.l)
 
     filename = args.dir
+
+    if verbose and rank == 0:
+        print("{}: example of put/get 3D transposed arrays".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format, length)
