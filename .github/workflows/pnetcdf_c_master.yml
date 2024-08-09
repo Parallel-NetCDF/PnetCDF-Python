@@ -88,7 +88,7 @@ jobs:
     - name: Install PnetCDF-Python
       run: |
         export CC=$MPICH_DIR/bin/mpicc
-        pip install --no-build-isolation -e .
+        pip install --verbose --no-build-isolation -e .
 
     - name: Test PnetCDF-Python
       run: |
@@ -101,7 +101,7 @@ jobs:
         make install-clean
         export CC=$MPICH_DIR/bin/mpicc
         python setup.py sdist
-        pip install dist/pnetcdf-*.tar.gz
+        pip install --verbose dist/pnetcdf-*.tar.gz
 
     - name: Test PnetCDF-Python
       run: |
