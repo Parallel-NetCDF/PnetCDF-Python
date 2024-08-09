@@ -24,7 +24,7 @@ import io
 import numpy.ma as ma
 
 seed(0)
-file_formats = ['NETCDF3_64BIT_DATA', 'NETCDF3_64BIT_OFFSET', None]
+file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_var_def_fill.nc"
 
 # file value to be set for each variable

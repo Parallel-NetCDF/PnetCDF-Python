@@ -21,7 +21,7 @@ import io
 
 seed(0)
 # file format selections: CDF-5(64BIT_DATA'), CDF-2('64BIT_OFFSET') and CDF-1 (None)
-file_formats = ['NETCDF3_64BIT_DATA', 'NETCDF3_64BIT_OFFSET', None]
+file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_wait.nc"
 
 comm = MPI.COMM_WORLD

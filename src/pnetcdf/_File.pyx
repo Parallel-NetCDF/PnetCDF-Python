@@ -53,9 +53,9 @@ cdef class File:
 
         :param format: underlying file format. Only relevant when creating file
 
-            - ``NETCDF3_64BIT_OFFSET``: CDF-2 format
-            - ``NETCDF3_64BIT_DATA``: CDF-5 format
-            - `None` defaults to default file format (CDF-1 format)
+            - ``NETCDF3_64BIT_OFFSET`` or ``NC_64BIT_OFFSET``: CDF-2 format
+            - ``NETCDF3_64BIT_DATA`` or ``NC_64BIT_DATA``: CDF-5 format
+            - ``NETCDF3_CLASSIC`` or `None` defaults to default file format (CDF-1 format)
 
         :type format: str
 
@@ -79,9 +79,9 @@ cdef class File:
         bytestr = _strencode(filename, encoding=encoding)
         path = bytestr
         if format:
-            supported_formats = ["NETCDF3_64BIT_OFFSET", "NETCDF3_64BIT_DATA", "NETCDF3_CLASSIC"]
+            supported_formats = ["NETCDF3_64BIT_OFFSET", "NETCDF3_64BIT_DATA", "NETCDF3_CLASSIC", "NC_64BIT_OFFSET", "NC_64BIT_DATA"]
             if format not in supported_formats:
-                msg="underlying file format must be one of `'NETCDF3_CLASSIC'`, `'NETCDF3_64BIT_OFFSET'` or `'NETCDF3_64BIT_DATA'`"
+                msg="underlying file format must be one of `'NETCDF3_CLASSIC'`, `'NETCDF3_64BIT_OFFSET'` (same as `'NC_64BIT_OFFSET'`) or `'NETCDF3_64BIT_DATA'` (same as `'NC_64BIT_DATA'`)"
                 raise ValueError(msg)
 
         clobber = True
@@ -94,8 +94,8 @@ cdef class File:
             cmode = 0
             if not clobber:
                 cmode = NC_NOCLOBBER
-            if format in ['NETCDF3_64BIT_OFFSET', 'NETCDF3_64BIT_DATA']:
-                file_cmode = NC_64BIT_OFFSET_C if format  == 'NETCDF3_64BIT_OFFSET' else NC_64BIT_DATA_C
+            if format in ['NETCDF3_64BIT_OFFSET', 'NETCDF3_64BIT_DATA', 'NC_64BIT_OFFSET', 'NC_64BIT_DATA']:
+                file_cmode = NC_64BIT_OFFSET_C if format in ['NETCDF3_64BIT_OFFSET', 'NC_64BIT_OFFSET'] else NC_64BIT_DATA_C
                 cmode = cmode | file_cmode
             with nogil:
                 ierr = ncmpi_create(mpicomm, path, cmode, mpiinfo, &ncid)

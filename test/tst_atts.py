@@ -44,7 +44,7 @@ ATTDICT = {'stratt':STRATT,'floatatt':FLOATATT,'seqatt':SEQATT,
            'emptystratt':EMPTYSTRATT,'intatt':INTATT}
 
 NUM_TESTS = 3
-file_formats = [fmt for fmt in ['NETCDF3_64BIT_DATA', 'NETCDF3_64BIT_OFFSET', None] for i in range(NUM_TESTS)]
+file_formats = [fmt for fmt in ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None] for i in range(NUM_TESTS)]
 
 class AttrTestCase(unittest.TestCase):
 
