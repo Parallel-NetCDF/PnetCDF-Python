@@ -1,5 +1,5 @@
 --- mnist_main_original.py	2024-08-10 17:30:08.552324326 -0500
-+++ pnetcdf_mnist.py	2024-08-10 18:02:49.008705003 -0500
++++ pnetcdf_mnist.py	2024-08-11 16:10:31.895471785 -0500
 @@ -1,3 +1,8 @@
 +#
 +# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
@@ -15,10 +15,10 @@
  from torch.optim.lr_scheduler import StepLR
 +from torch.nn.parallel import DistributedDataParallel as DDP
 +from torch.utils.data.distributed import DistributedSampler
- 
+
 +import comm_file, pnetcdf_io
 +from mpi4py import MPI
- 
+
  class Net(nn.Module):
      def __init__(self):
 @@ -42,14 +51,13 @@
@@ -32,7 +32,7 @@
                  100. * batch_idx / len(train_loader), loss.item()))
              if args.dry_run:
                  break
- 
+
 -
  def test(model, device, test_loader):
      model.eval()
@@ -40,19 +40,19 @@
 @@ -62,9 +70,14 @@
              pred = output.argmax(dim=1, keepdim=True)  # get the index of the max log-probability
              correct += pred.eq(target.view_as(pred)).sum().item()
- 
+
 +    # aggregate loss among all ranks
 +    test_loss = comm.mpi_comm.allreduce(test_loss, op=MPI.SUM)
 +    correct = comm.mpi_comm.allreduce(correct, op=MPI.SUM)
 +
      test_loss /= len(test_loader.dataset)
- 
+
 -    print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
 +    if rank == 0:
 +        print('\nTest set: Average loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
          test_loss, correct, len(test_loader.dataset),
          100. * correct / len(test_loader.dataset)))
- 
+
 @@ -94,6 +107,8 @@
                          help='how many batches to wait before logging training status')
      parser.add_argument('--save-model', action='store_true', default=False,
@@ -65,7 +65,7 @@
 @@ -107,7 +122,7 @@
      else:
          device = torch.device("cpu")
- 
+
 -    train_kwargs = {'batch_size': args.batch_size}
 +    train_kwargs = {'batch_size': args.batch_size//nprocs}
      test_kwargs = {'batch_size': args.test_batch_size}
@@ -84,8 +84,8 @@
 +
 +    # Open files storing training and testing samples
 +    infile = args.input_file
-+    train_file = pnetcdf_io.dataset(infile, 'train_images', 'train_labels', transform, comm.mpi_comm)
-+    test_file = pnetcdf_io.dataset(infile, 'test_images', 'test_labels', transform, comm.mpi_comm)
++    train_file = pnetcdf_io.dataset(infile, 'train_samples', 'train_labels', transform, comm.mpi_comm)
++    test_file = pnetcdf_io.dataset(infile, 'test_samples', 'test_labels', transform, comm.mpi_comm)
 +
 +    # create distributed samplers
 +    train_sampler = DistributedSampler(train_file, num_replicas=nprocs, rank=rank, shuffle=True)
@@ -94,14 +94,14 @@
 +    # add distributed samplers to DataLoaders
 +    train_loader = torch.utils.data.DataLoader(train_file, sampler=train_sampler, **train_kwargs)
 +    test_loader = torch.utils.data.DataLoader(test_file, sampler=test_sampler, **test_kwargs, drop_last=False)
- 
+
      model = Net().to(device)
 +
 +    # use DDP
 +    model = DDP(model, device_ids=[device] if use_cuda else None)
 +
      optimizer = optim.Adadelta(model.parameters(), lr=args.lr)
- 
+
      scheduler = StepLR(optimizer, step_size=1, gamma=args.gamma)
      for epoch in range(1, args.epochs + 1):
 +        # train sampler set epoch
@@ -111,16 +111,16 @@
          train(args, model, device, train_loader, optimizer, epoch)
          test(model, device, test_loader)
          scheduler.step()
- 
+
      if args.save_model:
 -        torch.save(model.state_dict(), "mnist_cnn.pt")
 +        if rank == 0:
 +            torch.save(model.state_dict(), "mnist_cnn.pt")
- 
+
 +    # close files
 +    train_file.close()
 +    test_file.close()
- 
+
  if __name__ == '__main__':
 +    ## initialize parallel environment
 +    comm, device = comm_file.init_parallel()

@@ -61,4 +61,6 @@ ptest8:
 
 clean:
 	rm -rf ${OUTPUT_DIR}
+	cd Pytorch_DDP && make clean
+	cd MNIST && make clean
 
