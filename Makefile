@@ -3,6 +3,8 @@
 # See COPYRIGHT notice in top-level directory.
 #
 
+all:
+
 check:
 	cd test && make check
 	cd examples && make check
@@ -31,4 +33,6 @@ build-clean: clean
 
 install-clean: build-clean
 	rm -rf dist
+
+.PHONY: all check ptests clean build-clean install-clean
 

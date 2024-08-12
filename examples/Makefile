@@ -64,3 +64,5 @@ clean:
 	cd Pytorch_DDP && make clean
 	cd MNIST && make clean
 
+.PHONY: all check ptests ptest3 ptest4 ptest8 clean
+

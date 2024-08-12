@@ -83,3 +83,5 @@ ptest8:
 clean:
 	rm -rf ${OUTPUT_DIR}
 
+.PHONY: all check ptests ptest3 ptest4 ptest8 clean
+
