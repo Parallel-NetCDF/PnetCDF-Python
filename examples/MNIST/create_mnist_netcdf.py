@@ -48,14 +48,9 @@ class MnistDataloader(object):
         return (x_train, y_train),(x_test, y_test)
 
 
-def to_nc(train_samples, train_labels, test_samples, test_labels, out_file_path='mnist_images.nc'):
-    if os.path.exists(out_file_path):
-        os.remove(out_file_path)
+def to_nc(train_samples, train_labels, test_samples, test_labels, out_file):
 
-    train_labels = list(train_labels)
-    test_labels = list(test_labels)
-
-    with pnetcdf.File(out_file_path, mode = "w", format = "NC_64BIT_DATA") as fnc:
+    with pnetcdf.File(out_file, mode = "w", format = "NC_64BIT_DATA") as fnc:
 
         # add MNIST dataset URL as a global attribute
         fnc.url = "https://yann.lecun.com/exdb/mnist/"
@@ -116,6 +111,8 @@ if __name__ == '__main__':
                          default = "t10k-images-idx3-ubyte")
     parser.add_argument("--test-label-file", nargs=1, type=str, help="(Optional) input file name of testing labels",\
                          default = "t10k-labels-idx1-ubyte")
+    parser.add_argument("--out-file", nargs=1, type=str, help="(Optional) output NetCDF file name",\
+                         default = "mnist_images.nc")
     args = parser.parse_args()
 
     verbose = True if args.verbose else False
@@ -152,6 +149,6 @@ if __name__ == '__main__':
     # create mini MNIST file in NetCDF format
     #
     to_nc(train_data[0:n_train], train_label[0:n_train],
-           test_data[0:n_test],   test_label[0:n_test], "mnist_images.nc")
+           test_data[0:n_test],   test_label[0:n_test], args.out_file)
 
 
