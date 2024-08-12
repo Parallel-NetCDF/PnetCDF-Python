@@ -62,7 +62,15 @@
      args = parser.parse_args()
      use_cuda = not args.no_cuda and torch.cuda.is_available()
      use_mps = not args.no_mps and torch.backends.mps.is_available()
-@@ -107,7 +122,7 @@
+@@ -101,18 +116,18 @@
+     torch.manual_seed(args.seed)
+
+     if use_cuda:
+-        device = torch.device("cuda")
++        torch.cuda.set_device(rank)  # Set the GPU device by rank
++        device = torch.device(f"cuda:{rank}")
+     elif use_mps:
+         device = torch.device("mps")
      else:
          device = torch.device("cpu")
 
@@ -71,6 +79,12 @@
      test_kwargs = {'batch_size': args.test_batch_size}
      if use_cuda:
          cuda_kwargs = {'num_workers': 1,
+-                       'pin_memory': True,
+-                       'shuffle': True}
++                       'pin_memory': True}
+         train_kwargs.update(cuda_kwargs)
+         test_kwargs.update(cuda_kwargs)
+
 @@ -120,25 +135,53 @@
          transforms.ToTensor(),
          transforms.Normalize((0.1307,), (0.3081,))
