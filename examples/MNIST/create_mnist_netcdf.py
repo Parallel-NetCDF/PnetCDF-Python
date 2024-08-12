@@ -57,6 +57,9 @@ def to_nc(train_samples, train_labels, test_samples, test_labels, out_file_path=
 
     with pnetcdf.File(out_file_path, mode = "w", format = "NC_64BIT_DATA") as fnc:
 
+        # add MNIST dataset URL as a global attribute
+        fnc.url = "https://yann.lecun.com/exdb/mnist/"
+
         # Each image is of dimension 28 x 28
         dim_y = fnc.def_dim("height", 28)
         dim_x = fnc.def_dim("width", 28)
