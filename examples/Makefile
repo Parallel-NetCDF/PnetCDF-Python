@@ -29,9 +29,11 @@ all:
 
 check: ptest4
 	cd Pytorch_DDP && make check
+	cd MNIST && make check
 
 ptests: ptest3 ptest4 ptest8
 	cd Pytorch_DDP && make ptests
+	cd MNIST && make ptests
 
 ptest3:
 	@mkdir -p ${OUTPUT_DIR}
@@ -59,4 +61,8 @@ ptest8:
 
 clean:
 	rm -rf ${OUTPUT_DIR}
+	cd Pytorch_DDP && make clean
+	cd MNIST && make clean
+
+.PHONY: all check ptests ptest3 ptest4 ptest8 clean
 

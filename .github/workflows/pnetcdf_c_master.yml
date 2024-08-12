@@ -83,7 +83,7 @@ jobs:
         pip install numpy cython cftime pytest twine wheel check-manifest
         export MPICC=$MPICH_DIR/bin/mpicc
         pip install mpi4py
-        pip install torch
+        pip install torch torchvision
 
     - name: Install PnetCDF-Python
       run: |
