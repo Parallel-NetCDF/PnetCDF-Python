@@ -98,5 +98,12 @@ installation information.
   + Test non-blocking APIs and then use `wait/wait_all` method of `File` class
     to flush out the pending I/O requests.
 
-
+* **tst_copy_attr.py**
+  + Copying an attribute from one file to another in python can be done without
+    `ncmpi_copy_att()`. For exampl, this can be done in two lines of python
+    codes below:
+    ```
+    att = source_file.get_att("history")
+    destition_file.put_att('history', att)
+    ```
 

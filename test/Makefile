@@ -4,6 +4,7 @@
 #
 
 check_PROGRAMS = tst_atts.py \
+                 tst_copy_attr.py \
                  tst_default_format.py \
                  tst_dims.py \
                  tst_file_fill.py \
