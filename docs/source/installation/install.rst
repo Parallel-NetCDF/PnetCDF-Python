@@ -46,10 +46,10 @@ Building PnetCDF-python from source
      # use Python 3.9 or later
      $ python -m venv env
      $ source env/bin/activate
-     $ pip install --upgrade pip
+     $ pip install --upgrade pip setuptools wheel packaging
 
      # install Python libraries
-     $ pip install numpy Cython setuptools wheel packaging
+     $ pip install numpy Cython
      $ env CC=/path/to/mpicc pip install mpi4py
 
      # download PnetCDF-python source code
