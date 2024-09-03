@@ -62,7 +62,7 @@ class VariablesTestCase(unittest.TestCase):
             v[:,::-1,:] = data
         # each process post 10 requests to write a single element
         req_ids = []
-        index = (rank, rank, rank)
+        start = (rank, rank, rank)
         value = np.int32(rank * 10 + 1)
         # estimate the memory buffer size of all requests and attach buffer for buffered put requests
         buffsize = num_reqs * 4
@@ -72,7 +72,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write a single element
-            req_id = v.bput_var(value, index = index)
+            req_id = v.bput_var(value, start)
             # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
 
@@ -89,7 +89,7 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             # post the request to write a single element
-            v.bput_var(value, index = index)
+            v.bput_var(value, start)
 
         # all processes commit all pending requests to the file at once using wait_all (collective i/o)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)

@@ -70,12 +70,12 @@ class VariablesTestCase(unittest.TestCase):
         # each process post 10 requests to read a single element
         req_ids = []
         v_datas.clear()
-        index = (rank, rank, rank)
+        start = (rank, rank, rank)
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = (1,), dtype = v.datatype)
             # post the request to read one part of the variable
-            req_id = v.iget_var(buff, index = index)
+            req_id = v.iget_var(buff, start)
             # track the reqeust ID for each read reqeust
             req_ids.append(req_id)
             # store the reference of variable values
@@ -97,7 +97,7 @@ class VariablesTestCase(unittest.TestCase):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = (1,), dtype = v.datatype)
             # post the request to read a single element of values
-            v.iget_var(buff, index =  index)
+            v.iget_var(buff, start)
             # store the reference of variable values
             v_datas.append(buff)
 

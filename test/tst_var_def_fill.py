@@ -72,7 +72,7 @@ class VariablesTestCase(unittest.TestCase):
         # enter data mode and write partially values to variables
         f.enddef()
         for v in [v1,v2,v3,v4]:
-            v.put_var_all(np.float32(rank + 1), index = (rank, rank))
+            v.put_var_all(np.float32(rank + 1), (rank, rank))
         self.v1_nofill, self.v1_fillvalue = v1.inq_fill()
         self.v2_nofill, self.v2_fillvalue = v2.inq_fill()
         self.v3_nofill, self.v3_fillvalue = v3.inq_fill()
