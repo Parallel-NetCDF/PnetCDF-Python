@@ -74,7 +74,17 @@
   nonblocking version of the APIs. A nonblocking API means the call to the API
   will return as soon as the `put/get` request has been registered in the
   PnetCDF library. The commitment of the request may happen later, when a call
-  to `ncmpi_wait_all/ncmpi_wait` is made.
+  to `ncmpi_wait_all/ncmpi_wait` is made. The nonblocking APIs are listed below.
+  + Variable.iput_var() - posts a nonblocking request to write to a variable.
+  + Variable.iget_var() - posts a nonblocking request to from from a variable.
+  + Variable.bput_var() - posts a nonblocking, buffered request to write to a variable.
+  + Variable.iput_varn() - posts a nonblocking request to write multiple subarrays to a variable.
+  + Variable.iget_varn() - posts a nonblocking request to read multiple subarrays from a variable.
+  + Variable.bput_varn() - posts a nonblocking, buffered request to write multiple subarrays to a variable.
+  + File.wait_all() - waits for nonblocking requests to complete, using collective MPI-IO.
+  + File.wait() - waits for nonblocking requests to complete, using independent MPI-IO.
+  + File.attach_buff() - Let PnetCDF to allocate an internal buffer to cache bput write requests.
+  + File.detach_buff() - Free the attached buffer.
 * The advantage of using nonblocking APIs is when there are many small
   `put/get` requests and each of them has a small amount.  PnetCDF tries to
   aggregate and coalesce multiple registered nonblocking requests into a large
@@ -91,7 +101,7 @@
 | ... ||
 | # exit define mode and enter data mode<br>f.enddef() | ditto |
 | ...<br># Call blocking APIs to write 3 variables to the file | <br># Call nonblocking APIs to post 3 write requests |
-| psfc.put_var_al(psfc_buf, start, count)<br>prcp.put_var_al(prcp_buf, start, count)<br>snow.put_var_al(snow_buf, start, count)<br>| reqs = [0]*3<br>reqs[0] = psfc.iput_var(psfc_buf, start, count)<br>reqs[1] = prcp.iput_var(prcp_buf, start, count)<br>reqs[2] = snow.iput_var(snow_buf, start, count)|
+| psfc.put_var_all(psfc_buf, start, count)<br>prcp.put_var_all(prcp_buf, start, count)<br>snow.put_var_all(snow_buf, start, count)<br>| reqs = [0]*3<br>reqs[0] = psfc.iput_var(psfc_buf, start, count)<br>reqs[1] = prcp.iput_var(prcp_buf, start, count)<br>reqs[2] = snow.iput_var(snow_buf, start, count)|
 | | # Wait for nonblocking APIs to complete<br>errs = [0]*3<br>f.wait_all(3, reqs, errs)|
 
 
