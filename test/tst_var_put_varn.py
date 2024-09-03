@@ -4,20 +4,16 @@
 #
 
 import pnetcdf
-from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
-import tempfile, unittest, os, random, sys
+from numpy.testing import assert_array_equal
+import unittest, os, sys
 import numpy as np
 from mpi4py import MPI
 from utils import validate_nc_file
 import io
 import argparse
 
-
-
 file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_var_put_varn.nc"
-
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -43,7 +39,10 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+
+        f = pnetcdf.File(filename=self.file_path, mode = 'w',
+                         format=self._file_format, comm=comm, info=None)
+
         # define dimensions and variables
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
@@ -107,23 +106,28 @@ class VariablesTestCase(unittest.TestCase):
             #         -  -  -  -  -  -  -  3  3  3
         else:
             num_reqs = 0
+
         # allocate write buffer
         buf_len = 0
         for i in range(num_reqs):
             w_req_len = np.prod(counts[i,:])
             buf_len += w_req_len
+
         data = np.empty(buf_len, dtype=np.float32)
         data.fill(rank)
-        # collective put_var
-        var1.put_var_all(data, start = starts, count = counts, num = num_reqs)
 
-        # independent put_var
+        # test collective put_varn
+        var1.put_varn_all(data, num_reqs, starts, counts)
+
+        # test independent put_varn
         f.begin_indep()
-        var2.put_var(data, start = starts, count = counts, num = num_reqs)
-        f.close()
-        comm.Barrier()
-        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+        var2.put_varn(data, num_reqs, starts, counts)
 
+        f.close()
+
+        comm.Barrier()
+        if os.environ.get('PNETCDF_DIR') is not None:
+            assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0
 
     def tearDown(self):
         # Remove the temporary files
@@ -132,15 +136,17 @@ class VariablesTestCase(unittest.TestCase):
             os.remove(self.file_path)
 
     def runTest(self):
-        """testing variable put vara all"""
+        """testing API put_varn_all"""
 
         f = pnetcdf.File(self.file_path, 'r')
-        # test collective i/o put_var
+        # create a variable for testing collective i/o put_varn
         v1 = f.variables['var1']
         assert_array_equal(v1[:], dataref)
-        # test independent i/o put_var
+
+        # create a variable for testing independent i/o put_varn
         v2 = f.variables['var2']
         assert_array_equal(v2[:], dataref)
+
         f.close()
 
 if __name__ == '__main__':

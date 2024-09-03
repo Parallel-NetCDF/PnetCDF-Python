@@ -4,19 +4,16 @@
 #
 
 import pnetcdf
-from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
-import tempfile, unittest, os, random, sys
+from numpy.testing import assert_array_equal
+import unittest, os, sys
 import numpy as np
 from mpi4py import MPI
 from utils import validate_nc_file
 import io
 import argparse
 
-
 file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_var_get_varn.nc"
-
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -85,7 +82,8 @@ elif rank == 3:
     #         -  -  -  -  -  -  -  3  3  3
 else:
     num_reqs = 0
-#Obtain the size of returned array, needed for generating reference array
+
+# Obtain the size of returned array, needed for generating reference array
 buf_len = np.sum(np.prod(counts, axis=1))
 
 class VariablesTestCase(unittest.TestCase):
@@ -96,7 +94,9 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+        f = pnetcdf.File(filename=self.file_path, mode = 'w',
+                         format=self._file_format, comm=comm, info=None)
+
         # define dimensions and variables
         f.def_dim('x',xdim)
         f.def_dim('y',ydim)
@@ -107,8 +107,8 @@ class VariablesTestCase(unittest.TestCase):
         var1[:] = data
 
         comm.Barrier()
-        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
-
+        if os.environ.get('PNETCDF_DIR') is not None:
+            assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0
 
     def tearDown(self):
         # Remove the temporary files
@@ -120,16 +120,19 @@ class VariablesTestCase(unittest.TestCase):
         """testing variable get varn for CDF-5/CDF-2/CDF-1 file"""
         dataref = np.full((buf_len,), rank, np.float32)
         f = pnetcdf.File(self.file_path, 'r')
-        # test collective i/o get_var
+
+        # test collective i/o get_varn
         v1 = f.variables['var1']
         buff = np.empty((buf_len,), v1.dtype)
-        v1.get_var_all(buff, start = starts, count = counts, num = num_reqs)
+        v1.get_varn_all(buff, num_reqs, starts, counts)
         assert_array_equal(buff, dataref)
-        # test independent i/o get_var
+
+        # test independent i/o get_varn
         f.begin_indep()
         buff = np.empty((buf_len,), v1.dtype)
-        v1.get_var(buff, start = starts, count = counts, num = num_reqs)
+        v1.get_varn(buff, num_reqs, starts, counts)
         assert_array_equal(buff, dataref)
+
         f.close()
 
 if __name__ == '__main__':
@@ -143,3 +146,4 @@ if __name__ == '__main__':
     if not result.wasSuccessful():
         print(output.getvalue())
         sys.exit(1)
+

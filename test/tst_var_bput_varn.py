@@ -4,13 +4,14 @@
 #
 
 """
-This example program is intended to illustrate the use of the pnetCDF python
-API. The program runs in non-blocking mode and makes a request to write a list
-of subarray of values to a variable into a netCDF variable of an opened netCDF
-file using bput_var method of `Variable` class. This method is a buffered
-version of bput_var and requires the user to attach an internal buffer of size
-equal to the sum of all requests using attach_buff method of `File` class. The
-library will internally invoke ncmpi_bput_vara and ncmpi_attach_buffer in C.
+This program test ibput_varn() method of `Variable` class, a nonblocking,
+buffered API, by making multiple calls to it to write to different NetCDF
+variables of an opened netCDF file.  Each call also writes to multiple
+subarrays of the same variable. This method is a buffered version of
+iput_varn() and requires the user to first attach an internal buffer of size
+equal to the sum of all requests using attach_buff() method of `File` class.
+The library will internally invoke ncmpi_bput_varn() and ncmpi_attach_buffer()
+in C.
 """
 
 import numpy as np
@@ -165,8 +166,8 @@ def run_test(format):
     for i in range(num_reqs):
         v = f.variables[f'data{i}']
         assert(f.inq_buff_size() - f.inq_buff_usage() > 0)
-        # post the request to write an array of values
-        req_id = v.bput_var(data, start = starts, count = counts, num = num_subarrays)
+        # post the request to write multiple subarrays
+        req_id = v.bput_varn(data, num_subarrays, starts, counts)
         # track the request ID for each write request
         req_ids.append(req_id)
 
@@ -182,7 +183,7 @@ def run_test(format):
     # post requests to write the 2nd half of variables w/o tracking req ids
     for i in range(num_reqs):
         v = f.variables[f'data{num_reqs + i}']
-        v.bput_var(data, start = starts, count = counts, num = num_subarrays)
+        v.bput_varn(data, num_subarrays, starts, counts)
 
     # commit the posted requests all at once using wait_all (collective i/o)
     f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
@@ -218,3 +219,4 @@ if __name__ == '__main__':
         except BaseException as err:
             print("Error: type:", type(err), str(err))
             raise
+

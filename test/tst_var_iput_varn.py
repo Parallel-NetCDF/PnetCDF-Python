@@ -4,22 +4,19 @@
 #
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API. The program
-   runs in non-blocking mode and makes a request to write a list of subarray of values to a variable
-   into a netCDF variable of an opened netCDF file using iput_var method of `Variable` class. The
-   library will internally invoke ncmpi_iput_varn in C.
+This program tests nonblocking method, iput_varn() of `Variable` class, by
+making a write request consisting of multiple subarrays to a variable of an
+opened netCDF file.  The library will internally invoke ncmpi_iput_varn() in C.
 """
 import pnetcdf
-from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
-import tempfile, unittest, os, random, sys
+from numpy.testing import assert_array_equal
+import unittest, os, sys
 import numpy as np
 from mpi4py import MPI
 from pnetcdf import strerror, strerrno
 from utils import validate_nc_file
 import io
 
-seed(0)
 file_formats = ['NC_64BIT_DATA', 'NC_64BIT_OFFSET', None]
 file_name = "tst_var_iput_varn.nc"
 
@@ -115,7 +112,10 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+
+        f = pnetcdf.File(filename=self.file_path, mode = 'w',
+                         format=self._file_format, comm=comm, info=None)
+
         dx = f.def_dim('x',xdim)
         dy = f.def_dim('y',ydim)
 
@@ -136,11 +136,12 @@ class VariablesTestCase(unittest.TestCase):
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             # post the request to write an array of values
-            req_id = v.iput_var(data, start = starts, count = counts, num = num_subarrays)
+            req_id = v.iput_varn(data, num_subarrays, starts, counts)
             # track the reqeust ID for each write reqeust
             req_ids.append(req_id)
 
-        # all processes commit those 10 requests to the file at once using wait_all (collective i/o)
+        # all processes commit those 10 requests to the file at once using
+        # wait_all (collective i/o)
         req_errs = [None] * num_reqs
         f.wait_all(num_reqs, req_ids, req_errs)
 
@@ -149,13 +150,15 @@ class VariablesTestCase(unittest.TestCase):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
 
-        # post 10 requests to write an array of values for the last 10 variables w/o tracking req ids
+        # post 10 requests to write an array of values for the last 10
+        # variables w/o tracking req ids
         for i in range(num_reqs):
             v = f.variables[f'data{num_reqs + i}']
             # post the request to write an array of values
-            v.iput_var(data, start = starts, count = counts, num = num_subarrays)
+            v.iput_varn(data, num_subarrays, starts, counts)
 
-        # all processes commit all pending requests to the file at once using wait_all (collective i/o)
+        # all processes commit all pending requests to the file at once using
+        # wait_all (collective I/O)
         f.wait_all(num = pnetcdf.NC_PUT_REQ_ALL)
         f.close()
 
@@ -186,3 +189,4 @@ if __name__ == '__main__':
     if not result.wasSuccessful():
         print(output.getvalue())
         sys.exit(1)
+

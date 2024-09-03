@@ -4,8 +4,8 @@
 #
 
 """
-This example shows how to use a single call of `Variable` method `put_var()` to
-to write a sequence of requests with arbitrary array indices and lengths.
+This example shows how to use a single call of `Variable` method `put_varn()`
+to to write a sequence of requests with arbitrary array indices and lengths.
 
 To run:
   % mpiexec -n num_process python3 put_varn_int.py [test_file_name]
@@ -153,7 +153,7 @@ def pnetcdf_io(file_name, file_format):
     w_buf = np.full(w_len, rank, dtype=np.int32)
 
     # set the buffer pointers to different offsets to the I/O buffe
-    v.put_var_all(w_buf, start = starts, count = counts, num = num_reqs)
+    v.put_varn_all(w_buf, num = num_reqs, starts = starts, counts = counts)
 
     # close the file
     f.close()
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     filename = args.dir
 
     if verbose and rank == 0:
-        print("{}: example of writing multiple variables in a call".format(os.path.basename(__file__)))
+        print("{}: example of writing multiple subarrays of a variable in a call".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, file_format)
