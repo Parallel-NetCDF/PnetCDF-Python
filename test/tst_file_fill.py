@@ -56,8 +56,8 @@ class FileTestCase(unittest.TestCase):
         f.enddef()
         v1 = f.variables['data1']
         v2 = f.variables['data2']
-        v1.put_var_all(np.int32(rank), index = (rank, rank))
-        v2.put_var_all(np.int32(rank), index = (rank, rank))
+        v1.put_var_all(np.int32(rank), start = (rank, rank))
+        v2.put_var_all(np.int32(rank), start = (rank, rank))
         f.close()
         assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 

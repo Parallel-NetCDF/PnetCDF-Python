@@ -61,18 +61,18 @@ class VariablesTestCase(unittest.TestCase):
         v1 = f.variables['data1u']
         # test collective i/o put var1
          # equivalent code to the following using indexer syntax: value = v1[rank][rank][rank]
-        index = (rank, rank, rank)
+        start = (rank, rank, rank)
         f.begin_indep()
         # all processes read the designated cell of the variable using independent i/o
         buff = np.empty((), v1.dtype)
-        v1.get_var(buff, index = index)
+        v1.get_var(buff, start)
         # compare returned value against reference value
         assert_equal(buff, datarev[rank][rank][rank])
         # test independent i/o put var1
         f.end_indep()
         # all processes read the designated cell of the variable using collective i/o
         buff = np.empty((), v1.dtype)
-        v1.get_var_all(buff, index = index)
+        v1.get_var_all(buff, start)
         # compare returned value against reference value
         assert_equal(buff, datarev[rank][rank][rank])
         f.close()
