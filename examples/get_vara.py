@@ -101,12 +101,12 @@ def pnetcdf_io(filename, file_format):
     # set access pattern for reading subarray
     local_ny = global_ny
     local_nx = global_nx // nprocs
-    starts = [0,  local_nx * rank]
-    counts = [local_ny, local_nx]
+    start = [0,  local_nx * rank]
+    count = [local_ny, local_nx]
 
     # Read a subarray in collective mode
-    r_buf = np.empty(tuple(counts), v.dtype)
-    v.get_var_all(r_buf, start = starts, count = counts)
+    r_buf = np.empty(tuple(count), v.dtype)
+    v.get_var_all(r_buf, start = start, count = count)
 
     # close the file
     f.close()

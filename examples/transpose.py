@@ -50,43 +50,43 @@ def pnetcdf_io(filename, file_format, length):
     if verbose and rank == 0:
         print("Number of dimensions = ", NDIMS)
 
-    gsizes  = np.zeros(NDIMS, dtype=np.int64)
-    starts  = np.zeros(NDIMS, dtype=np.int64)
-    counts  = np.zeros(NDIMS, dtype=np.int64)
-    imap    = np.zeros(NDIMS, dtype=np.int64)
-    startsT = np.zeros(NDIMS, dtype=np.int64)
-    countsT = np.zeros(NDIMS, dtype=np.int64)
+    gsizes = np.zeros(NDIMS, dtype=np.int64)
+    start  = np.zeros(NDIMS, dtype=np.int64)
+    count  = np.zeros(NDIMS, dtype=np.int64)
+    imap   = np.zeros(NDIMS, dtype=np.int64)
+    startT = np.zeros(NDIMS, dtype=np.int64)
+    countT = np.zeros(NDIMS, dtype=np.int64)
 
     # calculate number of processes along each dimension
     psizes = MPI.Compute_dims(nprocs, NDIMS)
     if rank == 0 and verbose:
         print("psizes =", psizes)
 
-    # for each MPI rank, find its local rank IDs along each dimension in starts[]
+    # for each MPI rank, find its local rank IDs along each dimension in start[]
     lower_dims = 1
     for i in range(NDIMS-1, -1, -1):
-        starts[i] = rank // lower_dims % psizes[i]
+        start[i] = rank // lower_dims % psizes[i]
         lower_dims *= psizes[i]
     if verbose:
-        print("proc {}: dim rank = {}".format(rank, starts))
+        print("proc {}: dim rank = {}".format(rank, start))
 
     # set up subarray access pattern
     bufsize = 1
     for i in range(NDIMS):
         gsizes[i]  = (length + i) * psizes[i]  # global array size
-        starts[i] *= (length + i)  # start indices
-        counts[i]  = (length + i)  # array elements
+        start[i]  *= (length + i)  # start indices
+        count[i]   = (length + i)  # array elements
         bufsize   *= (length + i)
 
     # allocate buffer and initialize with contiguous numbers
     buf = np.empty(bufsize, dtype=int)
     index = 0
-    for k in range(counts[0]):
-        for j in range(counts[1]):
-            for i in range(counts[2]):
-                buf[index] = (starts[0]+k)*gsizes[1]*gsizes[2] + \
-                             (starts[1]+j)*gsizes[2] + \
-                             (starts[2]+i)
+    for k in range(count[0]):
+        for j in range(count[1]):
+            for i in range(count[2]):
+                buf[index] = (start[0]+k)*gsizes[1]*gsizes[2] + \
+                             (start[1]+j)*gsizes[2] + \
+                             (start[2]+i)
                 index += 1
 
     # Create the file
@@ -122,43 +122,43 @@ def pnetcdf_io(filename, file_format, length):
      # Exit the define mode
     f.enddef()
     # Write the whole variable in file: ZYX
-    var_zyx.put_var_all(buf, start=starts, count=counts)
+    var_zyx.put_var_all(buf, start=start, count=count)
 
     # ZYX -> ZXY:
-    imap[1] = 1;  imap[2] = counts[2]; imap[0] = counts[1]*counts[2]
-    startsT[0] = starts[0]; startsT[1] = starts[2]; startsT[2] = starts[1]
-    countsT[0] = counts[0]; countsT[1] = counts[2]; countsT[2] = counts[1]
-    var_zxy.put_var_all(buf, start = startsT, count = countsT, imap = imap)
+    imap[1] = 1;  imap[2] = count[2]; imap[0] = count[1]*count[2]
+    startT[0] = start[0]; startT[1] = start[2]; startT[2] = start[1]
+    countT[0] = count[0]; countT[1] = count[2]; countT[2] = count[1]
+    var_zxy.put_var_all(buf, start = startT, count = countT, imap = imap)
 
     # ZYX -> ZXY:
-    imap[1] = 1; imap[2] = counts[2]; imap[0] = counts[1]*counts[2]
-    startsT[0] = starts[0]; startsT[1] = starts[2]; startsT[2] = starts[1]
-    countsT[0] = counts[0]; countsT[1] = counts[2]; countsT[2] = counts[1]
-    var_zxy.put_var_all(buf, start=startsT, count=countsT, imap=imap)
+    imap[1] = 1; imap[2] = count[2]; imap[0] = count[1]*count[2]
+    startT[0] = start[0]; startT[1] = start[2]; startT[2] = start[1]
+    countT[0] = count[0]; countT[1] = count[2]; countT[2] = count[1]
+    var_zxy.put_var_all(buf, start=startT, count=countT, imap=imap)
 
     # ZYX -> YZX:
-    imap[2] = 1; imap[0] = counts[2]; imap[1] = counts[1]*counts[2]
-    startsT[0] = starts[1]; startsT[1] = starts[0]; startsT[2] = starts[2]
-    countsT[0] = counts[1]; countsT[1] = counts[0]; countsT[2] = counts[2]
-    var_yzx.put_var_all(buf, start=startsT, count=countsT, imap=imap)
+    imap[2] = 1; imap[0] = count[2]; imap[1] = count[1]*count[2]
+    startT[0] = start[1]; startT[1] = start[0]; startT[2] = start[2]
+    countT[0] = count[1]; countT[1] = count[0]; countT[2] = count[2]
+    var_yzx.put_var_all(buf, start=startT, count=countT, imap=imap)
 
     # ZYX -> YXZ:
-    imap[1] = 1; imap[0] = counts[2]; imap[2] = counts[1]*counts[2]
-    startsT[0] = starts[1]; startsT[1] = starts[2]; startsT[2] = starts[0]
-    countsT[0] = counts[1]; countsT[1] = counts[2]; countsT[2] = counts[0]
-    var_yxz.put_var_all(buf, start=startsT, count=countsT, imap=imap)
+    imap[1] = 1; imap[0] = count[2]; imap[2] = count[1]*count[2]
+    startT[0] = start[1]; startT[1] = start[2]; startT[2] = start[0]
+    countT[0] = count[1]; countT[1] = count[2]; countT[2] = count[0]
+    var_yxz.put_var_all(buf, start=startT, count=countT, imap=imap)
 
     # ZYX -> XZY:
-    imap[0] = 1; imap[2] = counts[2]; imap[1] = counts[1]*counts[2]
-    startsT[0] = starts[2]; startsT[1] = starts[0]; startsT[2] = starts[1]
-    countsT[0] = counts[2]; countsT[1] = counts[0]; countsT[2] = counts[1]
-    var_xzy.put_var_all(buf, start=startsT, count=countsT, imap=imap)
+    imap[0] = 1; imap[2] = count[2]; imap[1] = count[1]*count[2]
+    startT[0] = start[2]; startT[1] = start[0]; startT[2] = start[1]
+    countT[0] = count[2]; countT[1] = count[0]; countT[2] = count[1]
+    var_xzy.put_var_all(buf, start=startT, count=countT, imap=imap)
 
     # ZYX -> XYZ:
-    imap[0] = 1; imap[1] = counts[2]; imap[2] = counts[1]*counts[2]
-    startsT[0] = starts[2]; startsT[1] = starts[1]; startsT[2] = starts[0]
-    countsT[0] = counts[2]; countsT[1] = counts[1]; countsT[2] = counts[0]
-    var_xyz.put_var_all(buf, start=startsT, count=countsT, imap=imap)
+    imap[0] = 1; imap[1] = count[2]; imap[2] = count[1]*count[2]
+    startT[0] = start[2]; startT[1] = start[1]; startT[2] = start[0]
+    countT[0] = count[2]; countT[1] = count[1]; countT[2] = count[0]
+    var_xyz.put_var_all(buf, start=startT, count=countT, imap=imap)
 
     # Close the file
     f.close()

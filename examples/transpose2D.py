@@ -72,11 +72,11 @@ def pnetcdf_io(filename, file_format, length):
         print("Number of dimensions = ", NDIMS)
 
     gsizes = np.zeros(NDIMS, dtype=np.int64)
-    starts = np.zeros(NDIMS, dtype=np.int64)
-    counts = np.zeros(NDIMS, dtype=np.int64)
+    start = np.zeros(NDIMS, dtype=np.int64)
+    count = np.zeros(NDIMS, dtype=np.int64)
     imap = np.zeros(NDIMS, dtype=np.int64)
-    startsT = np.zeros(NDIMS, dtype=np.int64)
-    countsT = np.zeros(NDIMS, dtype=np.int64)
+    startT = np.zeros(NDIMS, dtype=np.int64)
+    countT = np.zeros(NDIMS, dtype=np.int64)
 
     psizes = MPI.Compute_dims(nprocs, NDIMS)
 
@@ -89,28 +89,28 @@ def pnetcdf_io(filename, file_format, length):
     # set subarray access pattern
     lower_dims = 1
     for i in range(NDIMS - 1, -1, -1):
-        starts[i] = rank // lower_dims % psizes[i]
+        start[i] = rank // lower_dims % psizes[i]
         lower_dims *= psizes[i]
 
     if verbose:
         str = "proc %d: dim rank= " % rank
         for i in range(NDIMS):
-            str += "%d " % starts[i]
+            str += "%d " % start[i]
         print(str)
 
     bufsize = 1
     gsizes = np.zeros(NDIMS, dtype=np.int64)
     for i in range(NDIMS):
         gsizes[i] = (length + i) * psizes[i]
-        starts[i] *= (length + i)
-        counts[i] = (length + i)
+        start[i] *= (length + i)
+        count[i] = (length + i)
         bufsize *= (length + i)
 
     # initialize write buffer
     buf = np.zeros(bufsize, dtype=np.int32)
-    for i in range(counts[0]):
-        for j in range(counts[1]):
-            buf[i * counts[1] + j] = (starts[0] + i) * gsizes[1] + (starts[1] + j)
+    for i in range(count[0]):
+        for j in range(count[1]):
+            buf[i * count[1] + j] = (start[0] + i) * gsizes[1] + (start[1] + j)
 
 
     # Create the file
@@ -132,16 +132,16 @@ def pnetcdf_io(filename, file_format, length):
     f.enddef()
 
     # Write the whole variable in file: ZYX
-    var_yx.put_var_all(buf, start=starts, count=counts)
+    var_yx.put_var_all(buf, start=start, count=count)
 
     # Transpose YX -> XY */
     imap[0] = 1
-    imap[1] = counts[1]
-    startsT[0] = starts[1]
-    startsT[1] = starts[0]
-    countsT[0] = counts[1]
-    countsT[1] = counts[0]
-    var_xy.put_var_all(buf, start = startsT, count = countsT, imap = imap)
+    imap[1] = count[1]
+    startT[0] = start[1]
+    startT[1] = start[0]
+    countT[0] = count[1]
+    countT[1] = count[0]
+    var_xy.put_var_all(buf, start = startT, count = countT, imap = imap)
 
     # Close the file
     f.close()

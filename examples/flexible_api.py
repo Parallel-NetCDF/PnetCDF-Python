@@ -122,11 +122,11 @@ def pnetcdf_io(filename, file_format):
     # create an MPI derived datatype to exclude ghost cells
     array_of_sizes = np.array([NZ + 2 * ghost_len, NY + 2 * ghost_len])
     array_of_subsizes = np.array([NZ, NY])
-    array_of_starts = np.array([ghost_len, ghost_len])
+    array_of_start = np.array([ghost_len, ghost_len])
 
     subarray = MPI.INT.Create_subarray(array_of_sizes, \
                                        array_of_subsizes, \
-                                       array_of_starts, \
+                                       array_of_start, \
                                        order=MPI.ORDER_C)
     subarray.Commit()
 
@@ -135,12 +135,12 @@ def pnetcdf_io(filename, file_format):
     buf_zy = np.full(buffer_len, rank, dtype=np.int32)
 
     # set the subarray access pattern
-    starts = np.array([NZ * rank, 0])
-    counts = np.array([NZ, NY])
+    start = np.array([NZ * rank, 0])
+    count = np.array([NZ, NY])
 
     # calling a blocking flexible API using put_var_all()
-    var_zy.put_var_all(buf_zy, start = starts, \
-                               count = counts, \
+    var_zy.put_var_all(buf_zy, start = start, \
+                               count = count, \
                                bufcount = 1, \
                                buftype = subarray)
 
@@ -153,8 +153,8 @@ def pnetcdf_io(filename, file_format):
     buf_zy.fill(-1)
 
     # read using flexible API
-    var_zy.get_var_all(buf_zy, start = starts,
-                               count = counts,
+    var_zy.get_var_all(buf_zy, start = start,
+                               count = count,
                                bufcount = 1,
                                buftype = subarray)
 
@@ -177,22 +177,22 @@ def pnetcdf_io(filename, file_format):
     # var_yx is partitioned along X dimension
     array_of_sizes = np.array([NY + 2 * ghost_len, NX + 2 * ghost_len])
     array_of_subsizes = np.array([NY, NX])
-    array_of_starts = np.array([ghost_len, ghost_len])
+    array_of_start = np.array([ghost_len, ghost_len])
     subarray = MPI.DOUBLE.Create_subarray(array_of_sizes,
                                           array_of_subsizes,
-                                          array_of_starts,
+                                          array_of_start,
                                           order=MPI.ORDER_C)
     subarray.Commit()
 
     # initialize write user buffer
     buffer_len = (NY + 2 * ghost_len) * (NX + 2 * ghost_len)
     buf_yx = np.full(buffer_len, rank, dtype=np.float64)
-    starts = np.array([0, NX * rank])
-    counts = np.array([NY, NX])
+    start = np.array([0, NX * rank])
+    count = np.array([NY, NX])
 
     # calling a blocking flexible write API
-    req_id = var_yx.iput_var(buf_yx, start = starts,
-                                     count = counts,
+    req_id = var_yx.iput_var(buf_yx, start = start,
+                                     count = count,
                                      bufcount = 1,
                                      buftype = subarray)
 
@@ -208,8 +208,8 @@ def pnetcdf_io(filename, file_format):
     buf_yx.fill(-1)
 
     # calling a blocking flexible read API
-    req_id = var_yx.iget_var(buf_yx, start = starts,
-                                     count = counts,
+    req_id = var_yx.iget_var(buf_yx, start = start,
+                                     count = count,
                                      bufcount = 1,
                                      buftype=subarray)
 

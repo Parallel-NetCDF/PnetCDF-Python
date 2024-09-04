@@ -107,15 +107,15 @@ def pnetcdf_io(filename):
     f.enddef()
 
     # set subarray access pattern
-    starts = np.array([0, NX * rank])
-    counts = np.array([NY, NX])
+    start = np.array([0, NX * rank])
+    count = np.array([NY, NX])
 
     # allocate user buffer
     buf = np.array([[rank] * NX] * NY).astype('i4')
 
     # do not write the variable in full
-    counts[1] -= 1
-    fix_var.put_var_all(buf, start = starts, count = counts)
+    count[1] -= 1
+    fix_var.put_var_all(buf, start = start, count = count)
 
     # check fill value
     no_fill, fill_value = fix_var.inq_fill()
@@ -123,18 +123,18 @@ def pnetcdf_io(filename):
     assert(fill_value == pnetcdf.NC_FILL_INT)
 
     # fill the 1st record of the record variable
-    counts[0] = 1
-    rec_var.fill_rec(starts[0])
+    count[0] = 1
+    rec_var.fill_rec(start[0])
 
     # write to the 1st record
-    rec_var.put_var_all(buf, start = starts, count = counts)
+    rec_var.put_var_all(buf, start = start, count = count)
 
     # fill the 2nd record of the record variable
-    starts[0] = 1
-    rec_var.fill_rec(starts[0])
+    start[0] = 1
+    rec_var.fill_rec(start[0])
 
     # write to the 2nd record
-    rec_var.put_var_all(buf, start = starts, count = counts)
+    rec_var.put_var_all(buf, start = start, count = count)
 
     # close file
     f.close()

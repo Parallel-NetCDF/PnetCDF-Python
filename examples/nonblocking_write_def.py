@@ -60,21 +60,21 @@ def pnetcdf_io(file_name, length):
         print("Number of dimensions = ", NDIMS)
 
     # set subarray access pattern
-    starts = np.zeros(NDIMS, dtype=np.int32)
-    counts = np.zeros(NDIMS, dtype=np.int32)
+    start = np.zeros(NDIMS, dtype=np.int32)
+    count = np.zeros(NDIMS, dtype=np.int32)
     gsizes = np.zeros(NDIMS, dtype=np.int32)
     buf = []
 
     psizes = MPI.Compute_dims(nprocs, NDIMS)
-    starts[0] = rank % psizes[0]
-    starts[1] = (rank // psizes[1]) % psizes[1]
-    starts[2] = (rank // (psizes[0] * psizes[1])) % psizes[2]
+    start[0] = rank % psizes[0]
+    start[1] = (rank // psizes[1]) % psizes[1]
+    start[2] = (rank // (psizes[0] * psizes[1])) % psizes[2]
 
     bufsize = 1
     for i in range(NDIMS):
         gsizes[i] = length * psizes[i]
-        starts[i] *= length
-        counts[i] = length
+        start[i] *= length
+        count[i] = length
         bufsize *= length
 
     # Allocate buffer and initialize with non-zero numbers
@@ -104,7 +104,7 @@ def pnetcdf_io(file_name, length):
 
     # Write one variable at a time
     for i in range(NUM_VARS):
-        vars[i].iput_var(buf[i], start = starts, count = counts)
+        vars[i].iput_var(buf[i], start = start, count = count)
 
     # exit define mode and enter data mode
     f.enddef()
@@ -120,7 +120,7 @@ def pnetcdf_io(file_name, length):
     # call bput for writing to one variable at a time
     reqs = []
     for i in range(NUM_VARS):
-        req_id = vars[i].bput_var(buf[i], start = starts, count = counts)
+        req_id = vars[i].bput_var(buf[i], start = start, count = count)
         reqs.append(req_id)
         # can safely change contents or free up the buf[i] here
 
