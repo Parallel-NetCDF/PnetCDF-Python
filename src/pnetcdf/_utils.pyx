@@ -296,7 +296,7 @@ cdef _get_att(file, int varid, name, encoding='utf-8'):
 
 
 cdef _get_att_names(int file_id, int varid):
-    # Private function to get all the attribute names in a group
+    # Private function to get all the attribute names of a variable
     cdef int ierr, numatts, n
     cdef char namstring[NC_MAX_NAME+1]
     if varid == NC_GLOBAL:

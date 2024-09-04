@@ -93,8 +93,8 @@ be found at the beginning of each file.
 
 * [put_varn_int.py](./put_varn_int.py)
   + This example shows how to use a single call of `Variable` method
-    `put_var()` to to write a sequence of requests with arbitrary array indices
-    and lengths.
+    `put_varn()` to write a sequence of subarray requests to a variable with
+    arbitrary array indices and lengths.
 
 * [transpose.py](./transpose.py)
   + This example shows how to use `Variable` method `put_var()` to write six 3D

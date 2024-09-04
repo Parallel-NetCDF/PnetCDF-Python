@@ -4,15 +4,15 @@
 #
 
 """
-   This example program is intended to illustrate the use of the pnetCDF python API.
-   The program runs in non-blocking mode and makes a request to read a list of subarray of
-   a netCDF variable of an opened netCDF file using iget_var method of `Variable` class. The
-   library will internally invoke ncmpi_iget_varn in C.
+This program tests iget_varn() method of `Variable` class, by making a
+nonblocking request to read a list of subarrays of a netCDF variable of an
+opened netCDF file.  The library will internally invoke ncmpi_iget_varn() in C.
 """
+
 import pnetcdf
-from numpy.random import seed, randint
-from numpy.testing import assert_array_equal, assert_equal, assert_array_almost_equal
-import tempfile, unittest, os, random, sys
+from numpy.random import seed
+from numpy.testing import assert_array_equal
+import unittest, os, random, sys
 import numpy as np
 from mpi4py import MPI
 from pnetcdf import strerror, strerrno
@@ -90,14 +90,16 @@ elif rank == 3:
     #         -  -  -  -  -  -  -  3  3  3
 else:
     num_subarray_reqs = 0
+
 # obtain the buffer size of returned array
 buf_len = 0
 for i in range(num_subarray_reqs):
     w_req_len = np.prod(counts[i,:])
     buf_len += w_req_len
+
 # generate reference array for comparing at the testing phase
 dataref = np.full((buf_len,), rank, np.float32)
-# total number of iget_var requests for this test program
+# total number of subarray requests for this test program
 num_reqs = 10
 # initialize a list to store references of variable values
 v_datas = []
@@ -110,58 +112,71 @@ class VariablesTestCase(unittest.TestCase):
         else:
             self.file_path = file_name
         self._file_format = file_formats.pop(0)
-        f = pnetcdf.File(filename=self.file_path, mode = 'w', format=self._file_format, comm=comm, info=None)
+
+        f = pnetcdf.File(filename=self.file_path, mode = 'w',
+                         format=self._file_format, comm=comm, info=None)
+
         dx = f.def_dim('x',xdim)
         dy = f.def_dim('y',ydim)
 
         # define 20 netCDF variables
         for i in range(num_reqs * 2):
             v = f.def_var(f'data{i}', pnetcdf.NC_FLOAT, (dx, dy))
-        # initialize variable values
+
         f.enddef()
+
+        # initialize and write variable values
         for i in range(num_reqs * 2):
             v = f.variables[f'data{i}']
             v[:] = data
-        f.close()
-        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
 
+        f.close()
+        if os.environ.get('PNETCDF_DIR') is not None:
+            assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0
 
 
         f = pnetcdf.File(self.file_path, 'r')
+
         # each process post 10 requests to read a list of subarrays from the variable
         req_ids = []
         v_datas.clear()
+
         for i in range(num_reqs):
             v = f.variables[f'data{i}']
             buff = np.empty(shape = buf_len, dtype = v.datatype)
             # post the request to read multiple slices (subarrays) of the variable
-            req_id = v.iget_var(buff, start = starts, count = counts, num = num_subarray_reqs)
+            req_id = v.iget_varn(buff, num_subarray_reqs, starts, counts)
             # track the reqeust ID for each read reqeust
             req_ids.append(req_id)
             # store the reference of variable values
             v_datas.append(buff)
-        f.end_indep()
+
         # commit those 10 requests to the file at once using wait_all (collective i/o)
         req_errs = [None] * num_reqs
         f.wait_all(num_reqs, req_ids, req_errs)
+
         # check request error msg for each unsuccessful requests
         for i in range(num_reqs):
             if strerrno(req_errs[i]) != "NC_NOERR":
                 print(f"Error on request {i}:",  strerror(req_errs[i]))
 
-         # post 10 requests to read an array of values for the last 10 variables w/o tracking req ids
+        # post 10 requests to read an array of values for the last 10
+        # variables w/o tracking req ids
         for i in range(num_reqs, num_reqs * 2):
             v = f.variables[f'data{i}']
             buff = np.empty(buf_len, dtype = v.datatype)
             # post the request to read a list of subarrays from the variable
-            v.iget_var(buff, start = starts, count = counts, num = num_subarray_reqs)
+            v.iget_varn(buff, num_subarray_reqs, starts, counts)
             # store the reference of variable values
             v_datas.append(buff)
 
-        # commit all pending get requests to the file at once using wait_all (collective i/o)
+        # commit all pending get requests to the file at once using wait_all
+        # (collective i/o)
         req_errs = f.wait_all(num = pnetcdf.NC_GET_REQ_ALL)
+
         f.close()
-        assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0 if os.environ.get('PNETCDF_DIR') is not None else True
+        if os.environ.get('PNETCDF_DIR') is not None:
+            assert validate_nc_file(os.environ.get('PNETCDF_DIR'), self.file_path) == 0
 
 
     def tearDown(self):
@@ -188,3 +203,4 @@ if __name__ == '__main__':
     if not result.wasSuccessful():
         print(output.getvalue())
         sys.exit(1)
+
