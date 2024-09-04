@@ -60,22 +60,22 @@ def pnetcdf_io(filename, file_format, length):
         print("Number of variables = ", NUM_VARS)
         print("Number of dimensions = ", NDIMS)
 
-    starts = np.zeros(NDIMS, dtype=np.int32)
-    counts = np.zeros(NDIMS, dtype=np.int32)
+    start = np.zeros(NDIMS, dtype=np.int32)
+    count = np.zeros(NDIMS, dtype=np.int32)
     gsizes = np.zeros(NDIMS, dtype=np.int32)
     buf = []
 
     # calculate local subarray access pattern
     psizes = MPI.Compute_dims(nprocs, NDIMS)
-    starts[0] = rank % psizes[0]
-    starts[1] = (rank // psizes[1]) % psizes[1]
-    starts[2] = (rank // (psizes[0] * psizes[1])) % psizes[2]
+    start[0] = rank % psizes[0]
+    start[1] = (rank // psizes[1]) % psizes[1]
+    start[2] = (rank // (psizes[0] * psizes[1])) % psizes[2]
 
     bufsize = 1
     for i in range(NDIMS):
         gsizes[i] = length * psizes[i]
-        starts[i] *= length
-        counts[i] = length
+        start[i] *= length
+        count[i] = length
         bufsize *= length
 
     # Allocate buffer and initialize with non-zero numbers
@@ -111,7 +111,7 @@ def pnetcdf_io(filename, file_format, length):
 
     # Collectively write one variable at a time
     for i in range(NUM_VARS):
-        vars[i].put_var_all(buf[i], start = starts, count = counts)
+        vars[i].put_var_all(buf[i], start = start, count = count)
 
     # Close the file
     f.close()

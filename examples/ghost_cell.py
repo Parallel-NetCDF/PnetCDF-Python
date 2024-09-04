@@ -83,7 +83,7 @@ def parse_help():
 
 def pnetcdf_io(filename, file_format, length):
 
-    counts = [length, length + 1]
+    count = [length, length + 1]
     psizes = MPI.Compute_dims(nprocs, 2)
 
     if verbose and rank == 0:
@@ -104,24 +104,24 @@ def pnetcdf_io(filename, file_format, length):
         print("rank {}: dim rank= {} {}".format(rank, local_rank[0], local_rank[1]))
 
     # set subarray access pattern
-    counts = np.array([length, length + 1], dtype=np.int64)
-    starts = np.array([local_rank[0] * counts[0], local_rank[1] * counts[1]],
+    count = np.array([length, length + 1], dtype=np.int64)
+    start = np.array([local_rank[0] * count[0], local_rank[1] * count[1]],
                       dtype=np.int64)
     if verbose:
-        print("starts= {} {} counts= {} {}".format(starts[0], starts[1], counts[0], counts[1]))
+        print("start= {} {} count= {} {}".format(start[0], start[1], count[0], count[1]))
 
    # allocate and initialize buffer with ghost cells on both ends of each dim
     nghosts = 2
-    bufsize = (counts[0] + 2 * nghosts) * (counts[1] + 2 * nghosts)
+    bufsize = (count[0] + 2 * nghosts) * (count[1] + 2 * nghosts)
     buf = np.empty(bufsize, dtype=np.int32)
-    for i in range(counts[0] + 2 * nghosts):
-        for j in range(counts[1] + 2 * nghosts):
-            if nghosts <= i < counts[0] + nghosts and \
-               nghosts <= j < counts[1] + nghosts:
-                buf[i * (counts[1] + 2 * nghosts) + j] = rank
+    for i in range(count[0] + 2 * nghosts):
+        for j in range(count[1] + 2 * nghosts):
+            if nghosts <= i < count[0] + nghosts and \
+               nghosts <= j < count[1] + nghosts:
+                buf[i * (count[1] + 2 * nghosts) + j] = rank
             else:
                 # set values of all ghost cells to -8
-                buf[i * (counts[1] + 2 * nghosts) + j] = -8
+                buf[i * (count[1] + 2 * nghosts) + j] = -8
 
     # Create the file
     f = pnetcdf.File(filename = filename,
@@ -143,11 +143,11 @@ def pnetcdf_io(filename, file_format, length):
     # set imap pattern for local buffer
     imap = np.zeros(2, dtype=np.int64)
     imap[1] = 1
-    imap[0] = counts[1] + 2 * nghosts
-    buf_ptr = buf[nghosts * (counts[1] + 2 * nghosts + 1):]
+    imap[0] = count[1] + 2 * nghosts
+    buf_ptr = buf[nghosts * (count[1] + 2 * nghosts + 1):]
 
     # Write data to the variable
-    var.put_var_all(buf_ptr, start = starts, count = counts, imap = imap)
+    var.put_var_all(buf_ptr, start = start, count = count, imap = imap)
 
     # Close the file
     f.close()

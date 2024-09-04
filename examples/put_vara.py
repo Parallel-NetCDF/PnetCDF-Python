@@ -75,8 +75,8 @@ def pnetcdf_io(filename, file_format):
     NX = 4
     global_ny = NY
     global_nx = NX * nprocs
-    starts = [0, NX * rank]
-    counts = [NY, NX]
+    start = [0, NX * rank]
+    count = [NY, NX]
 
     if verbose and rank == 0:
         print("Y dimension size = ", NY)
@@ -125,7 +125,8 @@ def pnetcdf_io(filename, file_format):
     buf = np.zeros(shape = (NY, NX), dtype = "i4") + rank
 
     # Write data to the variable
-    var.put_var_all(buf, start = starts, count = counts)
+    # var.put_var_all(buf, start = starts, count = counts)
+    var[0:NY, NX*rank:NX*rank+NX] = buf
 
     # Close the file
     f.close()
