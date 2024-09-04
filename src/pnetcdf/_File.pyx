@@ -499,11 +499,10 @@ cdef class File:
 
         Operational mode: This method must be called while the file is in define mode.
         """
-
-
         cdef nc_type xtype
         xtype=-99
         _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
+
 
     def get_att(self,name,encoding='utf-8'):
         """
@@ -519,13 +518,13 @@ cdef class File:
         :param name: Name of the attribute.
         :type name: str
 
-        :rtype: str
+        :rtype: str or numpy.ndarray
 
-        Operational mode: This method must be called while the file is in define mode.
+        Operational mode: This method can be called while the file is in either
+            define or data mode (collective or independent).
         """
-
-
         return _get_att(self, NC_GLOBAL, name, encoding=encoding)
+
 
     def __delattr__(self,name):
         # if it's a netCDF attribute, remove it

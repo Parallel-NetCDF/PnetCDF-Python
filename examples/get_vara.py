@@ -95,8 +95,8 @@ def pnetcdf_io(filename, file_format):
     if rank == 0 and verbose:
         print("variable attribute \"str_att_name\" of type text =", str_att)
 
-    # Get the length of the variable's attribute named "float_att_name"
-    float_att =  v.get_att("float_att_name")
+    # Get the variable's attribute named "float_att_name"
+    float_att = v.get_att("float_att_name")
 
     # set access pattern for reading subarray
     local_ny = global_ny
