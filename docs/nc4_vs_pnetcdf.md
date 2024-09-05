@@ -89,8 +89,8 @@
   `put/get` requests and each of them has a small amount.  PnetCDF tries to
   aggregate and coalesce multiple registered nonblocking requests into a large
   one, because I/O usually performs better when the request amounts are large
-  and contiguous. [nonblocking_write.py](../examples/nonblocking_write.py) is
-  an example that makes use of nonblocking APIs.
+  and contiguous. See an example program in
+  [nonblocking_write.py](../examples/nonblocking/nonblocking_write.py).
 * Table below shows the difference in python programming between using blocking
   and nonblocking APIs.
 
