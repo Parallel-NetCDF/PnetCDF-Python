@@ -36,6 +36,10 @@ instructions can be found at the beginning of each file.
       instead. It creates a netcdf file in CDF-5 format and writes a number of
       3D integer non-record variables.
 
+    * [nonblocking_read.py](./nonblocking/nonblocking_read.py]) --
+      A counterpart of `nonblocking_write.py` but does reads. It reads the
+      output file generated from `nonblocking_write.py`.
+
     * [nonblocking_write_def.py](./nonblocking/nonblocking_write_def.py]) --
       This example is the same as `nonblocking_write.py` expect all nonblocking
       write requests (calls to `iput` and `bput`) are posted in define mode. It

@@ -41,15 +41,14 @@ applications that require parallel access to netCDF files.
       files created by the programs The default is the current folder.
 
 ### Additional Resources
-* [PnetCDF-python User Guide](https://pnetcdf-python.readthedocs.io/en/latest/)
-* [Data objects in PnetCDF python programming](docs/pnetcdf_objects.md)
-* [Comparison between NetCDF4-python and PnetCDF-python](docs/nc4_vs_pnetcdf.md)
-* This project is under active development. The current status of API
-  implementation can be found in [dev_status.md](docs/dev_status.md).
-* [PnetCDF](https://parallel-netcdf.github.io/)
+* PnetCDF-python [User Guide](https://pnetcdf-python.readthedocs.io/en/latest/)
+* [Data objects](docs/pnetcdf_objects.md) in PnetCDF python programming
+* [Comparison](docs/nc4_vs_pnetcdf.md) of NetCDF4-python and PnetCDF-python
+* [PnetCDF project home page](https://parallel-netcdf.github.io/)
+* [PnetCDF repository of C/Fortran library](https://parallel-netcdf.github.io/)
 
 ### Acknowledgements
 Ongoing development and maintenance of PnetCDF-python is supported by the U.S.
 Department of Energy's Office of Science, Scientific Discovery through Advanced
-Computing (SciDAC) program, OASIS Institute.
+Computing (SciDAC) program, RAPIDS/OASIS Institute.
 
