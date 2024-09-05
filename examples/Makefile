@@ -11,8 +11,6 @@ check_PROGRAMS = collective_write.py \
                  ghost_cell.py \
                  global_attribute.py \
                  hints.py \
-                 nonblocking_write_def.py \
-                 nonblocking_write.py \
                  put_varn_int.py \
                  transpose2D.py \
                  transpose.py \
@@ -28,10 +26,12 @@ OUTPUT_DIR = _tmp_output
 all:
 
 check: ptest4
+	cd nonblocking && make check
 	cd Pytorch_DDP && make check
 	cd MNIST && make check
 
 ptests: ptest3 ptest4 ptest8
+	cd nonblocking && make ptests
 	cd Pytorch_DDP && make ptests
 	cd MNIST && make ptests
 
@@ -61,6 +61,7 @@ ptest8:
 
 clean:
 	rm -rf ${OUTPUT_DIR}
+	cd nonblocking && make clean
 	cd Pytorch_DDP && make clean
 	cd MNIST && make clean
 
