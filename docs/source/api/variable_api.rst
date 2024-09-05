@@ -13,9 +13,8 @@ function-call style methods or indexer-style (numpy-like) syntax.
 
 .. autoclass:: pnetcdf::Variable
    :members: ncattrs, put_att, get_att, del_att, rename_att, get_dims, def_fill,
-    inq_fill, fill_rec, set_auto_chartostring, set_auto_scale, set_auto_mask, 
-    set_auto_maskandscale, put_var, put_var_all, get_var, get_var_all, iput_var, bput_var
-    iget_var, inq_offset
+    inq_fill, fill_rec, set_auto_chartostring, put_var, put_var_all, get_var,
+    get_var_all, iput_var, bput_var iget_var, inq_offset
    :exclude-members: name, shape, size
 
 
@@ -31,7 +30,7 @@ Variable Attributes
  .. attribute:: dtype
 
 
-   Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object 
+   Return the mapped numpy data type of the variable netCDF datatype. A numpy dtype object
    describing the variable's data type.
    **Type:** ``numpy.dtype``
 
@@ -44,7 +43,7 @@ Variable Attributes
  .. attribute:: shape
 
 
-   Return the shape of the variable, which is the current sizes of all variable 
+   Return the shape of the variable, which is the current sizes of all variable
    dimensions
    **Type:** `Tuple[int, int]`
 
@@ -66,25 +65,7 @@ Variable Attributes
    Return the variable's dimension names
    **Type:** `List[str]`
 
- .. attribute:: scale
-
-   Only relevant when using indexer syntax to read from or write to netCDF variable. 
-   If True, `scale_factor` and `add_offset` are applied, and signed integer data is 
-   automatically converted to unsigned integer data if the `_Unsigned` attribute is set.
-   Default is `True`, can be reset using :meth:`Variable.set_auto_scale` and
-   :meth:`Variable.set_auto_maskandscale` methods.
-   **Type:** `bool`
-
- .. attribute:: mask
-
-   Only relevant when using indexer syntax to read from netCDF variable. If `True`, 
-   data is automatically converted to/from masked arrays when missing values or fill 
-   values are present. Default is `True`, can be reset using :meth:`Variable.set_auto_mask`
-   and :meth:`Variable.set_auto_maskandscale` methods. 
-   **Type:** `bool`
-
  .. attribute:: chartostring
-
 
    If `True`, data is automatically converted to/from character
    arrays to string arrays when the `_Encoding` variable attribute is set.
