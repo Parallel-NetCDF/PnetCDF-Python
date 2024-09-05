@@ -15,9 +15,9 @@ Nonblocking Write
  Write requests can be posted by the method call of :meth:`Variable.iput_var`.
  Same as :meth:`Variable.put_var`, the behavior of :meth:`Variable.iput_var`
  varies depending on the pattern of provided optional arguments - `index`,
- `start`, `count`, `stride`, `num` and `imap` as shown below. Note that the
- method only posts the request, which is not committed until :meth:`File.wait`.
- The method call returns a request id that can be optionally passed to
+ `start`, `count`, `stride`, and `imap` as shown below. Note that the method
+ only posts the request, which is not committed until :meth:`File.wait`. The
+ method call returns a request id that can be optionally passed to
  :meth:`File.wait` to select this request.
 
  - `data` - Request to write an entire variable
@@ -25,9 +25,9 @@ Nonblocking Write
  - `data`, `start`, `count` - Request to write an array of values
  - `data`, `start`, `count`, `stride` - Request to write a subarray of values
  - `data`, `start`, `count`, `imap` - Request to write a mapped array of values
- - `start`, `count`, `num` - Request to write a list of subarrays of values
 
- Here's a python example to post 10 write requests that write to 10 netCDF variables in the same file.
+ Here's a python example to post 10 write requests that write to 10 netCDF
+ variables in the same file.
 
  .. code-block:: Python
 
@@ -58,15 +58,13 @@ Nonblocking Read
  the method call returns a request id that can be optionally passed to
  :meth:`File.wait` to select this request. Similar to :meth:`Variable.get_var`,
  the behavior of :meth:`Variable.iget_var` varies depending on the pattern of
- provided optional arguments - `index`, `start`, `count`, `stride`, `num` and
- `imap`.
+ provided optional arguments - `index`, `start`, `count`, `stride`, and `imap`.
 
  - `buff` - Request to read an entire variable
  - `buff`, `index` - Request to read a single data value
  - `buff`, `start`, `count` - Request to read an array of values
  - `buff`, `start`, `count`, `stride` - Request to read a subarray of values
  - `buff`, `start`, `count`, `imap` - Request to read a mapped array of values
- - `buff`, `start`, `count`, `num` - Request to read a list of subarrays of a netCDF variable
 
  Here's a python example to post 10 read requests that read from 10 netCDF variables in the same file.
 
