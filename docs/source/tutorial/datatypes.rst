@@ -1,13 +1,11 @@
 ===========================
-Datatype 
+Data type
 ===========================
-.. warning::
 
-   Under construction. 
-
-NetCDF Variable Types
- The following table gives the netCDF external data types defined in CDF-1 and CDF-2 and the corresponding type constants for 
- defining variables in the python interface. All these data types have direct numpy quivalent.
+NetCDF Variable Data Types
+ The following table gives the netCDF external data types defined in CDF-1 and
+ CDF-2 and the corresponding type constants for defining variables in the
+ python interface. All these data types have direct numpy quivalent.
 
 
 

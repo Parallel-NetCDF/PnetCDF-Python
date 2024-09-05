@@ -4,7 +4,8 @@
 #
 
 check_PROGRAMS = nonblocking_write_def.py \
-                 nonblocking_write.py
+                 nonblocking_write.py \
+                 nonblocking_read.py
 
 
 TESTS_ENVIRONMENT  = export check_PROGRAMS="${check_PROGRAMS}";

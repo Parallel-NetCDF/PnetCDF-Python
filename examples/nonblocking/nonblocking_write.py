@@ -15,23 +15,10 @@ To run:
   where len decides the size of each local array, which is len x len x len.
   So, each non-record variable is of size len*len*len * nprocs * sizeof(int)
   All variables are partitioned among all processes in a 3D
-  block-block-block fashion. Below is an example standard output from
-  command:
-
-  mpiexec -n 32 python3 nonblocking_write_.py tmp/test1.nc 100
-
-  MPI hint: cb_nodes        = 2
-  MPI hint: cb_buffer_size  = 16777216
-  MPI hint: striping_factor = 32
-  MPI hint: striping_unit   = 1048576
-  Local array size 100 x 100 x 100 integers, size = 3.81 MB
-  Global array size 400 x 400 x 200 integers, write size = 0.30 GB
-  procs    Global array size  exec(sec)  write(MB/s)
-  -------  ------------------  ---------  -----------
-    32     400 x  400 x  200     6.67       45.72
+  block-block-block fashion.
 """
 
-import sys, os, argparse, inspect
+import sys, os, argparse
 import numpy as np
 from mpi4py import MPI
 import pnetcdf
@@ -96,7 +83,7 @@ def pnetcdf_io(filename, length):
         req_id = vars[i].iput_var(buf[i], start = start, count = count)
         reqs.append(req_id)
 
-    # commit posted noblocking requests
+    # commit posted nonblocking requests
     req_errs = [None] * NUM_VARS
     f.wait_all(NUM_VARS, reqs, req_errs)
 
@@ -136,7 +123,7 @@ def parse_help():
     help_flag = "-h" in sys.argv or "--help" in sys.argv
     if help_flag and rank == 0:
         help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
+            "Usage: {} [-h | -q | -l len] [file_name]\n"
             "       [-h] Print help\n"
             "       [-q] Quiet mode (reports when fail)\n"
             "       [-l len] size of each dimension of the local array\n"

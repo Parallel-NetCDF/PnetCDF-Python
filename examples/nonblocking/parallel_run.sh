@@ -60,7 +60,13 @@ for prog in $check_PROGRAMS; do
 
    printf '%-60s' "Testing $prog"
 
-   CMD="mpiexec -n $NPROC python $prog -q $OUT_DIR/${prog%.*}.nc"
+   if test "x$prog" = "xnonblocking_read.py" ; then
+      CMD="mpiexec -n $NPROC python $prog -q $OUT_DIR/nonblocking_write.nc"
+   else
+      CMD="mpiexec -n $NPROC python $prog -q $OUT_DIR/${prog%.*}.nc"
+   fi
+   # echo "$CMD"
+
    $CMD
    status=$?
    if [ $status -ne 0 ]; then

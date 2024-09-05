@@ -1,5 +1,5 @@
 ================
-Functions
+Utility Functions
 ================
 
 .. autofunction:: pnetcdf::strerror
