@@ -3,19 +3,8 @@
 # See COPYRIGHT notice in top-level directory.
 #
 
-check_PROGRAMS = collective_write.py \
-                 create_open.py \
-                 fill_mode.py \
-                 flexible_api.py \
-                 get_info.py \
-                 ghost_cell.py \
-                 global_attribute.py \
-                 hints.py \
-                 put_varn_int.py \
-                 transpose2D.py \
-                 transpose.py \
-                 put_vara.py \
-                 get_vara.py
+check_PROGRAMS = nonblocking_write_def.py \
+                 nonblocking_write.py
 
 
 TESTS_ENVIRONMENT  = export check_PROGRAMS="${check_PROGRAMS}";
@@ -26,14 +15,8 @@ OUTPUT_DIR = _tmp_output
 all:
 
 check: ptest4
-	cd nonblocking && make check
-	cd Pytorch_DDP && make check
-	cd MNIST && make check
 
 ptests: ptest3 ptest4 ptest8
-	cd nonblocking && make ptests
-	cd Pytorch_DDP && make ptests
-	cd MNIST && make ptests
 
 ptest3:
 	@mkdir -p ${OUTPUT_DIR}
@@ -61,9 +44,6 @@ ptest8:
 
 clean:
 	rm -rf ${OUTPUT_DIR}
-	cd nonblocking && make clean
-	cd Pytorch_DDP && make clean
-	cd MNIST && make clean
 
 .PHONY: all check ptests ptest3 ptest4 ptest8 clean
 

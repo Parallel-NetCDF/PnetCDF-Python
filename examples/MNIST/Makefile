@@ -52,6 +52,7 @@ clean:
 	rm -f mnist_main.py
 	rm -f $(MNIST_DATASETS)
 	rm -f $(MNIST_DATASETS_GZ)
+	rm -rf __pycache__
 
 .PHONY: all check ptests clean
 

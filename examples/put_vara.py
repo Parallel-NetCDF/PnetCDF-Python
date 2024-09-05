@@ -56,20 +56,6 @@ from mpi4py import MPI
 import pnetcdf
 
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
-
 def pnetcdf_io(filename, file_format):
     NY = 10
     NX = 4
@@ -99,6 +85,9 @@ def pnetcdf_io(filename, file_format):
     str_att = comm.bcast(str_att, root=0)
 
     # write a global attribute
+    f.history = str_att
+
+    # Equivalently, below uses function call
     f.put_att('history',str_att)
 
     # Define dimensions
@@ -108,14 +97,25 @@ def pnetcdf_io(filename, file_format):
     # Define a 2D variable of integer type
     var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))
 
-    # Add attributes to the variable
+    # Add an attribute of string type to the variable
     str_att = "example attribute of type text."
+    var.str_att_name = str_att
+
+    # Equivalently, below uses function call
     var.put_att("str_att_name", str_att)
 
+    # Add an attribute of float type to the variable
     float_att = np.arange(8, dtype = 'f4')
+    var.float_att_name = float_att
+
+    # Equivalently, below uses function call
     var.put_att("float_att_name", float_att)
 
+    # Add an attribute of int16 type to the variable
     short_att = np.int16(1000)
+    var.short_att_name = short_att
+
+    # Equivalently, below uses function call
     var.put_att("short_att_name", short_att)
 
     # Exit the define mode
@@ -124,12 +124,29 @@ def pnetcdf_io(filename, file_format):
     # initialize write buffer
     buf = np.zeros(shape = (NY, NX), dtype = "i4") + rank
 
-    # Write data to the variable
-    # var.put_var_all(buf, start = starts, count = counts)
-    var[0:NY, NX*rank:NX*rank+NX] = buf
+    # Write to the variable
+    end = [start[i] + count[i] for i in range(2)]
+    var[start[0]:end[0], start[1]:end[1]] = buf
+
+    # Equivalently, below uses function call
+    var.put_var_all(buf, start = start, count = count)
 
     # Close the file
     f.close()
+
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 
 if __name__ == "__main__":

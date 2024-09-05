@@ -51,21 +51,6 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-            "       [-l len] size of each dimension of the local array\n"
-            "       [filename] input netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
-
 def pnetcdf_io(filename, file_format):
 
     # Open an existing file for reading
@@ -87,15 +72,25 @@ def pnetcdf_io(filename, file_format):
         print("Y dimension size = ", global_ny)
         print("X dimension size = ", global_nx)
 
-    # get the variable of a 2D variable of integer type
+    # get the handler of variable named 'var', a 2D variable of integer type
     v = f.variables['var']
 
     # Get the variable's attribute named "str_att_name"
-    str_att = v.get_att("str_att_name")
+    str_att = v.str_att_name
+
     if rank == 0 and verbose:
-        print("variable attribute \"str_att_name\" of type text =", str_att)
+        print("Read variable attribute \"str_att_name\" of type text =", str_att)
+
+    # Equivalently, below uses function call
+    str_att = v.get_att("str_att_name")
+
+    if rank == 0 and verbose:
+        print("Read variable attribute \"str_att_name\" of type text =", str_att)
 
     # Get the variable's attribute named "float_att_name"
+    float_att = v.float_att_name
+
+    # Equivalently, below uses function call
     float_att = v.get_att("float_att_name")
 
     # set access pattern for reading subarray
@@ -103,13 +98,34 @@ def pnetcdf_io(filename, file_format):
     local_nx = global_nx // nprocs
     start = [0,  local_nx * rank]
     count = [local_ny, local_nx]
+    end   = np.add(start, count)
+
+    # allocate read buffer
+    r_buf = np.empty(tuple(count), v.dtype)
 
     # Read a subarray in collective mode
-    r_buf = np.empty(tuple(count), v.dtype)
+    r_bufs = v[start[0]:end[0], start[1]:end[1]]
+
+    # Equivalently, below uses function call
     v.get_var_all(r_buf, start = start, count = count)
 
     # close the file
     f.close()
+
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [-l len] size of each dimension of the local array\n"
+            "       [filename] input netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 
 if __name__ == "__main__":

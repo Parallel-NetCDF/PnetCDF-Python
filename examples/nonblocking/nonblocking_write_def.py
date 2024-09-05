@@ -4,13 +4,14 @@
 #
 
 """
-This example is similar to collective_write.py but using nonblocking APIs.
+This example is the same as nonblocking_write.py expect all nonblocking
+write requests (calls to iput and bput) are posted in define mode.
 It creates a netcdf file in CDF-5 format and writes a number of
 3D integer non-record variables. The measured write bandwidth is reported
 at the end. Usage: (for example)
 
 To run:
-  mpiexec -n num_processes nonblocking_write.py [filename] [len]
+  mpiexec -n num_processes nonblocking_write_def.py [filename] [len]
 
   where len decides the size of each local array, which is len x len x len.
   So, each non-record variable is of size len*len*len * nprocs * sizeof(int)
@@ -18,7 +19,7 @@ To run:
   block-block-block fashion. Below is an example standard output from
   command:
 
-  mpiexec -n 32 python3 nonblocking_write_.py tmp/test1.nc 100
+  mpiexec -n 32 python3 nonblocking_write_def.py tmp/test1.nc -l 100
 
   MPI hint: cb_nodes        = 2
   MPI hint: cb_buffer_size  = 16777216
@@ -36,21 +37,7 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [-l len] size of each dimension of the local array\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
-
-def pnetcdf_io(filename, length):
+def pnetcdf_io(file_name, length):
     NDIMS = 3
     NUM_VARS = 10
 
@@ -58,7 +45,7 @@ def pnetcdf_io(filename, length):
         print("Number of variables = ", NUM_VARS)
         print("Number of dimensions = ", NDIMS)
 
-    # set up subarray access pattern
+    # set subarray access pattern
     start = np.zeros(NDIMS, dtype=np.int32)
     count = np.zeros(NDIMS, dtype=np.int32)
     gsizes = np.zeros(NDIMS, dtype=np.int32)
@@ -101,29 +88,22 @@ def pnetcdf_io(filename, length):
         var = f.def_var("var{}".format(i), pnetcdf.NC_INT, dims)
         vars.append(var)
 
-    # Exit the define mode
+    # Write one variable at a time
+    for i in range(NUM_VARS):
+        vars[i].iput_var(buf[i], start = start, count = count)
+
+    # exit define mode and enter data mode
     f.enddef()
 
-    # Write one variable at a time, using iput APIs
-    reqs = []
-    for i in range(NUM_VARS):
-        req_id = vars[i].iput_var(buf[i], start = start, count = count)
-        reqs.append(req_id)
+    # commit posted nonblocking requests
+    f.wait_all(num = pnetcdf.NC_REQ_ALL)
 
-    # commit posted noblocking requests
-    req_errs = [None] * NUM_VARS
-    f.wait_all(NUM_VARS, reqs, req_errs)
-
-    # check errors
-    for i in range(NUM_VARS):
-        if pnetcdf.strerrno(req_errs[i]) != "NC_NOERR":
-            print(f"Error on request {i}:",  pnetcdf.strerror(req_errs[i]))
-
-    # call bput APIs, first calculate space needed
+    # use nonblocking bput APIs
+    # First, calculate the amount of space required
     bbufsize = bufsize * NUM_VARS * np.dtype(np.int32).itemsize
     f.attach_buff(bbufsize)
 
-    # Write one variable at a time, using bput APIs
+    # call bput for writing to one variable at a time
     reqs = []
     for i in range(NUM_VARS):
         req_id = vars[i].bput_var(buf[i], start = start, count = count)
@@ -142,8 +122,22 @@ def pnetcdf_io(filename, length):
     # detach the temporary buffer
     f.detach_buff()
 
-    # Close the file
+    # close the file
     f.close()
+
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-l len] size of each dimension of the local array\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 
 if __name__ == "__main__":
@@ -167,12 +161,13 @@ if __name__ == "__main__":
     verbose = False if args.q else True
 
     length = 10
-    if args.l and int(args.l) > 0: length = int(args.l)
+    if args.l and int(args.l) > 0:
+       length = int(args.l)
 
     filename = args.dir
 
     if verbose and rank == 0:
-        print("{}: example of calling nonblocking write APIs".format(os.path.basename(__file__)))
+        print("{}: example of nonblocking APIs in define mode".format(os.path.basename(__file__)))
 
     try:
         pnetcdf_io(filename, length)

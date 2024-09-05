@@ -45,18 +45,6 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
 def pnetcdf_io(filename):
 
     NY = 3
@@ -77,13 +65,13 @@ def pnetcdf_io(filename):
     global_nx = NX * nprocs
 
     # define dimensions
-    dim_xu = f.def_dim('REC_DIM', -1)
+    time = f.def_dim('REC_DIM', -1)
     dim_x = f.def_dim('X',global_nx)
     dim_y = f.def_dim('Y',global_ny)
 
     # define 2D variables of integer type
     fix_var = f.def_var("fix_var", pnetcdf.NC_INT, (dim_y, dim_x))
-    rec_var = f.def_var("rec_var", pnetcdf.NC_INT, (dim_xu, dim_x))
+    rec_var = f.def_var("rec_var", pnetcdf.NC_INT, (time, dim_x))
 
     # set the fill mode to NC_FILL for the entire file
     old_fillmode = f.set_fill(pnetcdf.NC_FILL)
@@ -110,12 +98,24 @@ def pnetcdf_io(filename):
     start = np.array([0, NX * rank])
     count = np.array([NY, NX])
 
+    if verbose:
+        print("rank: ", rank," global_ny=",global_ny," global_nx=",global_nx," start=",start," count=",count)
+
     # allocate user buffer
     buf = np.array([[rank] * NX] * NY).astype('i4')
+    for i in range(NY):
+        for j in range(NX):
+            buf[i, j] = 10 + rank*10 + i * NX + j
 
     # do not write the variable in full
     count[1] -= 1
-    fix_var.put_var_all(buf, start = start, count = count)
+
+    # write using Python style subarray access
+    end = np.add(start, count)
+    fix_var[start[0]:end[0], start[1]:end[1]] = buf[0:count[0], 0:count[1]]
+
+    # Equivalently, below uses function call
+    fix_var.put_var_all(buf[0:count[0], 0:count[1]], start = start, count = count)
 
     # check fill value
     no_fill, fill_value = fix_var.inq_fill()
@@ -126,19 +126,39 @@ def pnetcdf_io(filename):
     count[0] = 1
     rec_var.fill_rec(start[0])
 
-    # write to the 1st record
-    rec_var.put_var_all(buf, start = start, count = count)
+    # write to the 1st record, using Python style subarray access
+    end = np.add(start, count)
+    rec_var[start[0]:end[0], start[1]:end[1]] = buf[0:count[0], 0:count[1]]
+
+    # Equivalently, below uses function call
+    rec_var.put_var_all(buf[0:count[0], 0:count[1]], start = start, count = count)
 
     # fill the 2nd record of the record variable
     start[0] = 1
     rec_var.fill_rec(start[0])
 
-    # write to the 2nd record
-    rec_var.put_var_all(buf, start = start, count = count)
+    # write to the 2nd record using Python style subarray access
+    end = np.add(start, count)
+    rec_var[start[0]:end[0], start[1]:end[1]] = buf[0:count[0], 0:count[1]]
+
+    # Equivalently, below uses function call
+    rec_var.put_var_all(buf[0:count[0], 0:count[1]], start = start, count = count)
 
     # close file
     f.close()
 
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 if __name__ == "__main__":
     verbose = True

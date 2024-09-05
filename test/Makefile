@@ -83,6 +83,7 @@ ptest8:
 
 clean:
 	rm -rf ${OUTPUT_DIR}
+	rm -rf __pycache__
 
 .PHONY: all check ptests ptest3 ptest4 ptest8 clean
 

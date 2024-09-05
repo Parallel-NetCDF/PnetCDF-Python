@@ -1,8 +1,8 @@
 # PnetCDF-python examples
 
 This directory contains example python programs that make use of PnetCDF to
-perform file I/O. Detailed description of each program and run instructions can
-be found at the beginning of each file.
+perform file I/O in parallel. Detailed description of each program and run
+instructions can be found at the beginning of each file.
 
 ---
 ### Running individual example programs
@@ -20,7 +20,7 @@ be found at the beginning of each file.
 ### Overview of Test Programs
 
 * [MNIST](./MNIST)
-  + This directory contains an example of
+  + A directory contains an example of
     [MNIST](https://github.com/pytorch/examples/tree/main/mnist),
     using Pytorch module `DistributedDataParallel` for parallel training and
     `PnetCDF-Python` for reading data from a NetCDF files.
@@ -28,6 +28,19 @@ be found at the beginning of each file.
 * [Pytorch_DDP](./Pytorch_DDP)
   + A directory contains examples that make use of Pytorch Distributed Data
     Parallel module to run python programs in parallel.
+
+* [nonblocking](./nonblocking)
+  + A directory contains examples that make use of nonblocking I/O APIs.
+    * [nonblocking_write.py](./nonblocking/nonblocking_write.py]) --
+      Similar to `collective_write.py`, this example uses nonblocking APIs
+      instead. It creates a netcdf file in CDF-5 format and writes a number of
+      3D integer non-record variables.
+
+    * [nonblocking_write_def.py](./nonblocking/nonblocking_write_def.py]) --
+      This example is the same as `nonblocking_write.py` expect all nonblocking
+      write requests (calls to `iput` and `bput`) are posted in define mode. It
+      creates a netcdf file in CDF-5 format and writes a number of 3D integer
+      non-record variables.
 
 * [collective_write.py](./collective_write.py)
   + This example writes multiple 3D subarrays to non-record variables of int
@@ -42,17 +55,6 @@ be found at the beginning of each file.
   + This example is the read counterpart of [put_vara.py](./put_vara.py), which
     shows how to use to `Variable` method get_var() read a 2D 4-byte integer
     array in parallel.
-
-* [nonblocking_write.py](./nonblocking_write.py)
-  + Similar to `collective_write.py`, this example uses nonblocking APIs
-    instead. It creates a netcdf file in CDF-5 format and writes a number of 3D
-    integer non-record variables.
-
-* [nonblocking_write_def.py](./nonblocking_write_def.py)
-  + This example is the same as `nonblocking_write.py` expect all nonblocking
-    write requests (calls to `iput` and `bput`) are posted in define mode. It
-    creates a netcdf file in CDF-5 format and writes a number of 3D integer
-    non-record variables.
 
 * [create_open.py](./create_open.py)
   + This example shows how to use `File` class constructor to create a NetCDF

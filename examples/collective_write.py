@@ -36,20 +36,6 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-            "       [-l len] size of each dimension of the local array\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
 def pnetcdf_io(filename, file_format, length):
     # number of dimensions
     NDIMS = 3
@@ -60,8 +46,8 @@ def pnetcdf_io(filename, file_format, length):
         print("Number of variables = ", NUM_VARS)
         print("Number of dimensions = ", NDIMS)
 
-    start = np.zeros(NDIMS, dtype=np.int32)
-    count = np.zeros(NDIMS, dtype=np.int32)
+    start  = np.zeros(NDIMS, dtype=np.int32)
+    count  = np.zeros(NDIMS, dtype=np.int32)
     gsizes = np.zeros(NDIMS, dtype=np.int32)
     buf = []
 
@@ -75,8 +61,10 @@ def pnetcdf_io(filename, file_format, length):
     for i in range(NDIMS):
         gsizes[i] = length * psizes[i]
         start[i] *= length
-        count[i] = length
-        bufsize *= length
+        count[i]  = length
+        bufsize  *= length
+
+    end = np.add(start, count)
 
     # Allocate buffer and initialize with non-zero numbers
     for i in range(NUM_VARS):
@@ -111,11 +99,29 @@ def pnetcdf_io(filename, file_format, length):
 
     # Collectively write one variable at a time
     for i in range(NUM_VARS):
+        # write using Python style subarray access
+        vars[i][start[0]:end[0], start[1]:end[1], start[2]:end[2]] = buf[i]
+
+        # Equivalently, below uses function call
         vars[i].put_var_all(buf[i], start = start, count = count)
 
     # Close the file
     f.close()
 
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [-l len] size of each dimension of the local array\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 if __name__ == "__main__":
 

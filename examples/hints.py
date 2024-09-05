@@ -30,18 +30,6 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
 def print_hints(nc_file, nc_var1, nc_var2):
     value = np.zeros(MPI.MAX_INFO_VAL, dtype='c')
     header_size, header_extent, var_zy_start, var_yx_start = -1, -1, -1, -1
@@ -131,9 +119,13 @@ def pnetcdf_io(filename):
 
     # set subarray access pattern
     start = [NZ * rank, 0]
-    count =[NZ, NY * nprocs]
+    count = [NZ, NY * nprocs]
+    end   = [start[i] + count[i] for i in range(2)]
 
-    # write to variable
+    # write to variable var_zy
+    var_zy[start[0]:end[0], start[1]:end[1]] = buf_zy
+
+    # Equivalently, below uses function call
     var_zy.put_var_all(buf_zy, start = start, count = count)
 
     # var_yx is partitioned along X dimension
@@ -143,9 +135,13 @@ def pnetcdf_io(filename):
 
     # set subarray access pattern
     start = [0, NX*rank]
-    count =[NY * nprocs, NX]
+    count = [NY * nprocs, NX]
+    end   = [start[i] + count[i] for i in range(2)]
 
-    # write to variable
+    # write to variable var_yx
+    var_yx[start[0]:end[0], start[1]:end[1]] = buf_yx
+
+    # Equivalently, below uses function call
     var_yx.put_var_all(buf_yx, start = start, count = count)
 
     if verbose and rank == 0:
@@ -155,6 +151,18 @@ def pnetcdf_io(filename):
     # close the file
     f.close()
 
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 if __name__ == "__main__":
     comm = MPI.COMM_WORLD
