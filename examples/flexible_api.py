@@ -72,19 +72,6 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
 def pnetcdf_io(filename, file_format):
     NY = 5
     NX = 5
@@ -124,9 +111,9 @@ def pnetcdf_io(filename, file_format):
     array_of_subsizes = np.array([NZ, NY])
     array_of_start = np.array([ghost_len, ghost_len])
 
-    subarray = MPI.INT.Create_subarray(array_of_sizes, \
-                                       array_of_subsizes, \
-                                       array_of_start, \
+    subarray = MPI.INT.Create_subarray(array_of_sizes,
+                                       array_of_subsizes,
+                                       array_of_start,
                                        order=MPI.ORDER_C)
     subarray.Commit()
 
@@ -139,12 +126,13 @@ def pnetcdf_io(filename, file_format):
     count = np.array([NZ, NY])
 
     # calling a blocking flexible API using put_var_all()
-    var_zy.put_var_all(buf_zy, start = start, \
-                               count = count, \
-                               bufcount = 1, \
+    var_zy.put_var_all(buf_zy, start = start,
+                               count = count,
+                               bufcount = 1,
                                buftype = subarray)
 
 
+    # check if write buffer's contents are altered (should not be).
     for i in range(buffer_len):
         if buf_zy[i] != rank:
             print(f"Error at line {sys._getframe().f_lineno} in {__file__}: put buffer[{i}] is altered")
@@ -158,7 +146,7 @@ def pnetcdf_io(filename, file_format):
                                bufcount = 1,
                                buftype = subarray)
 
-    # check contents of the get buffer
+    # check whether contents of the get buffer are expected
     for i in range(array_of_sizes[0]):
         for j in range(array_of_sizes[1]):
             index = i*array_of_sizes[1] + j
@@ -200,7 +188,7 @@ def pnetcdf_io(filename, file_format):
     status = [None]
     f.wait_all(1, [req_id], status = status)
 
-    # check request error msg for each unsuccessful requests
+    # check request error for each unsuccessful requests
     if pnetcdf.strerrno(status[0]) != "NC_NOERR":
         print(f"Error on request {i}:",  pnetcdf.strerror(status[0]))
 
@@ -216,11 +204,11 @@ def pnetcdf_io(filename, file_format):
     # commit posted pending nonblocking requests
     f.wait_all(1, [req_id], status = status)
 
-    # check request error msg for each unsuccessful requests
+    # check request error for each unsuccessful requests
     if pnetcdf.strerrno(status[0]) != "NC_NOERR":
         print(f"Error on request {i}:",  pnetcdf.strerror(status[0]))
 
-    # check the contents of iget buffer
+    # check the contents of read buffer
     for i in range(array_of_sizes[0]):
         for j in range(array_of_sizes[1]):
             index = i * array_of_sizes[1] + j
@@ -235,6 +223,19 @@ def pnetcdf_io(filename, file_format):
     # close the file
     f.close()
 
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [-k format] file format: 1 for CDF-1, 2 for CDF-2, 5 for CDF-5\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 if __name__ == "__main__":
     comm = MPI.COMM_WORLD

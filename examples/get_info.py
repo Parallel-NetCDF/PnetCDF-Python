@@ -38,19 +38,6 @@ import numpy as np
 from mpi4py import MPI
 import pnetcdf
 
-def parse_help():
-    help_flag = "-h" in sys.argv or "--help" in sys.argv
-    if help_flag and rank == 0:
-        help_text = (
-            "Usage: {} [-h] | [-q] [file_name]\n"
-            "       [-h] Print help\n"
-            "       [-q] Quiet mode (reports when fail)\n"
-            "       [filename] (Optional) output netCDF file name\n"
-        ).format(sys.argv[0])
-        print(help_text)
-    return help_flag
-
-
 def print_info(info_used):
     nkeys = info_used.Get_nkeys()
     print("MPI File Info: nkeys =", nkeys)
@@ -82,6 +69,19 @@ def pnetcdf_io(filename):
 
     # close the file
     f.close()
+
+
+def parse_help():
+    help_flag = "-h" in sys.argv or "--help" in sys.argv
+    if help_flag and rank == 0:
+        help_text = (
+            "Usage: {} [-h] | [-q] [file_name]\n"
+            "       [-h] Print help\n"
+            "       [-q] Quiet mode (reports when fail)\n"
+            "       [filename] (Optional) output netCDF file name\n"
+        ).format(sys.argv[0])
+        print(help_text)
+    return help_flag
 
 
 if __name__ == "__main__":
