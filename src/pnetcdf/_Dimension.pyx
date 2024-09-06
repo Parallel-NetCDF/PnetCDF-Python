@@ -16,16 +16,27 @@ include "PnetCDF.pxi"
 
 cdef class Dimension:
     def __init__(self, File file, name, size=-1, **kwargs):
-        self._dimid = 0
-        self._file = file
         """
-        **`__init__(self, File file, name, Offset size = None, **kwargs)`**
-        `Dimension` constructor.
-        **`file`**: `File` instance to associate with dimension.
-        **`name`**: Name of the dimension.
-        **`size`**: Size of the dimension. -1 means unlimited. (Default `-1`).
-        ***Note***: `Dimension` instances should be created using the
-        `Dataset.def_dim` method of a `File` instance, not using `Dimension.__init__` directly.
+        __init__(self, File file, name, size=-1, **kwargs)
+
+        The constructor for :class:`pnetcdf.Dimension`.
+
+        :param file: An :class:`pnetcdf.File` instance to associate with dimension.
+        :type file: :class:`pnetcdf.File`
+
+        :param name: Name of the new dimension.
+        :type name: str
+
+        :param size: Length of the dimension. ``-1`` means to create the
+            expandable dimension. (Default ``-1``).
+        :type size: int
+
+        :return: The created dimension instance.
+        :rtype: :class:`pnetcdf.Dimension`
+
+        .. note:: ``Dimension`` instances should be created using the
+            :meth:`File.def_dim` method of a ``File`` instance, not using
+            :meth:`Dimension.__init__` directly.
         """
         cdef int ierr
         cdef char *dimname
@@ -33,6 +44,8 @@ cdef class Dimension:
         self._file_id = file._ncid
         self._file_format = file.file_format
         self._name = name
+        self._dimid = 0
+        self._file = file
 
         if 'id' in kwargs:
             self._dimid = kwargs['id']
@@ -97,7 +110,8 @@ cdef class Dimension:
         """
         getfile(self)
 
-        Return the file that this ``Dimension`` is a member of.
+        :return: the ``pnetcdf.File`` instance that this ``Dimension`` is a
+            member of.
 
         :rtype: :class:`pnetcdf.File`
         """
@@ -107,7 +121,8 @@ cdef class Dimension:
         """
         isunlimited(self)
 
-        Returns `True` if the ``Dimension`` instance is unlimited, ``False`` otherwise.
+        :return: ``True`` if this ``Dimension`` instance is unlimited, ``False``
+            otherwise.
 
         :rtype: bool
         """

@@ -10,32 +10,43 @@ relations among data fields stored in a netCDF file.
 
 .. autoclass:: pnetcdf::File
    :members: __init__, close, filepath, redef, enddef, begin_indep, end_indep,
-    sync, flush, def_dim, rename_var, rename_dim, def_var, ncattrs, put_att, get_att,
-    del_att, rename_att, wait, wait_all, cancel, attach_buff, detach_buff, set_fill,
-    inq_buff_usage, inq_buff_size, inq_num_rec_vars, inq_num_fix_vars, inq_striping,
-    inq_recsize, inq_version, inq_info, inq_header_size, inq_put_size, inq_header_extent,
-    inq_nreqs
-   :exclude-members: indep_mode, path
+    sync, flush, def_dim, rename_var, rename_dim, def_var, ncattrs, put_att,
+    get_att, del_att, rename_att, wait, wait_all, cancel, attach_buff,
+    detach_buff, set_fill, inq_buff_usage, inq_buff_size, inq_num_rec_vars,
+    inq_num_fix_vars, inq_striping, inq_recsize, inq_version, inq_info,
+    inq_header_size, inq_put_size, inq_header_extent, inq_nreqs
+   :exclude-members: dimensions, variables, file_format, libver, indep_mode,
+    path
 
-File Attributes
- The following class members are read-only and should not be modified by the user.
+Read-only Python Attributes of File Class
+ The following class members are read-only and should not be modified by the
+ user.
 
- .. attribute:: dimensions
+   .. attribute:: dimensions
 
-    The dimensions dictionary maps the names of dimensions defined for the file 
-    to instances of the ``pnetcdf.Dimension`` class. 
+      The dimensions dictionary maps the names of dimensions defined in this
+      file as an instance of the ``pnetcdf.Dimension`` class.
 
- .. attribute:: variables
-      
-    The variables dictionary maps the names of variables defined for this file 
-    to instances of the ``pnetcdf.Variable`` class. 
+      **Type:** `dict`
 
- .. attribute:: file_format
-    
-    The file format in string of the netCDF file. Possible values include: "CLASSIC", "CDF2",
-    "64BIT_OFFSET", "64BIT", "CDF5", "64BIT_DATA", "NETCDF4" and "BP". 
+   .. attribute:: variables
 
-    
+      The variables dictionary maps the names of variables defined in this file
+      as an instance of the ``pnetcdf.Variable`` class.
 
+      **Type:** `dict`
 
+   .. attribute:: file_format
+
+      The file format of the netCDF file. Possible values are one of the
+      following strings. "CLASSIC", "CDF2", "64BIT_OFFSET", "64BIT", "CDF5",
+      "64BIT_DATA", "NETCDF4" and "BP".
+
+      **Type:** `str`
+
+   .. attribute:: libver
+
+      The PnetCDF-Python version string.
+
+      **Type:** `str`
 

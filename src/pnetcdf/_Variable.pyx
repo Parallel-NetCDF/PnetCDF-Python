@@ -37,8 +37,9 @@ cdef class Variable:
     analogous to numpy array objects. See :meth:`Variable.__init__` for more
     details.
 
-    .. note:: ``Variable`` instances should be created using the `File.def_var`
-        method of a `File` instance, not using this class constructor directly.
+    .. note:: ``Variable`` instances should be created using the
+        :meth:`File.def_var` method of a :meth:`File` instance, not using this
+        class constructor directly.
     """
 
     def __init__(self, file, name, datatype, dimensions=(), fill_value=None, **kwargs):
@@ -47,12 +48,11 @@ cdef class Variable:
 
         The constructor for :class:`pnetcdf.Variable`.
 
-        :param varname: Name of the new variable.
-        :type varname: str
+        :param str varname: Name of the new variable.
 
-        :param datatype: The datatype of the new variable. Can be specified by
-            providing a NC module constant, or numpy dtype object, or a string
-            that describes a numpy dtype object. Supported specifiers are:
+        :param datatype: The data type of the new variable.
+            It can be a string that describes a numpy dtype object, a numpy
+            dtype object, or one of PnetCDF data type constant, as shown below.
 
             - ``pnetcdf.NC_CHAR`` or ``S1`` for 1-character string
             - ``pnetcdf.NC_BYTE`` or ``i1`` for 1-byte integer
@@ -61,7 +61,7 @@ cdef class Variable:
             - ``pnetcdf.NC_FLOAT`` or ``f4`` for 4-byte floating point number
             - ``pnetcdf.NC_DOUBLE`` or ``f8`` for 8-byte real number in double precision
 
-         The following datatypes are `CDF-5` format only
+            The following additional data types are available for `CDF-5` format.
 
             - ``pnetcdf.NC_UBYTE`` or ``u1`` for unsigned 1-byte integer
             - ``pnetcdf.NC_USHORT`` or ``u2`` for unsigned 2-byte integer
@@ -69,22 +69,20 @@ cdef class Variable:
             - ``pnetcdf.NC_INT64`` or ``i8`` for signed 8-byte integer
             - ``pnetcdf.NC_UINT64`` or ``u8`` for unsigned 8-byte integer
 
-        :type datatype: int
-
         :param dimensions: [Optional]
             The dimensions of the new variable. Can be either dimension names
             or dimension class instances. Default is an empty tuple which means
             the variable is a scalar (and therefore has no dimensions).
         :type dimensions: tuple of str or :class:`pnetcdf.Dimension` instances
 
-        :param fill_value:
-            The fill value of the new variable. Accepted values are:
+        :param fill_value: [Optional] The fill value of the new variable.
+            Accepted values are shown below.
 
-         - ``None``: use the default fill value for the given datatype
-         - ``False``: fill mode is turned off
-         - If specified with other value, the default netCDF `_FillValue` (the
-             value that the variable gets filled with before any data is
-             written to it) is replaced with this value.
+            - ``None`` to use the default netCDF fill value for the given data type.
+            - ``False`` to turn off the fill mode.
+            - If specified with other value, the default netCDF `_FillValue`
+              (the value that the variable gets filled with before any data is
+              written to it) is replaced with this value.
 
         :return: The created variable
         :rtype: :class:`pnetcdf.Variable`
@@ -302,8 +300,8 @@ cdef class Variable:
         """
         put_att(self,name,value)
 
-        Method to add or change a variable attribute. If this attribute is new,
-        or if the space required to store the attribute is greater than before,
+        Method add or change a variable attribute. If this attribute is new, or
+        if the space required to store the attribute is greater than before,
         the netCDF file must be in define mode.
 
         :param name: Name of the attribute.
@@ -312,8 +310,8 @@ cdef class Variable:
         :param value: Value of the attribute.
         :type value: str or numpy.ndarray
 
-        Operational mode: This method must be called while the associated
-        netCDF file is in define mode.
+        :Operational mode: This method must be called while the associated
+            netCDF file is in define mode.
         """
         cdef nc_type xtype
         xtype=-99
@@ -335,8 +333,8 @@ cdef class Variable:
 
         :rtype: str or numpy.ndarray
 
-        Operational mode: This method can be called while the file is in either
-        define or data mode (collective or independent).
+        :Operational mode: This method can be called while the file is in either
+            define or data mode (collective or independent).
         """
         return _get_att(self._file, self._varid, name, encoding=encoding)
 
@@ -349,8 +347,8 @@ cdef class Variable:
         :param name: Name of the attribute
         :type name: str
 
-        Operational mode: This method must be called while the associated
-        netCDF file is in define mode.
+        :Operational mode: This method must be called while the associated
+            netCDF file is in define mode.
         """
         cdef char *attname
         bytestr = _strencode(name)
@@ -407,9 +405,9 @@ cdef class Variable:
         :param oldname: Old name of the attribute.
         :type oldname: str
 
-        Operational mode: If the new name is longer than the original name, the
-        associated netCDF file must be in define mode.  Otherwise, the netCDF
-        file can be in either define or data mode.
+        :Operational mode: If the new name is longer than the original name, the
+            associated netCDF file must be in define mode.  Otherwise, the
+            netCDF file can be in either define or data mode.
         """
         cdef char *oldnamec
         cdef char *newnamec
@@ -472,8 +470,9 @@ cdef class Variable:
         :return: A tuple of two values which are ``no_fill`` mode and
             ``fill_value``, respectively.
 
-             - ``no_fill``: will be 1 if no_fill mode is set (else 0).
+             - ``no_fill``: 1 if no_fill mode is set (else 0).
              - ``fill_value``: the fill value for this variable.
+
         :rtype: tuple
         """
 
@@ -838,28 +837,29 @@ cdef class Variable:
         """
         put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
-        Method call to write to one or more netCDF variables in independent I/O
-        mode. The behavior of the method varies depends on the pattern of
-        provided optional arguments - `starts`, and `counts`. This method is
-        equivalent to making multiple calls to :meth:`Variable.put_vara`,
-        same variable or more than one variable. Combining multiple `put_vara`
-        calls may achieve a better performance.
+        Method write multiple subarrays of a netCDF variable to the file.  This
+        an independent I/O call and can only be called when the file is in the
+        independent I/O mode. This method is equivalent to making multiple
+        calls to :meth:`Variable.put_var`. Note, combining multiple `put_var`
+        calls into one can achieve a better performance.
 
-        - `data`, `num`,`starts`, `counts` -  Write multiple subarrays of
-            values The part of the netCDF variable to write is specified by
-            giving multiple subarrays and each subarray is specified by a
-            corner and a vector of edge lengths that refer to an array section
-            of the netCDF variable.  The example code and diagram below
-            illustrates a 4 subarray section in a 4 * 10 two-dimensional
-            variable ("-" means skip).
+        - `data`, `num`, `starts`, `counts` -  Write multiple subarrays of values.
+           The part of the netCDF variable to write is specified by giving
+           multiple subarrays and each subarray is specified by a corner and a
+           vector of edge lengths that refer to an array section of the netCDF
+           variable.  The example code and diagram below illustrates a 4
+           subarray section in a 4 * 10 two-dimensional variable ("-" means
+           skip).
 
-        ::
+           ::
 
             num = 4
+
             starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
             starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
             starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
             starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+
                                  -  -  -  -  -  a  b  -  -  -
             a b c d e f g h  ->  c  -  -  -  -  -  -  -  -  -
                                  -  -  -  -  -  -  d  e  -  -
@@ -1091,118 +1091,152 @@ cdef class Variable:
         """
         put_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to write in parallel to the netCDF variable in independent
-        I/O mode. The behavior of the method varies depends on the pattern of
+        Method to write in parallel to the netCDF variable in independent I/O
+        mode. The behavior of the method varies depends on the pattern of
         provided optional arguments - `start`, `count`, `stride`, `bufcount`
         and `buftype`.
 
-        - `data` - Write an entire variable
-         Write a netCDF variable entirely of an opened netCDF file, i.e.
-         calling this API with only argument `data`. This is the simplest
-         interface to use for writing a value in a scalar variable or whenever
-         all the values of a multidimensional variable can all be written at
-         once.
+        - `data` - Write an entire variable.
+           Write a netCDF variable entirely of an opened netCDF file, i.e.
+           calling this API with only argument `data`. This is the simplest
+           interface to use for writing a value in a scalar variable or
+           whenever all the values of a multidimensional variable can all be
+           written at once.
 
-        .. note:: Be careful when using the simplest forms of this interface
-         with record variables. When there is no record written into the file
-         yet, calling this API with only argument `data`, nothing will be
-         written. Similarly, when writing the entire record variable, one must
-         take the number of records into account.
+           .. note:: Be careful when using the simplest forms of this interface
+              with record variables. When there is no record written into the
+              file yet, calling this API with only argument `data`, nothing
+              will be written. Similarly, when writing the entire record
+              variable, one must take the number of records into account.
 
-        - `data`, `start` - Write a single data value (a single element)
-         Put a single data value specified by `start` into a variable of an
-         opened netCDF file. For example, start = [0,5] would specify the
-         following position in a 4 * 10 two-dimensional
-         variable ("-" means skip).
+        - `data`, `start` - Write a single data value (a single element).
+           Put a single data value specified by `start` into a variable of an
+           opened netCDF file. For example, start = [0,5] would specify the
+           following position in a 4 * 10 two-dimensional variable ("-" means
+           skip).
 
-        ::
+           ::
 
                        -  -  -  -  -  a  -  -  -  -
             a     ->   -  -  -  -  -  -  -  -  -  -
                        -  -  -  -  -  -  -  -  -  -
                        -  -  -  -  -  -  -  -  -  -
 
-        - `data`, `start`, `count` - Write a subarray of values
-         The part of the netCDF variable to write is specified by giving a corner index and a vector of edge lengths that refer to
-         an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array
-         section in a 4 * 10 two-dimensional variable ("-" means skip).
+        - `data`, `start`, `count` - Write a subarray of values.
+           The part of the netCDF variable to write is specified by giving a
+           corner index and a vector of edge lengths that refer to an array
+           section of the netCDF variable. For example, start = [0,5] and count
+           = [2,2] would specify the following array section in a 4 * 10
+           two-dimensional variable ("-" means skip).
 
-        ::
+           ::
 
                         -  -  -  -  -  a  b  -  -  -
             a  b   ->   -  -  -  -  -  c  d  -  -  -
             c  d        -  -  -  -  -  -  -  -  -  -
                         -  -  -  -  -  -  -  -  -  -
 
-        - `data`, `start`, `count`, `stride` - Write a subsampled array of values
-         The part of the netCDF variable to write is specified by giving a corner, a vector of edge lengths and stride vector that
-         refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2]
-         would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
+        - `data`, `start`, `count`, `stride` - Write a subarray of values with strided space.
+           The part of the netCDF variable to write is specified by giving a
+           corner, a vector of edge lengths and stride vector that refer to a
+           subsampled array section of the netCDF variable. For example, start
+           = [0,2], count = [2,4] and stride = [1,2] would specify the
+           following array section in a 4 * 10 two-dimensional variable ("-"
+           means skip).
 
-        ::
+           ::
 
-                          -  -  a  -  b  -  c  -  d  -
-         a  b  c  d   ->  -  -  e  -  f  -  g  -  h  -
-         e  f  g  h       -  -  -  -  -  -  -  -  -  -
-                          -  -  -  -  -  -  -  -  -  -
+                             -  -  a  -  b  -  c  -  d  -
+            a  b  c  d   ->  -  -  e  -  f  -  g  -  h  -
+            e  f  g  h       -  -  -  -  -  -  -  -  -  -
+                             -  -  -  -  -  -  -  -  -  -
 
-        - `data`, `start`, `count`, `imap`, `stride` (optional) - Write a mapped array of values
-         The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
-         The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable
-         and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
-         section in write butter and array section in a 4 * 10 two-dimensional variable ("-" means skip).
+        - `data`, `start`, `count`, `stride`, `imap` - Write a mapped array of values.
+           The mapped array section is specified by giving a corner, a vector
+           of counts, a stride vector, and an index mapping vector.  The index
+           mapping vector (imap) is a vector of integers that specifies the
+           mapping between the dimensions of a netCDF variable and the
+           in-memory structure of the internal data array. For example, imap =
+           [3,8], start = [0,5] and count = [2,2] would specify the following
+           section in write butter and array section in a 4 * 10
+           two-dimensional variable ("-" means skip).
 
-        ::
+           ::
 
                                        -  -  -  -  -  a  c  -  -  -
             a - - b         a  c       -  -  -  -  -  b  d  -  -  -
             - - - -    ->   b  d  ->   -  -  -  -  -  -  -  -  -  -
             c - - d                    -  -  -  -  -  -  -  -  -  -
+
             distance from a to b is 3 in buffer => imap[0] = 3
             distance from a to c is 8 in buffer => imap[1] = 8
 
-        :param data: the numpy array that stores array values to be written, which serves as a write buffer. When writing a single data value,
-         it can also be a single numeric (e.g. np.int32) python variable. The datatype should match with the variable's datatype. Note this numpy array
-         write buffer can be in any shape as long as the number of elements (buffer size) is matched.
-
+        :param data: the numpy array that stores array values to be written,
+            which serves as a write buffer. When writing a single data value,
+            it can also be a single numeric (e.g. np.int32) python variable.
+            The datatype should match with the variable's datatype. Note this
+            numpy array write buffer can be in any shape as long as the number
+            of elements (buffer size) is matched.
         :type data: numpy.ndarray
 
-        :param start: [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
-         An array of integers specifying the index in the variable where the first of the data values will be written. The
-         elements of `start` must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
-         index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, `start`
-         is 2D array of size [num][ndims] and each start[i] is a vector specifying the index in the variable where the first of the data values
-         will be written.
+        :param start: [Optional]
+            Only relevant when writing a array of values, a subsampled array, a
+            mapped array or a list of subarrays.  An array of integers
+            specifying the index in the variable where the first of the data
+            values will be written. The elements of `start` must correspond to
+            the variable’s dimensions in order. Hence, if the variable is a
+            record variable, the first index would correspond to the starting
+            record number for writing the data values. When writing to a list
+            of subarrays, `start` is 2D array of size [num][ndims] and each
+            start[i] is a vector specifying the index in the variable where the
+            first of the data values will be written.
         :type start: numpy.ndarray
 
-        :param count: [Optional] Only relevant when writing a array of values, a subsampled array, a mapped array or a list of subarrays.
-         An array of integers specifying  the edge lengths along each dimension of the block of data values to be written. The
-         elements of `count` must correspond to the variable’s dimensions in order. Hence, if the variable is a record variable, the first
-         index would correspond to the starting record number for writing the data values. When writing to a list of subarrays, `count`
-         is 2D array of size [num][ndims] and each count[i] is a vector specifying the edge lengths along each dimension of the block of
-         data values to be written.
-
+        :param count: [Optional]
+            Only relevant when writing a array of values, a subsampled array, a
+            mapped array or a list of subarrays.  An array of integers
+            specifying  the edge lengths along each dimension of the block of
+            data values to be written. The elements of `count` must correspond
+            to the variable’s dimensions in order. Hence, if the variable is a
+            record variable, the first index would correspond to the starting
+            record number for writing the data values. When writing to a list
+            of subarrays, `count` is 2D array of size [num][ndims] and each
+            count[i] is a vector specifying the edge lengths along each
+            dimension of the block of data values to be written.
         :type count: numpy.ndarray
 
-        :param stride: [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers specifying
-         the sampling interval along each dimension of the netCDF variable. The elements of the stride vector correspond, in order, to the
-         netCDF variable’s dimensions.
+        :param stride: [Optional]
+            Only relevant when writing a subsampled array or a mapped array. An
+            array of integers specifying the sampling interval along each
+            dimension of the netCDF variable. The elements of the stride vector
+            correspond, in order, to the netCDF variable’s dimensions.
         :type stride: numpy.ndarray
 
-        :param imap: [Optional] Only relevant when writing a subsampled array or a mapped array. An array of integers the mapping between
-         the dimensions of a netCDF variable and the in-memory structure of the internal data array. The elements of the index mapping vector
-         correspond, in order, to the netCDF variable’s dimensions. Each element value of imap should equal the memory location distance in write buffer between two adjacent elements along the corresponding dimension of netCDF variable.
+        :param imap: [Optional]
+            Only relevant when writing a subsampled array or a mapped array. An
+            array of integers the mapping between the dimensions of a netCDF
+            variable and the in-memory structure of the internal data array.
+            The elements of the index mapping vector correspond, in order, to
+            the netCDF variable’s dimensions. Each element value of imap should
+            equal the memory location distance in write buffer between two
+            adjacent elements along the corresponding dimension of netCDF
+            variable.
         :type imap: numpy.ndarray
 
-        :param bufcount: [Optional] Optional for all types of writing patterns. An integer indicates the number of MPI derived data type elements
-         in the write buffer to be written to the file.
+        :param bufcount: [Optional]
+            Optional for all types of writing patterns. An integer indicates
+            the number of MPI derived data type elements in the write buffer to
+            be written to the file.
         :type bufcount: int
 
-        :param buftype: [Optional] Optional for all types of writing patterns. An MPI derived data type that describes the memory layout of the
-         write buffer.
+        :param buftype: [Optional]
+            An MPI derived data type that describes the memory layout of the
+            write buffer.
         :type buftype: mpi4py.MPI.Datatype
 
-        Operational mode: This method must be called while the file is in independent data mode."""
+        :Operational mode: This method must be called while the file is in
+            independent data mode."""
+
         if data is not None and all(arg is None for arg in [start, count, stride, imap]):
             self._put_var(data, collective = False, bufcount = bufcount, buftype = buftype)
         elif all(arg is not None for arg in [data, start]) and all(arg is None for arg in [count, stride, imap]):
@@ -1220,13 +1254,13 @@ cdef class Variable:
         """
         put_var_all(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to write in parallel to the netCDF variable in the
-        collective I/O mode. For the argument usage, please refer to method
+        Method to write in parallel to the netCDF variable in the collective
+        I/O mode. For the argument usage, please refer to method
         :meth:`Variable.put_var`. The only difference is this method is a
         collective operation.
 
-        Operational mode: This method must be called while the file is in
-        collective data mode.
+        :Operational mode: This method must be called while the file is in
+            collective data mode.
         """
         if data is not None and all(arg is None for arg in [start, count, stride, num, imap]):
             self._put_var(data, collective = True, bufcount = bufcount, buftype = buftype)
@@ -1563,73 +1597,84 @@ cdef class Variable:
         """
         get_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to read in parallel from the netCDF variable in the
-        independent I/O mode. The behavior of the method varies depends on the
-        pattern of provided optional arguments - `start`, `count`, `stride`,
-        and `imap`. The method requires a empty array (`data`) as a read buffer
-        from caller to store returned array values.
+        Method to read in parallel from the netCDF variable in the independent
+        I/O mode. The behavior of the method varies depends on the pattern of
+        provided optional arguments - `start`, `count`, `stride`, and `imap`.
+        The method requires a empty array (`data`) as a read buffer from caller
+        to store returned array values.
 
-        - `data` - Read an entire variable
-         Read all the values from a netCDF variable of an opened netCDF file.
-         This is the simplest interface to use for reading the value of a
-         scalar variable or when all the values of a multidimensional variable
-         can be read at once.
+        - `data` - Read an entire variable.
+           Read all the values from a netCDF variable of an opened netCDF file.
+           This is the simplest interface to use for reading the value of a
+           scalar variable or when all the values of a multidimensional
+           variable can be read at once.
 
-        .. note:: Be careful when using this simplest form to read a record
-         variable when you don’t specify how many records are to be read.  If
-         you try to read all the values of a record variable into an array but
-         there are more records in the file than you assume, more data will be
-         read than you expect, which may cause a segmentation violation.
+           .. note:: Be careful when using this simplest form to read a record
+              variable when you don’t specify how many records are to be read.
+              If you try to read all the values of a record variable into an
+              array but there are more records in the file than you assume,
+              more data will be read than you expect, which may cause a
+              segmentation violation.
 
-        - `data`, `start` - Read a single data value (a single element)
-         Put a single array element specified by `start` from a variable of an
-         opened netCDF file that is in data mode. For example, index = [0,5]
-         would specify the following position in a 4 * 10 two-dimensional
-         variable ("-" means skip).
+        - `data`, `start` - Read a single data value (a single element).
+           Put a single array element specified by `start` from a variable of
+           an opened netCDF file that is in data mode. For example, index =
+           [0,5] would specify the following position in a 4 * 10
+           two-dimensional variable ("-" means skip).
 
-        ::
+           ::
 
             -  -  -  -  -  a  -  -  -  -
             -  -  -  -  -  -  -  -  -  -      ->   a
             -  -  -  -  -  -  -  -  -  -
             -  -  -  -  -  -  -  -  -  -
 
-        - `data`, `start`, `count` - Read a subarray of values
-         The part of the netCDF variable to read is specified by giving a corner index and a vector of edge lengths that refer to
-         an array section of the netCDF variable. For example, start = [0,5] and count = [2,2] would specify the following array
-         section in a 4 * 10 two-dimensional variable ("-" means skip).
+        - `data`, `start`, `count` - Read a subarray of values.
+           The part of the netCDF variable to read is specified by giving a
+           corner index and a vector of edge lengths that refer to an array
+           section of the netCDF variable. For example, start = [0,5] and count
+           = [2,2] would specify the following array section in a 4 * 10
+           two-dimensional variable ("-" means skip).
 
-        ::
+           ::
 
             -  -  -  -  -  a  b  -  -  -
             -  -  -  -  -  c  d  -  -  -         a  b
             -  -  -  -  -  -  -  -  -  -     ->  c  d
             -  -  -  -  -  -  -  -  -  -
 
-        - `data`, `start`, `count`, `stride` - Read a subsampled array of values
-         The part of the netCDF variable to read is specified by giving a corner, a vector of edge lengths and stride vector that
-         refer to a subsampled array section of the netCDF variable. For example, start = [0,2], count = [2,4] and stride = [1,2]
-         would specify the following array section in a 4 * 10 two-dimensional variable ("-" means skip).
+        - `data`, `start`, `count`, `stride` - Read a subarray of values with strided space.
+           The part of the netCDF variable to read is specified by giving a
+           corner, a vector of edge lengths and stride vector that refer to a
+           subsampled array section of the netCDF variable. For example, start
+           = [0,2], count = [2,4] and stride = [1,2] would specify the
+           following array section in a 4 * 10 two-dimensional variable ("-"
+           means skip).
 
-        ::
+           ::
 
             -  -  a  -  b  -  c  -  d  -
             -  -  e  -  f  -  g  -  h  -                a  b  c  d
             -  -  -  -  -  -  -  -  -  -       ->       e  f  g  h
             -  -  -  -  -  -  -  -  -  -
 
-        - `data`, `start`, `count`, `imap`, `stride` (optional) - Read a mapped array of values
-         The mapped array section is specified by giving a corner, a vector of counts, a stride vector, and an index mapping vector.
-         The index mapping vector (imap) is a vector of integers that specifies the mapping between the dimensions of a netCDF variable
-         and the in-memory structure of the internal data array. For example, imap = [3,8], start = [0,5] and count = [2,2] would specify the following
-         section in read butter and array section in a 4 * 10 two-dimensional variable ("-" means skip).
+        - `data`, `start`, `count`, `stride`, `imap` - Read a mapped array of values.
+           The mapped array section is specified by giving a corner, a vector
+           of counts, a stride vector, and an index mapping vector.  The index
+           mapping vector (imap) is a vector of integers that specifies the
+           mapping between the dimensions of a netCDF variable and the
+           in-memory structure of the internal data array. For example, imap =
+           [3,8], start = [0,5] and count = [2,2] would specify the following
+           section in read butter and array section in a 4 * 10 two-dimensional
+           variable ("-" means skip).
 
-        ::
+           ::
 
                                        -  -  -  -  -  a  c  -  -  -
             a - - b         a  c       -  -  -  -  -  b  d  -  -  -
             - - - -    <=   b  d  <=   -  -  -  -  -  -  -  -  -  -
             c - - d                    -  -  -  -  -  -  -  -  -  -
+
             distance from a to b is 3 in buffer => imap[0] = 3
             distance from a to c is 8 in buffer => imap[1] = 8
 
@@ -1639,7 +1684,6 @@ cdef class Variable:
             variable's datatype. Note this numpy array read buffer can be in
             any shape as long as the number of elements (buffer size) is
             matched.
-
         :type data: numpy.ndarray
 
         :param start: [Optional]
@@ -1686,15 +1730,18 @@ cdef class Variable:
             store data read from the file.
         :type bufcount: int
 
-        :param buftype: [Optional] Optional for all types of reading patterns. An MPI derived data type that describes the memory layout of the
-         read buffer.
+        :param buftype: [Optional]
+            An MPI derived data type that describes the memory layout of the
+            read buffer.
         :type buftype: mpi4py.MPI.Datatype
 
-        Operational mode: This method must be called while the file is in independent data mode.
+        :Operational mode: This method must be called while the file is in
+            independent data mode.
         """
-        # Note that get_var requires a empty array as a buffer arg from caller to store returned array values. We understand this is
-        # against python API convention. But removing this or making this optional will create two layers of inconsistency that
-        # we don't desire:
+        # Note that get_var requires a empty array as a buffer arg from caller
+        # to store returned array values. We understand this is against python
+        # API convention. But removing this or making this optional will create
+        # two layers of inconsistency that we don't desire:
         # 1. Among all behaviors of get_var get_varm always requires a buffer argument
         # 2. Other i/o methods (iget/put/iput) all require buffer array as mandatory argument
 
@@ -1715,13 +1762,13 @@ cdef class Variable:
         """
         get_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to read in parallel from the netCDF variable in the
-        collective I/O mode.  For the argument usage, please refer to method
+        Method to read in parallel from the netCDF variable in the collective
+        I/O mode.  For the argument usage, please refer to method
         :meth:`Variable.get_var`. The only difference is this method is a
         collective operation.
 
-        Operational mode: This method must be called while the file is in
-        collective data mode.
+        :Operational mode: This method must be called while the file is in
+            collective data mode.
         """
         if all(arg is None for arg in [start, count, stride, imap]):
             self._get_var(data, collective = True, bufcount = bufcount, buftype = buftype)
@@ -1740,28 +1787,29 @@ cdef class Variable:
         """
         get_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
-        Method call to read in parallel from a netCDF variables. This an
-        independent I/O call. The behavior of the method varies depends on the
-        pattern of provided optional arguments - `starts`, and `counts`. This
-        method is equivalent to making multiple calls to
-        :meth:`Variable.get_vara`.  Combining multiple
-        :meth:`Variable.get_vara` calls may achieve a better performance.
+        Method to read multiple subarrays of a netCDF variables from the file.
+        This an independent I/O call and can only be called when the file is in
+        the independent I/O mode. This method is equivalent to making multiple
+        calls to :meth:`Variable.get_var`. Note, combining multiple `get_var`
+        calls into one can achieve a better performance.
 
-        - `data`, `num`,`starts`, `counts` -  Write multiple subarrays of
-            values The part of the netCDF variable to read is specified by
-            giving multiple subarrays and each subarray is specified by a
-            corner and a vector of edge lengths that refer to an array section
-            of the netCDF variable.  The example code and diagram below
-            illustrates a 4 subarray section in a 4 * 10 two-dimensional
-            variable ("-" means skip).
+        - `data`, `num`,`starts`, `counts` -  Write multiple subarrays of values.
+           The part of the netCDF variable to read is specified by giving
+           multiple subarrays and each subarray is specified by a corner and a
+           vector of edge lengths that refer to an array section of the netCDF
+           variable.  The example code and diagram below illustrates a 4
+           subarray section in a 4 * 10 two-dimensional variable ("-" means
+           skip).
 
-        ::
+           ::
 
             num = 4
+
             starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
             starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
             starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
             starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+
                                  -  -  -  -  -  a  b  -  -  -
             a b c d e f g h  <-  c  -  -  -  -  -  -  -  -  -
                                  -  -  -  -  -  -  d  e  -  -
@@ -2191,13 +2239,12 @@ cdef class Variable:
         """
         bput_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to post a nonblocking, buffered write request to write to
-        the netCDF variable. The syntax is the same as
-        :meth:`Variable.put_var`. For the argument usage, please refer to
-        :meth:`Variable.put_var`. This method returns a request ID that can
-        be used in :meth:`File.wait` or :meth:`File.wait_all`. The posted
-        write request may not be committed until :meth:`File.wait` or
-        :meth:`File.wait_all` is called.
+        Method to post a nonblocking, buffered write request to write to the
+        netCDF variable. The syntax is the same as :meth:`Variable.put_var`.
+        For the argument usage, please refer to :meth:`Variable.put_var`. This
+        method returns a request ID that can be used in :meth:`File.wait` or
+        :meth:`File.wait_all`. The posted write request may not be committed
+        until :meth:`File.wait` or :meth:`File.wait_all` is called.
 
         .. note:: Note that this method requires a numpy array (`data`) as a
             write buffer from caller prepared for writing returned array values
@@ -2215,8 +2262,8 @@ cdef class Variable:
             of the nonblocking operation.
         :rtype: int
 
-        Operational mode: This method can be called while the file is in either
-        collective or independent data mode.
+        :Operational mode: This method can be called while the file is in either
+            collective or independent data mode.
         """
 
         if data is not None and all(arg is None for arg in [start, count, stride, imap]):
@@ -2236,13 +2283,13 @@ cdef class Variable:
         """
         iput_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to post a nonblocking request to write to the netCDF
-        variable. The syntax is the same as :meth:`Variable.put_var`. For the
-        argument usage, please refer to :meth:`Variable.put_var`. This method
-        returns a request ID that can This method returns a request ID that can
-        be used in :meth:`File.wait` or :meth:`File.wait_all`. The posted
-        write request may not be committed until :meth:`File.wait` or
-        :meth:`File.wait_all` is called.
+        Method to post a nonblocking request to write to the netCDF variable.
+        The syntax is the same as :meth:`Variable.put_var`. For the argument
+        usage, please refer to :meth:`Variable.put_var`. This method returns a
+        request ID that can This method returns a request ID that can be used
+        in :meth:`File.wait` or :meth:`File.wait_all`. The posted write request
+        may not be committed until :meth:`File.wait` or :meth:`File.wait_all`
+        is called.
 
         .. note:: Note that this method requires a numpy array (`data`) as a
             write buffer from caller prepared for writing returned array values
@@ -2257,8 +2304,8 @@ cdef class Variable:
             of the nonblocking operation.
         :rtype: int
 
-        Operational mode: This method can be called while the file is in either
-        collective or independent data mode.
+        :Operational mode: This method can be called while the file is in either
+            collective or independent data mode.
         """
         if data is not None and all(arg is None for arg in [start, count, stride, imap]):
             return self._iput_var(data, bufcount = bufcount, buftype = buftype)
@@ -2494,10 +2541,10 @@ cdef class Variable:
         """
         iget_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method call to post a nonblocking request to read from the netCDF
-        variable. The syntax is the same as :meth:`Variable.get_var`. For the
-        argument usage, please refer to :meth:`Variable.get_var`.  This
-        method returns a request ID that can be used in :meth:`File.wait` or
+        Method to post a nonblocking request to read from the netCDF variable.
+        The syntax is the same as :meth:`Variable.get_var`. For the argument
+        usage, please refer to :meth:`Variable.get_var`.  This method returns a
+        request ID that can be used in :meth:`File.wait` or
         :meth:`File.wait_all`. The posted read request may not be committed
         until :meth:`File.wait` or :meth:`File.wait_all` is called.
 
@@ -2513,8 +2560,8 @@ cdef class Variable:
             of the nonblocking operation.
         :rtype: int
 
-        Operational mode: This method can be called in either define,
-        collective, or independent data mode.
+        :Operational mode: This method can be called in either define,
+            collective, or independent data mode.
         """
 
         if data is not None and all(arg is None for arg in [start, count, stride, imap]):

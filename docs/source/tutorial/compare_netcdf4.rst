@@ -1,6 +1,6 @@
 .. currentmodule:: pnetcdf
 =================================
-Comparing with netCDF4-python API
+Comparing with netCDF4-python
 =================================
 
 PnetCDF-python programming in a way is very similar to netCDF4-python.

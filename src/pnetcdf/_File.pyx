@@ -36,30 +36,39 @@ cdef class File:
 
         The constructor for :class:`pnetcdf.File`.
 
-        :param filename: Name of the new file.
-        :type filename: str
+        :param str filename: Name of the new file.
 
-        :param mode: Access mode.
-            - ``r``: Open a file for reading, error if the file does not exist.
-            - ``w``: Create a file, an existing file with the same name is deleted.
-            - ``x``: Create the file, returns an error if the file exists.
-            -  ``a`` and ``r+``: append, creates the file if it does not exist.
+        :param str mode: Access mode.
 
-        :type mode: str
+            - ``r``: Open a file for read-only mode. An error will return if
+              the file does not exist.
+            - ``w``: Create a new file. If a file with the same name has
+              already  existed, the file will be clobbered to zero size.
+            - ``x``: Create a new file, but return an error if the file has
+              already existed.
+            - ``a`` or ``r+``: append mode. It creates the file if it does not
+              exist.
 
-        :param format: underlying file format. Only relevant when creating file
+        :param str format: [Optional] underlying file format. Only relevant
+            when creating a new file.
 
             - ``NETCDF3_64BIT_OFFSET`` or ``NC_64BIT_OFFSET``: CDF-2 format
             - ``NETCDF3_64BIT_DATA`` or ``NC_64BIT_DATA``: CDF-5 format
-            - ``NETCDF3_CLASSIC`` or `None` defaults to default file format (CDF-1 format)
+            - ``NETCDF3_CLASSIC`` or `None` defaults to default file format
+              (CDF-1 format)
 
-        :type format: str
-
-        :param comm: [Optional] MPI communicator to use for file access. `None` defaults to MPI_COMM_WORLD.
+        :param comm: [Optional]
+            MPI communicator to use for file access. `None` defaults to
+            ``MPI_COMM_WORLD``.
         :type comm: mpi4py.MPI.Comm or None
 
-        :param info: [Optional] MPI info object to use for file access. `None` defaults to MPI_INFO_NULL.
+        :param info: [Optional]
+            MPI info object to use for file access. `None` defaults to
+            ``MPI_INFO_NULL``.
         :type info: mpi4py.MPI.Info or None
+
+        :return: The created file instance.
+        :rtype: :class:`pnetcdf.File`
         """
         cdef int ncid
         encoding = sys.getfilesystemencoding()
@@ -131,13 +140,19 @@ cdef class File:
             _check_err(ierr)
         self._isopen = 0 # indicates file already closed, checked by __dealloc__
 
-    def filepath(self,encoding=None):
+    def filepath(self, encoding=None):
         """
-        filepath(self,encoding=None)
+        filepath(self, encoding=None)
 
-        Get the file system path which was used to open/create the Dataset.
-        The path is decoded into a string using `sys.getfilesystemencoding()` by default.
+        Method to return the file system path which was used to open/create the
+        Dataset.  The path is decoded into a string using
+        `sys.getfilesystemencoding()` by default.
 
+        :param str encoding: [Optional]
+            character encoding of a string attribute (default is `utf-8`).
+
+        :return: The file path
+        :rtype: str
         """
         cdef int ierr
         cdef int pathlen
@@ -186,13 +201,16 @@ cdef class File:
         """
         redef(self)
 
-        Enter define mode, so that dimensions, variables, and attributes can be added or
-        renamed and attributes can be deleted
+        Enter define mode, so that dimensions, variables, and attributes can be
+        added or renamed and attributes can be deleted
 
-        .. note:: This is a compulsory call before running define-mode operations. ``NetCDF4-python`` library automatically
-         switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally at the define-mode
-         operations. This feature is NOT implemented in ``pnetcdf-python`` due to additional switching overheads between consecutive
-         define operations and potential hazards of hanging when performing independent I/O on multiple processes.
+        .. note:: In PnetCDF implementation, a file mode can be in either
+            define or data mode. While in the define mode, metadata can be
+            created and modified, for instance, creating new dimension,
+            variables, and attributes. Variables that have been defined can
+            only be read and written while in the data mode. This requirement
+            is to guarantee the data consistency when running application
+            programs in parallel.
         """
         self._redef()
 
@@ -202,17 +220,21 @@ cdef class File:
         with nogil:
             ierr = ncmpi_redef(fileid)
         _check_err(ierr)
+
     def enddef(self):
         """
         enddef(self)
 
-        Exit define mode. The netCDF file is then placed in data mode, so variable data can be
-        read or written.
+        Method to exit the current file's mode from define mode and place the
+        file in data mode, so variable data can be read or written.
 
-        .. note:: This is a compulsory call before data-mode operations. ``NetCDF4-python`` library automatically
-         switches between data and define mode for the user by calling ``redef`` and ``enddef`` internally at the define-mode
-         operations. This feature is NOT implemented in ``pnetcdf-python`` due to additional switching overheads between consecutive
-         define operations and potential hazards of hanging when performing independent I/O on multiple processes.
+        .. note:: In PnetCDF implementation, a file mode can be in either
+            define or data mode. While in the define mode, metadata can be
+            created and modified, for instance, creating new dimension,
+            variables, and attributes. Variables that have been defined can
+            only be read and written while in the data mode. This requirement
+            is to guarantee the data consistency when running application
+            programs in parallel.
         """
         self._enddef()
 
@@ -227,8 +249,9 @@ cdef class File:
         """
         begin_indep(self)
 
-        The file leaves from collective data mode and enters into independent data mode. The default mode is collective data mode.
-
+        Method to leave the file's current mode from collective data mode and
+        enter into independent data mode. The default mode is collective data
+        mode.
         """
         cdef int ierr
         cdef int fileid = self._ncid
@@ -241,7 +264,9 @@ cdef class File:
         """
         end_indep(self)
 
-        This file leaves from independent data mode and enters into collective data mode. The default mode is collective data mode.
+        Method to leave the file's current mode from independent data mode and
+        enter into collective data mode. The default mode is collective data
+        mode.
         """
         cdef int ierr
         cdef int fileid = self._ncid
@@ -267,19 +292,17 @@ cdef class File:
         """
         def_dim(self, dimname, size=-1)
 
-        Creates a new dimension with the given `dimname` and `size`.
-        `size` must be a positive integer or `-1`, which stands for
-        "unlimited" (default is `-1`). The return value is the `Dimension`
-        class instance describing the new dimension.  To determine the current
-        maximum size of the dimension, use the `len` function on the `Dimension`
-        instance. To determine if a dimension is 'unlimited', use the
-        `Dimension.isunlimited` method of the `Dimension` instance.
+        Creates a new dimension with the given `dimname` and `size`.  `size`
+        must be a positive integer or `-1`, which stands for "unlimited"
+        (default is `-1`). The return value is the `Dimension` class instance
+        describing the new dimension.  To determine the current maximum size of
+        the dimension, use the `len` function on the `Dimension` instance. To
+        determine if a dimension is 'unlimited', use the
+        :meth:`Dimension.isunlimited` method of the `Dimension` instance.
 
-        :param dimname: Name of the new dimension.
-        :type dimname: str
+        :param str dimname: Name of the new dimension.
 
-        :param size: Size of the new dimension
-        :type size: int
+        :param int size: [Optional] Size of the new dimension.
         """
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
@@ -288,7 +311,7 @@ cdef class File:
         """
         createDimension(self, dimname, size=-1)
 
-        Same as ``pnetcdf.File.def_dim``
+        Same as :meth:`File.def_dim`
         """
         return self.def_dim(dimname, size)
 
@@ -298,17 +321,17 @@ cdef class File:
 
         Rename a `Variable` named `oldname` to `newname`
 
-        :param oldname: Old name of the variable.
-        :type oldname: str
+        :param str oldname: Old name of the variable.
 
-        :param newname: New name of the variable.
-        :type newname: str
+        :param str newname: New name of the variable.
 
-        Operational mode: this method is collective subroutine, argument new name must
-        be consistent among all calling processes. If the new name is longer than the old name,
-        then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either
-        define or data mode
+        :Operational mode: this method is collective subroutine, argument
+            new name must be consistent among all calling processes. If the new
+            name is longer than the old name, then the netCDF file must be in
+            define mode. Otherwise, the netCDF file can be in either define or
+            data mode.
         """
+
         cdef char *namstring
         cdef Variable var
         cdef int _file_id, _varid
@@ -332,7 +355,7 @@ cdef class File:
         """
         renameVariable(self, oldname, newname)
 
-        Same as ``pnetcdf.File.rename_var``
+        Same as :meth:`File.rename_var`
         """
         self.rename_var(oldname, newname)
 
@@ -342,16 +365,15 @@ cdef class File:
 
         Rename a ``Dimension`` named `oldname` to `newname`
 
-        :param oldname: Old name of the dimension.
-        :type oldname: str
+        :param str oldname: Old name of the dimension.
 
-        :param newname: New name of the dimension.
-        :type newname: str
+        :param str newname: New name of the dimension.
 
-        Operational mode: this method is collective subroutine, argument new name must
-        be consistent among all calling processes. If the new name is longer than the old name,
-        then the netCDF file must be in define mode. Otherwise, the netCDF file can be in either
-        define or data mode
+        :Operational mode: this method is collective subroutine, argument new
+            name must be consistent among all calling processes. If the new
+            name is longer than the old name, then the netCDF file must be in
+            define mode. Otherwise, the netCDF file can be in either define or
+            data mode.
         """
         cdef char *namstring
         cdef Variable var
@@ -376,7 +398,7 @@ cdef class File:
         """
         renameDimension(self, oldname, newname)
 
-        Same as ``pnetcdf.File.rename_dim``
+        Same as :meth:`File.rename_dim`
         """
         self.rename_dim(oldname, newname)
 
@@ -386,44 +408,47 @@ cdef class File:
 
         Create a new variable with the given parameters.
 
-        :param varname: Name of the new variable.
-        :type varname: str
+        :param str varname: Name of the new variable.
 
-        :param datatype: The datatype of the new variable. Supported specifiers are:
+        :param datatype: The data type of the new variable.
+            It can be a string that describes a numpy dtype object, a numpy
+            dtype object, or one of PnetCDF data type constant, as shown below.
 
-            - ``pnetcdf.NC_CHAR`` for text data
-            - ``pnetcdf.NC_BYTE`` for 1-byte integer
-            - ``pnetcdf.NC_SHORT`` for 2-byte signed integer
-            - ``pnetcdf.NC_INT`` for 4-byte signed integer
-            - ``pnetcdf.NC_FLOAT`` for 4-byte floating point number
-            - ``pnetcdf.NC_DOUBLE`` for 8-byte real number in double precision
+              - ``pnetcdf.NC_CHAR`` for text data
+              - ``pnetcdf.NC_BYTE`` for 1-byte signed integer
+              - ``pnetcdf.NC_SHORT`` for 2-byte signed integer
+              - ``pnetcdf.NC_INT`` for 4-byte signed integer
+              - ``pnetcdf.NC_FLOAT`` for 4-byte floating point number
+              - ``pnetcdf.NC_DOUBLE`` for 8-byte real number in double precision
 
-         The following are `CDF-5` format only
+            The following are additional data types supported by `CDF-5` format.
 
-            - ``pnetcdf.NC_UBYTE`` for unsigned 1-byte integer
-            - ``pnetcdf.NC_USHORT`` for unsigned 2-byte integer
-            - ``pnetcdf.NC_UINT`` for unsigned 4-byte intege
-            - ``pnetcdf.NC_INT64`` for signed 8-byte integer
-            - ``pnetcdf.NC_UINT64`` for unsigned 8-byte integer
+              - ``pnetcdf.NC_UBYTE`` for unsigned 1-byte integer
+              - ``pnetcdf.NC_USHORT`` for unsigned 2-byte integer
+              - ``pnetcdf.NC_UINT`` for unsigned 4-byte intege
+              - ``pnetcdf.NC_INT64`` for signed 8-byte integer
+              - ``pnetcdf.NC_UINT64`` for unsigned 8-byte integer
 
-        :type datatype: int, str, or numpy.dtype
-        :param dimensions: [Optional] The dimensions of the new variable. Can be either dimension names
-         or dimension class instances. Default is an empty tuple which means the variable is a scalar
-         (and therefore has no dimensions).
-
+        :param dimensions: [Optional]
+            The dimensions of the new variable. Can be either dimension names
+            or dimension class instances. Default is an empty tuple which means
+            the variable is a scalar (and therefore has no dimensions).
         :type dimensions: tuple of str or :class:`pnetcdf.Dimension` instances
 
-        :param fill_value: The fill value of the new variable. Accepted values are:
+        :param fill_value: [Optional] The fill value of the new variable.
+            Accepted values are shown below.
 
-         - ``None``: use the default fill value for the given datatype
-         - ``False``: fill mode is turned off
-         - any other value: use the given value as fill value
+            - ``None`` to use the default netCDF fill value for the given data type.
+            - ``False`` to turn off the fill mode.
+            - If specified with other value, the default netCDF `_FillValue`
+              (the value that the variable gets filled with before any data is
+              written to it) is replaced with this value.
 
         :return: The created variable
         :rtype: :class:`pnetcdf.Variable`
         """
 
-        # the following should be added to explaination of variable class.
+        # the following should be added to explanation of variable class.
         # # A list of names corresponding to netCDF variable attributes can be
         # # obtained with the `Variable` method `Variable.ncattrs`. A dictionary
         # # containing all the netCDF attribute name/value pairs is provided by
@@ -465,7 +490,7 @@ cdef class File:
         """
         createVariable(self, varname, datatype, dimensions=(), fill_value=None)
 
-        Same as ``pnetcdf.File.def_var``
+        Same as :meth:`File.def_var`
         """
         return self.def_var(varname, datatype, dimensions, fill_value)
 
@@ -494,36 +519,37 @@ cdef class File:
         :param value: Value of the new attribute.
         :type value: str, int, float or list of int and float
 
-        Operational mode: This method must be called while the file is in define mode.
+        :Operational mode: This method must be called while the file is in
+            define mode.
         """
         cdef nc_type xtype
         xtype=-99
         _set_att(self, NC_GLOBAL, name, value, xtype=xtype)
 
 
-    def get_att(self,name,encoding='utf-8'):
+    def get_att(self, name, encoding='utf-8'):
         """
-        get_att(self,name,encoding='utf-8')
+        get_att(self, name, encoding='utf-8')
 
-        Retrieve a netCDF file attribute.
-        Useful when you need to get a netCDF attribute with the same
-        name as one of the reserved python attributes.
-
-        option kwarg `encoding` can be used to specify the
-        character encoding of a string attribute (default is `utf-8`).
+        Retrieve a netCDF file attribute.  Useful when you need to get a netCDF
+        attribute with the same name as one of the reserved python attributes.
 
         :param name: Name of the attribute.
         :type name: str
 
-        :rtype: str or numpy.ndarray
+        :param encoding: [Optional]
+            character encoding of a string attribute (default is `utf-8`).
+        :type encoding: str
 
-        Operational mode: This method can be called while the file is in either
-            define or data mode (collective or independent).
+        :rtype: str or ``numpy.ndarray``
+
+        :Operational mode: This method can be called while the file is in
+            either define or data mode (collective or independent).
         """
         return _get_att(self, NC_GLOBAL, name, encoding=encoding)
 
 
-    def __delattr__(self,name):
+    def __delattr__(self, name):
         # if it's a netCDF attribute, remove it
         if name not in _private_atts:
             self.del_att(name)
@@ -533,16 +559,15 @@ cdef class File:
 
     def del_att(self, name):
         """
-        del_att(self,name,value)
+        del_att(self, name)
 
-        Delete a netCDF file attribute. Useful when you need to delete a
-        netCDF attribute with the same name as one of the reserved python
-        attributes.
+        Delete a netCDF attribute.
 
         :param name: Name of the attribute
         :type name: str
 
-        Operational mode: This method must be called while the file is in define mode.
+        :Operational mode: This method must be called while the file is in
+            define mode.
         """
         cdef char *attname
         cdef int ierr
@@ -591,9 +616,9 @@ cdef class File:
         :param oldname: Old name of the attribute.
         :type oldname: str
 
-        Operational mode: If the new name is longer than the original name, the netCDF file must be in define mode.
-        Otherwise, the netCDF file can be in either define or data mode.
-
+        :Operational mode: If the new name is longer than the original name,
+            the netCDF file must be in define mode.  Otherwise, the netCDF file
+            can be in either define or data mode.
         """
         cdef char *oldnamec
         cdef char *newnamec
@@ -613,7 +638,7 @@ cdef class File:
         """
         renameAttribute(self, oldname, newname)
 
-        Same as ``pnetcdf.File.rename_att``
+        Same as :meth:`File.rename_att`
         """
         self.rename_att(oldname, newname)
 
@@ -660,29 +685,32 @@ cdef class File:
         """
         wait(self, num=None, requests=None, status=None)
 
-        This method is a blocking call that wait for the completion of nonblocking I/O requests made by ``Variable.iput_var``,
-        ``Variable.iget_var`` and ``Variable.bput_var``
+        This method is a blocking call that wait for the completion of
+        nonblocking I/O requests made by :meth:`Variable.iput_var`,
+        :meth:`Variable.iget_var` and :meth:`Variable.bput_var`
 
-        :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it
-         can be module-level constants:
+        :param int num: [Optional]
+            number of requests. It is also the array size of the next two
+            arguments. Alternatively it can be module-level constants:
 
-            - None or ``pnetcdf.NC_REQ_ALL``: flush all pending nonblocking  requests
+            - ``pnetcdf.NC_REQ_ALL`` or ``None``: flush all pending nonblocking requests
             - ``pnetcdf.NC_GET_REQ_ALL``: flush all pending nonblocking GET requests
             - ``pnetcdf.NC_PUT_REQ_ALL``: flush all pending nonblocking PUT requests
 
-        :type num: int
-
-        :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
+        :param requests: [Optional]
+            Integers specifying the nonblocking request IDs returned from the
+            nonblocking requests posted earlier.
         :type requests: list of int
 
-        :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the
-         statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to
-         obtain the status messages.
+        :param status: [Optional]
+            List of integers to hold returned error codes from the call, each
+            specifying the status of corresponding nonblocking request. The
+            values can be used in a call to :meth:`pnetcdf.strerror` to obtain
+            the error messages.
         :type status: list
 
-        Optional mode: it is an independent subroutine and must be called while the file
-        is in independent data mode.
-
+        :Operational mode: it is an independent subroutine and must be called
+            while the file is in independent data mode.
         """
         return self._wait(num, requests, status, collective=False)
 
@@ -690,12 +718,10 @@ cdef class File:
         """
         wait_all(self, num=None, requests=None, status=None)
 
-        Same as ``File.wait`` but in collective data mode
+        Same as :meth:`File.wait` but in collective data mode
 
-        Optional mode: it is an collective subroutine and must be called while the file
-        is in collective data mode.
-
-
+        :Operational mode: it is an collective subroutine and must be called
+            while the file is in collective data mode.
         """
         return self._wait(num, requests, status, collective=True)
 
@@ -703,29 +729,32 @@ cdef class File:
         """
         cancel(self, num=None, requests=None, status=None)
 
-        This method cancels a list of pending nonblocking requests made by ``Variable.iput_var``, ``Variable.iget_var``,
-        and ``Variable.bput_var``
+        This method cancels a list of pending nonblocking requests made by the
+        nonblocking methods, such as :meth:`Variable.iput_var`,
+        :meth:`Variable.iget_var`, and :meth:`Variable.bput_var`
 
-        :param num: [Optional] number of requests. It is also the array size of the next two arguments. Alternatively it
-         can be module-level constants:
+        :param int num: [Optional]
+            Number of requests. It is also the array size of the next two
+            arguments. Alternatively it can be module-level constants:
 
-            - None or `pnetcdf.NC_REQ_ALL`: flush all pending nonblocking  requests
-            - `pnetcdf.NC_GET_REQ_ALL`: flush all pending nonblocking GET requests
-            - `pnetcdf.NC_PUT_REQ_ALL`: flush all pending nonblocking PUT requests
+            - ``pnetcdf.NC_REQ_ALL`` or ``None``: flush all pending nonblocking requests
+            - ``pnetcdf.NC_GET_REQ_ALL``: flush all pending nonblocking GET requests
+            - ``pnetcdf.NC_PUT_REQ_ALL``: flush all pending nonblocking PUT requests
 
-        :type num: int
-
-        :param requests: [Optional] Integers specifying the nonblocking request IDs that were made earlier.
+        :param requests: [Optional]
+            Integers specifying the nonblocking request IDs that were made
+            earlier.
         :type requests: list of int
 
-        :param status: [Optional] List of `None` to hold returned error codes from the call, specifying the
-         statuses of corresponding nonblocking requests. The values can be used in a call to ``strerror()`` to
-         obtain the status messages.
+        :param status: [Optional]
+            List of integers to hold returned error codes from the call, each
+            specifying the status of corresponding nonblocking request. The
+            values can be used in a call to :meth:`pnetcdf.strerror` to obtain
+            the status messages.
         :type status: list
 
-
-        Optional mode: it can be called in either independent or collective data mode or define mode.
-
+        :Operational mode: it can be called in either independent or collective
+            data mode or define mode.
         """
         cdef int _file_id, ierr
         cdef int num_req
@@ -759,10 +788,9 @@ cdef class File:
         """
         inq_nreqs(self)
 
-        Reports the number of pending nonblocking requests.
+        Method to return the number of pending nonblocking requests.
 
         :rtype: int
-
         """
         cdef int _file_id, ierr
         cdef int num_req
@@ -776,11 +804,14 @@ cdef class File:
         """
         attach_buff(self, bufsize)
 
-        Allow PnetCDF to allocate an internal buffer for accommodating the write requests. This method call
-        is the prerequisite of buffered non-blocking write. A call to ``File.detach_buff()`` is required when
+        Allow PnetCDF to allocate an internal buffer for accommodating the
+        write requests. This method call is the prerequisite of buffered
+        non-blocking write. A call to :meth:`File.detach_buff` is required when
         this buffer is no longer needed.
 
-        :param bufsize: Size of the buffer in the unit of bytes. Can be obtained using ``numpy.ndarray.nbytes``
+        :param bufsize:
+            Size of the buffer in the unit of bytes. Can be obtained using
+            ``numpy.ndarray.nbytes``
         :type bufsize: int
 
         """
@@ -796,8 +827,8 @@ cdef class File:
         """
         detach_buff(self)
 
-        Detach the write buffer previously attached for buffered non-blocking write
-
+        Detach the write buffer previously attached for buffered non-blocking
+        write
         """
         cdef int _file_id = self._ncid
         with nogil:
@@ -808,10 +839,10 @@ cdef class File:
         """
         inq_buff_usage(self)
 
-        Return the current usage of the internal buffer
+        Return the current usage of the internal attached buffer, set in the
+        call to :meth:`File.attach_buff`.
 
         :rtype: int
-
         """
         cdef int _file_id
         cdef MPI_Offset usage
@@ -825,9 +856,9 @@ cdef class File:
         """
         inq_buff_size(self)
 
-        Return the size (in number of bytes) of the attached buffer. This value is the same
-        as the one used in a call to ``File.attach_buff`` earlier.
-
+        Return the size (in number of bytes) of the attached buffer. This value
+        is the same as the one used in a call to :meth:`File.attach_buff`
+        earlier.
         :rtype: int
 
         """
@@ -864,19 +895,23 @@ cdef class File:
         """
         set_fill(self, fillmode)
 
-        Sets the fill mode for a netCDF file open for writing and returns the current fill mode. The fill mode
-        can be specified as either NC_FILL or NC_NOFILL. The default mode of PnetCDF is NC_NOFILL. The method call
-        will change the fill mode for all variables defined so far at the time this API is called. In other
-        words, it overwrites the fill mode for all variables previously defined. This method will also change the
-        default fill mode for new variables defined following this call. In PnetCDF, this API only affects non-record
-        variables. In addition, it can only be called while in the define mode. All non-record variables will be
-        filled with fill values (either default or user-defined) at the time ``File.enddef()`` is called.
+        Sets the fill mode for a netCDF file open for writing and returns the
+        current fill mode. The fill mode can be specified as either NC_FILL or
+        NC_NOFILL. The default mode of PnetCDF is NC_NOFILL. The method call
+        will change the fill mode for all variables defined so far at the time
+        this API is called. In other words, it overwrites the fill mode for all
+        variables previously defined. This method will also change the default
+        fill mode for new variables defined following this call. In PnetCDF,
+        this API only affects non-record variables. In addition, it can only be
+        called while in the define mode. All non-record variables will be
+        filled with fill values (either default or user-defined) at the time
+        :meth:`File.enddef` is called.
 
         :param fillmode: ``pnetcdf.NC_FILL`` or ``pnetcdf.NC_NOFILL``
         :type fillmode: int
 
-        Operational mode: This method is a collective subroutine and must be called in define mode
-
+        :Operational mode: This method is a collective subroutine and must be
+            called in define mode
         """
         cdef int _file_id, _fillmode, _old_fillmode
         _file_id = self._ncid
@@ -890,12 +925,15 @@ cdef class File:
         """
         set_auto_chartostring(self, value)
 
-        Call ``Variable.set_auto_chartostring()`` for all variables contained in this `File`. Calling this function only affects
-        existing variables. Variables defined after calling this function will follow the default behaviour.
+        Call :meth:`Variable.set_auto_chartostring` for all variables
+        contained in this `File`. Calling this function only affects existing
+        variables.  Variables defined after calling this function will follow
+        the default behaviour.
 
         :param value: True or False
         :type value: bool
-        Operational mode: Any
+
+        :Operational mode: Any
         """
 
         _vars = self.variables
@@ -904,9 +942,8 @@ cdef class File:
 
 
     def inq_num_rec_vars(self):
-        #TODO: currently not working with PnetCDF-C version <= 1.12.3
         """
-
+        inq_num_rec_vars(self)
 
         Returns the number of record variables defined for this netCDF file
 
@@ -920,8 +957,9 @@ cdef class File:
         return num_rec_vars
 
     def inq_num_fix_vars(self):
-        #TODO: currently not working with PnetCDF-C version <= 1.12.3
         """
+        inq_num_fix_vars(self)
+
         Return the number of fixed-size variables defined for this netCDF file
 
         :rtype: int
@@ -951,8 +989,8 @@ cdef class File:
         """
         inq_recsize(self)
 
-        Return the size of record block, sum of individual record sizes (one record each) of
-        all record variables, for this netCDF file.
+        Return the size of record block, sum of individual record sizes (one
+        record each) of all record variables, for this netCDF file.
 
         :rtype: int
 
@@ -966,7 +1004,16 @@ cdef class File:
 
     def inq_version(self):
         """
+        inq_version(self)
 
+        Return the file format version, one of the following PnetCDf constants.
+
+            - ``pnetcdf.NC_CLASSIC_MODEL`` indicating the file is CDF-1 format
+            - ``pnetcdf.NC_64BIT_OFFSET`` indicating the file is CDF-2 format
+            - ``pnetcdf.NC_64BIT_DATA`` indicating the file is CDF-5 format
+            - ``pnetcdf.NC_NETCDF4`` indicating the file is HDF5 format
+
+        :rtype: int
         """
         cdef int ierr, nc_mode
         with nogil:
@@ -979,7 +1026,8 @@ cdef class File:
         """
         inq_info(self)
 
-        Returns an MPI info object containing all the file hints used by PnetCDF library.
+        Returns an MPI info object containing all the file hints used by
+        PnetCDF library.
 
         :rtype:  mpi4py.MPI.Info
 
@@ -997,11 +1045,10 @@ cdef class File:
         """
         inq_header_size(self)
 
-        Reports the current file header size (in bytes) of an opened netCDF file. Note
-        this is the amount of space used by the metadata.
+        Reports the current file header size (in bytes) of an opened netCDF
+        file. Note this is the amount of space used by the metadata.
 
         :rtype: int
-
         """
         cdef int ierr
         cdef MPI_Offset size
@@ -1014,8 +1061,8 @@ cdef class File:
         """
         inq_put_size(self)
 
-        Reports the amount of data that has actually been written to the file since the
-        file is opened/created.
+        Reports the amount of data that has actually been written to the file
+        since the file is opened/created.
 
         :rtype: int
         """
@@ -1030,8 +1077,8 @@ cdef class File:
         """
         inq_get_size(self)
 
-        Reports the amount of data that has actually the amount of data that has been actually read from the
-        file since the file is opened/created.
+        Reports the amount of data that has actually the amount of data that
+        has been actually read from the file since the file is opened/created.
 
         :rtype: int
         """
@@ -1046,8 +1093,8 @@ cdef class File:
         """
         inq_header_extent(self)
 
-        Reports the current file header extent of an opened netCDF file. The amount
-        is the file space allocated for the file header.
+        Reports the current file header extent of an opened netCDF file. The
+        amount is the file space allocated for the file header.
 
         :rtype: int
         """

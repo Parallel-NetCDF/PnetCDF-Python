@@ -12,7 +12,7 @@ python programs to achieve a scalable I/O performance.
 * Python 3.9 or later.
 * [numpy](http://www.numpy.org/) Python package.
 * MPI C library and Python package, [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html).
-* PnetCDF [C library](https://github.com/Parallel-netCDF/PnetCDF), built with shared libraries.
+* [PnetCDF C library](https://github.com/Parallel-netCDF/PnetCDF), built with shared libraries.
 
 ### Developer Installation
 * Clone this GitHub repository
@@ -39,7 +39,7 @@ python programs to achieve a scalable I/O performance.
 
 ### Developer Team
 * Youjia Li <<youjia@northwestern.edu>>
-* Wei-keng Liao <<wkliao@northwestern.edu>> (Principle Investigator)
+* Wei-keng Liao <<wkliao@northwestern.edu>>
 
 ### Acknowledgements
 Ongoing development and maintenance of PnetCDF-python is supported by the U.S.
