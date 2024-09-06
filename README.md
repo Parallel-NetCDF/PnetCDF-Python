@@ -28,24 +28,22 @@ applications that require parallel access to netCDF files.
   CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install --no-build-isolation -e .
   ```
 * Testing
-  + Run command `make check` to test all the programs available in folders
-    `test` and `examples` in parallel on 4 MPI processes.
-  + In addition, command `make ptests` runs the same tests but using 3, 4, and
-    8 MPI processes.
-  + To run any individual programs in folders `test` and `examples`, use
-    command below. For example,
-    ```sh
-    mpiexec -n [num_process] python examples/create_open.py [output_dir]
-    ```
-    * The optional `output_dir` argument is the folder for storing the output
-      files created by the programs The default is the current folder.
+  + Run command `"make check"` to test all the programs available in folders
+    ["test/"](./test) and ["examples/"](./examples) in parallel on 4 MPI
+    processes.
+  + In addition, command `"make ptests"` runs the same tests using 3, 4, and 8
+    MPI processes.
 
 ### Additional Resources
-* PnetCDF-python [User Guide](https://pnetcdf-python.readthedocs.io/en/latest/)
+* PnetCDF-python [User Guide](https://pnetcdf-python.readthedocs.io/en/latest)
 * [Data objects](docs/pnetcdf_objects.md) in PnetCDF python programming
 * [Comparison](docs/nc4_vs_pnetcdf.md) of NetCDF4-python and PnetCDF-python
-* [PnetCDF project home page](https://parallel-netcdf.github.io/)
-* [PnetCDF repository of C/Fortran library](https://parallel-netcdf.github.io/)
+* [PnetCDF project home page](https://parallel-netcdf.github.io)
+* [PnetCDF repository of C/Fortran library](https://github.com/Parallel-NetCDF/PnetCDF)
+
+### Developer Team
+* Youjia Li <<youjia@northwestern.edu>>
+* Wei-keng Liao <<wkliao@northwestern.edu>> (Principle Investigator)
 
 ### Acknowledgements
 Ongoing development and maintenance of PnetCDF-python is supported by the U.S.
