@@ -21,7 +21,7 @@ instructions can be found at the beginning of each file.
 
 * [MNIST](./MNIST)
   + A directory contains an example of
-    [MNIST](https://github.com/pytorch/examples/tree/main/mnist),
+    [Pytorch MNIST](https://github.com/pytorch/examples/tree/main/mnist),
     using Pytorch module `DistributedDataParallel` for parallel training and
     `PnetCDF-Python` for reading data from a NetCDF files.
 
@@ -31,24 +31,22 @@ instructions can be found at the beginning of each file.
 
 * [nonblocking](./nonblocking)
   + A directory contains examples that make use of nonblocking I/O APIs.
-    * [nonblocking_write.py](./nonblocking/nonblocking_write.py]) --
+    * [nonblocking_write.py](./nonblocking/nonblocking_write.py) --
       Similar to `collective_write.py`, this example uses nonblocking APIs
       instead. It creates a netcdf file in CDF-5 format and writes a number of
       3D integer non-record variables.
-
-    * [nonblocking_read.py](./nonblocking/nonblocking_read.py]) --
-      A counterpart of `nonblocking_write.py` but does reads. It reads the
-      output file generated from `nonblocking_write.py`.
-
-    * [nonblocking_write_def.py](./nonblocking/nonblocking_write_def.py]) --
+    * [nonblocking_read.py](./nonblocking/nonblocking_read.py) --
+      A read counterpart of `nonblocking_write.py`. It reads the output file
+      generated from `nonblocking_write.py`.
+    * [nonblocking_write_def.py](./nonblocking/nonblocking_write_def.py) --
       This example is the same as `nonblocking_write.py` expect all nonblocking
       write requests (calls to `iput` and `bput`) are posted in define mode. It
       creates a netcdf file in CDF-5 format and writes a number of 3D integer
       non-record variables.
 
-* [collective_write.py](./collective_write.py)
-  + This example writes multiple 3D subarrays to non-record variables of int
-    type using collective I/O mode.
+* [create_open.py](./create_open.py)
+  + This example shows how to use `File` class constructor to create a NetCDF
+    file and to open the file for read only.
 
 * [put_vara.py](./put_vara.py)
   + This example shows how to use `Variable` method put_var() to write a 2D
@@ -60,9 +58,9 @@ instructions can be found at the beginning of each file.
     shows how to use to `Variable` method get_var() read a 2D 4-byte integer
     array in parallel.
 
-* [create_open.py](./create_open.py)
-  + This example shows how to use `File` class constructor to create a NetCDF
-    file and to open the file for read only.
+* [collective_write.py](./collective_write.py)
+  + This example writes multiple 3D subarrays to non-record variables of int
+    type using collective I/O mode.
 
 * [ghost_cell.py](./ghost_cell.py)
   + This example shows how to use `Variable` method to write a 2D array user
@@ -89,18 +87,13 @@ instructions can be found at the beginning of each file.
     `nc_var_align_size` and prints the hint values as well as the header size,
     header extent, and two variables' starting file offsets.
 
+* [get_info.py](./get_info.py)
+  + This example prints all MPI-IO hints used.
+
 * [transpose2D.py](./transpose2D.py)
   + This example shows how to use `Variable` method `put_var()` to write a 2D
     integer array variable into a file. The variable in the file is a
     dimensional transposed array from the one stored in memory.
-
-* [get_info.py](./get_info.py)
-  + This example prints all MPI-IO hints used.
-
-* [put_varn_int.py](./put_varn_int.py)
-  + This example shows how to use a single call of `Variable` method
-    `put_varn()` to write a sequence of subarray requests to a variable with
-    arbitrary array indices and lengths.
 
 * [transpose.py](./transpose.py)
   + This example shows how to use `Variable` method `put_var()` to write six 3D
@@ -115,4 +108,9 @@ instructions can be found at the beginning of each file.
     * int YXZ_var(Y, X, Z) ;     ZYX -> YXZ
     * int XZY_var(X, Z, Y) ;     ZYX -> XZY
     * int XYZ_var(X, Y, Z) ;     ZYX -> XYZ
+
+* [put_varn_int.py](./put_varn_int.py)
+  + This example shows how to use a single call of `Variable` method
+    `put_varn()` to write a sequence of subarray requests to a variable with
+    arbitrary array indices and lengths.
 
