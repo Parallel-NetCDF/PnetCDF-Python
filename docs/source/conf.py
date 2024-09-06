@@ -7,8 +7,8 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'PnetCDF Python'
-copyright = '2023, CUCIS'
-author = 'CUCIS'
+copyright = '2024, Northwestern University and Argonne National Laboratory'
+author = 'PnetCDF-Python Developer Team'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------

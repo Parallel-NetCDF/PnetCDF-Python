@@ -28,7 +28,6 @@ PnetCDF-Python Documentation
    tutorial/non_blocking
    tutorial/compare_netcdf4
 
-
 .. toctree::
    :maxdepth: 3
    :caption: API Documentation
@@ -37,6 +36,12 @@ PnetCDF-Python Documentation
    api/dimension_api
    api/variable_api
    api/function_api
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Copyright Statement
+
+   copyright
 
 .. #.. toctree::
 .. #   :maxdepth: 2
