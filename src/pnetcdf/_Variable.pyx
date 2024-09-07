@@ -41,9 +41,9 @@ cdef class Variable:
         method of a `File` instance, not using this class constructor directly.
     """
 
-    def __init__(self, file, name, datatype, dimensions=(), **kwargs):
+    def __init__(self, file, name, datatype, dimensions=(), fill_value=None, **kwargs):
         """
-        __init__(self, file, name, datatype, dimensions=(), **kwargs)
+        __init__(self, file, name, datatype, dimensions=(), fill_value=None, **kwargs)
 
         The constructor for :class:`pnetcdf.Variable`.
 
@@ -156,6 +156,10 @@ cdef class Variable:
         # to string arrays when _Encoding variable attribute is set.
         self.chartostring = True
         # propagate _ncstring_attrs__ setting from parent group.
+
+        if fill_value != None:
+            self.def_fill(0, fill_value = fill_value)
+
 
     def __array__(self):
         # numpy special method that returns a numpy array.
