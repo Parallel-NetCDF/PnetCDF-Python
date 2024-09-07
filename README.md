@@ -29,8 +29,8 @@ python programs to achieve a scalable I/O performance.
   ["test/"](./test) and ["examples/"](./examples).
 
 ### Additional Resources
-* [Example programs](./examples#pnetcdf-python-examples) are available in
-  folder `./examples`.
+* [Example python programs](./examples#pnetcdf-python-examples) available in
+  folder [./examples](./examples).
 * PnetCDF-python [User Guide](https://pnetcdf-python.readthedocs.io/en/latest)
 * [Data objects](docs/pnetcdf_objects.md) in PnetCDF python programming
 * [Comparison](docs/nc4_vs_pnetcdf.md) of NetCDF4-python and PnetCDF-python

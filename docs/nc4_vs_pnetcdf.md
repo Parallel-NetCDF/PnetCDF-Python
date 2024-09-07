@@ -1,7 +1,14 @@
-# Difference between NetCDF4-python and PnetCDF-python
+# Comparison between PnetCDF-Python and NetCDF4-Python
+
+Programming using [NetCDF4-Python](http://unidata.github.io/netcdf4-python/) and
+[PnetCDF-Python](https://pnetcdf-python.readthedocs.io) are very similar.
+Below lists some of the differences, including the file format support and
+operational modes.
 
 * [Supported File Formats](#supported-file-formats)
 * [Differences in Python Programming](#differences-in-python-programming)
+* [Define Mode and Data Mode](#define-mode-and-data-mode)
+* [Collective and Independent I/O Mode](#collective-and-independent-io-mode)
 * [Blocking vs. Nonblocking APIs](#blocking-vs-nonblocking-apis)
 
 ---
@@ -58,6 +65,215 @@
 | # write to variable WIND in the file<br>var[0, 5:10, 0:10] = buff | ditto NetCDF4 |
 | ... ||
 | # close file<br>f.close() | ditto NetCDF4 |
+
+---
+## Define Mode and Data Mode
+
+In PnetCDF, an opened file is in either define mode or data mode. Switching
+between the modes is done by explicitly calling `"pnetcdf.File.enddef()"` and
+`"pnetcdf.File.redef()"`. NetCDF4-Python has no such mode switching
+requirement. The reason of PnetCDF enforcing such a requirement is to ensure
+the metadata consistency across all the MPI processes and keep the overhead of
+metadata synchronization small.
+
+* Define mode
+  + When calling constructor of python class `"pnetcdf.File()"` to create a new
+    file, the file is automatically put in the define mode.  While in the
+    define mode, the python program can create new dimensions, i.e. instances
+    of class `"pnetcdf.Dimension"`, new variables, i.e. instances of class
+    `"pnetcdf.Variable"`, and netCDF attributes. Modification of these data
+    objects' metadata can only be done when the file is in the define mode.
+  + When opening an existing file, the opened file is automatically put in the
+    data mode. To add or modify the metadata, a python program must call
+    `"pnetcdf.File.redef()"`.
+
+* Data mode
+  + Once the creation or modification of metadata is complete, the python
+    program must call `"pnetcdf.File.enddef()"` to leave the define mode and
+    enter the data mode.
+  + While an open file is in data mode, the python program can make read and
+    write requests to that variables that have been created.
+
+<ul>
+  <li> A PnetCDF-Python example shows switching between define and data modes
+       after creating a new file.</li>
+  <li> <details>
+  <summary>Example code fragment (click to expand)</summary>
+
+```python
+  import pnetcdf
+  ...
+  # Create the file
+  f = pnetcdf.File(filename, 'w', "NC_64BIT_DATA", MPI.COMM_WORLD)
+  ...
+  # Define dimensions
+  dim_y = f.def_dim("Y", 16)
+  dim_x = f.def_dim("X", 32)
+
+  # Define a 2D variable of integer type
+  var = f.def_var("grid", pnetcdf.NC_INT, (dim_y, dim_x))
+
+  # Add an attribute of string type to the variable
+  var.str_att_name = "example attribute"
+
+  # Exit the define mode
+  f.enddef()
+
+  # Write to a subarray of the variable, var
+  var[4:8, 20:24] = buf
+
+  # Re-enter the define mode
+  f.redef()
+
+  # Define a new 2D variable of float type
+  var_flt = f.def_var("temperature", pnetcdf.NC_FLOAT, (dim_y, dim_x))
+
+  # Exit the define mode
+  f.enddef()
+
+  # Write to a subarray of the variable, var_flt
+  var_flt[0:4, 16:20] = buf_flt
+
+  # Close the file
+  f.close()
+```
+</details></li>
+
+  <li> An example shows switching between define and data modes after opening an existing file.
+  </li>
+  <li> <details>
+  <summary>Example code fragment (click to expand)</summary>
+
+```python
+  import pnetcdf
+  ...
+  # Opening an existing file
+  f = pnetcdf.File(filename, 'r', MPI.COMM_WORLD)
+  ...
+  # get the python handler of variable named 'grid', a 2D variable of integer type
+  var = f.variables['grid']
+
+  # Read the variable's attribute named "str_att_name"
+  str_att = var.str_att_name
+
+  # Read a subarray of the variable, var
+  r_buf = np.empty((4, 4), var.dtype)
+  r_buf = var[4:8, 20:24]
+
+  # Re-enter the define mode
+  f.redef()
+
+  # Define a new 2D variable of double type
+  var_dbl = f.def_var("precipitation", pnetcdf.NC_DOUBLE, (dim_y, dim_x))
+
+  # Add an attribute of string type to the variable
+  var_dbl.unit = "mm/s"
+
+  # Exit the define mode
+  f.enddef()
+
+  # Write to a subarray of the variable, temperature
+  var_dbl[0:4, 16:20] = buf_dbl
+
+  # Close the file
+  f.close()
+```
+</details></li>
+</ul>
+
+
+---
+## Collective and Independent I/O Mode
+
+The terminology of collective and independent I/O comes from MPI standard. A
+collective I/O function call requires all the MPI processes opening the same
+file to participate. On the other hand, an independent I/O function can be
+called by an MPI process independently from others.
+
+For metadata I/O, both PnetCDF and NetCDF4 require the function calls to be
+collective.
+
+* Mode Switch Mechanism
+  + PnetCDF-Python -- when a file is in the data mode, it can be put into
+    either collective or independent I/O mode.  The default mode is collective
+    I/O mode.  Switching to and exiting from the independent I/O mode is done
+    by explicitly calling `"pnetcdf.File.begin_indep()"` and
+    `"pnetcdf.File.end_indep()"`.
+
+  + NetCDF4-Python -- collective and independent mode switching is done per
+    variable basis. Switching mode is done by explicitly calling
+    `"Variable.set_collective()"` before accessing the variable.
+    For more information, see
+    [NetCDF4-Python User Guide on Parallel I/O](https://unidata.github.io/netcdf4-python/#parallel-io)
+
+<ul>
+  <li> A PnetCDF-Python example shows switching between collective and
+       independent I/O modes.</li>
+  <li> <details>
+  <summary>Example code fragment (click to expand)</summary>
+
+```python
+  import pnetcdf
+  ...
+  # Create the file
+  f = pnetcdf.File(filename, 'w', "NC_64BIT_DATA", MPI.COMM_WORLD)
+  ...
+  # Metadata operations to define dimensions and variables
+  ...
+  # Exit the define mode (by default, in the collective I/O mode)
+  f.enddef()
+
+  # Write to variables collectively
+  var_flt[start_y:end_y, start_x:end_x] = buf_flt
+  var_dbl[start_y:end_y, start_x:end_x] = buf_dbl
+
+  # Leaving collective I/O mode and entering independent I/O mode
+  f.begin_indep()
+
+  # Write to variables independently
+  var_flt[start_y:end_y, start_x:end_x] = buf_flt
+  var_dbl[start_y:end_y, start_x:end_x] = buf_dbl
+
+  # Close the file
+  f.close()
+```
+</details></li>
+</ul>
+
+<ul>
+  <li> A NetCDF4-Python example shows switching between collective and
+       independent I/O modes.</li>
+  <li> <details>
+  <summary>Example code fragment (click to expand)</summary>
+
+```python
+  import netCDF4
+  ...
+  # Create the file
+  f = netCDF4.File(filename, 'w', "NC_64BIT_DATA", MPI.COMM_WORLD, parallel=True)
+  ...
+  # Metadata operations to define dimensions and variables
+  ...
+
+  # Write to variables collectively
+  var_flt.set_collective(True)
+  var_flt[start_y:end_y, start_x:end_x] = buf_flt
+
+  var_dbl.set_collective(True)
+  var_dbl[start_y:end_y, start_x:end_x] = buf_dbl
+
+  # Write to variables independently
+  var_flt.set_collective(False)
+  var_flt[start_y:end_y, start_x:end_x] = buf_flt
+
+  var_dbl.set_collective(False)
+  var_dbl[start_y:end_y, start_x:end_x] = buf_dbl
+
+  # Close the file
+  f.close()
+```
+</details></li>
+</ul>
 
 ---
 
