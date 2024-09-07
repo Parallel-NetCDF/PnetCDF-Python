@@ -13,8 +13,8 @@ To run:
 Example commands for MPI run and outputs from running ncmpidump on the
 netCDF file produced by this example program:
 
-  % mpiexec -n 4 python3 global_attribute.py ./tmp/test2.nc
-  % ncmpidump ./tmp/test2.nc
+  % mpiexec -n 4 python3 global_attribute.py testfile.nc
+  % ncmpidump testfile.nc
      netcdf testfile {
      // file format: CDF-1
 
@@ -32,12 +32,9 @@ from mpi4py import MPI
 import pnetcdf
 
 
-def pnetcdf_io(filename, file_format):
-    digit = np.int16([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+def write_attr(filename, file_format):
 
-    # Run pnetcdf i/o
-
-    # Create the file
+    # Create a new file
     f = pnetcdf.File(filename = filename,
                      mode = 'w',
                      format = file_format,
@@ -53,49 +50,75 @@ def pnetcdf_io(filename, file_format):
     # Make sure the time string is consistent among all processes
     str_att = comm.bcast(str_att, root=0)
 
-    # write a global attribute
+    # write a global attribute of string data type
     f.history = str_att
+
+    # Equivalently, this can also be done by using a function call
+    f.put_att('history',str_att)
 
     if rank == 0 and verbose:
         print(f'writing global attribute "history" of text {str_att}')
 
-    # Equivalently, below uses function call
-    f.put_att('history',str_att)
+    # add another global attribute named "digits": an array of type int16
+    digits = np.int16([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    f.digits = digits
 
-    # add another global attribute named "digits": an array of short type
-    f.digits = digit
+    # Equivalently, this can also be done by using a function call
+    f.put_att('digits', digits)
+
     if rank == 0 and verbose:
         print("writing global attribute \"digits\" of 10 short integers")
-
-    # Equivalently, below uses function call
-    f.put_att('digits', digit)
 
     # Close the file
     f.close()
 
-    # Read the file
-    f = pnetcdf.File(filename=filename, mode = 'r')
 
-    # get the number of attributes
-    ngatts = len(f.ncattrs())
+def read_attr(filename):
+
+    # Open the file for read
+    f = pnetcdf.File(filename = filename, mode = 'r')
+
+    # obtain the name list of all global attributes
+    gatt_names = f.ncattrs()
+
+    # the number of global attributes
+    ngatts = len(gatt_names)
     if ngatts != 2:
         print(f"Error at line {sys._getframe().f_lineno} in {__file__}: expected number of global attributes is 2, but got {ngatts}")
+    elif verbose and rank == 0:
+        print("Number of global attributes = ", ngatts)
 
     # Find the name of the first global attribute
-    att_name = f.ncattrs()[0]
-    if att_name != "history":
-        print(f"Error: Expected attribute name 'history', but got {att_name}")
+    if gatt_names[0] != "history":
+        print(f"Error: Expected attribute name 'history', but got {gatt_names[0]}")
 
     # Read attribute value
-    str_att = f.get_att(att_name)
+    str_att = f.history
+
+    if verbose and rank == 0:
+        print("Global attribute name=", gatt_names[0]," value=",str_att)
+
+    # Equivalently, this can also be done by using a function call
+    str_att = f.get_att(gatt_names[0])
+
+    if verbose and rank == 0:
+        print("Global attribute name=", gatt_names[0]," value=",str_att)
 
     # Find the name of the second global attribute
-    att_name = f.ncattrs()[1]
-    if att_name != "digits":
-        print(f"Error: Expected attribute name 'digits', but got {att_name}")
+    if gatt_names[1] != "digits":
+        print(f"Error: Expected attribute name 'digits', but got {gatt_names[1]}")
 
     # Read attribute value
-    short_att = f.get_att(att_name)
+    short_att = f.digits
+
+    if verbose and rank == 0:
+        print("Global attribute name=", gatt_names[1]," value=",short_att)
+
+    # Equivalently, this can also be done by using a function call
+    short_att = f.get_att(gatt_names[1])
+
+    if verbose and rank == 0:
+        print("Global attribute name=", gatt_names[1]," value=",short_att)
 
     # close the file
     f.close()
@@ -145,7 +168,8 @@ if __name__ == "__main__":
         print("{}: example of put/get global attributes".format(os.path.basename(__file__)))
 
     try:
-        pnetcdf_io(filename, file_format)
+        write_attr(filename, file_format)
+        read_attr(filename)
     except BaseException as err:
         print("Error: type:", type(err), str(err))
         raise
