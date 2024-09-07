@@ -335,71 +335,75 @@ cdef _safecast(a,b):
             is_safe = False
     return is_safe
 
-cpdef chartostring(b,encoding='utf-8'):
+cpdef chartostring(src, encoding='utf-8'):
     """
-    chartostring(b,encoding='utf-8')
+    chartostring(src, encoding='utf-8')
 
     Convert a character array to a string array with one less dimension.
 
-    returns a numpy string array with datatype `'UN'` (or `'SN'`) and shape
-    `b.shape[:-1]` where where `N=b.shape[-1]`.
+    :param src: Input character array (numpy datatype `'S1'` or `'U1'`).
+        Will be converted to a array of strings, where each string has a fixed
+        length of `src.shape[-1]` characters.
+    :type src: numpy.ndarray
 
-    :param b: Input character array (numpy datatype `'S1'` or `'U1'`).
-    Will be converted to a array of strings, where each string has a fixed
-    length of `b.shape[-1]` characters.
-    :type b: numpy.ndarray
-
-    :param encoding: [Optional] Can be used to specify character encoding (default
-    `utf-8`). If `encoding` is 'none' or 'bytes', a `np.string_` btye array is
-    returned.
+    :param encoding: [Optional]
+        Can be used to specify character encoding (default `utf-8`). If
+        `encoding` is 'none' or 'bytes', a `np.string_` btye array is returned.
     :type encoding: str
 
-    :rtype: numpy.ndarray
+    :return: A numpy string array with datatype `'UN'` (or `'SN'`) and shape
+        `src.shape[:-1]` where where `N=src.shape[-1]`.
+
+    :rtype: ``numpy.ndarray``
 
     """
-    dtype = b.dtype.kind
+    dtype = src.dtype.kind
     if dtype not in ["S","U"]:
         raise ValueError("type must be string or unicode ('S' or 'U')")
     if encoding in ['none','None','bytes']:
-        bs = b.tobytes()
+        src_str = src.tobytes()
     else:
-        bs = b.tobytes().decode(encoding)
-    slen = int(b.shape[-1])
+        src_str = src.tobytes().decode(encoding)
+    slen = int(src.shape[-1])
     if encoding in ['none','None','bytes']:
-        a = np.array([bs[n1:n1+slen] for n1 in range(0,len(bs),slen)],'S'+repr(slen))
+        out_str = np.array([src_str[n1:n1+slen] for n1 in range(0,len(src_str),slen)],'S'+repr(slen))
     else:
-        a = np.array([bs[n1:n1+slen] for n1 in range(0,len(bs),slen)],'U'+repr(slen))
-    a.shape = b.shape[:-1]
-    return a
+        out_str = np.array([src_str[n1:n1+slen] for n1 in range(0,len(src_str),slen)],'U'+repr(slen))
+    out_str.shape = src.shape[:-1]
+    return out_str
 
-cpdef stringtochar(a,encoding='utf-8'):
+cpdef stringtochar(src, encoding='utf-8'):
     """
-    stringtochar(a,encoding='utf-8')
+    stringtochar(src, encoding='utf-8')
 
     Convert a string array to a character array with one extra dimension.
 
-    Returns a numpy character array with datatype `'S1'` or `'U1'`
-    and shape `a.shape + (N,)`, where N is the length of each string in a.
-
-    :param a: Input numpy string array with numpy datatype `'SN'` or `'UN'`, where N
-    is the number of characters in each string.  Will be converted to
-    an array of characters (datatype `'S1'` or `'U1'`) of shape `a.shape + (N,)`.
+    :param src: Input numpy string array with numpy datatype `'SN'` or `'UN'`,
+        where N is the number of characters in each string.  Will be converted
+        to an array of characters (datatype `'S1'` or `'U1'`) of shape
+        `src.shape + (N,)`.
     :type a: numpy.ndarray
 
-    :param encoding: [Optional] Can be used to specify character encoding (default
-    `utf-8`). If `encoding` is 'none' or 'bytes', a `numpy.string_` the input array
-    is treated a raw byte strings (`numpy.string_`).
+    :param encoding: [Optional]
+        Can be used to specify character encoding (default `utf-8`). If
+        `encoding` is 'none' or 'bytes', a `numpy.string_` the input array is
+        treated a raw byte strings (`numpy.string_`).
     :type encoding: str
+
+    :return: A numpy character array with datatype `'S1'` or `'U1'` and shape
+        `src.shape + (N,)`, where N is the length of each string in src.
+
+    :rtype: ``numpy.ndarray``
     """
-    dtype = a.dtype.kind
+    dtype = src.dtype.kind
     if dtype not in ["S","U"]:
         raise ValueError("type must string or unicode ('S' or 'U')")
     if encoding in ['none','None','bytes']:
-        b = np.array(tuple(a.tobytes()),'S1')
+        out_array = np.array(tuple(src.tobytes()),'S1')
     else:
-        b = np.array(tuple(a.tobytes().decode(encoding)),dtype+'1')
-    b.shape = a.shape + (a.itemsize,)
-    return b
+        out_array = np.array(tuple(src.tobytes().decode(encoding)),dtype+'1')
+    out_array.shape = src.shape + (src.itemsize,)
+    return out_array
 
 cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
 
@@ -784,21 +788,22 @@ cdef _get_format(int ncid):
     if formatp not in _reverse_format_dict:
         raise ValueError('format not supported by python interface')
     return _reverse_format_dict[formatp]
+
+
 # external C functions.
 cpdef strerror(err_code):
     """
     strerror(err_code)
 
-    The function strerror returns a static reference to an error message string corresponding
-    to an integer netCDF error status or to a system error number, presumably returned by a previous
-    call to some other PnetCDF function.
+    This function returns an error message string corresponding to an integer
+    netCDF error code or to a system error number, presumably returned by a
+    call to a PnetCDF function.
 
-    :param err_code: An error status that might have been returned from a previous call
-    to some PnetCDF function.
-    :type err_code: int.
+    :param err_code: An error code returned from a call to a PnetCDF function.
+    :type err_code: int
 
+    :return: error message
     :rtype: str
-
     """
     cdef int ierr
     ierr = err_code
@@ -808,17 +813,17 @@ cpdef strerror(err_code):
 
 cpdef strerrno(err_code):
     """
-    strerror(err_code)
+    strerrno(err_code)
 
-    The function strerrno returns a character string containing the name of the NC error code.
-    For instance, ncmpi_strerrno(NC_EBADID) returns string "NC_EBADID".
+    This function returns a character string containing the name of the NC
+    error code. For instance, ncmpi_strerrno(NC_EBADID) returns string
+    "NC_EBADID".
 
-    :param err_code: An error status that might have been returned from a previous call
-    to some PnetCDF function.
-    :type err_code: int.
+    :param err_code: An error code returned from a call to a PnetCDF function.
+    :type err_code: int
 
+    :return: name of the NC error code.
     :rtype: str
-
     """
     cdef int ierr
     ierr = err_code
@@ -829,19 +834,22 @@ cpdef set_default_format(int new_format):
     """
     set_default_format(int new_format)
 
-    The function  allows the user to change the format of the netCDF file to be created by future
-    calls to ncmpi_create without specifying the file format. It returns the existing default
-    format while setting a new default format.
+    Thise function change the default format of the netCDF file to be created
+    in the successive file creations when no file format is explicitly passed
+    as a parameter.
 
-    :param new_format: ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting), ``pnetcdf.NC_FORMAT_CDF2``
-    (``pnetcdf.NC_FORMAT_64BIT``), or ``pnetcdf.NC_FORMAT_CDF5`` (``pnetcdf.NC_FORMAT_64BIT_DATA``).
+    :param new_format:
 
+        - ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting),
+        - ``pnetcdf.NC_FORMAT_CDF2`` (``pnetcdf.NC_FORMAT_64BIT``), or
+        - ``pnetcdf.NC_FORMAT_CDF5`` (``pnetcdf.NC_FORMAT_64BIT_DATA``).
     :rtype: int
 
-    Operational mode: This function is an independent subroutine, but is expected to be called by all processes that
-    intend to create a file later.
+    :return: The current default format before this call of setting a new
+        default format.
 
-
+    :Operational mode: This function can be called in either collective or
+        independent I/O mode, but is expected to be called by all processes.
     """
     cdef int ierr, newformat, oldformat
     newformat = new_format
@@ -854,12 +862,16 @@ cpdef inq_default_format():
     """
     inq_default_format()
 
-    The function returns the current setting for default file format.
+    Method to return the current setting for default file format, one of the
+    PnetCDF constants shown below.
+
+        - ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting),
+        - ``pnetcdf.NC_FORMAT_CDF2`` (``pnetcdf.NC_FORMAT_64BIT``), or
+        - ``pnetcdf.NC_FORMAT_CDF5`` (``pnetcdf.NC_FORMAT_64BIT_DATA``).
 
     :rtype: int
 
-    Operational mode: This function is an independent subroutine.
-
+    :Operational mode: This function is an independent subroutine.
     """
     cdef int curformat
     with nogil:
@@ -871,12 +883,16 @@ cpdef inq_file_format(str file_name):
     """
     inq_file_format(str file_name)
 
-    The function returns the current setting for default file format.
+    Method to return the current setting for default file format, one of the
+    PnetCDF constants shown below.
+
+        - ``pnetcdf.NC_FORMAT_CLASSIC`` (the default setting),
+        - ``pnetcdf.NC_FORMAT_CDF2`` (``pnetcdf.NC_FORMAT_64BIT``), or
+        - ``pnetcdf.NC_FORMAT_CDF5`` (``pnetcdf.NC_FORMAT_64BIT_DATA``).
 
     :rtype: int
 
-    Operational mode: This function is an independent subroutine.
-
+    :Operational mode: This function is an independent subroutine.
     """
     cdef char *filename
     cdef int ierr, curformat
@@ -891,7 +907,8 @@ cpdef inq_malloc_max_size():
     """
     inq_malloc_max_size()
 
-    Return the maximum size in bytes of memory allocated internally
+    Return the maximum size in bytes of memory allocated internally in PnetCDF
+
     :rtype: int
     """
     cdef int ierr
@@ -905,7 +922,8 @@ cpdef inq_malloc_size():
     """
     inq_malloc_size()
 
-    Return the size in bytes of current memory allocated internally
+    Return the size in bytes of current memory allocated internally in PnetCDF
+
     :rtype: int
     """
     cdef int ierr
@@ -914,6 +932,7 @@ cpdef inq_malloc_size():
         ierr = ncmpi_inq_malloc_size(<MPI_Offset *>&size)
     _check_err(ierr)
     return size
+
 """
 cpdef inq_files_opened(ncids=None):
     cdef int ierr, num
