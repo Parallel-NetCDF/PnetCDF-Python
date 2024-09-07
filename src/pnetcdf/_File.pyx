@@ -29,14 +29,10 @@ import numpy as np
 
 
 
-ctypedef MPI.Comm Comm
-ctypedef MPI.Info Info
-
-
 cdef class File:
-    def __init__(self, filename, mode="w", format=None, Comm comm=None, Info info=None, **kwargs):
+    def __init__(self, filename, mode="w", format=None, MPI.Comm comm=None, MPI.Info info=None):
         """
-        __init__(self, filename, format=None, mode="w", Comm comm=None, Info info=None, **kwargs)
+        __init__(self, filename, format=None, mode="w", MPI.Comm comm=None, MPI.Info info=None)
 
         The constructor for :class:`pnetcdf.File`.
 
@@ -461,7 +457,8 @@ cdef class File:
         tuple(self.dimensions[d] if isinstance(d,(str,bytes)) else d for d in dimensions)
         # create variable.
         self.variables[varname] = Variable(self, varname, datatype,
-        dimensions=dimensions, fill_value=fill_value)
+                                           dimensions=dimensions,
+                                           fill_value=fill_value)
         return self.variables[varname]
 
     def createVariable(self, varname, datatype, dimensions=(), fill_value=None):
@@ -989,7 +986,7 @@ cdef class File:
         """
         cdef MPI_Info *mpiinfo
         cdef int ierr
-        cdef Info info_py
+        cdef MPI.Info info_py
         info_py = MPI.Info.Create()
         with nogil:
             ierr = ncmpi_inq_file_info(self._ncid, &info_py.ob_mpi)
@@ -1060,6 +1057,7 @@ cdef class File:
             ierr = ncmpi_inq_header_extent(self._ncid, <MPI_Offset *>&extent)
         _check_err(ierr)
         return extent
+
 cdef _get_dims(file):
     # Private function to create `Dimension` instances for all the
     # dimensions in a `File`
