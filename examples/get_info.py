@@ -52,7 +52,7 @@ def pnetcdf_io(filename):
     # create a new file using clobber "w" mode
     f = pnetcdf.File(filename=filename,
                      mode = 'w',
-                     file_format = "NC_64BIT_DATA",
+                     format = "NC_64BIT_DATA",
                      comm=comm,
                      info=None)
 

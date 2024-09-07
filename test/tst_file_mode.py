@@ -58,7 +58,7 @@ class FileTestCase(unittest.TestCase):
     def runTest(self):
         """testing file access with different modes with CDF5/CDF2/CDF1 file format"""
         # TEST MODE "w"
-        with pnetcdf.File(filename=self.file_path, mode='w', format=self.file_format, Comm=comm) as f:
+        with pnetcdf.File(filename=self.file_path, mode='w', format=self.file_format, comm=comm) as f:
         # Try writing to file by defining a dimension
             f.def_dim('x',xdim)
         # Validate the created data file using ncvalidator tool
