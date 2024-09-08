@@ -48,13 +48,13 @@ instructions can be found at the beginning of each file.
   + This example shows how to use `File` class constructor to create a NetCDF
     file and to open the file for read only.
 
-* [put_vara.py](./put_vara.py)
+* [put_var.py](./put_var.py)
   + This example shows how to use `Variable` method put_var() to write a 2D
     integer array in parallel. The data partitioning pattern is a column-wise
     partitioning across all processes.
 
-* [get_vara.py](./get_vara.py)
-  + This example is the read counterpart of [put_vara.py](./put_vara.py), which
+* [get_var.py](./get_var.py)
+  + This example is the read counterpart of [put_var.py](./put_var.py), which
     shows how to use to `Variable` method get_var() read a 2D 4-byte integer
     array in parallel.
 
@@ -72,7 +72,7 @@ instructions can be found at the beginning of each file.
     * `set_fill()` to enable fill mode of the file
     * `def_fill()` to enable fill mode and define the variable's fill value
     * `inq_var_fill()` to inquire the variable's fill mode information
-    * `put_vara_all()` to write two 2D 4-byte integer array in parallel.
+    * `put_var_all()` to write two 2D 4-byte integer array in parallel.
 
 * [global_attribute.py](./global_attribute.py)
   + This example shows how to use `File` method `put_att()` to write a global

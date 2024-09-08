@@ -14,8 +14,8 @@ check_PROGRAMS = collective_write.py \
                  put_varn_int.py \
                  transpose2D.py \
                  transpose.py \
-                 put_vara.py \
-                 get_vara.py
+                 put_var.py \
+                 get_var.py
 
 
 TESTS_ENVIRONMENT  = export check_PROGRAMS="${check_PROGRAMS}";

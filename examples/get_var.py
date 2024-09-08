@@ -4,16 +4,16 @@
 #
 
 """
-This example is the read counterpart of example put_vara.py. It shows how to
+This example is the read counterpart of example put_var.py. It shows how to
 use to `Variable` method get_var() read a 2D 4-byte integer array in parallel.
 It also reads a global attribute and two attribute of variable named "var".
 The data partitioning pattern is a column-wise partitioning across all
 processes. Each process reads a subarray of size local_ny * local_nx.
 
 To run:
-     % mpiexec -n num_process python3 get_vara.py [put_vara_output_filename]
+     % mpiexec -n num_process python3 get_var.py [put_var_output_filename]
 
-Input file is the output file produced by put_vara.c. Here is the CDL dumped
+Input file is the output file produced by put_var.c. Here is the CDL dumped
 from running ncmpidump.
 
      % ncmpidump /tmp/test1.nc

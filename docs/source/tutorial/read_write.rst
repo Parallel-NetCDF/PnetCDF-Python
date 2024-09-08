@@ -77,7 +77,7 @@ Read from netCDF variables
     f.end_indep()
     buf = var.get_var(start = [0, 0], count = [5, 25], stride = [2,2])
 
- For full example program, see ``examples/get_vara.py``.
+ For full example program, see ``examples/get_var.py``.
 
 Write to netCDF variables
  For writing, the behavior of :meth:`Variable.put_var` depends on the following
@@ -111,6 +111,6 @@ Write to netCDF variables
     f.end_indep()
     var.put_var(buff, start = [0, 0], count = [5, 25], stride = [2,2])
 
- For the full example program, see ``examples/put_vara.py`` and ``examples/collective_write.py``.
+ For the full example program, see ``examples/put_var.py`` and ``examples/collective_write.py``.
 
 

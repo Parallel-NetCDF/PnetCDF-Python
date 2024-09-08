@@ -13,12 +13,12 @@ The data partitioning pattern is a column-wise partitioning across all
 processes. Each process writes a subarray of size ny * nx.
 
 To run:
-  % mpiexec -n num_process python3 put_vara.py [test_file_name]
+  % mpiexec -n num_process python3 put_var.py [test_file_name]
 
   Example commands for MPI run and outputs from running ncmpidump on the
   output netCDF file produced by this example program:
 
-  % mpiexec -n num_process python3 put_vara.py /tmp/test1.nc
+  % mpiexec -n num_process python3 put_var.py /tmp/test1.nc
 
   % ncmpidump /tmp/test1.nc
     netcdf test1 {

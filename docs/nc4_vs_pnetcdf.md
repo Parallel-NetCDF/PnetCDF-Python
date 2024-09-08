@@ -280,9 +280,9 @@ collective.
 ## Blocking vs Nonblocking APIs
 * Blocking APIs -- All NetCDF4 APIs are blocking APIs. A blocking API means the
   call to the API will not return until the operation is completed. For
-  example, `nc_put_vara_float()` will return only when the write data has been
-  stored at the system space, e.g. file systems. Similarly,
-  `nc_get_vara_float()` will only return when the user read buffer containing
+  example, a call to `Variable.put_var()` will return only when the write data
+  has been stored at the system space, e.g. file systems. Similarly, a call to
+  `Variable.get_var()` will only return when the user read buffer containing
   the data retrieved from the file. Therefore, when a series of `put/get`
   blocking APIs are called, these calls will be committed by the NetCDF4
   library one at a time, following the same order of the calls.

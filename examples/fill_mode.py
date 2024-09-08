@@ -9,7 +9,7 @@ to set the fill mode of variables and fill values.
  * 1. set_fill() to enable fill mode of the file
  * 2. def_fill() to enable fill mode and define the variable's fill value
  * 3. inq_var_fill() to inquire the variable's fill mode information
- * 4. put_vara_all() to write two 2D 4-byte integer array in parallel.
+ * 4. put_var_all() to write two 2D 4-byte integer array in parallel.
 
 Example commands for MPI run and outputs from running ncmpidump on the
 netCDF file produced by this example program:

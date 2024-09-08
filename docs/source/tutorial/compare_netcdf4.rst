@@ -62,7 +62,7 @@ Alternative Reads and Writes Methods
  as read/write buffer, which is a prerequisite non-blocking I/O as introduced
  below.
 
- An example program can be found in ``examples/get_vara.py``.
+ An example program can be found in ``examples/get_var.py``.
 
 Nonblocking I/O
 ------------------------------------------
