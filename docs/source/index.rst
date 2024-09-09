@@ -6,6 +6,8 @@
 PnetCDF-Python Documentation
 ============================
 
+**Release:** |release|
+
 .. toctree::
    :maxdepth: 2
    :caption: Introduction
