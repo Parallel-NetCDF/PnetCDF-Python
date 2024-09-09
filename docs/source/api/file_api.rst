@@ -15,8 +15,7 @@ relations among data fields stored in a netCDF file.
     detach_buff, set_fill, inq_buff_usage, inq_buff_size, inq_num_rec_vars,
     inq_num_fix_vars, inq_striping, inq_recsize, inq_version, inq_info,
     inq_header_size, inq_put_size, inq_header_extent, inq_nreqs
-   :exclude-members: dimensions, variables, file_format, libver, indep_mode,
-    path
+   :exclude-members: dimensions, variables, file_format, indep_mode, path
 
 Read-only Python Attributes of File Class
  The following class members are read-only and should not be modified by the
@@ -41,12 +40,6 @@ Read-only Python Attributes of File Class
       The file format of the netCDF file. Possible values are one of the
       following strings. "CLASSIC", "CDF2", "64BIT_OFFSET", "64BIT", "CDF5",
       "64BIT_DATA", "NETCDF4" and "BP".
-
-      **Type:** `str`
-
-   .. attribute:: libver
-
-      The PnetCDF-Python version string.
 
       **Type:** `str`
 

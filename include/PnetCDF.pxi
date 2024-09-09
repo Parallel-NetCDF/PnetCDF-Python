@@ -21,6 +21,7 @@ cdef extern from "pnetcdf.h":
     ctypedef int MPI_Datatype
     const_char_ptr ncmpi_strerror(int err);
     const_char_ptr ncmpi_strerrno(int err);
+    const_char_ptr ncmpi_inq_libvers();
 
 
     cdef const int NC_BYTE_C "NC_BYTE"
