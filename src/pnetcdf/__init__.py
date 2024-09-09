@@ -17,7 +17,7 @@ def libver():
     """
     libver()
 
-    :return: PnetCDF-Python version string.
+    :return: The PnetCDF-Python version string, for example "1.0.0".
     :rtype: str
     """
     return __version__

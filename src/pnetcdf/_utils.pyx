@@ -799,7 +799,8 @@ cpdef inq_clibvers():
     library used to build this PnetCDF-Python module, and when the PnetCDF-C
     library was built.
 
-    :return: a string about PnetCDF-C library
+    :return: A string about PnetCDF-C library, for example, "1.13.0 of March 29, 2024".
+
     :rtype: str
     """
     ver_str = (<char *>ncmpi_inq_libvers()).decode('ascii')
