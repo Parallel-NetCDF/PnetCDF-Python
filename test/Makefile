@@ -47,7 +47,8 @@ check_PROGRAMS = tst_atts.py \
                  tst_var_string.py \
                  tst_var_type.py \
                  tst_version.py \
-                 tst_wait.py
+                 tst_wait.py \
+                 tst_libver.py
 
 TESTS_ENVIRONMENT = export check_PROGRAMS="${check_PROGRAMS}";
 OUTPUT_DIR = _tmp_output
