@@ -5,11 +5,11 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
+import pnetcdf
 project = 'PnetCDF Python'
 copyright = '2024, Northwestern University and Argonne National Laboratory'
 author = 'PnetCDF-Python Developer Team'
-release = '0.1.0'
+release = pnetcdf.__version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
