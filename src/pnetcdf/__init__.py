@@ -12,3 +12,13 @@ from ._File import *
 from ._Dimension import *
 from ._Variable import *
 from ._utils import *
+
+def libver():
+    """
+    libver()
+
+    :return: The PnetCDF-Python version string, for example "1.0.0".
+    :rtype: str
+    """
+    return __version__
+

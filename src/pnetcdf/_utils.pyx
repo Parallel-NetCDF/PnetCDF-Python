@@ -791,6 +791,21 @@ cdef _get_format(int ncid):
 
 
 # external C functions.
+cpdef inq_clibvers():
+    """
+    inq_clibvers()
+
+    This function returns a string describing the version of the PnetCDF-C
+    library used to build this PnetCDF-Python module, and when the PnetCDF-C
+    library was built.
+
+    :return: A string about PnetCDF-C library, for example, "1.13.0 of March 29, 2024".
+
+    :rtype: str
+    """
+    ver_str = (<char *>ncmpi_inq_libvers()).decode('ascii')
+    return ver_str
+
 cpdef strerror(err_code):
     """
     strerror(err_code)
@@ -807,7 +822,6 @@ cpdef strerror(err_code):
     """
     cdef int ierr
     ierr = err_code
-
     err_str = (<char *>ncmpi_strerror(ierr)).decode('ascii')
     return err_str
 
@@ -873,7 +887,7 @@ cpdef inq_default_format():
 
     :Operational mode: This function is an independent subroutine.
     """
-    cdef int curformat
+    cdef int ierr, curformat
     with nogil:
         ierr = ncmpi_inq_default_format(&curformat)
     _check_err(ierr)

@@ -14,12 +14,20 @@ from setuptools.dist import Distribution
 import mpi4py
 import json
 from packaging import version
+import shutil
 
 open_kwargs = {'encoding': 'utf-8'}
 
+if 'CC' not in os.environ:
+    # environment variable CC is not set
+    # check if command 'mpicc' is available in PATH
+    path = shutil.which("mpicc")
+    if path is None:
+        raise RuntimeError("Error: could not find an mpicc, please set it in environment variable CC")
+    os.environ["CC"] = path
+
 PnetCDF_dir = os.environ.get('PNETCDF_DIR')
 pnc_config = None
-
 
 try:
     if pnc_config is None:

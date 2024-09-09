@@ -30,7 +30,11 @@ fi
 for prog in ${check_PROGRAMS} ; do
    printf '%-60s' "Testing $prog "
 
-   CMD="mpiexec -n $NPROC python $prog $OUT_DIR"
+   if test $prog = "tst_libver.py" ; then
+      CMD="mpiexec -n $NPROC python $prog -q"
+   else
+      CMD="mpiexec -n $NPROC python $prog $OUT_DIR"
+   fi
    $CMD
    status=$?
    if [ $status -ne 0 ]; then
