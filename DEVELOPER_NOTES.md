@@ -1,6 +1,33 @@
 ## Notes for PnetCDF-python developers
 ---
-### Note on python library packaging
+### Library packaging and publishing
+ * Packaging: build source distribution and wheel distribution (optional)
+  1. Create virtual env and install PnetCDF-C and all python dependencies as developer installation
+  2. Update version number, cd to repo directory and generate distribution:
+  ```
+  python3 -m pip install --upgrade build twine
+  ```
+  ```
+  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python3 -m build
+  ```
+ * Publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing
+ 1. Create TestPyPI account and update `.pypirc` as instruction
+ 2. Publish source distribution on TestPyPI
+ ```
+ python3 -m pip install --upgrade build twine
+ ```
+ ```
+ python3 -m twine upload --repository testpypi dist/pnetcdf-x.x.x.tar.gz
+ ```
+ 3. Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich is installed. Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index.
+ ```
+ CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pnetcdf==x.x.x
+ ```
+
+ 4. Run test programs
+
+
+### Library installation
  * Quick install
    * Currently, quick install via `pip install pnetcdf` is disabled. Main challenge is that build distribution (using wheels) is platform-specific and multiple wheels need to be generated to cover all mainstream platforms. A working source distribution for `pip install` is easier and has been tested on PyPI (works for all platforms but still needs MPI and PnetCDF-C installation) 
    * `MANIFEST.in` controls files to be included in source distribution (sdist), which will be eventually uploaded to PyPI if we enables quick install in the future. After modifications to `MANIFEST.IN` file, here are steps to check if the files included are valid to build the library.
@@ -38,6 +65,7 @@
     * `pip install .` works as a wrapper command for the above but it goes further: it automatically handles and install any dependencies listed in `pyproject.toml` file.Need to pay special attention to the dependencies listed in `requires` under `[build-system]` and `dependencies`. 
       * `dependencies` defines python libraries required for running the project and will first check if requirement already satisfied in current environment before installing the latest qualified version of the library.
       * `requires` defines libraries required for building the project. `pip install` by default creates and uses isolated building env for building stage which completely ignores current user env. For example, if user already installed mpi4py==3.1.6, "mpi4py>=3.1.4" will still automatically install a mpi4py 4.0.0 in the building env and thereafter use syntax from 4.0.0 to build pnetcdf-python. This caused version mismatch issues between building and running envs when numpy 2.0 and mpi4py 4.0.0 are released. To address this issue, current user guide forces to use current python env for building stage by adding ` -no-build-isolation` arg to `pip install` command.
+
 
 ### Note on configuring Read the Docs tool for user guide generation
  * Read the Docs settings
