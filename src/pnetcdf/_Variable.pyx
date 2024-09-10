@@ -992,8 +992,8 @@ cdef class Variable:
 
         This method call is the same as method :meth:`Variable.put_varn_all`,
         except it is an independent call and can only be called in the
-        independent I/O mode. Please refer to :meth:`Variable.put_varn` for its
-        argument usage.
+        independent I/O mode. Please refer to :meth:`Variable.put_varn_all` for
+        its argument usage.
         """
         self._put_varn(data, num, starts, counts, bufcount = bufcount,
                        buftype = buftype, collective = False)
@@ -1005,22 +1005,22 @@ cdef class Variable:
         This method call is the nonblocking counterpart of
         :meth:`Variable.put_varn`. The syntax is the same as
         :meth:`Variable.put_varn`. For the argument usage, please refer to
-        method :meth:`Variable.put_varn`. This method returns a request ID
-        that can be used in :meth:`File.wait` or :meth:`File.wait_all`. The
-        posted write request may not be committed until :meth:`File.wait` or
-        :meth:`File.wait_all` is called.
+        method :meth:`Variable.put_varn_all`. This method returns a request ID
+        that can be used in :meth:`File.wait_all` or :meth:`File.wait`. The
+        posted write request may not be committed until :meth:`File.wait_all` or
+        :meth:`File.wait` is called.
 
         .. note::
             Unlike :meth:`Variable.put_varn`, the posted nonblocking write
             requests may not be committed to the file until the time of calling
-            :meth:`File.wait` or :meth:`File.wait_all`.  Users should not
+            :meth:`File.wait_all` or :meth:`File.wait`.  Users should not
             alter the contents of the write buffer once the request is posted
-            until the :meth:`File.wait` or :meth:`File.wait_all` is
+            until the :meth:`File.wait_all` or :meth:`File.wait` is
             returned. Any change to the buffer contents in between will result
             in unexpected error.
 
         :return: The request ID, which can be used in a successive call to
-            :meth:`File.wait` or :meth:`File.wait_all` for the completion
+            :meth:`File.wait_all` or :meth:`File.wait` for the completion
             of the nonblocking operation.
         :rtype: int
         """
@@ -1033,22 +1033,22 @@ cdef class Variable:
 
         This method call is the nonblocking, buffered counterpart of
         :meth:`Variable.put_varn`. For the argument usage, please refer to
-        method :meth:`Variable.put_varn`. This method returns a request ID
-        that can be used in :meth:`File.wait` or :meth:`File.wait_all`. The
-        posted write request may not be committed until :meth:`File.wait` or
-        :meth:`File.wait_all` is called.
+        method :meth:`Variable.put_varn_all`. This method returns a request ID
+        that can be used in :meth:`File.wait_all` or :meth:`File.wait`. The
+        posted write request may not be committed until :meth:`File.wait_all`
+        or :meth:`File.wait` is called.
 
         .. note::
             Unlike :meth:`Variable.iput_varn`, the write data is buffered
             (cached) internally by PnetCDF and will be flushed to the file at
-            the time of calling :meth:`File.wait` or :meth:`File.wait_all`.
+            the time of calling :meth:`File.wait_all` or :meth:`File.wait`.
             Once the call to this method returns, the caller is free to change
             the contents of write buffer. Prior to calling this method, make
             sure :meth:`File.attach_buff` is called to allocate an internal
             buffer for accommodating the write requests.
 
         :return: The request ID, which can be used in a successive call to
-            :meth:`File.wait` or :meth:`File.wait_all` for the completion
+            :meth:`File.wait_all` or :meth:`File.wait` for the completion
             of the nonblocking operation.
         :rtype: int
         """
@@ -1331,7 +1331,7 @@ cdef class Variable:
 
         Method to write in parallel to the netCDF variable in the independent
         I/O mode. For the argument usage, please refer to method
-        :meth:`Variable.put_var`. The only difference is this method is a
+        :meth:`Variable.put_var_all`. The only difference is this method is a
         independent operation.
 
         :Operational mode: This method must be called while the file is in
@@ -1852,7 +1852,7 @@ cdef class Variable:
 
         Method to read in parallel from the netCDF variable in the independent
         I/O mode.  For the argument usage, please refer to method
-        :meth:`Variable.get_var`. The only difference is this method is a
+        :meth:`Variable.get_var_all`. The only difference is this method is a
         independent operation.
 
         :Operational mode: This method must be called while the file is in
@@ -1871,13 +1871,13 @@ cdef class Variable:
         else:
             raise ValueError("Invalid input arguments for get_var")
 
-    def get_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def get_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None):
         """
-        get_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
+        get_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
         Method to read multiple subarrays of a netCDF variables from the file.
-        This an independent I/O call and can only be called when the file is in
-        the independent I/O mode. This method is equivalent to making multiple
+        This a collective  I/O call and can only be called when the file is in
+        the collective I/O mode. This method is equivalent to making multiple
         calls to :meth:`Variable.get_var`. Note, combining multiple `get_var`
         calls into one can achieve a better performance.
 
@@ -1974,19 +1974,19 @@ cdef class Variable:
 
         """
         return self._get_varn(data, num, starts, counts, bufcount = bufcount,
-                              buftype = buftype, collective = False)
+                              buftype = buftype, collective = True)
 
-    def get_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def get_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
         """
-        get_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None)
+        get_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
-        This method call is the same as method :meth:`Variable.get_varn`,
-        except it is collective and can only be called while the file in the
-        collective I/O mode. Please refer to :meth:`Variable.get_varn` for
-        its argument usage.
+        This method call is the same as method :meth:`Variable.get_varn_all`,
+        except it is an independent call and can only be called while the file
+        in the independent I/O mode. Please refer to
+        :meth:`Variable.get_varn_all` for its argument usage.
         """
         return self._get_varn(data, num, starts, counts, bufcount = bufcount,
-                              buftype = buftype, collective = True)
+                              buftype = buftype, collective = False)
 
     def _get(self,start,count,stride):
         """Private method to retrieve data from a netCDF variable"""
@@ -2344,24 +2344,25 @@ cdef class Variable:
 
         Method to post a nonblocking, buffered write request to write to the
         netCDF variable. The syntax is the same as :meth:`Variable.put_var`.
-        For the argument usage, please refer to :meth:`Variable.put_var`. This
-        method returns a request ID that can be used in :meth:`File.wait` or
-        :meth:`File.wait_all`. The posted write request may not be committed
-        until :meth:`File.wait` or :meth:`File.wait_all` is called.
+        For the argument usage, please refer to :meth:`Variable.put_var_all`.
+        This method returns a request ID that can be used in
+        :meth:`File.wait_all` or :meth:`File.wait`. The posted write request
+        may not be committed until :meth:`File.wait_all` or :meth:`File.wait`
+        is called.
 
         .. note:: Note that this method requires a numpy array (`data`) as a
             write buffer from caller prepared for writing returned array values
-            when :meth:`File.wait` or :meth:`File.wait_all` is called.
+            when :meth:`File.wait_all` or :meth:`File.wait` is called.
             Unlike :meth:`Variable.iput_var`, the write data is buffered
             (cached) internally by PnetCDF and will be flushed to the file at
-            the time of calling :meth:`File.wait` or :meth:`File.wait_all`.
+            the time of calling :meth:`File.wait_all` or :meth:`File.wait`.
             Once the call to this method returns, the caller is free to change
             the contents of write buffer.  Prior to calling this method, make
             sure :meth:`File.attach_buff` is called to allocate an internal
             buffer for accommodating the write requests.
 
         :return: The request ID, which can be used in a successive call to
-            :meth:`File.wait` or :meth:`File.wait_all` for the completion
+            :meth:`File.wait_all` or :meth:`File.wait` for the completion
             of the nonblocking operation.
         :rtype: int
 
@@ -2388,22 +2389,22 @@ cdef class Variable:
 
         Method to post a nonblocking request to write to the netCDF variable.
         The syntax is the same as :meth:`Variable.put_var`. For the argument
-        usage, please refer to :meth:`Variable.put_var`. This method returns a
-        request ID that can This method returns a request ID that can be used
-        in :meth:`File.wait` or :meth:`File.wait_all`. The posted write request
-        may not be committed until :meth:`File.wait` or :meth:`File.wait_all`
-        is called.
+        usage, please refer to :meth:`Variable.put_var_all`. This method
+        returns a request ID that can This method returns a request ID that can
+        be used in :meth:`File.wait_all` or :meth:`File.wait`. The posted write
+        request may not be committed until :meth:`File.wait_all` or
+        :meth:`File.wait` is called.
 
         .. note:: Note that this method requires a numpy array (`data`) as a
             write buffer from caller prepared for writing returned array values
-            when :meth:`File.wait` or :meth:`File.wait_all` is called.
-            Users should not alter the contents of the write buffer once the
-            request is posted until the :meth:`File.wait` or
-            :meth:`File.wait_all` is returned. Any change to the buffer
-            contents in between will result in unexpected error.
+            when :meth:`File.wait_all` or :meth:`File.wait` is called.  Users
+            should not alter the contents of the write buffer once the request
+            is posted until the :meth:`File.wait_all` or :meth:`File.wait` is
+            returned. Any change to the buffer contents in between will result
+            in unexpected error.
 
         :return: The request ID, which can be used in a successive call to
-            :meth:`File.wait` or :meth:`File.wait_all` for the completion
+            :meth:`File.wait_all` or :meth:`File.wait` for the completion
             of the nonblocking operation.
         :rtype: int
 
@@ -2538,22 +2539,22 @@ cdef class Variable:
         This method call is the nonblocking counterpart of
         :meth:`Variable.get_varn`. The syntax is the same as
         :meth:`Variable.get_varn`. For the argument usage, please refer to
-        method :meth:`Variable.get_varn`. This method returns a request ID
-        that can be used in :meth:`File.wait` or :meth:`File.wait_all`. The
-        posted write request may not be committed until :meth:`File.wait` or
-        :meth:`File.wait_all` is called.
+        method :meth:`Variable.get_varn_all`. This method returns a request ID
+        that can be used in :meth:`File.wait_all` or :meth:`File.wait`. The
+        posted write request may not be committed until :meth:`File.wait_all`
+        or :meth:`File.wait` is called.
 
         .. note::
             Unlike :meth:`Variable.get_varn`, the posted nonblocking read
             requests may not be committed until the time of calling
-            :meth:`File.wait` or :meth:`File.wait_all`.  Users should not
+            :meth:`File.wait_all` or :meth:`File.wait`.  Users should not
             alter the contents of the read buffer once the request is posted
-            until the :meth:`File.wait` or :meth:`File.wait_all` is
+            until the :meth:`File.wait_all` or :meth:`File.wait` is
             returned. Any change to the buffer contents in between will result
             in unexpected error.
 
         :return: The request ID, which can be used in a successive call to
-            :meth:`File.wait` or :meth:`File.wait_all` for the completion
+            :meth:`File.wait_all` or :meth:`File.wait` for the completion
             of the nonblocking operation.
         :rtype: int
         """
@@ -2646,20 +2647,20 @@ cdef class Variable:
 
         Method to post a nonblocking request to read from the netCDF variable.
         The syntax is the same as :meth:`Variable.get_var`. For the argument
-        usage, please refer to :meth:`Variable.get_var`.  This method returns a
-        request ID that can be used in :meth:`File.wait` or
-        :meth:`File.wait_all`. The posted read request may not be committed
-        until :meth:`File.wait` or :meth:`File.wait_all` is called.
+        usage, please refer to :meth:`Variable.get_var_all`.  This method
+        returns a request ID that can be used in :meth:`File.wait_all` or
+        :meth:`File.wait`. The posted read request may not be committed until
+        :meth:`File.wait_all` or :meth:`File.wait` is called.
 
         .. note:: Note that this method requires a empty array (`data`) as a
             read buffer from caller prepared for storing returned array values
-            when :meth:`File.wait` or :meth:`File.wait_all` is called. User
+            when :meth:`File.wait_all` or :meth:`File.wait` is called. User
             is expected to retain this buffer array handler (the numpy
             variable) until the read buffer is committed and the transaction is
             completed.
 
         :return: The request ID, which can be used in a successive call to
-            :meth:`File.wait` or :meth:`File.wait_all` for the completion
+            :meth:`File.wait_all` or :meth:`File.wait` for the completion
             of the nonblocking operation.
         :rtype: int
 
