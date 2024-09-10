@@ -77,9 +77,9 @@ def pnetcdf_io(filename):
     old_fillmode = f.set_fill(pnetcdf.NC_FILL)
     if verbose:
         if old_fillmode == pnetcdf.NC_FILL:
-            print("The old fill mode is NC_FILL\n")
+            print("The old fill mode is NC_FILL")
         else:
-            print("The old fill mode is NC_NOFILL\n")
+            print("The old fill mode is NC_NOFILL")
 
     # set the fill mode back to NC_NOFILL for the entire file
     f.set_fill(pnetcdf.NC_NOFILL)

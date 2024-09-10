@@ -1021,8 +1021,8 @@ cdef class File:
 
            # set the fill mode to NC_FILL for the entire file
            old_fillmode = f.set_fill(pnetcdf.NC_FILL)
-           if verbose:
-               if old_fillmode == pnetcdf.NC_FILL:
+
+           if old_fillmode == pnetcdf.NC_FILL:
                print("The old fill mode is NC_FILL")
            else:
                print("The old fill mode is NC_NOFILL")
