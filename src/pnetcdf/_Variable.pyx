@@ -1305,25 +1305,23 @@ cdef class Variable:
          var[start[0]:end[0], start[1]:end[1]] = buf
 
         """
-        if data is not None and all(arg is None for arg in [start, count, stride, num, imap]):
+        if data is not None and all(arg is None for arg in [start, count, stride, imap]):
             self._put_var(data, collective = True, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start]) and all(arg is None for arg in [count, stride, num, imap]):
+        elif all(arg is not None for arg in [data, start]) and all(arg is None for arg in [count, stride, imap]):
             self._put_var1(data, start, collective = True, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [stride, num, imap]):
+        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [stride, imap]):
             self._put_vara(start, count, data, collective = True, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [num, imap]):
+        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [imap]):
             self._put_vars(start, count, stride, data, collective = True, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count, num]) and all(arg is None for arg in [stride, imap]):
-            self._put_varn(start, count, num, data, collective = True, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count, imap]) and all(arg is None for arg in [num]):
+        elif all(arg is not None for arg in [data, start, count, imap]):
             self._put_varm(data, start, count, stride, imap, collective = True, bufcount = bufcount, buftype = buftype)
         else:
             raise ValueError("Invalid input arguments for put_var_all")
 
 
-    def put_var(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
+    def put_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
         """
-        put_var(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
+        put_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
         Method to write in parallel to the netCDF variable in the independent
         I/O mode. For the argument usage, please refer to method
