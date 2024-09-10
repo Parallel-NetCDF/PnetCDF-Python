@@ -18,6 +18,20 @@
      CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install dist/package-<version>.tar.gz
      ```
      5. Check installation by test and example programs
+   * More notes about quick install
+     1. Source distribution(.tar.gz)
+       * Pip-install command’s second go-to option if no matching build distribution is found on PyPI. It will build its own wheel file for the current system. For python libs with C-extension (like pnetcdf-python, netcdf4-python, h5py), wheel installation require their C bindings.
+       * Invariant to platforms/versions, usually each version of python library has one single source distribution.
+     2. Build distribution (.whl)
+       * Pip-install command’s first go-to option by default. For python libs with C-extension (like pnetcdf-python, netcdf4-python, h5py), wheel installation does not require their C bindings. 
+       * Wheels are platform-specific and python-version specific. Different system used for building and uploading will generate different versions of wheel files on PyPI. To cover most mainstream python versions and operating systems, python libraries (like [numpy 1.25](https://pypi.org/project/numpy/#files)) has 20+ wheels files to cover most mainstream systems (e.g. Linux (x86_64), macOS (x86_64), and Windows (32-bit and 64-bit)) and recent python versions.
+       * General procedures of  building and uploading python library wheels (build distributions) for MacOS and Linux systems
+         * Python libs with C-extension (like pncpy, netcdf4-python, h5py) requires shared object (.so in linux and .dylibs in mac) files collected from C software installation. When making python library wheels (build distribution), an extra post-processing step (Delocate tool for Mac, auditwheel Tool in linux) is usually performed to copy and store these files in the python package to remove these dependencies. That’s why the user’s pip install with build distribution does not require a C installation as a prerequisite.
+         * For MacOS wheels (like netCDF4-1.6.4-cp311-cp311-macosx_10_9_x86_64.whl), need to: Build the package to create the wheel -> Use Delocate tool to fix wheels -> Upload to PyPI.
+         * For Linux wheels, need to: Pull manylinux docker image -> build the package to create the wheel in this container -> Use auditwheel Tool to fix wheels -> Upload to PyPI.
+         * For some python libraries (numpy, netCDF4), a [dedicated github repo](https://github.com/MacPython/netcdf4-python-wheels) is used to automate building wheels for every release.
+
+
   * Developer install
     * Developer installation is mainly managed by `setup.py` and `pyproject.toml`. The former one is the core file to build the package and the latter manages dependencies required by `pip install` command.
     * `python setup.py install` builds and installs the python library based on the current python environment and will error out if dependency (e.g. mpi4py) not met. This command is going to be deprecated and is not recommended for modern python library installation.
