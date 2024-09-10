@@ -37,6 +37,16 @@ cdef class Dimension:
         .. note:: ``Dimension`` instances should be created using the
             :meth:`File.def_dim` method of a ``File`` instance, not using
             :meth:`Dimension.__init__` directly.
+
+        :Example: A example is available in ``examples/put_var.py``
+
+         ::
+
+           # Define dimensions
+           dim_t = f.def_dim('time', size = -1)
+           dim_y = f.def_dim("Y",    size = 100)
+           dim_x = f.def_dim("X",    size = 200)
+
         """
         cdef int ierr
         cdef char *dimname
@@ -89,7 +99,7 @@ cdef class Dimension:
 
     def __str__(self):
         if not dir(self._file):
-            return 'Dimension object no longer valid'
+            return 'Dimension is not valid'
         if self.isunlimited():
             return "%r (unlimited): name = '%s', size = %s" %\
                 (type(self), self._name, len(self))
@@ -110,8 +120,7 @@ cdef class Dimension:
         """
         getfile(self)
 
-        :return: the ``pnetcdf.File`` instance that this ``Dimension`` is a
-            member of.
+        :return: the ``pnetcdf.File`` instance that this ``Dimension`` belongs to.
 
         :rtype: :class:`pnetcdf.File`
         """

@@ -92,7 +92,7 @@ def pnetcdf_io(filename, file_format):
 
     # Define dimensions
     dim_y = f.def_dim("Y", global_ny)
-    dim_x = f.def_dim("X",global_nx)
+    dim_x = f.def_dim("X", global_nx)
 
     # Define a 2D variable of integer type
     var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))

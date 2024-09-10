@@ -6,10 +6,10 @@ Parallel Read and Write
 NumPy Slicing Syntax
 --------------------------------------
 
- PnetCDF-python datasets re-use the numpy slicing syntax to read and write to
- the file. Slice specifications are translated directly to PnetCDF “start,
- count, stride” selections, and are a fast and efficient way to access data in
- the file. The following slicing arguments are recognized:
+ PnetCDF-python datasets re-use the ``numpy`` slicing syntax to read and write
+ to the file. Slice specifications are translated directly to PnetCDF-C style
+ of subarray selection, i.e. using index arrays of “start, count, stride”.
+ The following slicing arguments are recognized:
 
  - Indices (var[1,5])
  - Slices (i.e. [:] or [0:10])
@@ -29,7 +29,7 @@ NumPy Slicing Syntax
     # put values to the entire variable
     var[:] = buff
 
-    # read the topleft 10*10 corner from variable var
+    # read the top-left 10*10 corner from variable var
     print(var[:10, :10])
 
 
@@ -42,8 +42,8 @@ Method Call of put_var()/get_var()
  written. :meth:`Variable.get_var` requires `buff` as a mandatory argument,
  which serves as a read buffer that stores values to be read. The behavior of
  :meth:`Variable.put_var` and :meth:`Variable.get_var` varies depending on the
- pattern of provided optional arguments - `index`, `start`, `count`, `stride`,
- and `imap`. The suffix `_all` indicates this is collective I/O in contrast to
+ pattern of provided optional arguments - `start`, `count`, `stride`, and
+ `imap`. The suffix `_all` indicates this is collective I/O in contrast to
  independent I/O (without `_all`).
 
 Read from netCDF variables
@@ -51,7 +51,7 @@ Read from netCDF variables
  provided input parameter pattern:
 
  - `buff` - Read an entire variable
- - `buff`, `index` - Read a single data value
+ - `buff`, `start` - Read a single data value
  - `buff`, `start`, `count` - Read an array of values
  - `buff`, `start`, `count`, `stride` - Read a subarray of values
  - `buff`, `start`, `count`, `imap`, `buff` - Read a mapped array of values
@@ -84,7 +84,7 @@ Write to netCDF variables
  provided input parameter pattern:
 
  - `data` - Write an entire variable
- - `data`, `index` - Write a single data value (a single element)
+ - `data`, `start` - Write a single data value (a single element)
  - `data`, `start`, `count` - Write an array of values
  - `data`, `start`, `count`, `stride` - Write a subarray of values
  - `data`, `start`, `count`, `imap` - Write a mapped array of values

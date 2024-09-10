@@ -3,16 +3,17 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-PnetCDF-Python Documentation
+PnetCDF-Python User Guide
 ============================
 
 **Release:** |release|
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Introduction
-
-   introduction/overview
+PnetCDF-python is a Python interface to PnetCDF, a high-performance parallel
+I/O library for accessing netCDF files.  This integration with Python allows
+for easy manipulation, analysis, and visualization of netCDF data using the
+rich ecosystem of Python's scientific computing libraries, making it a valuable
+tool for python-based applications that require high-performance access to
+netCDF files.
 
 .. toctree::
    :maxdepth: 2
@@ -32,16 +33,17 @@ PnetCDF-Python Documentation
 
 .. toctree::
    :maxdepth: 3
-   :caption: API Documentation
+   :caption: API Reference
 
    api/file_api
    api/dimension_api
    api/variable_api
+   api/attribute_api
    api/function_api
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Copyright Statement
+   :maxdepth: 1
+   :caption: Copyright
 
    copyright
 

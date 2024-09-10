@@ -1,22 +1,23 @@
 ==============
-Dimension
+Dimensions
 ==============
 
-Dimension defines the shape and structure of variables and stores coordinate
-data for multidimensional arrays. The ``Dimension`` object, which is also a key
-component of ``File`` class, provides an interface to access dimensions.
+Class ``Dimension`` is used to define the shape of NetCDF variables. In NetCDF,
+a variable, an instance of :class:`pnetcdf.Variable`, is a multi-dimensional
+array. Methods in :class:`pnetcdf.Dimension` provide an interface to access
+dimensions objects stored in the file.
 
 .. autoclass:: pnetcdf::Dimension
    :members: getfile, isunlimited
    :exclude-members: name, size
 
-Read-only Python Attributes of Dimension Class
- The following class members are read-only and should not be modified by the
+Read-only python fields of class :class:`pnetcdf.Dimension`
+ The following class fields are read-only and should not be modified by the
  user.
 
  .. attribute:: name
 
-    String name of Dimension instance. This class member is read-only and
+    String name of Dimension instance. This class field is read-only and
     should not be modified by the user. To rename a dimension, use
     :meth:`File.rename_dim` method.
 
@@ -24,7 +25,8 @@ Read-only Python Attributes of Dimension Class
 
  .. attribute:: size
 
-    The current size of Dimension (calls ``len`` on Dimension instance).
+    The current size of Dimension (its value can be obtained by calling
+    python function ``len()`` on the Dimension instance).
 
     **Type:** `int`
 

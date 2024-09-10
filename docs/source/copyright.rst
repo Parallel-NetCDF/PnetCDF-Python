@@ -2,10 +2,8 @@
 Copyright Statement
 ================
 
-::
-
-    Copyright (c) 2024 Northwestern University and Argonne National
-    Laboratory All rights reserved.
+    Copyright (c) 2024 Northwestern University and Argonne National Laboratory
+    All rights reserved.
 
     Portions of this software were developed by the Unidata Program at the
     University Corporation for Atmospheric Research.

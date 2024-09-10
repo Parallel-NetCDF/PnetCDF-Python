@@ -20,22 +20,21 @@ Difference in Programming Model
 
  Data/Define Mode
   NetCDF4-python library automatically switches between data and define mode
-  for the user by calling ``redef`` and ``enddef`` internally within the
-  define-mode operation functions. For performance reason, this is **not**
-  adopted in Pnetcdf-python. A manual call to :meth:`File.redef` is compulsory
-  to re-enter the define mode, following the C library convention. Similarly,
-  :meth:`File.enddef` is required before switching to data mode operations.
-  This design is based on considerations of the following aspects:
+  by calling ``redef`` and ``enddef`` internally.  For performance reason, this
+  is **not** adopted in Pnetcdf-python. A manual call to :meth:`File.redef` is
+  compulsory to re-enter the define mode, following the C library convention.
+  Similarly, :meth:`File.enddef` is required before switching to data mode
+  operations.  This design is based on considerations of the following aspects:
 
   - Minimize overheads during consecutive define operations: Automatically
-    wrapping all define functions with :meth:`File.redef` and
+    wrapping all define methods with :meth:`File.redef` and
     :meth:`File.enddef` could introduce significant overhead between
     consecutive define operations. The netCDF4-python approach results in
     unnecessary data/define mode switches, impacting performance.
 
   - Avoid potential hanging when performing independent I/O: if
-    :meth:`File.enddef` is automatically embedded in all data mode operation
-    functions, the program will hang when partial processes are performing
+    :meth:`File.enddef` is automatically embedded in all data mode
+    methods, the program will hang when partial processes are performing
     independent I/O (while others don't) because :meth:`File.enddef` is a
     collective call which requires all processes to participate.
 
