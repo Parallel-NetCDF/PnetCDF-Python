@@ -69,6 +69,16 @@ cdef class File:
 
         :return: The created file instance.
         :rtype: :class:`pnetcdf.File`
+
+        :Example: A example is available in ``examples/create_open.py``
+
+        ::
+         # create a new file using file clobber mode, i.e. flag "-w"
+         f = pnetcdf.File(filename = "foo.nc", mode = 'w', comm = MPI.COMM_WORLD, info = None)
+
+         # open an existing file for read only
+         f = pnetcdf.File(filename = "foo.nc", mode = 'r', comm = MPI.COMM_WORLD, info = None)
+
         """
         cdef int ncid
         encoding = sys.getfilesystemencoding()
@@ -129,6 +139,14 @@ cdef class File:
         close(self)
 
         Close the opened netCDF file
+
+        :Example: A example is available in ``examples/create_open.py``
+
+        ::
+         # create a new file using file clobber mode, i.e. flag "-w"
+         f = pnetcdf.File(filename = "foo.nc", mode = 'w', comm = MPI.COMM_WORLD, info = None)
+         f.close()
+
         """
         self._close(True)
 
@@ -303,6 +321,16 @@ cdef class File:
         :param str dimname: Name of the new dimension.
 
         :param int size: [Optional] Size of the new dimension.
+        :Example: A example is available in ``examples/put_var.py``
+
+        ::
+         dim_t = f.def_dim('time', size = -1)
+         dim_y = f.def_dim("Y",    size = 100)
+         dim_x = f.def_dim("X",    size = 200)
+
+         # Define a 2D variable of integer type
+         var = f.def_var("foo", pnetcdf.NC_INT, (dim_y, dim_x))
+
         """
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
         return self.dimensions[dimname]
@@ -446,6 +474,16 @@ cdef class File:
 
         :return: The created variable
         :rtype: :class:`pnetcdf.Variable`
+
+        :Example: A example is available in ``examples/put_var.py``
+
+        ::
+         dim_y = f.def_dim("Y", global_ny)
+         dim_x = f.def_dim("X", global_nx)
+
+         # Define a 2D variable of integer type
+         var = f.def_var("foo", pnetcdf.NC_INT, (dim_y, dim_x))
+
         """
 
         # the following should be added to explanation of variable class.
@@ -521,6 +559,16 @@ cdef class File:
 
         :Operational mode: This method must be called while the file is in
             define mode.
+
+        :Example: A example is available in ``examples/put_var.py``
+
+        ::
+         str_att = "example attribute of type text."
+         var.foo_attr = str_att
+
+         # Equivalently, below uses function call
+         var.put_att("foo_attr", str_att)
+
         """
         cdef nc_type xtype
         xtype=-99
@@ -545,6 +593,16 @@ cdef class File:
 
         :Operational mode: This method can be called while the file is in
             either define or data mode (collective or independent).
+
+        :Example: A example is available in ``examples/get_var.py``
+
+        ::
+         # Get global attribute named "foo_attr"
+         str_att = f.get_att("foo_attr")
+
+         # Get the variable's attribute named "foo_attr"
+         str_att = v.foo_attr
+
         """
         return _get_att(self, NC_GLOBAL, name, encoding=encoding)
 
@@ -681,13 +739,14 @@ cdef class File:
             _check_err(ierr)
         return None
 
-    def wait(self, num=None, requests=None, status=None):
+    def wait_all(self, num=None, requests=None, status=None):
         """
-        wait(self, num=None, requests=None, status=None)
+        wait_all(self, num=None, requests=None, status=None)
 
         This method is a blocking call that wait for the completion of
-        nonblocking I/O requests made by :meth:`Variable.iput_var`,
-        :meth:`Variable.iget_var` and :meth:`Variable.bput_var`
+        nonblocking I/O requests made by one of more method calls to
+        :meth:`Variable.iput_var`, :meth:`Variable.iget_var` and
+        :meth:`Variable.bput_var`
 
         :param int num: [Optional]
             number of requests. It is also the array size of the next two
@@ -709,21 +768,35 @@ cdef class File:
             the error messages.
         :type status: list
 
+        :Operational mode: it is an collective subroutine and must be called
+            while the file is in collective data mode.
+
+        :Example: A example is available in ``examples/nonblocking/nonblocking_write.py``
+
+        ::
+         # Write one variable at a time, using iput APIs
+         reqs = []
+         for i in range(NUM_VARS):
+             req_id = vars[i].iput_var(buf[i], start = start, count = count)
+             reqs.append(req_id)
+
+         # commit posted nonblocking requests
+         req_errs = [None] * NUM_VARS
+         f.wait_all(NUM_VARS, reqs, req_errs)
+
+        """
+        return self._wait(num, requests, status, collective=True)
+
+    def wait(self, num=None, requests=None, status=None):
+        """
+        wait(self, num=None, requests=None, status=None)
+
+        Same as :meth:`File.wait_all` but called in independent data mode
+
         :Operational mode: it is an independent subroutine and must be called
             while the file is in independent data mode.
         """
         return self._wait(num, requests, status, collective=False)
-
-    def wait_all(self, num=None, requests=None, status=None):
-        """
-        wait_all(self, num=None, requests=None, status=None)
-
-        Same as :meth:`File.wait` but in collective data mode
-
-        :Operational mode: it is an collective subroutine and must be called
-            while the file is in collective data mode.
-        """
-        return self._wait(num, requests, status, collective=True)
 
     def cancel(self, num=None, requests=None, status=None):
         """
@@ -814,6 +887,13 @@ cdef class File:
             ``numpy.ndarray.nbytes``
         :type bufsize: int
 
+        :Example: A example is available in ``examples/nonblocking/nonblocking_write.py``
+
+        ::
+         # Before calling bput APIs, calculate allocate space needed
+         bufsize = length * NUM_VARS * np.dtype(np.int32).itemsize
+         f.attach_buff(bbufsize)
+
         """
         cdef MPI_Offset buffsize
         cdef int _file_id
@@ -829,6 +909,17 @@ cdef class File:
 
         Detach the write buffer previously attached for buffered non-blocking
         write
+
+        :Example: A example is available in ``examples/nonblocking/nonblocking_write.py``
+
+        ::
+         # Before calling bput APIs, calculate allocate space needed
+         bufsize = length * NUM_VARS * np.dtype(np.int32).itemsize
+         f.attach_buff(bbufsize)
+
+         # detach the buffer
+         f.detach_buff()
+
         """
         cdef int _file_id = self._ncid
         with nogil:
@@ -912,6 +1003,21 @@ cdef class File:
 
         :Operational mode: This method is a collective subroutine and must be
             called in define mode
+
+        :Example: A example is available in ``examples/fill_mode.py``
+
+        ::
+         # set the fill mode to NC_FILL for the entire file
+         old_fillmode = f.set_fill(pnetcdf.NC_FILL)
+         if verbose:
+             if old_fillmode == pnetcdf.NC_FILL:
+             print("The old fill mode is NC_FILL\n")
+         else:
+             print("The old fill mode is NC_NOFILL\n")
+
+         # set the fill mode to back to NC_NOFILL for the entire file
+         f.set_fill(pnetcdf.NC_NOFILL)
+
         """
         cdef int _file_id, _fillmode, _old_fillmode
         _file_id = self._ncid

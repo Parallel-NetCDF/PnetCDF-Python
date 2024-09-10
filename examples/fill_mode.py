@@ -81,14 +81,18 @@ def pnetcdf_io(filename):
         else:
             print("The old fill mode is NC_NOFILL\n")
 
-    # set the fill mode to back to NC_NOFILL for the entire file
+    # set the fill mode back to NC_NOFILL for the entire file
     f.set_fill(pnetcdf.NC_NOFILL)
 
-    # set the variable's fill mode to NC_FILL with default fill value
+    # set the variable's fill mode to NC_FILL with PnetCDF default fill value
     fix_var.def_fill(no_fill = 0)
 
-    # set a customized fill value -1
+    # enable the variable's fill mode and use a customized value, -1
     fill_value = np.int32(-1)
+    rec_var.def_fill(no_fill = 0, fill_value = fill_value)
+
+    # Equivalently this can be done by setting the PnetCDF pre-defined
+    # attribute "_FillValue"
     rec_var._FillValue = fill_value
 
     # exit define mode

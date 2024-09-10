@@ -112,7 +112,7 @@ def pnetcdf_io(filename, length):
         if pnetcdf.strerrno(req_errs[i]) != "NC_NOERR":
             print(f"Error on request {i}:",  pnetcdf.strerror(req_errs[i]))
 
-    # detach the temporary buffer
+    # detach the buffer
     f.detach_buff()
 
     # Close the file

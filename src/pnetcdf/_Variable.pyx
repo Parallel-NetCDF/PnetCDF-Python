@@ -86,6 +86,19 @@ cdef class Variable:
         :return: The created variable
         :rtype: :class:`pnetcdf.Variable`
 
+        :Example: A example is available in ``examples/put_var.py``
+
+        ::
+         # Define dimensions
+         dim_y = f.def_dim("Y", global_ny)
+         dim_x = f.def_dim("X", global_nx)
+
+         # Define a 2D variable of integer type, using :meth:`File.def_var`.
+         var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))
+
+         # Or equivalently, using :meth:`File.createVariable`.
+         var = f.createVariable("var", pnetcdf.NC_INT, (dim_y, dim_x))
+
         """
 
         cdef int ierr, ndims, icontiguous, icomplevel, numdims, _file_id, nsd,
@@ -312,6 +325,16 @@ cdef class Variable:
 
         :Operational mode: This method must be called while the associated
             netCDF file is in define mode.
+
+        :Example: A example is available in ``examples/put_var.py``
+
+        ::
+         str_att = "example attribute of type text."
+         var.put_att("foo_attr", str_att)
+
+         # Equivalently, uses python dictionary way
+         var.foo_attr = str_att
+
         """
         cdef nc_type xtype
         xtype=-99
@@ -335,6 +358,16 @@ cdef class Variable:
 
         :Operational mode: This method can be called while the file is in either
             define or data mode (collective or independent).
+
+        :Example: A example is available in ``examples/get_var.py``
+
+        ::
+         # Get attribute named "foo_attr"
+         str_att = v.get_att("foo_attr")
+
+         # Equivalently, uses python dictionary way
+         str_att = v.foo_attr
+
         """
         return _get_att(self._file, self._varid, name, encoding=encoding)
 
@@ -446,6 +479,19 @@ cdef class Variable:
             attribute, created for this purpose. If None, this argument will be
             ignored and the default fill value is used.
         :type fill_value: any
+
+        :Example: A example is available in ``examples/fill_mode.py``
+
+        ::
+         # set the variable's fill mode to NC_FILL with PnetCDF default fill value
+         var.def_fill(no_fill = 0)
+
+         # enable the variable's fill mode and use a customized value
+         fill_value = np.int32(-1)
+         var.def_fill(no_fill = 0, fill_value = fill_value)
+
+         # Equivalently this can be done by setting the PnetCDF pre-defined attribute "_FillValue"
+         var._FillValue = fill_value
 
         """
         cdef ndarray data
@@ -831,13 +877,13 @@ cdef class Variable:
                                       bufftype)
         _check_err(ierr)
 
-    def put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def put_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None):
         """
-        put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
+        put_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
         Method write multiple subarrays of a netCDF variable to the file.  This
-        an independent I/O call and can only be called when the file is in the
-        independent I/O mode. This method is equivalent to making multiple
+        an collective I/O call and can only be called when the file is in the
+        collective I/O mode. This method is equivalent to making multiple
         calls to :meth:`Variable.put_var`. Note, combining multiple `put_var`
         calls into one can achieve a better performance.
 
@@ -917,21 +963,35 @@ cdef class Variable:
             An MPI derived data type that describes the memory layout of the
             write buffer.
         :type buftype: mpi4py.MPI.Datatype
-        """
-        self._put_varn(data, num, starts, counts, bufcount = bufcount,
-                       buftype = buftype, collective = False)
 
-    def put_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None):
-        """
-        put_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None)
+        :Example: A example is available in ``examples/put_varn_int.py``
 
-        This method call is the same as method :meth:`Variable.put_varn`,
-        except it is collective and can only be called in the collective I/O
-        mode. Please refer to :meth:`Variable.put_varn` for its argument
-        usage.
+        ::
+         num_reqs = 4
+         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+         counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+         starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
+         starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
+         starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
+         starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+
+         v.put_varn_all(w_buf, num = num_reqs, starts = starts, counts = counts)
+
         """
         self._put_varn(data, num, starts, counts, bufcount = bufcount,
                        buftype = buftype, collective = True)
+
+    def put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+        """
+        put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
+
+        This method call is the same as method :meth:`Variable.put_varn_all`,
+        except it is an independent call and can only be called in the
+        independent I/O mode. Please refer to :meth:`Variable.put_varn` for its
+        argument usage.
+        """
+        self._put_varn(data, num, starts, counts, bufcount = bufcount,
+                       buftype = buftype, collective = False)
 
     def iput_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
         """
@@ -1085,12 +1145,12 @@ cdef class Variable:
 
 
 
-    def put_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
+    def put_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
         """
-        put_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
+        put_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method to write in parallel to the netCDF variable in independent I/O
-        mode. The behavior of the method varies depends on the pattern of
+        Method to write in parallel to the netCDF variable in the collective
+        I/O mode. The behavior of the method varies depends on the pattern of
         provided optional arguments - `start`, `count`, `stride`, `bufcount`
         and `buftype`.
 
@@ -1233,32 +1293,17 @@ cdef class Variable:
         :type buftype: mpi4py.MPI.Datatype
 
         :Operational mode: This method must be called while the file is in
-            independent data mode."""
-
-        if data is not None and all(arg is None for arg in [start, count, stride, imap]):
-            self._put_var(data, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start]) and all(arg is None for arg in [count, stride, imap]):
-            self._put_var1(data, start, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [stride, imap]):
-            self._put_vara(start, count, data, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [imap]):
-            self._put_vars(start, count, stride, data, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [data, start, count, stride, imap]):
-            self._put_varm(data, start, count, stride, imap, collective = False, bufcount = bufcount, buftype = buftype)
-        else:
-            raise ValueError("Invalid input arguments for put_var")
-
-    def put_var_all(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
-        """
-        put_var_all(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
-
-        Method to write in parallel to the netCDF variable in the collective
-        I/O mode. For the argument usage, please refer to method
-        :meth:`Variable.put_var`. The only difference is this method is a
-        collective operation.
-
-        :Operational mode: This method must be called while the file is in
             collective data mode.
+
+        :Example: A example is available in ``examples/put_var.py``
+
+        ::
+         var.put_var_all(buf, start = start, count = count)
+
+         # Equivalently, below uses python index style
+         end = [start[i] + count[i] for i in range(2)]
+         var[start[0]:end[0], start[1]:end[1]] = buf
+
         """
         if data is not None and all(arg is None for arg in [start, count, stride, num, imap]):
             self._put_var(data, collective = True, bufcount = bufcount, buftype = buftype)
@@ -1274,6 +1319,32 @@ cdef class Variable:
             self._put_varm(data, start, count, stride, imap, collective = True, bufcount = bufcount, buftype = buftype)
         else:
             raise ValueError("Invalid input arguments for put_var_all")
+
+
+    def put_var(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None):
+        """
+        put_var(self, data, start=None, count=None, stride=None, num=None, imap=None, bufcount=None, buftype=None)
+
+        Method to write in parallel to the netCDF variable in the independent
+        I/O mode. For the argument usage, please refer to method
+        :meth:`Variable.put_var`. The only difference is this method is a
+        independent operation.
+
+        :Operational mode: This method must be called while the file is in
+            independent data mode.
+        """
+        if data is not None and all(arg is None for arg in [start, count, stride, imap]):
+            self._put_var(data, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [data, start]) and all(arg is None for arg in [count, stride, imap]):
+            self._put_var1(data, start, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [data, start, count]) and all(arg is None for arg in [stride, imap]):
+            self._put_vara(start, count, data, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [data, start, count, stride]) and all(arg is None for arg in [imap]):
+            self._put_vars(start, count, stride, data, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [data, start, count, stride, imap]):
+            self._put_varm(data, start, count, stride, imap, collective = False, bufcount = bufcount, buftype = buftype)
+        else:
+            raise ValueError("Invalid input arguments for put_var")
 
     def _put(self, ndarray data, start, count, stride):
         """Private method to put data into a netCDF variable"""
@@ -1591,11 +1662,11 @@ cdef class Variable:
                                         <const MPI_Offset *>imapp, PyArray_DATA(buff), buffcount, bufftype)
         _check_err(ierr)
 
-    def get_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
+    def get_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
         """
-        get_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
+        get_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
-        Method to read in parallel from the netCDF variable in the independent
+        Method to read in parallel from the netCDF variable in the collective
         I/O mode. The behavior of the method varies depends on the pattern of
         provided optional arguments - `start`, `count`, `stride`, and `imap`.
         The method requires a empty array (`data`) as a read buffer from caller
@@ -1734,7 +1805,21 @@ cdef class Variable:
         :type buftype: mpi4py.MPI.Datatype
 
         :Operational mode: This method must be called while the file is in
-            independent data mode.
+            collective data mode.
+
+        :Example: A example is available in ``examples/get_var.py``
+
+        ::
+         # allocate read buffer
+         r_buf = np.empty(tuple(count), v.dtype)
+
+         # Read a subarray in collective mode
+         v.get_var_all(r_buf, start = start, count = count)
+
+         # Equivalently, below uses python index style
+         end = [start[i] + count[i] for i in range(2)]
+         r_bufs = v[start[0]:end[0], start[1]:end[1]]
+
         """
         # Note that get_var requires a empty array as a buffer arg from caller
         # to store returned array values. We understand this is against python
@@ -1743,31 +1828,6 @@ cdef class Variable:
         # 1. Among all behaviors of get_var get_varm always requires a buffer argument
         # 2. Other i/o methods (iget/put/iput) all require buffer array as mandatory argument
 
-        if all(arg is None for arg in [start, count, stride, imap]):
-            self._get_var(data, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [start]) and all(arg is None for arg in [count, stride, imap]):
-            self._get_var1(data, start, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [stride, imap]):
-            self._get_vara(data, start, count, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [imap]):
-            self._get_vars(data, start, count, stride, collective = False, bufcount = bufcount, buftype = buftype)
-        elif all(arg is not None for arg in [start, count, imap]):
-            self._get_varm(data, start, count, stride, imap, collective = False, bufcount = bufcount, buftype = buftype)
-        else:
-            raise ValueError("Invalid input arguments for get_var")
-
-    def get_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
-        """
-        get_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
-
-        Method to read in parallel from the netCDF variable in the collective
-        I/O mode.  For the argument usage, please refer to method
-        :meth:`Variable.get_var`. The only difference is this method is a
-        collective operation.
-
-        :Operational mode: This method must be called while the file is in
-            collective data mode.
-        """
         if all(arg is None for arg in [start, count, stride, imap]):
             self._get_var(data, collective = True, bufcount = bufcount, buftype = buftype)
         elif all(arg is not None for arg in [start]) and all(arg is None for arg in [count, stride, imap]):
@@ -1780,6 +1840,31 @@ cdef class Variable:
             self._get_varm(data, start, count, stride, imap, collective = True, bufcount = bufcount, buftype = buftype)
         else:
             raise ValueError("Invalid input arguments for get_var_all")
+
+    def get_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
+        """
+        get_var(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
+
+        Method to read in parallel from the netCDF variable in the independent
+        I/O mode.  For the argument usage, please refer to method
+        :meth:`Variable.get_var`. The only difference is this method is a
+        independent operation.
+
+        :Operational mode: This method must be called while the file is in
+            independent data mode.
+        """
+        if all(arg is None for arg in [start, count, stride, imap]):
+            self._get_var(data, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [start]) and all(arg is None for arg in [count, stride, imap]):
+            self._get_var1(data, start, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [start, count]) and all(arg is None for arg in [stride, imap]):
+            self._get_vara(data, start, count, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [start, count, stride]) and all(arg is None for arg in [imap]):
+            self._get_vars(data, start, count, stride, collective = False, bufcount = bufcount, buftype = buftype)
+        elif all(arg is not None for arg in [start, count, imap]):
+            self._get_varm(data, start, count, stride, imap, collective = False, bufcount = bufcount, buftype = buftype)
+        else:
+            raise ValueError("Invalid input arguments for get_var")
 
     def get_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
         """
@@ -1867,6 +1952,20 @@ cdef class Variable:
             An MPI derived data type that describes the memory layout of the
             write buffer.
         :type buftype: mpi4py.MPI.Datatype
+
+        :Example:
+
+        ::
+         num_reqs = 4
+         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+         counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+         starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
+         starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
+         starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
+         starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+
+         v.get_varn_all(r_buf, num = num_reqs, starts = starts, counts = counts)
+
         """
         return self._get_varn(data, num, starts, counts, bufcount = bufcount,
                               buftype = buftype, collective = False)
