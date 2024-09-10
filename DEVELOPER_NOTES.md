@@ -3,36 +3,37 @@
 ### Library packaging and publishing
  * Currently, pip-install via build distribution is disabled. No wheel files are uploaded to PyPI. Lastest pnetcdf-python package on PyPI: https://pypi.org/project/pnetcdf/
  * Packaging: build source distribution and wheel distribution
-  1. Create virtual env and install PnetCDF-C and all python dependencies as developer installation
-  2. Update version number, cd to repo directory and generate distribution:
-  ```
-  python3 -m pip install --upgrade build twine
-  ```
-  ```
-  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python3 -m build
-  ```
+   1. Create virtual env and install PnetCDF-C and all python dependencies as developer installation
+   2. Update version number, cd to repo directory and generate distribution:
+      ```
+      python3 -m pip install --upgrade build twine
+      ```
+
+      ```
+      CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python3 -m build
+      ```
  * (Recommended) publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing. Only upload source distribution archive, as the wheel file (dist/pncpy-x.x.x*.whl) works exclusively for your own system and python version.
- 1. Create TestPyPI account and update `.pypirc` per instruction
- 2. Publish source distribution on TestPyPI
- ```
- python3 -m twine upload --repository testpypi dist/pnetcdf-x.x.x.tar.gz
- ```
- 3. Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich are installed. Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index.
- ```
- CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pnetcdf==x.x.x
- ```
- 4. Run pnetcdf-python test programs
+   1. Create TestPyPI account and update `.pypirc` per instruction
+   2. Publish source distribution on TestPyPI
+       ```
+       python3 -m twine upload --repository testpypi dist/pnetcdf-x.x.x.tar.gz
+       ```
+   3. Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich are installed. Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index.
+       ```
+       CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pnetcdf==x.x.x
+       ```
+   4. Run pnetcdf-python test programs
 
  * Officially publish on [PyPI](https://pypi.org/) for testing
- 1. Create TestPyPI account and update `.pypirc` per instruction
- 2. Publish source distribution on PyPI
- ```
- python3 -m twine upload dist/pnetcdf-x.x.x.tar.gz
- ```
- 3. For testing, just create a new virtual env and quick install (using default PyPI index) without source code repo.
- ```
- CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install pnetcdf
- ```
+   1. Create TestPyPI account and update `.pypirc` per instruction
+   2. Publish source distribution on PyPI
+       ```
+       python3 -m twine upload dist/pnetcdf-x.x.x.tar.gz
+       ```
+   3. For testing, just create a new virtual env and quick install (using default PyPI index) without source code repo.
+       ```
+       CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install pnetcdf
+       ```
 
 
 ### Library installation
@@ -40,17 +41,17 @@
    * `MANIFEST.in` controls files to be included in source distribution (sdist), which will be eventually uploaded to PyPI if we enables quick install in the future. After modifications to `MANIFEST.IN` file, here are steps to check if the files included are valid to build the library.
      1. Make sure pnetcdf.egg-info folder is deleted. Otherwise it will first cache previous versions of `MANIFEST.IN` requirement.
      2. Build the source distribution
-     ```
-     CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python setup.py sdist
-     ```
+         ```
+         CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python setup.py sdist
+         ```
      3. Check source distribution content if the list matches `MANIFEST.IN`
-     ```
-     tar -tzf dist/package-<version>.tar.gz
-     ```
+         ```
+         tar -tzf dist/package-<version>.tar.gz
+         ```
      4. Install the library from sdist
-     ```
-     CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install dist/package-<version>.tar.gz
-     ```
+         ```
+         CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install dist/package-<version>.tar.gz
+         ```
      5. Check installation by test and example programs
    * More notes about quick install
      1. Source distribution(.tar.gz)
