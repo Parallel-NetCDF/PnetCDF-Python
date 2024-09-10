@@ -10,16 +10,13 @@
   ```
   CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python3 -m build
   ```
- * Publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing
- 1. Create TestPyPI account and update `.pypirc` as instruction
+ * (Recommended) publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing
+ 1. Create TestPyPI account and update `.pypirc` per TestPyPI instruction
  2. Publish source distribution on TestPyPI
- ```
- python3 -m pip install --upgrade build twine
- ```
  ```
  python3 -m twine upload --repository testpypi dist/pnetcdf-x.x.x.tar.gz
  ```
- 3. Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich is installed. Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index.
+ 3. Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich are installed. Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index.
  ```
  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pnetcdf==x.x.x
  ```
