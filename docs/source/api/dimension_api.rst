@@ -1,10 +1,11 @@
 ==============
-Dimension
+Dimensions
 ==============
 
-Dimension defines the shape and structure of variables and stores coordinate
-data for multidimensional arrays. The ``Dimension`` object, which is also a key
-component of ``File`` class, provides an interface to access dimensions.
+Class ``Dimension`` is used to define the shape of NetCDF variables. In NetCDF,
+a variable, an instance of :class:`pnetcdf.Variable`, is a multi-dimensional
+array. Methods in :class:`pnetcdf.Dimension` provide an interface to access
+dimensions objects stored in the file.
 
 .. autoclass:: pnetcdf::Dimension
    :members: getfile, isunlimited
@@ -24,7 +25,8 @@ Read-only Python Attributes of Dimension Class
 
  .. attribute:: size
 
-    The current size of Dimension (calls ``len`` on Dimension instance).
+    The current size of Dimension (its value can be obtained by calling
+    python function ``len()`` on the Dimension instance).
 
     **Type:** `int`
 

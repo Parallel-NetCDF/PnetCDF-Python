@@ -1,5 +1,5 @@
 ================
-Utility Functions
+Other PnetCDF Utility Functions
 ================
 
 .. autofunction:: pnetcdf::libver

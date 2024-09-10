@@ -26,7 +26,7 @@ NetCDF Variable Data Types
       +-------+----------------+-------+----------------------------------------+---------------------+
 
 
- New data types supported in CDF-5 format:
+ Additional data types supported in CDF-5 format:
 
       +---------------------+----------------+-------+----------------------------------------+---------------------+
       | Type                | C #define      | Bits  | Intent of use                          | Numpy Equivalent    |

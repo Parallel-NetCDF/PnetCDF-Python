@@ -6,10 +6,10 @@ Parallel Read and Write
 NumPy Slicing Syntax
 --------------------------------------
 
- PnetCDF-python datasets re-use the numpy slicing syntax to read and write to
- the file. Slice specifications are translated directly to PnetCDF “start,
- count, stride” selections, and are a fast and efficient way to access data in
- the file. The following slicing arguments are recognized:
+ PnetCDF-python datasets re-use the ``numpy`` slicing syntax to read and write
+ to the file. Slice specifications are translated directly to PnetCDF-C style
+ of subarray selection, i.e. using index arrays of “start, count, stride”.
+ The following slicing arguments are recognized:
 
  - Indices (var[1,5])
  - Slices (i.e. [:] or [0:10])
@@ -29,7 +29,7 @@ NumPy Slicing Syntax
     # put values to the entire variable
     var[:] = buff
 
-    # read the topleft 10*10 corner from variable var
+    # read the top-left 10*10 corner from variable var
     print(var[:10, :10])
 
 
