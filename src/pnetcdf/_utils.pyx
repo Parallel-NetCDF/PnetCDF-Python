@@ -168,7 +168,7 @@ NC_BP = NC_BP_C
 _private_atts = \
 ['_ncid','_varid','dimensions','variables', 'file_format',
  '_nunlimdim','path', 'name', '__orthogonal_indexing__', '_buffer']
-# internal C functions.
+# internal methods that call PnetCDF-C functions.
 cdef _strencode(pystr,encoding=""):
     # encode a string into bytes.  If already bytes, do nothing.
     # uses 'utf-8' for default encoding.
@@ -194,7 +194,7 @@ cdef _check_err(ierr, err_cls=RuntimeError, filename=""):
 
 cdef _set_att(file, int varid, name, value,\
               nc_type xtype=-99):
-    # Private function to set an attribute name/value pair
+    # Private method to set an attribute name/value pair
     cdef int ierr, N, file_id
     cdef char *attname
     cdef char *datstring
@@ -245,7 +245,7 @@ cdef _set_att(file, int varid, name, value,\
 
 
 cdef _get_att(file, int varid, name, encoding='utf-8'):
-    # Private function to get an attribute value given its name
+    # Private method to get an attribute value given its name
     cdef int ierr, n, file_id, var_id
     cdef MPI_Offset att_len
     cdef char *attname
@@ -296,7 +296,7 @@ cdef _get_att(file, int varid, name, encoding='utf-8'):
 
 
 cdef _get_att_names(int file_id, int varid):
-    # Private function to get all the attribute names of a variable
+    # Private method to get all the attribute names of a variable
     cdef int ierr, numatts, n
     cdef char namstring[NC_MAX_NAME+1]
     if varid == NC_GLOBAL:
@@ -405,14 +405,12 @@ cpdef stringtochar(src, encoding='utf-8'):
     out_array.shape = src.shape + (src.itemsize,)
     return out_array
 
-cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
-
-        put=False):
+cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None, put=False):
     """Return start, count, stride and indices needed to store/extract data
     into/from a netCDF variable.
 
-    This function is used to convert a slicing expression into a form that is
-    compatible with the nc_get_vars function. Specifically, it needs
+    This method is used to convert a slicing expression into a form that is
+    compatible with the C function ncmpi_get_vars. Specifically, it needs
     to interpret integers, slices, Ellipses, and 1-d sequences of integers
     and booleans.
 
@@ -431,7 +429,7 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
     index arrays be 1-d boolean or integer. If integer arrays are used,
     the index values must be sorted and contain no duplicates.
 
-    In summary, slicing netcdf variable objects with 1-d integer or boolean arrays
+    In summary, slicing netcdf variable instances with 1-d integer or boolean arrays
     is allowed, but may give a different result than slicing a numpy array.
 
     Numpy also supports slicing an array with a boolean array of the same
@@ -444,7 +442,7 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
     Allow for this sort of simple variable subsetting is the reason we decided to
     deviate from numpy's slicing rules.
 
-    This function is used both by the __setitem__ and __getitem__ method of
+    This method is used both by the __setitem__ and __getitem__ method of
     the Variable class.
 
     Parameters
@@ -477,8 +475,8 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None,\
 
     Notes:
 
-    netCDF data is accessed via the function:
-       nc_get_vars(fileid, varid, start, count, stride, data)
+    netCDF data is accessed via the C function:
+       ncmpi_get_vars(fileid, varid, start, count, stride, data)
 
     Assume that the variable has dimension n, then
 
@@ -780,7 +778,7 @@ cdef _is_int(a):
         return False
 
 cdef _get_format(int ncid):
-    # Private function to get the netCDF file format
+    # Private method to get the netCDF file format
     cdef int ierr, formatp
     with nogil:
         ierr = ncmpi_inq_format(ncid, &formatp)
@@ -790,14 +788,14 @@ cdef _get_format(int ncid):
     return _reverse_format_dict[formatp]
 
 
-# external C functions.
+# methods calling external POnetCDF-C functions.
 cpdef inq_clibvers():
     """
     inq_clibvers()
 
-    This function returns a string describing the version of the PnetCDF-C
-    library used to build this PnetCDF-Python module, and when the PnetCDF-C
-    library was built.
+    Method to return a string describing the version of the PnetCDF-C library
+    used to build this PnetCDF-Python module, and when the PnetCDF-C library
+    was built.
 
     :return: A string about PnetCDF-C library, for example, "1.13.0 of March 29, 2024".
 
@@ -810,11 +808,11 @@ cpdef strerror(err_code):
     """
     strerror(err_code)
 
-    This function returns an error message string corresponding to an integer
-    netCDF error code or to a system error number, presumably returned by a
-    call to a PnetCDF function.
+    Method to return an error message string corresponding to an integer netCDF
+    error code or to a system error number, presumably returned by a call to a
+    PnetCDF method.
 
-    :param err_code: An error code returned from a call to a PnetCDF function.
+    :param err_code: An error code returned from a call to a PnetCDF method.
     :type err_code: int
 
     :return: error message
@@ -829,11 +827,11 @@ cpdef strerrno(err_code):
     """
     strerrno(err_code)
 
-    This function returns a character string containing the name of the NC
+    Method to return a character string containing the name of the NC
     error code. For instance, ncmpi_strerrno(NC_EBADID) returns string
     "NC_EBADID".
 
-    :param err_code: An error code returned from a call to a PnetCDF function.
+    :param err_code: An error code returned from a call to a PnetCDF method.
     :type err_code: int
 
     :return: name of the NC error code.
@@ -848,9 +846,9 @@ cpdef set_default_format(int new_format):
     """
     set_default_format(int new_format)
 
-    Thise function change the default format of the netCDF file to be created
-    in the successive file creations when no file format is explicitly passed
-    as a parameter.
+    Method to change the default format of the netCDF file to be created in the
+    successive file creations when no file format is explicitly passed as a
+    parameter.
 
     :param new_format:
 
@@ -862,7 +860,7 @@ cpdef set_default_format(int new_format):
     :return: The current default format before this call of setting a new
         default format.
 
-    :Operational mode: This function can be called in either collective or
+    :Operational mode: This method can be called in either collective or
         independent I/O mode, but is expected to be called by all processes.
     """
     cdef int ierr, newformat, oldformat
@@ -885,7 +883,7 @@ cpdef inq_default_format():
 
     :rtype: int
 
-    :Operational mode: This function is an independent subroutine.
+    :Operational mode: This method is an independent subroutine.
     """
     cdef int ierr, curformat
     with nogil:
@@ -906,7 +904,7 @@ cpdef inq_file_format(str file_name):
 
     :rtype: int
 
-    :Operational mode: This function is an independent subroutine.
+    :Operational mode: This method is an independent subroutine.
     """
     cdef char *filename
     cdef int ierr, curformat

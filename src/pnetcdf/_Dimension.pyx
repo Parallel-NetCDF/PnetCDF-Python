@@ -89,7 +89,7 @@ cdef class Dimension:
 
     def __str__(self):
         if not dir(self._file):
-            return 'Dimension object no longer valid'
+            return 'Dimension is not valid'
         if self.isunlimited():
             return "%r (unlimited): name = '%s', size = %s" %\
                 (type(self), self._name, len(self))
@@ -110,8 +110,7 @@ cdef class Dimension:
         """
         getfile(self)
 
-        :return: the ``pnetcdf.File`` instance that this ``Dimension`` is a
-            member of.
+        :return: the ``pnetcdf.File`` instance that this ``Dimension`` belongs to.
 
         :rtype: :class:`pnetcdf.File`
         """

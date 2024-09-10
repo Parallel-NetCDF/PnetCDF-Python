@@ -80,7 +80,8 @@ Dimensions
 
  To retrieve the previous defined dimension instance from the file, you can
  directly index the dictionary using variable name as the key.  The dimension
- information can be retrieved using following functions.
+ information can be retrieved using following python functions or ``Dimension``
+ class methods.
 
  .. code-block:: Python
 

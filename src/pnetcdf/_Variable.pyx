@@ -34,8 +34,7 @@ ctypedef MPI.Datatype Datatype
 cdef class Variable:
     """
     A PnetCDF variable is used to read and write netCDF data.  They are
-    analogous to numpy array objects. See :meth:`Variable.__init__` for more
-    details.
+    analogous to numpy arrays. See :meth:`Variable.__init__` for more details.
 
     .. note:: ``Variable`` instances should be created using the
         :meth:`File.def_var` method of a :meth:`File` instance, not using this
@@ -102,7 +101,7 @@ cdef class Variable:
         self._file = file
         _file_id = self._file_id
         #TODO: decide whether we need to check xtype at python-level
-        if isinstance(datatype, str): # convert to numpy datatype object
+        if isinstance(datatype, str): # convert to numpy data type object
             datatype = np.dtype(datatype)
         if isinstance(datatype, np.dtype):
             if datatype.str[1:] in _supportedtypes:
@@ -161,7 +160,8 @@ cdef class Variable:
 
     def __array__(self):
         # numpy special method that returns a numpy array.
-        # allows numpy ufuncs to work faster on Variable objects
+        # This allows numpy Universal functions ufuncs to work faster on
+        # Variable instances.
         return self[...]
 
     def __repr__(self):
@@ -526,11 +526,10 @@ cdef class Variable:
         self.chartostring = bool(chartostring)
 
     def __getitem__(self, elem):
-        # This special method is used to index the netCDF variable
-        # using the "extended slice syntax". The extended slice syntax
-        # is a perfect match for the "start", "count" and "stride"
-        # arguments to the ncmpi_get_var() function, and is much more easy
-        # to use.
+        # This special method is used to index the netCDF variable using the
+        # "extended slice syntax". The extended slice syntax is a perfect match
+        # for the "start", "count" and "stride" arguments to the C function
+        # ncmpi_get_var(), and is much more easy to use.
         start, count, stride, put_ind =\
         _StartCountStride(elem,self.shape,dimensions=self.dimensions,file=self._file)
         datashape = _out_array_shape(count)
@@ -593,11 +592,10 @@ cdef class Variable:
         return data
 
     def __setitem__(self, elem, data):
-        # This special method is used to assign to the netCDF variable
-        # using "extended slice syntax". The extended slice syntax
-        # is a perfect match for the "start", "count" and "stride"
-        # arguments to the ncmpi_put_var() function, and is much more easy
-        # to use.
+        # This special method is used to assign to the netCDF variable using
+        # "extended slice syntax". The extended slice syntax is a perfect match
+        # for the "start", "count" and "stride" arguments to the C function
+        # ncmpi_put_var(), and is much more easy to use.
 
         # if _Encoding is specified for a character variable, convert
         # numpy array of strings to a numpy array of characters with one more

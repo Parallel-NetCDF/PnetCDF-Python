@@ -43,7 +43,7 @@ netCDF files.
 
 .. toctree::
    :maxdepth: 1
-   :caption: Copyright Statement
+   :caption: Copyright
 
    copyright
 

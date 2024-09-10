@@ -1,6 +1,9 @@
 ================
-Other PnetCDF Utility Functions
+Other pnetcdf class methods
 ================
+
+   PnetCDF class methods listed below are not associated with particular
+   instances of ``File`` or ``Variable``.
 
 .. autofunction:: pnetcdf::libver
 .. autofunction:: pnetcdf::strerror

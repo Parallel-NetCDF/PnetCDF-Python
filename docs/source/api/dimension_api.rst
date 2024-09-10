@@ -11,13 +11,13 @@ dimensions objects stored in the file.
    :members: getfile, isunlimited
    :exclude-members: name, size
 
-Read-only Python Attributes of Dimension Class
- The following class members are read-only and should not be modified by the
+Read-only python fields of class :class:`pnetcdf.Dimension`
+ The following class fields are read-only and should not be modified by the
  user.
 
  .. attribute:: name
 
-    String name of Dimension instance. This class member is read-only and
+    String name of Dimension instance. This class field is read-only and
     should not be modified by the user. To rename a dimension, use
     :meth:`File.rename_dim` method.
 

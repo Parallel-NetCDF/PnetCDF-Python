@@ -63,7 +63,7 @@ cdef class File:
         :type comm: mpi4py.MPI.Comm or None
 
         :param info: [Optional]
-            MPI info object to use for file access. `None` defaults to
+            MPI info instance to use for file access. `None` defaults to
             ``MPI_INFO_NULL``.
         :type info: mpi4py.MPI.Info or None
 
@@ -178,7 +178,7 @@ cdef class File:
 
 
     def __dealloc__(self):
-        # close file when there are no references to object left
+        # close file when there are no references to it left
         if self._isopen:
            self._close(False)
 
@@ -296,8 +296,8 @@ cdef class File:
         must be a positive integer or `-1`, which stands for "unlimited"
         (default is `-1`). The return value is the `Dimension` class instance
         describing the new dimension.  To determine the current maximum size of
-        the dimension, use the `len` function on the `Dimension` instance. To
-        determine if a dimension is 'unlimited', use the
+        the dimension, use the python function `len()` on the `Dimension`
+        instance. To determine if a dimension is 'unlimited', use the
         :meth:`Dimension.isunlimited` method of the `Dimension` instance.
 
         :param str dimname: Name of the new dimension.
@@ -454,7 +454,7 @@ cdef class File:
         # # containing all the netCDF attribute name/value pairs is provided by
         # # the `__dict__` attribute of a `Variable` instance.
 
-        # # `Variable` instances behave much like array objects. Data can be
+        # # `Variable` instances behave much like arrays. Data can be
         # # assigned to or retrieved from a variable with indexing and slicing
         # # operations on the `Variable` instance. A `Variable` instance has six
         # # Dataset standard attributes: `dimensions, dtype, shape, ndim, name`.
@@ -925,10 +925,10 @@ cdef class File:
         """
         set_auto_chartostring(self, value)
 
-        Call :meth:`Variable.set_auto_chartostring` for all variables
-        contained in this `File`. Calling this function only affects existing
-        variables.  Variables defined after calling this function will follow
-        the default behaviour.
+        Call :meth:`Variable.set_auto_chartostring` for all variables contained
+        in this `File`. Calling this method only affects existing variables.
+        Variables defined after calling this method will follow the default
+        behaviour.
 
         :param value: True or False
         :type value: bool
@@ -1026,7 +1026,7 @@ cdef class File:
         """
         inq_info(self)
 
-        Returns an MPI info object containing all the file hints used by
+        Returns an MPI info instance containing all the file hints used by
         PnetCDF library.
 
         :rtype:  mpi4py.MPI.Info
@@ -1106,7 +1106,7 @@ cdef class File:
         return extent
 
 cdef _get_dims(file):
-    # Private function to create `Dimension` instances for all the
+    # Private method to create `Dimension` instances for all the
     # dimensions in a `File`
     cdef int ierr, numdims, n, _file_id
     cdef int *dimids
@@ -1132,7 +1132,7 @@ cdef _get_dims(file):
     return dimensions
 
 cdef _get_variables(file):
-    # Private function to create `Variable` instances for all the
+    # Private method to create `Variable` instances for all the
     # variables in a `File`
     cdef int ierr, numvars, n, nn, numdims, varid, classp, iendian, _file_id
     cdef int *varids

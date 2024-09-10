@@ -20,8 +20,8 @@ syntax.
     chartostring
 
 
-Read-only Python Attributes of Variable Class
-    The following class members are read-only and should not be modified
+Read-only python fields of class :class:`pnetcdf.Variable`
+    The following class fields are read-only and should not be modified
     directly by the user.
 
     .. attribute:: name

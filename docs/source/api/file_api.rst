@@ -17,8 +17,8 @@ of data and relations among data objects stored in a netCDF file.
     inq_header_size, inq_put_size, inq_header_extent, inq_nreqs
    :exclude-members: dimensions, variables, file_format, indep_mode, path
 
-Read-only Python Attributes of File Class
- The following class members are read-only and should not be modified by the
+Read-only python fields of class :class:`pnetcdf.File`
+ The following class fields are read-only and should not be modified by the
  user.
 
    .. attribute:: dimensions
