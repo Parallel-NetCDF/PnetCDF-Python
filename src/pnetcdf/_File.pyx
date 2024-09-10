@@ -72,12 +72,13 @@ cdef class File:
 
         :Example: A example is available in ``examples/create_open.py``
 
-        ::
-         # create a new file using file clobber mode, i.e. flag "-w"
-         f = pnetcdf.File(filename = "foo.nc", mode = 'w', comm = MPI.COMM_WORLD, info = None)
+         ::
 
-         # open an existing file for read only
-         f = pnetcdf.File(filename = "foo.nc", mode = 'r', comm = MPI.COMM_WORLD, info = None)
+           # create a new file using file clobber mode, i.e. flag "-w"
+           f = pnetcdf.File(filename = "foo.nc", mode = 'w', comm = MPI.COMM_WORLD, info = None)
+
+           # open an existing file for read only
+           f = pnetcdf.File(filename = "foo.nc", mode = 'r', comm = MPI.COMM_WORLD, info = None)
 
         """
         cdef int ncid
@@ -142,10 +143,12 @@ cdef class File:
 
         :Example: A example is available in ``examples/create_open.py``
 
-        ::
-         # create a new file using file clobber mode, i.e. flag "-w"
-         f = pnetcdf.File(filename = "foo.nc", mode = 'w', comm = MPI.COMM_WORLD, info = None)
-         f.close()
+         ::
+
+           # create a new file using file clobber mode, i.e. flag "-w"
+           f = pnetcdf.File(filename = "foo.nc", mode = 'w', comm = MPI.COMM_WORLD, info = None)
+
+           f.close()
 
         """
         self._close(True)
@@ -323,13 +326,14 @@ cdef class File:
         :param int size: [Optional] Size of the new dimension.
         :Example: A example is available in ``examples/put_var.py``
 
-        ::
-         dim_t = f.def_dim('time', size = -1)
-         dim_y = f.def_dim("Y",    size = 100)
-         dim_x = f.def_dim("X",    size = 200)
+         ::
 
-         # Define a 2D variable of integer type
-         var = f.def_var("foo", pnetcdf.NC_INT, (dim_y, dim_x))
+           dim_t = f.def_dim('time', size = -1)
+           dim_y = f.def_dim("Y",    size = 100)
+           dim_x = f.def_dim("X",    size = 200)
+
+           # Define a 2D variable of integer type
+           var = f.def_var("foo", pnetcdf.NC_INT, (dim_y, dim_x))
 
         """
         self.dimensions[dimname] = Dimension(self, dimname, size=size)
@@ -477,12 +481,13 @@ cdef class File:
 
         :Example: A example is available in ``examples/put_var.py``
 
-        ::
-         dim_y = f.def_dim("Y", global_ny)
-         dim_x = f.def_dim("X", global_nx)
+         ::
 
-         # Define a 2D variable of integer type
-         var = f.def_var("foo", pnetcdf.NC_INT, (dim_y, dim_x))
+           dim_y = f.def_dim("Y", global_ny)
+           dim_x = f.def_dim("X", global_nx)
+
+           # Define a 2D variable of integer type
+           var = f.def_var("foo", pnetcdf.NC_INT, (dim_y, dim_x))
 
         """
 
@@ -562,12 +567,13 @@ cdef class File:
 
         :Example: A example is available in ``examples/put_var.py``
 
-        ::
-         str_att = "example attribute of type text."
-         var.foo_attr = str_att
+         ::
 
-         # Equivalently, below uses function call
-         var.put_att("foo_attr", str_att)
+           str_att = "example attribute of type text."
+           var.foo_attr = str_att
+
+           # Equivalently, below uses function call
+           var.put_att("foo_attr", str_att)
 
         """
         cdef nc_type xtype
@@ -596,12 +602,13 @@ cdef class File:
 
         :Example: A example is available in ``examples/get_var.py``
 
-        ::
-         # Get global attribute named "foo_attr"
-         str_att = f.get_att("foo_attr")
+         ::
 
-         # Get the variable's attribute named "foo_attr"
-         str_att = v.foo_attr
+           # Get global attribute named "foo_attr"
+           str_att = f.get_att("foo_attr")
+
+           # Get the variable's attribute named "foo_attr"
+           str_att = v.foo_attr
 
         """
         return _get_att(self, NC_GLOBAL, name, encoding=encoding)
@@ -773,16 +780,17 @@ cdef class File:
 
         :Example: A example is available in ``examples/nonblocking/nonblocking_write.py``
 
-        ::
-         # Write one variable at a time, using iput APIs
-         reqs = []
-         for i in range(NUM_VARS):
-             req_id = vars[i].iput_var(buf[i], start = start, count = count)
-             reqs.append(req_id)
+         ::
 
-         # commit posted nonblocking requests
-         req_errs = [None] * NUM_VARS
-         f.wait_all(NUM_VARS, reqs, req_errs)
+           # Write one variable at a time, using iput APIs
+           reqs = []
+           for i in range(NUM_VARS):
+               req_id = vars[i].iput_var(buf[i], start = start, count = count)
+               reqs.append(req_id)
+
+           # commit posted nonblocking requests
+           req_errs = [None] * NUM_VARS
+           f.wait_all(NUM_VARS, reqs, req_errs)
 
         """
         return self._wait(num, requests, status, collective=True)
@@ -889,10 +897,12 @@ cdef class File:
 
         :Example: A example is available in ``examples/nonblocking/nonblocking_write.py``
 
-        ::
-         # Before calling bput APIs, calculate allocate space needed
-         bufsize = length * NUM_VARS * np.dtype(np.int32).itemsize
-         f.attach_buff(bbufsize)
+         ::
+
+           # Before calling bput APIs, calculate allocate space needed
+           bufsize = length * NUM_VARS * np.dtype(np.int32).itemsize
+
+           f.attach_buff(bbufsize)
 
         """
         cdef MPI_Offset buffsize
@@ -912,13 +922,14 @@ cdef class File:
 
         :Example: A example is available in ``examples/nonblocking/nonblocking_write.py``
 
-        ::
-         # Before calling bput APIs, calculate allocate space needed
-         bufsize = length * NUM_VARS * np.dtype(np.int32).itemsize
-         f.attach_buff(bbufsize)
+         ::
 
-         # detach the buffer
-         f.detach_buff()
+           # Before calling bput APIs, calculate allocate space needed
+           bufsize = length * NUM_VARS * np.dtype(np.int32).itemsize
+           f.attach_buff(bbufsize)
+
+           # detach the buffer
+           f.detach_buff()
 
         """
         cdef int _file_id = self._ncid
@@ -1006,17 +1017,18 @@ cdef class File:
 
         :Example: A example is available in ``examples/fill_mode.py``
 
-        ::
-         # set the fill mode to NC_FILL for the entire file
-         old_fillmode = f.set_fill(pnetcdf.NC_FILL)
-         if verbose:
-             if old_fillmode == pnetcdf.NC_FILL:
-             print("The old fill mode is NC_FILL\n")
-         else:
-             print("The old fill mode is NC_NOFILL\n")
+         ::
 
-         # set the fill mode to back to NC_NOFILL for the entire file
-         f.set_fill(pnetcdf.NC_NOFILL)
+           # set the fill mode to NC_FILL for the entire file
+           old_fillmode = f.set_fill(pnetcdf.NC_FILL)
+           if verbose:
+               if old_fillmode == pnetcdf.NC_FILL:
+               print("The old fill mode is NC_FILL")
+           else:
+               print("The old fill mode is NC_NOFILL")
+
+           # set the fill mode to back to NC_NOFILL for the entire file
+           f.set_fill(pnetcdf.NC_NOFILL)
 
         """
         cdef int _file_id, _fillmode, _old_fillmode

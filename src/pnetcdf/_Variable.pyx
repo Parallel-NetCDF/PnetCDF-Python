@@ -88,16 +88,17 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/put_var.py``
 
-        ::
-         # Define dimensions
-         dim_y = f.def_dim("Y", global_ny)
-         dim_x = f.def_dim("X", global_nx)
+         ::
 
-         # Define a 2D variable of integer type, using :meth:`File.def_var`.
-         var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))
+           # Define dimensions
+           dim_y = f.def_dim("Y", global_ny)
+           dim_x = f.def_dim("X", global_nx)
 
-         # Or equivalently, using :meth:`File.createVariable`.
-         var = f.createVariable("var", pnetcdf.NC_INT, (dim_y, dim_x))
+           # Define a 2D variable of integer type, using :meth:`File.def_var`.
+           var = f.def_var("var", pnetcdf.NC_INT, (dim_y, dim_x))
+
+           # Or equivalently, using :meth:`File.createVariable`.
+           var = f.createVariable("var", pnetcdf.NC_INT, (dim_y, dim_x))
 
         """
 
@@ -328,12 +329,13 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/put_var.py``
 
-        ::
-         str_att = "example attribute of type text."
-         var.put_att("foo_attr", str_att)
+         ::
 
-         # Equivalently, uses python dictionary way
-         var.foo_attr = str_att
+           str_att = "example attribute of type text."
+           var.put_att("foo_attr", str_att)
+
+           # Equivalently, uses python dictionary way
+           var.foo_attr = str_att
 
         """
         cdef nc_type xtype
@@ -361,12 +363,13 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/get_var.py``
 
-        ::
-         # Get attribute named "foo_attr"
-         str_att = v.get_att("foo_attr")
+         ::
 
-         # Equivalently, uses python dictionary way
-         str_att = v.foo_attr
+           # Get attribute named "foo_attr"
+           str_att = v.get_att("foo_attr")
+
+           # Equivalently, uses python dictionary way
+           str_att = v.foo_attr
 
         """
         return _get_att(self._file, self._varid, name, encoding=encoding)
@@ -482,16 +485,17 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/fill_mode.py``
 
-        ::
-         # set the variable's fill mode to NC_FILL with PnetCDF default fill value
-         var.def_fill(no_fill = 0)
+         ::
 
-         # enable the variable's fill mode and use a customized value
-         fill_value = np.int32(-1)
-         var.def_fill(no_fill = 0, fill_value = fill_value)
+           # set the variable's fill mode to NC_FILL with PnetCDF default fill value
+           var.def_fill(no_fill = 0)
 
-         # Equivalently this can be done by setting the PnetCDF pre-defined attribute "_FillValue"
-         var._FillValue = fill_value
+           # enable the variable's fill mode and use a customized value
+           fill_value = np.int32(-1)
+           var.def_fill(no_fill = 0, fill_value = fill_value)
+
+           # Equivalently this can be done by setting the PnetCDF pre-defined attribute "_FillValue"
+           var._FillValue = fill_value
 
         """
         cdef ndarray data
@@ -966,16 +970,17 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/put_varn_int.py``
 
-        ::
-         num_reqs = 4
-         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
-         counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
-         starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
-         starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
-         starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
-         starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+         ::
 
-         v.put_varn_all(w_buf, num = num_reqs, starts = starts, counts = counts)
+           num_reqs = 4
+           starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+           counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+           starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
+           starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
+           starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
+           starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+
+           v.put_varn_all(w_buf, num = num_reqs, starts = starts, counts = counts)
 
         """
         self._put_varn(data, num, starts, counts, bufcount = bufcount,
@@ -1297,12 +1302,13 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/put_var.py``
 
-        ::
-         var.put_var_all(buf, start = start, count = count)
+         ::
 
-         # Equivalently, below uses python index style
-         end = [start[i] + count[i] for i in range(2)]
-         var[start[0]:end[0], start[1]:end[1]] = buf
+           var.put_var_all(buf, start = start, count = count)
+
+           # Equivalently, below uses python index style
+           end = [start[i] + count[i] for i in range(2)]
+           var[start[0]:end[0], start[1]:end[1]] = buf
 
         """
         if data is not None and all(arg is None for arg in [start, count, stride, imap]):
@@ -1685,7 +1691,7 @@ cdef class Variable:
 
         - `data`, `start` - Read a single data value (a single element).
            Put a single array element specified by `start` from a variable of
-           an opened netCDF file that is in data mode. For example, index =
+           an opened netCDF file that is in data mode. For example, start =
            [0,5] would specify the following position in a 4 * 10
            two-dimensional variable ("-" means skip).
 
@@ -1807,16 +1813,17 @@ cdef class Variable:
 
         :Example: A example is available in ``examples/get_var.py``
 
-        ::
-         # allocate read buffer
-         r_buf = np.empty(tuple(count), v.dtype)
+         ::
 
-         # Read a subarray in collective mode
-         v.get_var_all(r_buf, start = start, count = count)
+           # allocate read buffer
+           r_buf = np.empty(tuple(count), v.dtype)
 
-         # Equivalently, below uses python index style
-         end = [start[i] + count[i] for i in range(2)]
-         r_bufs = v[start[0]:end[0], start[1]:end[1]]
+           # Read a subarray in collective mode
+           v.get_var_all(r_buf, start = start, count = count)
+
+           # Equivalently, below uses python index style
+           end = [start[i] + count[i] for i in range(2)]
+           r_bufs = v[start[0]:end[0], start[1]:end[1]]
 
         """
         # Note that get_var requires a empty array as a buffer arg from caller
@@ -1951,18 +1958,19 @@ cdef class Variable:
             write buffer.
         :type buftype: mpi4py.MPI.Datatype
 
-        :Example:
+        :Example: an example code fragment is given below.
 
-        ::
-         num_reqs = 4
-         starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
-         counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
-         starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
-         starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
-         starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
-         starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+         ::
 
-         v.get_varn_all(r_buf, num = num_reqs, starts = starts, counts = counts)
+           num_reqs = 4
+           starts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+           counts = np.zeros((num_reqs, NDIMS), dtype=np.int64)
+           starts[0][0] = 0; starts[0][1] = 5; counts[0][0] = 1; counts[0][1] = 2
+           starts[1][0] = 1; starts[1][1] = 0; counts[1][0] = 1; counts[1][1] = 1
+           starts[2][0] = 2; starts[2][1] = 6; counts[2][0] = 1; counts[2][1] = 2
+           starts[3][0] = 3; starts[3][1] = 0; counts[3][0] = 1; counts[3][1] = 3
+
+           v.get_varn_all(r_buf, num = num_reqs, starts = starts, counts = counts)
 
         """
         return self._get_varn(data, num, starts, counts, bufcount = bufcount,
