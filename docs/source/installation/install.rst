@@ -5,14 +5,9 @@ Installation
 
 Quick Install
 ===================================
-Currently our PyPI wheels don't cover all systems so will need to pip install using source distribution. If 
-you already have a working MPI with the mpicc compiler wrapper is on your search path and pnetcdf-C installation, 
-you can use pip:
 
-.. code-block:: bash
-
-    $ env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pnetcdf
-
+Quick installation via pip install is currently unavailable as this library has not yet been uploaded to PyPI. 
+Please follow building from source instructions provided below to set up the library.
 
 Install from Source
 ============================================
