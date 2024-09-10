@@ -1,7 +1,8 @@
 ## Notes for PnetCDF-python developers
 ---
 ### Library packaging and publishing
- * Packaging: build source distribution and wheel distribution (optional)
+ * Currently, pip-install via build distribution is disabled. No wheel files are uploaded to PyPI. Lastest pnetcdf-python package on PyPI: https://pypi.org/project/pnetcdf/
+ * Packaging: build source distribution and wheel distribution
   1. Create virtual env and install PnetCDF-C and all python dependencies as developer installation
   2. Update version number, cd to repo directory and generate distribution:
   ```
@@ -10,8 +11,8 @@
   ```
   CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python3 -m build
   ```
- * (Recommended) publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing
- 1. Create TestPyPI account and update `.pypirc` per TestPyPI instruction
+ * (Recommended) publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing. Only upload source distribution archive, as the wheel file (dist/pncpy-x.x.x*.whl) works exclusively for your own system and python version.
+ 1. Create TestPyPI account and update `.pypirc` per instruction
  2. Publish source distribution on TestPyPI
  ```
  python3 -m twine upload --repository testpypi dist/pnetcdf-x.x.x.tar.gz
@@ -20,13 +21,22 @@
  ```
  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pnetcdf==x.x.x
  ```
+ 4. Run pnetcdf-python test programs
 
- 4. Run test programs
+ * Officially publish on [PyPI](https://pypi.org/) for testing
+ 1. Create TestPyPI account and update `.pypirc` per instruction
+ 2. Publish source distribution on PyPI
+ ```
+ python3 -m twine upload dist/pnetcdf-x.x.x.tar.gz
+ ```
+ 3. For testing, just create a new virtual env and quick install (using default PyPI index) without source code repo.
+ ```
+ CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install pnetcdf
+ ```
 
 
 ### Library installation
  * Quick install
-   * Currently, quick install via `pip install pnetcdf` is disabled. Main challenge is that build distribution (using wheels) is platform-specific and multiple wheels need to be generated to cover all mainstream platforms. A working source distribution for `pip install` is easier and has been tested on PyPI (works for all platforms but still needs MPI and PnetCDF-C installation) 
    * `MANIFEST.in` controls files to be included in source distribution (sdist), which will be eventually uploaded to PyPI if we enables quick install in the future. After modifications to `MANIFEST.IN` file, here are steps to check if the files included are valid to build the library.
      1. Make sure pnetcdf.egg-info folder is deleted. Otherwise it will first cache previous versions of `MANIFEST.IN` requirement.
      2. Build the source distribution
