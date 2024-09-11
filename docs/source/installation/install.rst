@@ -13,10 +13,10 @@ Install from Source
 ============================================
 
 Software Requirements
- - PnetCDF C library
+ - PnetCDF C library (built with shared libraries) and MPI C library
  - Python 3.9 or later
  - Python libraries: numpy, mpi4py
- - Python libraries: Cython, setuptools (optional, for building from source)
+ - Python libraries: Cython, setuptools, packaging, wheel (for building from source)
 
 Building PnetCDF C library
  .. code-block:: bash
@@ -45,11 +45,11 @@ Building PnetCDF-python from source
 
      # install Python libraries
      $ pip install numpy Cython
-     $ env CC=/path/to/mpicc pip install mpi4py
+     $ CC=/path/to/mpicc pip install mpi4py
 
      # download PnetCDF-python source code
      $ git clone git@github.com:Parallel-NetCDF/PnetCDF-Python.git
      $ cd PnetCDF-Python
 
      # install PnetCDF-python
-     env CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install --no-build-isolation -e .
+     CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install --no-build-isolation -e .
