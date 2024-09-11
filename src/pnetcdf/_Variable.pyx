@@ -675,8 +675,8 @@ cdef class Variable:
             data = np.tile(data,datashape)
         # reshape data array if needed to conform with start,count,stride.
         if data.ndim != len(datashape) or\
-           (data.shape != datashape and data.ndim > 1): # issue #1083
-            # create a view so shape in caller is not modified (issue 90)
+           (data.shape != datashape and data.ndim > 1): 
+            # create a view so shape in caller is not modified
             try: # if extra singleton dims, just reshape
                 data = data.view()
                 data.shape = tuple(datashape)
