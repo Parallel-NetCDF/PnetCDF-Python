@@ -1,3 +1,8 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 import os
 import torch
 import torch.distributed as dist

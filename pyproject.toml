@@ -1,3 +1,8 @@
+#
+# Copyright (C) 2024, Northwestern University and Argonne National Laboratory
+# See COPYRIGHT notice in top-level directory.
+#
+
 [build-system]
 requires = [
     "Cython>=0.29",
@@ -45,11 +50,9 @@ dynamic = [
 
 [project.readme]
 text = """\
-PnetCDF-python is a Python interface to PnetCDF, a high-performance parallel I/O
- library for accessing netCDF files. This integration with Python allows for easy
-  manipulation, analysis, and visualization of netCDF data using the rich ecosystem
-   of Python's scientific computing libraries, making it a valuable tool for python-based
-    applications that require high-performance access to netCDF files.
+PnetCDF-Python is a Python interface to PnetCDF, a high-performance I/O library
+for accessing NetCDF files in parallel. It can provide MPI-based parallel
+python programs to achieve a scalable I/O performance.
 """
 content-type = "text/markdown"
 
