@@ -37,8 +37,8 @@ scalable I/O performance.
   folder [./examples](./examples).
 * PnetCDF-python [User Guide](https://pnetcdf-python.readthedocs.io/en/latest)
 * [Data objects](docs/pnetcdf_objects.md) in PnetCDF python programming
-* [Comparison](docs/nc4_vs_pnetcdf.md) of
-  [NetCDF4-python](https://github.com/Unidata/netcdf4-python) and PnetCDF-python
+* [Comparison](docs/nc4_vs_pnetcdf.md) of PnetCDF-python to
+  [NetCDF4-python](https://github.com/Unidata/netcdf4-python)
 * [PnetCDF project home page](https://parallel-netcdf.github.io)
 * [PnetCDF of C/Fortran library repository](https://github.com/Parallel-NetCDF/PnetCDF)
 
