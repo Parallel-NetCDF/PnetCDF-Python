@@ -5,8 +5,9 @@
 
 PnetCDF-Python is a Python interface to
 [PnetCDF](https://parallel-netcdf.github.io/), a high-performance I/O library
-for accessing netCDF files in parallel. It can provide MPI-based parallel
-python programs to achieve a scalable I/O performance.
+for accessing [NetCDF](https://www.unidata.ucar.edu/software/netcdf) files in
+parallel. It can provide MPI-based parallel python programs to achieve a
+scalable I/O performance.
 
 ### Software Dependencies
 * Python 3.9 or later.
@@ -18,7 +19,10 @@ python programs to achieve a scalable I/O performance.
 * Clone this GitHub repository
 * Required software for developer installation:
   + The above mentioned dependent software are installed and additionally,
-  + [Cython](http://cython.org/), [packaging](https://pypi.org/project/packaging/), [setuptools>=65](https://pypi.org/project/setuptools/) and [wheel](https://pypi.org/project/wheel/).
+  + [Cython](http://cython.org),
+    [packaging](https://pypi.org/project/packaging),
+    [setuptools>=65](https://pypi.org/project/setuptools) and
+    [wheel](https://pypi.org/project/wheel).
 * Commands to install.
   ```
   export CC=/path/to/mpicc
@@ -33,7 +37,8 @@ python programs to achieve a scalable I/O performance.
   folder [./examples](./examples).
 * PnetCDF-python [User Guide](https://pnetcdf-python.readthedocs.io/en/latest)
 * [Data objects](docs/pnetcdf_objects.md) in PnetCDF python programming
-* [Comparison](docs/nc4_vs_pnetcdf.md) of NetCDF4-python and PnetCDF-python
+* [Comparison](docs/nc4_vs_pnetcdf.md) of
+  [NetCDF4-python](https://github.com/Unidata/netcdf4-python) and PnetCDF-python
 * [PnetCDF project home page](https://parallel-netcdf.github.io)
 * [PnetCDF of C/Fortran library repository](https://github.com/Parallel-NetCDF/PnetCDF)
 
