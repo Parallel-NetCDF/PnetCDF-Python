@@ -698,25 +698,6 @@ cdef class Variable:
                 dataput=np.array(dataput,dataput.dtype)
             self._put(dataput,a,b,c)
 
-    def _check_safecast(self, attname):
-        # check to see that variable attribute exists
-        # and can be safely cast to variable data type.
-        msg="""WARNING: %s not used since it
-                cannot be safely cast to variable data type""" % attname
-        if hasattr(self, attname):
-            att = np.array(self.get_att(attname))
-        else:
-            return False
-        try:
-            atta = np.array(att, self.dtype)
-        except ValueError:
-            is_safe = False
-            warnings.warn(msg)
-            return is_safe
-        is_safe = _safecast(att,atta)
-        if not is_safe:
-            warnings.warn(msg)
-        return is_safe
 
     def _put_var1(self, value, tuple index, bufcount, Datatype buftype, collective = True):
         cdef int ierr, ndims
