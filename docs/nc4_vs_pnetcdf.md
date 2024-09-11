@@ -18,13 +18,17 @@ operational modes.
   + Classic file format (CDF-1) -- The ESDS Community Standard defined the file format
     to be used in the NetCDF user community in 1989. The file header bears a
     signature of character string 'CDF-1' and now is commonly referred to as
-    'CDF-1' file format.
+    [CDF-1](https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d1-file-format-specification.html)
+    file format.
     * 'CDF-2' format -- The CDF-1 format was later extended to support large
       file size (i.e.  larger than 2GB) in 2004. See its specification in
       [ESDS-RFC-011v2.0](https://cdn.earthdata.nasa.gov/conduit/upload/496/ESDS-RFC-011v2.00.pdf).
       Because its file header bears a signature of 'CDF-2' and the format is
-      also commonly referred to as 'CDF-2' format.
-    * 'CDF-5' format -- The CDF-2 format was extended by PnetCDF developer team
+      also commonly referred to as
+      [CDF-2](https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d2-file-format-specification.html)
+      format.
+    * [CDF-5](https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d5-file-format-specification.html)
+      format -- The CDF-2 format was extended by PnetCDF developer team
       in 2009 to support large variables and additional large data types, such
       as 64-bit integer.
   + HDF5-based file format -- Starting from its version 4.0.0, NetCDF includes

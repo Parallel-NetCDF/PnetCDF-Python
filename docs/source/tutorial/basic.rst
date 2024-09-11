@@ -20,8 +20,12 @@ Creating/Opening/Closing a netCDF file
  This is also the method used to open an existing netCDF file. If the file is
  open for write access (mode='w', 'r+' or 'a'), you may write any type of data
  including new dimensions, variables and attributes. Currently, netCDF files
- can be created in classic formats, specifically the formats of CDF-1, 2, and
- 5. When creating a new file, the format may be specified using the format
+ can be created in classic formats, specifically the formats of
+ `CDF-1 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d1-file-format-specification.html>`_,
+ `CDF-2 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d2-file-format-specification.html>`_,
+ and
+ `CDF-5 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d5-file-format-specification.html>`_.
+ When creating a new file, the format may be specified using the format
  keyword in the ``File`` constructor. The default format is CDF-1. To see how a
  given file is formatted, you can examine the ``file_format`` attribute.
  Closing the netCDF file is accomplished via the :meth:`File.close` method of

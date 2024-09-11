@@ -52,10 +52,15 @@ cdef class File:
         :param str format: [Optional] underlying file format. Only relevant
             when creating a new file.
 
-            - ``NETCDF3_64BIT_OFFSET`` or ``NC_64BIT_OFFSET``: CDF-2 format
-            - ``NETCDF3_64BIT_DATA`` or ``NC_64BIT_DATA``: CDF-5 format
+            - ``NETCDF3_64BIT_OFFSET`` or ``NC_64BIT_OFFSET``:
+              `CDF-2 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d2-file-format-specification.html>`_
+              format
+            - ``NETCDF3_64BIT_DATA`` or ``NC_64BIT_DATA``:
+              `CDF-5 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d5-file-format-specification.html>`_
+              format
             - ``NETCDF3_CLASSIC`` or `None` defaults to default file format
-              (CDF-1 format)
+              (`CDF-1 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d1-file-format-specification.html>`_
+              format)
 
         :param comm: [Optional]
             MPI communicator to use for file access. `None` defaults to

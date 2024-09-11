@@ -4,7 +4,10 @@ Data type
 
 NetCDF Variable Data Types
  The following table gives the netCDF external data types defined in CDF-1 and
- CDF-2 and the corresponding type constants for defining variables in the
+ `CDF-1 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d1-file-format-specification.html>`_
+ and
+ `CDF-2 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d2-file-format-specification.html>`_
+ and the corresponding type constants for defining variables in the
  python interface. All these data types have direct numpy quivalent.
 
 
@@ -26,7 +29,10 @@ NetCDF Variable Data Types
       +-------+----------------+-------+----------------------------------------+---------------------+
 
 
- Additional data types supported in CDF-5 format:
+ Additional data types supported in
+ `CDF-5 <https://parallel-netcdf.github.io/doc/c-reference/pnetcdf-c/CDF_002d5-file-format-specification.html>`_.
+ format:
+
 
       +---------------------+----------------+-------+----------------------------------------+---------------------+
       | Type                | C #define      | Bits  | Intent of use                          | Numpy Equivalent    |
@@ -41,3 +47,4 @@ NetCDF Variable Data Types
       +---------------------+----------------+-------+----------------------------------------+---------------------+
       | unsigned long long  | NC_UINT64      | 64    | unsigned 8-byte integer                | np.uint64 or 'u8'   |
       +---------------------+----------------+-------+----------------------------------------+---------------------+
+
