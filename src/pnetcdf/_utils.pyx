@@ -206,12 +206,12 @@ cdef _set_att(file, int varid, name, value,\
     file_id = file._ncid
     # put attribute value into a np array.
     value_arr = np.array(value)
-    if value_arr.ndim > 1: # issue #841
+    if value_arr.ndim > 1: 
         raise ValueError('multi-dimensional array attributes not supported')
     N = value_arr.size
 
     if value_arr.dtype.char in ['S','U']:
-        # don't allow string array attributes in NETCDF3 files.
+        # don't allow string array attributes
         if N > 1:
             msg='array string attributes not supported'
         if not value_arr.shape:
@@ -221,7 +221,7 @@ cdef _set_att(file, int varid, name, value,\
             dats = _strencode(''.join(value_arr1.tolist()))
         lenarr = len(dats)
         datstring = dats
-        # TODO: resolve the special case when set attribute to none(\177)
+        # TODO: resolve the special case when set attribute to none
         with nogil:
             ierr = ncmpi_put_att_text(file_id, varid, attname, lenarr, datstring)
         _check_err(ierr, err_cls=AttributeError)
@@ -551,7 +551,7 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None, 
             try:
                 dimname = dimensions[i]
                 unlim = unlimd[dimname]
-            except IndexError: # more slices than dimensions (issue 371)
+            except IndexError:
                 unlim = False
         else:
             unlim = False
@@ -616,7 +616,6 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None, 
                 ee = False
             if ee and len(e) == len(ee) and (e == np.arange(start,stop,step)).all():
                 # don't convert to slice unless abs(stride) == 1
-                # (nc_get_vars is very slow, issue #680)
                 newElem.append(slice(start,stop,step))
             else:
                 newElem.append(e)
@@ -648,7 +647,7 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None, 
         else:
             sdim.append(1)
 
-    # broadcast data shape when assigned to full variable (issue #919)
+    # broadcast data shape when assigned to full variable
     try:
         fullslice = elem.count(slice(None,None,None)) == len(elem)
     except: # fails if elem contains a numpy array.
@@ -656,7 +655,6 @@ cdef _StartCountStride(elem, shape, dimensions=None, file=None, datashape=None, 
     if fullslice and datashape and put and not hasunlim:
         datashape = broadcasted_shape(shape, datashape)
 
-    # pad datashape with zeros for dimensions not being sliced (issue #906)
     # only used when data covers slice over subset of dimensions
     if datashape and len(datashape) != len(elem) and\
        len(datashape) == sum(1 for e in elem if type(e) == slice):
