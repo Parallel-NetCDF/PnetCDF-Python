@@ -48,6 +48,14 @@ Below is a list of tasks to be done immediately before making a new release
    * Click "Save draft" to save the changes. It can be modified later.
    * See all options from [github docs](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes)
 
+6. If a new commit were added or pushed to the main branch after a draft
+   release was created, make sure the local main branch is up-to-date and then
+   run commands below to force-update the tag on both local and remote.
+   ```
+   git tag -fa v.1.0.0.pre
+   git push -f --tags
+   ```
+
 ---
 ### Library Packaging And Publishing
  * Currently, pip-install via build distribution is disabled. No wheel files are uploaded to PyPI. Lastest pnetcdf-python package on PyPI: https://pypi.org/project/pnetcdf/
