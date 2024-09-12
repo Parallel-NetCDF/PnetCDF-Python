@@ -176,7 +176,7 @@ metadata synchronization small.
   # Exit the define mode
   f.enddef()
 
-  # Write to a subarray of the variable, temperature
+  # Write to a subarray of the variable, var_dbl
   var_dbl[0:4, 16:20] = buf_dbl
 
   # Close the file
@@ -224,7 +224,7 @@ collective.
   ...
   # Metadata operations to define dimensions and variables
   ...
-  # Exit the define mode (by default, in the collective I/O mode)
+  # Exit the define mode (by default, into the collective I/O mode)
   f.enddef()
 
   # Write to variables collectively
@@ -294,17 +294,18 @@ collective.
   nonblocking version of the APIs. A nonblocking API means the call to the API
   will return as soon as the `put/get` request has been registered in the
   PnetCDF library. The commitment of the request may happen later, when a call
-  to `ncmpi_wait_all/ncmpi_wait` is made. The nonblocking APIs are listed below.
-  + Variable.iput_var() - posts a nonblocking request to write to a variable.
-  + Variable.iget_var() - posts a nonblocking request to from from a variable.
-  + Variable.bput_var() - posts a nonblocking, buffered request to write to a variable.
-  + Variable.iput_varn() - posts a nonblocking request to write multiple subarrays to a variable.
-  + Variable.iget_varn() - posts a nonblocking request to read multiple subarrays from a variable.
-  + Variable.bput_varn() - posts a nonblocking, buffered request to write multiple subarrays to a variable.
-  + File.wait_all() - waits for nonblocking requests to complete, using collective MPI-IO.
-  + File.wait() - waits for nonblocking requests to complete, using independent MPI-IO.
-  + File.attach_buff() - Let PnetCDF to allocate an internal buffer to cache bput write requests.
-  + File.detach_buff() - Free the attached buffer.
+  to `File.wait_all()/File.wait()` is made. The nonblocking APIs are listed
+  below.
+  + `Variable.iput_var()` - posts a nonblocking request to write to a variable.
+  + `Variable.iget_var()` - posts a nonblocking request to from from a variable.
+  + `Variable.bput_var()` - posts a nonblocking, buffered request to write to a variable.
+  + `Variable.iput_varn()` - posts a nonblocking request to write multiple subarrays to a variable.
+  + `Variable.iget_varn()` - posts a nonblocking request to read multiple subarrays from a variable.
+  + `Variable.bput_varn()` - posts a nonblocking, buffered request to write multiple subarrays to a variable.
+  + `File.wait_all()` - waits for nonblocking requests to complete, using collective MPI-IO.
+  + `File.wait()` - waits for nonblocking requests to complete, using independent MPI-IO.
+  + `File.attach_buff()` - Let PnetCDF to allocate an internal buffer to cache bput write requests.
+  + `File.detach_buff()` - Free the attached buffer.
 * The advantage of using nonblocking APIs is when there are many small
   `put/get` requests and each of them has a small amount.  PnetCDF tries to
   aggregate and coalesce multiple registered nonblocking requests into a large
@@ -315,10 +316,10 @@ collective.
 * Table below shows the difference in python programming between using blocking
   and nonblocking APIs.
 
-| PnetCDF Blocking APIs | PnetCDF Nonblocking APIs |
+| PnetCDF Blocking APIs   PnetCDF Nonblocking APIs |
 |:-------|:--------|
 | ...<br># define 3 variables of NC_DOUBLE type ||
-| psfc = f.createVariable("PSFC", "f8", ("time", "lat", "lon"))<br>prcp = f.createVariable("prcp", "f8", ("time", "lat", "lon"))<br>snow = f.createVariable("SNOW", "f8", ("time", "lat", "lon")) | ditto |
+| psfc = f.createVariable("PSFC", "f8", ("time", "lat", "lon"))<br>prcp = f.createVariable("PRCP", "f8", ("time", "lat", "lon"))<br>snow = f.createVariable("SNOW", "f8", ("time", "lat", "lon")) | ditto |
 | ... ||
 | # exit define mode and enter data mode<br>f.enddef() | ditto |
 | ...<br># Call blocking APIs to write 3 variables to the file | <br># Call nonblocking APIs to post 3 write requests |
