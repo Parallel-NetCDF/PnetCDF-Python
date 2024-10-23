@@ -59,30 +59,52 @@ Below is a list of tasks to be done immediately before making a new release
 ---
 ### Library Packaging And Publishing
  * Currently, pip-install via build distribution is disabled. No wheel files are uploaded to PyPI. Lastest pnetcdf-python package on PyPI: https://pypi.org/project/pnetcdf/
- * Packaging: build source distribution and wheel distribution
-   1. Create virtual env and install PnetCDF-C and all python dependencies as developer installation
-   2. Update version number, cd to repo directory and generate distribution:
+ * Packaging: build source distribution and wheel distribution on a local machine following the steps
+   1. Make sure a python virtual env is created and install PnetCDF-C and all python dependencies as developer installation
       ```
+      python -m venv env
+      source env/bin/activate
+      pip install --upgrade pip setuptools wheel packaging
+      pip install numpy Cython
+      CC=/path/to/mpicc pip install mpi4py
+      ```
+   2. Download the release tarball as shown in the following example
+      ```
+      wget https://github.com/Parallel-NetCDF/PnetCDF-Python/archive/refs/tags/v.1.0.0.pre.tar.gz
+      tar -xfv v.1.0.0.pre.tar.gz
+      cd PnetCDF-Python
       python3 -m pip install --upgrade build twine
       ```
+   3. Build the package and generate distribution. 
 
       ```
       CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir python3 -m build
       ```
- * (Recommended) publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) for testing. Only upload source distribution archive, as the wheel file (dist/pncpy-x.x.x*.whl) works exclusively for your own system and python version.
-   1. Create TestPyPI account and update `.pypirc` per instruction
+      A successful run of this command will generate 2 new files:  `dist/pnetcdf-x.x.x.tar.gz` and `dist/pnetcdf-x.x.x-cp39-cp39-linux_x86_64.whl`
+      
+ * For testing purpose: publish on [TestPyPI](https://packaging.python.org/en/latest/guides/using-testpypi/). Only upload source distribution archive, since the wheel file (dist/pncpy-x.x.x*.whl) works exclusively for your own system and python version and not useful for users.
+   1. Create TestPyPI account and update `$HOME/.pypirc` on local machine to skip cresendentials
    2. Publish source distribution on TestPyPI
        ```
        python3 -m twine upload --repository testpypi dist/pnetcdf-x.x.x.tar.gz
        ```
-   3. Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich are installed. Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index.
+       The commmand will first check if there exists same package name and version number and error out if there exists. After uploading, open your browser, go to `https://test.pypi.org/` and search package name: `pnetcdf` to verify.
+   3. Next we need to test the uploaded distribution on a local machine
+      * Need to create a new empty folder. E.g. `mkdir pypi_test`
+      * Create and activate a new vanilla python env for testing. Make sure PnetCDF-C and mpich are installed. This env shouldn't be the same env used in developer install. i.e. the enviroment does not contain any pre-installed pnetcdf python library
+        ```
+        python -m venv testenv
+        source env/bin/activate
+        ```
+      * Then quick install via the distribution on TestPyPI (no python dependencies required). Note that `-i` redirects pip-install to search pnetcdf-python in testpypi index and `--extra-index-url` redirects pip-install to search dependency libraries (e.g. numpy) in official pypi index. 
        ```
        CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install -i https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple pnetcdf==x.x.x
        ```
-   4. Run pnetcdf-python test programs
+       This command will download the package from testpypi and install pnetcdf library in the current env
+   5. Run pnetcdf-python test programs. For example, using the test programs under `https://github.com/Parallel-NetCDF/PnetCDF-Python/tree/main/examples`
 
- * Officially publish on [PyPI](https://pypi.org/) for testing
-   1. Create TestPyPI account and update `.pypirc` per instruction
+ * Officially publish on [PyPI](https://pypi.org/) WARNING: after upload to pypi, we cannot overwrite or change the published package!
+   1. Create PyPI account and update `.pypirc` per instruction
    2. Publish source distribution on PyPI
        ```
        python3 -m twine upload dist/pnetcdf-x.x.x.tar.gz
@@ -91,6 +113,7 @@ Below is a list of tasks to be done immediately before making a new release
        ```
        CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir pip install pnetcdf
        ```
+   4. To verify the official publishing of latest pnetcdf verion, open the browser and go to `https://pypi.org/project/pnetcdf/` to check the latest release.
 
 
 ### Library installation
