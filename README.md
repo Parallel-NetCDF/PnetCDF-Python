@@ -15,6 +15,12 @@ scalable I/O performance.
 * MPI C library and Python package, [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html).
 * [PnetCDF C library](https://github.com/Parallel-netCDF/PnetCDF), built with shared libraries.
 
+### Quick Installation
+* Make sure have a working MPI and pnetcdf-C software and then use pip to install pnetcdf-Python library from PyPI
+  ```
+  CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pnetcdf
+  ```
+
 ### Developer Installation
 * Clone this GitHub repository
 * Required software for developer installation:
