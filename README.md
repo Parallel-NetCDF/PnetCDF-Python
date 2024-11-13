@@ -12,11 +12,16 @@ scalable I/O performance.
 ### Software Dependencies
 * Python 3.9 or later.
 * [numpy](http://www.numpy.org/) Python package.
-* MPI C library and Python package, [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html).
-* [PnetCDF C library](https://github.com/Parallel-netCDF/PnetCDF), built with shared libraries.
+* MPI C library and Python package,
+  [mpi4py](https://mpi4py.readthedocs.io/en/stable/install.html).
+  + Note when using mpi4py 4.0 and MPICH, MPICH version 4.2.2 and later is
+    required.
+* [PnetCDF C library](https://github.com/Parallel-netCDF/PnetCDF), built with
+  shared libraries.
 
 ### Quick Installation
-* Make sure you have a working MPI and pnetcdf-C software and then use pip to install pnetcdf-Python library from PyPI
+* Make sure you have a working MPI and PnetCDF-C software installed.
+* Run pip command below to install PnetCDF-Python library from PyPI:
   ```
   CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pnetcdf
   ```
