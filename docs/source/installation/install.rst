@@ -6,8 +6,14 @@ Installation
 Quick Install
 ===================================
 
-Quick installation via pip install is currently unavailable as this library has not yet been uploaded to PyPI. 
-Please follow building from source instructions provided below to set up the library.
+Software Requirements
+ - PnetCDF C library (built with shared libraries) and MPI C library
+
+Install PnetCDF-python library from PyPI
+ .. code-block:: bash
+
+     $ CC=/path/to/mpicc PNETCDF_DIR=/path/to/pnetcdf/dir/ pip install pnetcdf
+
 
 Install from Source
 ============================================
