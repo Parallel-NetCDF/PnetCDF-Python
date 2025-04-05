@@ -44,17 +44,17 @@ _nptonctype  = {'S1' : NC_CHAR_C,
                 'f4' : NC_FLOAT_C,
                 'f8' : NC_DOUBLE_C}
 
-_nptompitype = {'S1' : MPI_CHAR,
-                'i1' : MPI_BYTE,
-                'u1' : MPI_UNSIGNED_CHAR,
-                'i2' : MPI_SHORT,
-                'u2' : MPI_UNSIGNED_SHORT,
-                'i4' : MPI_INT,
-                'u4' : MPI_UNSIGNED,
-                'i8' : MPI_LONG_LONG,
-                'u8' : MPI_UNSIGNED_LONG_LONG,
-                'f4' : MPI_FLOAT,
-                'f8' : MPI_DOUBLE}
+_nptompitype = {'S1' : MPI.CHAR,
+                'i1' : MPI.BYTE,
+                'u1' : MPI.UNSIGNED_CHAR,
+                'i2' : MPI.SHORT,
+                'u2' : MPI.UNSIGNED_SHORT,
+                'i4' : MPI.INT,
+                'u4' : MPI.UNSIGNED,
+                'i8' : MPI.LONG_LONG,
+                'u8' : MPI.UNSIGNED_LONG_LONG,
+                'f4' : MPI.FLOAT,
+                'f8' : MPI.DOUBLE}
 
 
 """_nptompitype = {'S1' : MPI_CHAR,
