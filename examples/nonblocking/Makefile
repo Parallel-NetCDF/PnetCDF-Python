@@ -7,9 +7,10 @@ check_PROGRAMS = nonblocking_write_def.py \
                  nonblocking_write.py \
                  nonblocking_read.py
 
-
+TESTMPIRUN = $(shell dirname ${CC})/mpirun
 TESTS_ENVIRONMENT  = export check_PROGRAMS="${check_PROGRAMS}";
 TESTS_ENVIRONMENT += export PNETCDF_DIR="${PNETCDF_DIR}";
+TESTS_ENVIRONMENT += export TESTMPIRUN="$(TESTMPIRUN)";
 
 OUTPUT_DIR = _tmp_output
 

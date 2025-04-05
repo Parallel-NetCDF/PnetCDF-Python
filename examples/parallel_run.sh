@@ -61,9 +61,9 @@ for prog in $check_PROGRAMS; do
    printf '%-60s' "Testing $prog"
 
    if test $prog = "get_var.py" ; then
-      CMD="mpiexec -n $NPROC python $prog -q $OUT_DIR/put_var.nc"
+      CMD="${TESTMPIRUN} -n $NPROC python $prog -q $OUT_DIR/put_var.nc"
    else
-      CMD="mpiexec -n $NPROC python $prog -q $OUT_DIR/${prog%.*}.nc"
+      CMD="${TESTMPIRUN} -n $NPROC python $prog -q $OUT_DIR/${prog%.*}.nc"
    fi
    $CMD
    status=$?

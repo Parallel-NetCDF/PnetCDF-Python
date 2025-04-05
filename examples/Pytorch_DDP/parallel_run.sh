@@ -31,7 +31,7 @@ for prog in $check_PROGRAMS; do
    printf '%-60s' "Testing $prog"
 
    if test $prog = "torch_ddp_skeleton.py" ; then
-      CMD="mpiexec -n $NPROC python $prog -q"
+      CMD="${TESTMPIRUN} -n $NPROC python $prog -q"
    fi
    $CMD
    status=$?

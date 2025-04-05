@@ -40,8 +40,16 @@ scalable I/O performance.
   export PNETCDF_DIR=/path/to/pnetcdf/dir
   pip install --no-build-isolation -e .
   ```
-* Testing -- Command `"make check"` tests all the programs available in folders
-  ["test/"](./test) and ["examples/"](./examples).
+* Testing
+  + Command `"make check"` tests all the programs available in folders
+  ["test/"](./test) and ["examples/"](./examples) by running one MPI process.
+  + Command `"make ptests"` tests all the programs by running more than one MPI
+    process.
+  + Note when using OpenMPI, use command below.
+    ```
+    make check  TESTMPIRUN="/path/to/OpenMPI/bin/mpirun --oversubscribe"
+    make ptests TESTMPIRUN="/path/to/OpenMPI/bin/mpirun --oversubscribe"
+    ```
 
 ### Additional Resources
 * [Example python programs](./examples#pnetcdf-python-examples) available in
