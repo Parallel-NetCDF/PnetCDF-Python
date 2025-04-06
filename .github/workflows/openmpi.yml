@@ -1,4 +1,4 @@
-name: Test PnetCDF-C latest official release
+name: Using OpenMPI
 on:
   push:
     branches:
@@ -19,8 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      MPICH_VERSION: 4.3.0
-      MPICH_DIR: ${{ github.workspace }}/mpich-install
+      OPENMPI_VERSION: 5.0.7
+      OPENMPI_DIR: ${{ github.workspace }}/ompi-install
       PNETCDF_VERSION: 1.14.0
       PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
     strategy:
@@ -40,20 +40,20 @@ jobs:
         sudo apt-get update
         sudo apt-get install m4
 
-    - name: Build MPICH
+    - name: Build OPENMPI
       run: |
-        echo "Install MPICH ${MPICH_VERSION} in $MPICH_DIR"
-        rm -rf MPICH ; mkdir MPICH ; cd MPICH
-        wget -q https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
-        gzip -dc mpich-${MPICH_VERSION}.tar.gz | tar -xf -
-        cd mpich-${MPICH_VERSION}
-        ./configure --prefix=$MPICH_DIR \
-                    --silent \
-                    --enable-romio \
-                    --with-file-system=ufs \
-                    --with-device=ch3:sock \
-                    --enable-shared\
-                    --disable-fortran \
+        echo "Install OpenMPI ${OPENMPI_VERSION} in $OPENMPI_DIR"
+        VER_MAJOR=${OPENMPI_VERSION%.*}
+        rm -rf OPENMPI ; mkdir OPENMPI ; cd OPENMPI
+        wget -q https://download.open-mpi.org/release/open-mpi/v${VER_MAJOR}/openmpi-${OPENMPI_VERSION}.tar.gz
+        gzip -dc openmpi-${OPENMPI_VERSION}.tar.gz | tar -xf -
+        cd openmpi-${OPENMPI_VERSION}
+        ./configure --prefix=$OPENMPI_DIR \
+                    --with-io-romio-flags="--with-file-system=ufs" \
+                    --with-hwloc=internal \
+                    --with-pmix=internal \
+                    --with-libevent=internal \
+                    --disable-mpi-fortran \
                     CC=gcc
         make -s LIBTOOLFLAGS=--silent V=1 -j 4 install > qout 2>&1
         make -s -j 4 distclean >> qout 2>&1
@@ -70,7 +70,7 @@ jobs:
                     --enable-debug \
                     --disable-fortran \
                     --disable-cxx \
-                    --with-mpi=$MPICH_DIR
+                    --with-mpi=$OPENMPI_DIR
         make -s LIBTOOLFLAGS=--silent V=1 -j 4 install > qout 2>&1
         make -s -j 4 distclean >> qout 2>&1
         popd
@@ -79,32 +79,32 @@ jobs:
       run: |
         python -m pip install --upgrade pip setuptools wheel
         pip install numpy cython cftime pytest twine check-manifest
-        export MPICC=$MPICH_DIR/bin/mpicc
+        export MPICC=$OPENMPI_DIR/bin/mpicc
         pip install mpi4py
         pip install torch torchvision
 
     - name: Install PnetCDF-Python
       run: |
-        export CC=$MPICH_DIR/bin/mpicc
+        export CC=$OPENMPI_DIR/bin/mpicc
         pip install --verbose --no-build-isolation -e .
 
     - name: Test PnetCDF-Python
       run: |
-        export PATH=${MPICH_DIR}/bin:${PATH}
-        make ptests TESTMPIRUN="${MPICH_DIR}/bin/mpiexec"
+        export PATH=${OPENMPI_DIR}/bin:${PATH}
+        make ptests TESTMPIRUN="${OPENMPI_DIR}/bin/mpiexec --oversubscribe"
 
     - name: Re-install PnetCDF-Python from source distribution
       run: |
         pip uninstall -y pnetcdf
         make install-clean
-        export CC=$MPICH_DIR/bin/mpicc
+        export CC=$OPENMPI_DIR/bin/mpicc
         python setup.py sdist
         pip install --verbose dist/pnetcdf-*.tar.gz
 
     - name: Test PnetCDF-Python
       run: |
-        export PATH=${MPICH_DIR}/bin:${PATH}
-        make ptests TESTMPIRUN="${MPICH_DIR}/bin/mpiexec"
+        export PATH=${OPENMPI_DIR}/bin:${PATH}
+        make ptests TESTMPIRUN="${OPENMPI_DIR}/bin/mpiexec --oversubscribe"
 
 #   - name: Tarball
 #     run: |

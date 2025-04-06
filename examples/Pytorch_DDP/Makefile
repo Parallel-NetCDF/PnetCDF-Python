@@ -6,8 +6,10 @@
 check_PROGRAMS = torch_ddp_skeleton.py
 
 
+TESTMPIRUN = $(shell dirname ${CC})/mpirun
 TESTS_ENVIRONMENT  = export check_PROGRAMS="${check_PROGRAMS}";
 TESTS_ENVIRONMENT += export PNETCDF_DIR="${PNETCDF_DIR}";
+TESTS_ENVIRONMENT += export TESTMPIRUN="$(TESTMPIRUN)";
 
 OUTPUT_DIR = _tmp_output
 

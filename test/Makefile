@@ -50,7 +50,9 @@ check_PROGRAMS = tst_atts.py \
                  tst_wait.py \
                  tst_libver.py
 
+TESTMPIRUN = $(shell dirname ${CC})/mpirun
 TESTS_ENVIRONMENT = export check_PROGRAMS="${check_PROGRAMS}";
+TESTS_ENVIRONMENT += export TESTMPIRUN="$(TESTMPIRUN)";
 OUTPUT_DIR = _tmp_output
 
 all:

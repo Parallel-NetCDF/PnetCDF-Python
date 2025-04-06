@@ -28,7 +28,6 @@ cimport numpy
 numpy.import_array()
 
 
-ctypedef MPI.Datatype Datatype
 
 
 cdef class Variable:
@@ -699,7 +698,7 @@ cdef class Variable:
             self._put(dataput,a,b,c)
 
 
-    def _put_var1(self, value, tuple index, bufcount, Datatype buftype, collective = True):
+    def _put_var1(self, value, tuple index, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset buffcount
@@ -735,7 +734,7 @@ cdef class Variable:
         _check_err(ierr)
         free(indexp)
 
-    def _put_var(self, ndarray data, bufcount, Datatype buftype, collective = True):
+    def _put_var(self, ndarray data, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -765,7 +764,7 @@ cdef class Variable:
                                      PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
-    def _put_vara(self, start, count, ndarray data, bufcount, Datatype buftype, collective = True):
+    def _put_vara(self, start, count, ndarray data, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -802,7 +801,7 @@ cdef class Variable:
                                      PyArray_DATA(data), buffcount, bufftype)
         _check_err(ierr)
 
-    def _put_varn(self, ndarray data, num, starts, counts=None, bufcount=None, buftype=None, collective = True):
+    def _put_varn(self, ndarray data, num, starts, counts=None, bufcount=None, MPI.Datatype buftype=None, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -862,7 +861,7 @@ cdef class Variable:
                                       bufftype)
         _check_err(ierr)
 
-    def put_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def put_varn_all(self, data, num, starts, counts=None, bufcount=None, MPI.Datatype buftype=None):
         """
         put_varn_all(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
@@ -967,7 +966,7 @@ cdef class Variable:
         self._put_varn(data, num, starts, counts, bufcount = bufcount,
                        buftype = buftype, collective = True)
 
-    def put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def put_varn(self, data, num, starts, counts=None, bufcount=None, MPI.Datatype buftype=None):
         """
         put_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
@@ -979,7 +978,7 @@ cdef class Variable:
         self._put_varn(data, num, starts, counts, bufcount = bufcount,
                        buftype = buftype, collective = False)
 
-    def iput_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def iput_varn(self, data, num, starts, counts=None, bufcount=None, MPI.Datatype buftype=None):
         """
         iput_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
@@ -1008,7 +1007,7 @@ cdef class Variable:
         return self._iput_varn(data, num, starts, counts, bufcount, buftype,
                                buffered=False)
 
-    def bput_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None):
+    def bput_varn(self, data, num, starts, counts=None, bufcount=None, MPI.Datatype buftype=None):
         """
         bput_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
@@ -1035,7 +1034,7 @@ cdef class Variable:
         """
         return self._iput_varn(data, num, starts, counts, bufcount, buftype, buffered=True)
 
-    def _put_vars(self, start, count, stride, ndarray data, bufcount, Datatype buftype, collective = True):
+    def _put_vars(self, start, count, stride, ndarray data, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -1078,7 +1077,7 @@ cdef class Variable:
         _check_err(ierr)
 
 
-    def _put_varm(self, ndarray data, start, count, stride, imap, bufcount, Datatype buftype, collective = True):
+    def _put_varm(self, ndarray data, start, count, stride, imap, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -1131,7 +1130,7 @@ cdef class Variable:
 
 
 
-    def put_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None):
+    def put_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, MPI.Datatype buftype=None):
         """
         put_var_all(self, data, start=None, count=None, stride=None, imap=None, bufcount=None, buftype=None)
 
@@ -1423,7 +1422,7 @@ cdef class Variable:
         free(countp)
         free(stridep)
 
-    def _get_var1(self, ndarray buff, index, bufcount, Datatype buftype, collective = True):
+    def _get_var1(self, ndarray buff, index, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset buffcount
@@ -1453,7 +1452,7 @@ cdef class Variable:
         free(indexp)
 
 
-    def _get_var(self, ndarray buff, bufcount, Datatype buftype, collective = True):
+    def _get_var(self, ndarray buff, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -1479,7 +1478,7 @@ cdef class Variable:
         _check_err(ierr)
 
 
-    def _get_vara(self, ndarray buff, start, count, bufcount, Datatype buftype, collective = True):
+    def _get_vara(self, ndarray buff, start, count, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -1513,7 +1512,7 @@ cdef class Variable:
 
         _check_err(ierr)
 
-    def _get_varn(self, ndarray data, num, starts, counts, bufcount, Datatype buftype, collective = True):
+    def _get_varn(self, ndarray data, num, starts, counts, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -1569,7 +1568,7 @@ cdef class Variable:
 
         _check_err(ierr)
 
-    def _get_vars(self, ndarray buff, start, count, stride, bufcount, Datatype buftype, collective = True):
+    def _get_vars(self, ndarray buff, start, count, stride, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -1606,7 +1605,7 @@ cdef class Variable:
 
         _check_err(ierr)
 
-    def _get_varm(self, ndarray buff, start, count, stride, imap, bufcount, Datatype buftype, collective = True):
+    def _get_varm(self, ndarray buff, start, count, stride, imap, bufcount, MPI.Datatype buftype, collective = True):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2058,7 +2057,7 @@ cdef class Variable:
         else:
             return data
 
-    def _iput_var(self, ndarray data, bufcount, Datatype buftype, buffered = False):
+    def _iput_var(self, ndarray data, bufcount, MPI.Datatype buftype, buffered = False):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2090,7 +2089,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_var1(self, value, index, bufcount, Datatype buftype, buffered=False):
+    def _iput_var1(self, value, index, bufcount, MPI.Datatype buftype, buffered=False):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset buffcount
@@ -2127,7 +2126,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_vara(self, start, count, ndarray data, bufcount, Datatype buftype, buffered=False):
+    def _iput_vara(self, start, count, ndarray data, bufcount, MPI.Datatype buftype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2166,7 +2165,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_vars(self, start, count, stride, ndarray data, bufcount, Datatype buftype, buffered=False):
+    def _iput_vars(self, start, count, stride, ndarray data, bufcount, MPI.Datatype buftype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2206,7 +2205,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_varn(self, ndarray data, num, starts, counts, bufcount, Datatype buftype, buffered=False):
+    def _iput_varn(self, ndarray data, num, starts, counts, bufcount, MPI.Datatype buftype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2270,7 +2269,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iput_varm(self, ndarray data, start, count, stride, imap, bufcount, Datatype buftype, buffered=False):
+    def _iput_varm(self, ndarray data, start, count, stride, imap, bufcount, MPI.Datatype buftype, buffered=False):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2405,7 +2404,7 @@ cdef class Variable:
         else:
             raise ValueError("Invalid input arguments for iput_var")
 
-    def _iget_var(self, ndarray data, bufcount, Datatype buftype):
+    def _iget_var(self, ndarray data, bufcount, MPI.Datatype buftype):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2425,7 +2424,7 @@ cdef class Variable:
         return request
 
 
-    def _iget_var1(self, ndarray buff, index, bufcount, Datatype buftype):
+    def _iget_var1(self, ndarray buff, index, bufcount, MPI.Datatype buftype):
         cdef int ierr, ndims
         cdef size_t *indexp
         cdef MPI_Offset buffcount
@@ -2452,7 +2451,7 @@ cdef class Variable:
         return request
 
 
-    def _iget_vara(self, ndarray data, start, count, bufcount, Datatype buftype):
+    def _iget_vara(self, ndarray data, start, count, bufcount, MPI.Datatype buftype):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2481,7 +2480,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iget_vars(self, ndarray buff, start, count, stride, bufcount, Datatype buftype):
+    def _iget_vars(self, ndarray buff, start, count, stride, bufcount, MPI.Datatype buftype):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
@@ -2513,7 +2512,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def iget_varn(self, ndarray data, num, starts, counts=None, bufcount=None, Datatype buftype=None):
+    def iget_varn(self, ndarray data, num, starts, counts=None, bufcount=None, MPI.Datatype buftype=None):
         """
         iget_varn(self, data, num, starts, counts=None, bufcount=None, buftype=None)
 
@@ -2585,7 +2584,7 @@ cdef class Variable:
         _check_err(ierr)
         return request
 
-    def _iget_varm(self, ndarray buff, start, count, stride, imap, bufcount, Datatype buftype):
+    def _iget_varm(self, ndarray buff, start, count, stride, imap, bufcount, MPI.Datatype buftype):
         cdef int ierr, ndims
         cdef MPI_Offset buffcount
         cdef MPI_Datatype bufftype
