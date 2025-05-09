@@ -12,12 +12,6 @@ build:
     pre_install:
       - pip install numpy cython cftime pytest twine wheel check-manifest
 
-python:
-  install:
-    - requirements: docs/requirements.txt
-    - method: pip
-      path: .
-
 sphinx:
   configuration: docs/source/conf.py
 
