@@ -337,21 +337,25 @@ Note on configuring Read-the-Docs tool for generating PnetCDF-Python user guide.
   + User guide is automatically generated when new commits are pushed to the
     main branch and a new PR is created. Modify this in Read the Docs dashboard
     if needed.
+  + https://app.readthedocs.org/dashboard/
+  + A new maintainer can sign up with readthedocs using his/her github account
+  + Under the project's Settings -> maintainers, a maintainer can invite others
+    to become a maintain.
 
-* Doc files
-  + `.readthedocs.yaml` -- is a script file controls commands that run before
-    installation of PnetCDF-Python (under `pre-install:`) and installation
-    (under `python:`)
-  + `/docs/requirements.txt` -- lists all Python dependencies required for doc
-    generation, including `sphinx`
+* Configuration files
+  + [.readthedocs.yaml](../.readthedocs.yaml) -- is a script file controls
+    commands that run before installation of PnetCDF-Python (under
+    `pre-install:`) and installation (under `python:`)
+  + [docs/requirements.txt](./requirements.txt) -- is a file containing a list
+    all Python dependencies required for doc generation, including `sphinx`.
 
 * Important environment variables
   + User guide generation requires environment variables set by Read the Docs
-    dashboard (`Admin` -> `Environment Variables`). Delete and add a new
-    variable to modify (remember to select `Expose this environment variable in
-    PR builds` if PR auto-build is enabled)
-  + Current environment variables set (only effective solution found to set env
-    variable at installation):
+    dashboard (`Settings` -> `Environment Variables`). Delete and add a new
+    variable to modify (remember to select checkbox `Public` to `Expose this
+    environment variable in PR builds` if PR auto-build is enabled)
+  + Current environment variables set (the only effective solution found to set
+    the environment variable at installation):
      * `CC`: mpicc.mpich
      * `PNETCDF_DIR`: /home/docs/checkouts/readthedocs.org/user_builds/pnetcdf-python/checkouts/latest/_readthedocs/PnetCDF
      * `PNETCDF_VER`: 1.14.0
