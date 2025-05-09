@@ -8,9 +8,6 @@ build:
 
   tools:
     python: "3.10"
-  jobs:
-    pre_install:
-      - pip install numpy cython cftime pytest twine wheel check-manifest
 
 sphinx:
   configuration: docs/source/conf.py
