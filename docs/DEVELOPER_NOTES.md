@@ -1,13 +1,14 @@
 ## Notes for PnetCDF-Python developers
 
 This file contains instructions for PnetCDF-Python developers.
-Users of PnetCDF-Python please refer to the
+
+PnetCDF-Python users please refer to the
 [PnetCDF-Python User Guide](https://pnetcdf-python.readthedocs.io/en/latest/).
 
 * [Making A New Release](#making-a-new-release)
 * [Library Packaging And Publishing](#library-packaging-and-publishing)
 * [Library installation](#library-installation)
-* [User Guide](user-guide)
+* [User Guide](#user-guide)
 
 ---
 ### Making A New Release
@@ -335,19 +336,22 @@ Below is a list of tasks to be done immediately before making a new release
 Note on configuring Read-the-Docs tool for generating PnetCDF-Python user guide.
 * Read the Docs settings
   + User guide is automatically generated when new commits are pushed to the
-    main branch and a new PR is created. Modify this in Read the Docs dashboard
-    if needed.
+    main branch or a new PR is created. Modify this setting of automatic action
+    in the Read the Docs dashboard if needed.
   + https://app.readthedocs.org/dashboard/
-  + A new maintainer can sign up with readthedocs using his/her github account
-  + Under the project's Settings -> maintainers, a maintainer can invite others
-    to become a maintain.
+  + A new repo maintainer can sign up with readthedocs using his/her github
+    account
+  + Adding a new repo maintainer
+    * Under the project's Settings -> maintainers, a maintainer can invite
+      others to become a maintainer.
 
 * Configuration files
-  + [.readthedocs.yaml](../.readthedocs.yaml) -- is a script file controls
-    commands that run before installation of PnetCDF-Python (under
+  + [.readthedocs.yaml](../.readthedocs.yaml) -- is a script file containing
+    controls commands that run before installation of PnetCDF-Python (under
     `pre-install:`) and installation (under `python:`)
   + [docs/requirements.txt](./requirements.txt) -- is a file containing a list
-    all Python dependencies required for doc generation, including `sphinx`.
+    all Python package dependencies required for doc generation, including
+    `sphinx`.
 
 * Important environment variables
   + User guide generation requires environment variables set by Read the Docs
