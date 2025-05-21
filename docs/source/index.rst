@@ -41,6 +41,11 @@ netCDF files.
    api/attribute_api
    api/function_api
 
+Appendix
+--------
+
+* :ref:`genindex`
+
 .. toctree::
    :maxdepth: 1
    :caption: Copyright
