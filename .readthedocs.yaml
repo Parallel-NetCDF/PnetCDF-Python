@@ -10,21 +10,7 @@ build:
     python: "3.10"
   jobs:
     pre_install:
-      - echo "CC=$CC"
-      - echo "PNETCDF_VER=$PNETCDF_VER"
-      - echo "Download and build PnetCDF version $PNETCDF_VER"
-      - wget https://parallel-netcdf.github.io/Release/pnetcdf-$PNETCDF_VER.tar.gz
-      - tar -xzf pnetcdf-$PNETCDF_VER.tar.gz
-      - echo "Installing PnetCDF-C in PNETCDF_DIR=$PNETCDF_DIR"
-      - cd ./pnetcdf-$PNETCDF_VER ; ./configure --prefix=${PNETCDF_DIR} --enable-shared --enable-debug --disable-fortran --disable-cxx; make -j 8 install
-      - pip install numpy cython cftime pytest twine wheel check-manifest mpi4py
-
-python:
-  install:
-    - requirements: docs/requirements.txt
-    - method: pip
-      path: .
-
+      - pip install -r docs/requirements.txt
 sphinx:
   configuration: docs/source/conf.py
 
