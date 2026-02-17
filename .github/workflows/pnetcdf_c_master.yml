@@ -1,5 +1,11 @@
 name: Test PnetCDF-C master branch
 on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Enable manual run because PnetCDF is updated more frequently'
+        required: false
+        default: 'Manual trigger'
   push:
     branches:
       - main
@@ -19,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      MPICH_VERSION: 4.3.0
+      MPICH_VERSION: 4.3.2
       MPICH_DIR: ${{ github.workspace }}/mpich-install
       PNETCDF_VERSION: repo
       PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
