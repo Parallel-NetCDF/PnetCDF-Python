@@ -1,0 +1,187 @@
+name: main CI
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Enable manual run because PnetCDF is updated more frequently'
+        required: false
+        default: 'Manual trigger'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.txt'
+
+env:
+  MPICH_VERSION: 4.3.2
+  OPENMPI_VERSION: 5.0.9
+  PNETCDF_VERSION: 1.14.1
+  LIBTOOL_VERSION: 2.5.4
+  MPI_DIR: ${{ github.workspace }}/MPI
+  PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false # This disables the default cancel-on-failure behavior
+      matrix:
+        python-version: ["3.10"]
+        mpi_vendor: [ MPICH, OpenMPI ]
+        pnetcdf_ver: [ release, master ]
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Ubuntu Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install automake autoconf libtool libtool-bin m4
+
+    - name: Install GNU autotools
+      run: |
+        sudo apt-get update
+        sudo apt-get install autoconf
+        sudo apt-get install automake
+        sudo apt-get install m4
+
+        wget -q https://ftp.gnu.org/gnu/libtool/libtool-${LIBTOOL_VERSION}.tar.gz
+        gzip -dc libtool-${LIBTOOL_VERSION}.tar.gz | tar -xf -
+        cd libtool-${LIBTOOL_VERSION}
+        ./configure --prefix=/usr --silent
+        sudo make -s LIBTOOLFLAGS=--silent V=1 -j 8 install > qout 2>&1
+        sudo make -s LIBTOOLFLAGS=--silent V=1 -j 8 distclean >> qout 2>&1
+
+    - name: Install MPI compiler vendor - ${{ matrix.mpi_vendor }}
+      run: |
+        set -x
+        if test "${{ matrix.mpi_vendor }}" = "MPICH" ; then
+            # MPICH versions older than 4.2.2 do not support the MPI large
+            # count feature.
+            echo "Install MPICH ${MPICH_VERSION} in ${GITHUB_WORKSPACE}/MPI"
+            wget -q https://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz
+            gzip -dc mpich-${MPICH_VERSION}.tar.gz | tar -xf -
+            cd mpich-${MPICH_VERSION}
+            ./configure --prefix=${MPI_DIR} \
+                        --silent \
+                        --enable-romio \
+                        --with-file-system=ufs \
+                        --with-device=ch3:sock \
+                        --disable-fortran \
+                        CC=gcc
+            make -s LIBTOOLFLAGS=--silent V=1 -j 8 install
+            make -s LIBTOOLFLAGS=--silent V=1 -j 8 distclean
+        else # OpenMPI
+            echo "Install OpenMPI ${OPENMPI_VERSION} in ${GITHUB_WORKSPACE}/MPI"
+            VER_MAJOR=${OPENMPI_VERSION%.*}
+            wget -q https://download.open-mpi.org/release/open-mpi/v${VER_MAJOR}/openmpi-${OPENMPI_VERSION}.tar.gz
+            gzip -dc openmpi-${OPENMPI_VERSION}.tar.gz | tar -xf -
+            cd openmpi-${OPENMPI_VERSION}
+            ./configure --prefix=${MPI_DIR} \
+                        --silent \
+                        --with-io-romio-flags="--with-file-system=ufs" \
+                        --disable-mpi-fortran \
+                        CC=gcc
+            make -s LIBTOOLFLAGS=--silent V=1 -j 8 install
+            make -s LIBTOOLFLAGS=--silent V=1 -j 8 distclean
+        fi
+
+    - name: Build PnetCDF-C from ${{ matrix.pnetcdf_ver }}
+      run: |
+        set -x
+        cd ${GITHUB_WORKSPACE}
+        export PATH="${MPI_DIR}/bin:${PATH}"
+        export LD_LIBRARY_PATH="${MPI_DIR}/lib:${LD_LIBRARY_PATH}"
+        m4 --version
+        autoconf --version
+        automake --version
+        libtool --version
+
+        if test "${{ matrix.pnetcdf_ver }}" = "master" ; then
+            git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
+            pushd PnetCDF
+            autoreconf -i
+        else
+            wget -q https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
+            tar -xzf pnetcdf-${PNETCDF_VERSION}.tar.gz
+            pushd pnetcdf-${PNETCDF_VERSION}
+        fi
+        ./configure --prefix=$PNETCDF_DIR \
+                    --silent \
+                    --enable-shared \
+                    --enable-debug \
+                    --disable-fortran \
+                    --disable-cxx \
+                    --with-mpi=$MPI_DIR
+        make -s LIBTOOLFLAGS=--silent V=1 -j 4 install > qout 2>&1
+        make -s -j 4 distclean >> qout 2>&1
+        popd
+
+    - name: Install python dependencies via pip
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        pip install numpy cython cftime pytest twine check-manifest
+        export MPICC=$MPI_DIR/bin/mpicc
+        export CC=$MPI_DIR/bin/mpicc
+        pip install mpi4py
+        pip install torch torchvision
+
+    - name: Install PnetCDF-Python
+      run: |
+        export CC=$MPI_DIR/bin/mpicc
+        pip install --verbose --no-build-isolation -e .
+
+    - name: Test PnetCDF-Python
+      run: |
+        export PATH=${PNETCDF_DIR}/bin:${MPI_DIR}/bin:${PATH}
+        export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPI_DIR}/lib:${LD_LIBRARY_PATH}"
+        if test "${{ matrix.mpi_vendor }}" = "OpenMPI" ; then
+            make ptests TESTMPIRUN="${MPI_DIR}/bin/mpiexec --oversubscribe"
+        else
+            make ptests TESTMPIRUN="${MPI_DIR}/bin/mpiexec"
+        fi
+
+    - name: Re-install PnetCDF-Python from source distribution
+      run: |
+        pip uninstall -y pnetcdf
+        make install-clean
+        export CC=$MPI_DIR/bin/mpicc
+        python setup.py sdist
+        pip install --verbose dist/pnetcdf-*.tar.gz
+
+    - name: Test PnetCDF-Python
+      run: |
+        export PATH=${PNETCDF_DIR}/bin:${MPI_DIR}/bin:${PATH}
+        export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPI_DIR}/lib:${LD_LIBRARY_PATH}"
+        if test "${{ matrix.mpi_vendor }}" = "OpenMPI" ; then
+            make ptests TESTMPIRUN="${MPI_DIR}/bin/mpiexec --oversubscribe"
+        else
+            make ptests TESTMPIRUN="${MPI_DIR}/bin/mpiexec"
+        fi
+#   - name: Tarball
+#     run: |
+#       export PATH=${NETCDF_DIR}/bin:${PATH}
+#       python setup.py --version
+#       check-manifest --version
+#       check-manifest --verbose
+#       pip wheel . -w dist --no-deps
+#       twine check dist/*
