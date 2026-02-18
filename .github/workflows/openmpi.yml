@@ -19,9 +19,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
-      OPENMPI_VERSION: 5.0.7
+      OPENMPI_VERSION: 5.0.9
       OPENMPI_DIR: ${{ github.workspace }}/ompi-install
-      PNETCDF_VERSION: 1.14.0
+      PNETCDF_VERSION: 1.14.1
       PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
     strategy:
       matrix:
