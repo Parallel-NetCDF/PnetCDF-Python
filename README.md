@@ -41,6 +41,12 @@ scalable I/O performance.
   pip install --no-build-isolation -e .
   ```
 * Testing
+  + Additional packages are required: `torch` and `torchvision`
+  + Add the PnetCDF and MPI installation paths to the environment variable
+    `LD_LIBRARY_PATH`, for example by running command:
+    ```
+    export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPI_DIR}/lib:${LD_LIBRARY_PATH}"
+    ```
   + Command `"make check"` tests all the programs available in folders
   ["test/"](./test) and ["examples/"](./examples) by running one MPI process.
   + Command `"make ptests"` tests all the programs by running more than one MPI

@@ -91,6 +91,7 @@ jobs:
     - name: Test PnetCDF-Python
       run: |
         export PATH=${OPENMPI_DIR}/bin:${PATH}
+        export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${OPENMPI_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${OPENMPI_DIR}/bin/mpiexec --oversubscribe"
 
     - name: Re-install PnetCDF-Python from source distribution
@@ -104,6 +105,7 @@ jobs:
     - name: Test PnetCDF-Python
       run: |
         export PATH=${OPENMPI_DIR}/bin:${PATH}
+        export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${OPENMPI_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${OPENMPI_DIR}/bin/mpiexec --oversubscribe"
 
 #   - name: Tarball

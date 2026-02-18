@@ -91,6 +91,7 @@ jobs:
     - name: Test PnetCDF-Python
       run: |
         export PATH=${MPICH_DIR}/bin:${PATH}
+        export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPICH_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${MPICH_DIR}/bin/mpiexec"
 
     - name: Re-install PnetCDF-Python from source distribution
@@ -104,6 +105,7 @@ jobs:
     - name: Test PnetCDF-Python
       run: |
         export PATH=${MPICH_DIR}/bin:${PATH}
+        export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPICH_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${MPICH_DIR}/bin/mpiexec"
 
 #   - name: Tarball
