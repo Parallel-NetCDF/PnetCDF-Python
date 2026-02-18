@@ -1,4 +1,8 @@
 name: Test PnetCDF-C master branch
+
+permissions:
+  contents: read
+
 on:
   workflow_dispatch:
     inputs:

@@ -1,4 +1,8 @@
 name: Test PnetCDF-C latest official release
+
+permissions:
+  contents: read
+
 on:
   push:
     branches:
