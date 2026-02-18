@@ -84,6 +84,7 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install numpy cython cftime pytest twine check-manifest
         export MPICC=$OPENMPI_DIR/bin/mpicc
+        export CC=$OPENMPI_DIR/bin/mpicc
         pip install mpi4py
         pip install torch torchvision
 
@@ -94,7 +95,7 @@ jobs:
 
     - name: Test PnetCDF-Python
       run: |
-        export PATH=${OPENMPI_DIR}/bin:${PATH}
+        export PATH=${PNETCDF_DIR}/bin:${OPENMPI_DIR}/bin:${PATH}
         export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${OPENMPI_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${OPENMPI_DIR}/bin/mpiexec --oversubscribe"
 
@@ -108,7 +109,7 @@ jobs:
 
     - name: Test PnetCDF-Python
       run: |
-        export PATH=${OPENMPI_DIR}/bin:${PATH}
+        export PATH=${PNETCDF_DIR}/bin:${OPENMPI_DIR}/bin:${PATH}
         export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${OPENMPI_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${OPENMPI_DIR}/bin/mpiexec --oversubscribe"
 

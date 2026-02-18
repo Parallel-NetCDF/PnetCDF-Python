@@ -139,6 +139,7 @@ jobs:
         python -m pip install --upgrade pip setuptools wheel
         pip install numpy cython cftime pytest twine check-manifest
         export MPICC=$MPICH_DIR/bin/mpicc
+        export CC=$MPICH_DIR/bin/mpicc
         pip install mpi4py
         pip install torch torchvision
 
@@ -149,7 +150,7 @@ jobs:
 
     - name: Test PnetCDF-Python
       run: |
-        export PATH=${MPICH_DIR}/bin:${PATH}
+        export PATH=${PNETCDF_DIR}/bin:${MPICH_DIR}/bin:${PATH}
         export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPICH_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${MPICH_DIR}/bin/mpiexec"
 
@@ -163,7 +164,7 @@ jobs:
 
     - name: Test PnetCDF-Python
       run: |
-        export PATH=${MPICH_DIR}/bin:${PATH}
+        export PATH=${PNETCDF_DIR}/bin:${MPICH_DIR}/bin:${PATH}
         export LD_LIBRARY_PATH="${PNETCDF_DIR}/lib:${MPICH_DIR}/lib:${LD_LIBRARY_PATH}"
         make ptests TESTMPIRUN="${MPICH_DIR}/bin/mpiexec"
 #   - name: Tarball
