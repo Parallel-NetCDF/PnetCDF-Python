@@ -113,7 +113,7 @@ jobs:
         autoconf --version
         automake --version
         libtool --version
-        git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
+        git clone --recurse-submodules https://github.com/Parallel-NetCDF/PnetCDF.git
         git submodule update --init --recursive
         pushd PnetCDF
         autoreconf -i
