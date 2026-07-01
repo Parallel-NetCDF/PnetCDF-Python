@@ -1,4 +1,4 @@
-name: main CI
+name: Test using PnetCDF-C master branch
 
 permissions:
   contents: read
@@ -26,7 +26,6 @@ on:
 env:
   MPICH_VERSION: 5.0.1
   OPENMPI_VERSION: 5.0.9
-  PNETCDF_VERSION: 1.15.0
   LIBTOOL_VERSION: 2.5.4
   MPI_DIR: ${{ github.workspace }}/MPI
   PNETCDF_DIR: ${{ github.workspace }}/PnetCDF-install
@@ -104,7 +103,7 @@ jobs:
             make -s LIBTOOLFLAGS=--silent V=1 -j 8 distclean
         fi
 
-    - name: Build PnetCDF-C from its latest release
+    - name: Build PnetCDF-C from its master branch
       run: |
         set -x
         cd ${GITHUB_WORKSPACE}
@@ -114,9 +113,10 @@ jobs:
         autoconf --version
         automake --version
         libtool --version
-        wget -q https://parallel-netcdf.github.io/Release/pnetcdf-${PNETCDF_VERSION}.tar.gz
-        tar -xzf pnetcdf-${PNETCDF_VERSION}.tar.gz
-        pushd pnetcdf-${PNETCDF_VERSION}
+        git clone -q https://github.com/Parallel-NetCDF/PnetCDF.git
+        git submodule update --init --recursive
+        pushd PnetCDF
+        autoreconf -i
         ./configure --prefix=$PNETCDF_DIR \
                     --silent \
                     --enable-shared \
